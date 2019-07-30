@@ -1,0 +1,65 @@
+*	2.2 Variable Names and Units
+*	2.2.1 States (units fraction of grid cell unless otherwise specified)
+	primf
+	primn
+	secdf
+	secdn
+	pastr
+	range
+	urban
+	c3ann
+	c3per
+	c4ann
+	c4per
+	c3nfx
+	secma
+	secmb
+*	2.2.2 Transitions
+*	Transitions between land use states (units fraction of grid cell per y)
+*	All in format <state1_to_state2>
+*	Wood harvest (units fraction of grid cell)
+	primf_harv
+	primn_harv
+	secmf_harv
+	secyf_harv
+	secnf_harv
+*	Wood harvest (units kg C)
+	primf_bioh
+	primn_bioh
+	secmf_bioh
+	secyf_bioh
+	secnf_bioh
+*	2.2.3 Management
+*	Irrigation (units fraction of crop area)
+	irrig_c3ann
+	irrig_c3per
+	irrig_c4ann
+	irrig_c4per
+	irrig_c3nfx
+	flood
+*	Fertilizer (units kg N/ha/yr (crop season))
+	fertl_c3ann
+	fertl_c4ann
+	fertl_c3per
+	fertl_c4per
+	fertl_c3nfx
+*	Biofuel crops (fraction of crop type area occupied by biofuel crops)
+	crpbf_c3ann
+	crpbf_c4ann
+	crpbf_c3per
+	crpbf_c4per
+	crpbf_c3nfx
+*	Wood harvest product split (units fraction of wood harvest biomass)
+	rndwd
+	fulwd
+	combf
+*	Harvest (units of fraction of biomass harvested annually)
+	fharv_c3per
+	fharv_c4per
+*	2.2.4 Static
+	ptbio
+	fstnf
+	carea
+	ccode
+	icwtr
+	fallow

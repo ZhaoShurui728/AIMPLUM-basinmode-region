@@ -1,0 +1,17 @@
+
+1) all_execution3_sec.bat --> LandUseModel_mcp.gms & Disagg_FRSGL.gms
+2) gdx2csv.bat
+3) csv2nc.bat
+
+
+図示化の時
+gdx2txt.bat
+
+
+
+1シナリオを地域でパラレルにして回すとき
+all_execution.bat --> LandUseModel_mcp.gms
+all_execution2.bat --> LandUseModel_mcp2.gms
+
+LUMIP version
+1) LandUseModel.bat --> LandUseModel_mcp.gms & Disagg_FRSGL.gms

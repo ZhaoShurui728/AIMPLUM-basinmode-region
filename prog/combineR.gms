@@ -1,0 +1,74 @@
+*-*-*-*- This program is included by ..\prog\combine.gms
+parameter
+GHGL%1(Y,L)
+Psol_stat%1(Y,ST,SP)                  Solution report
+Area%1(Y,L)
+Area_base%1(L,Sacol)
+CSB%1
+PBIO%1(Y,G,Scol)
+*BIOENE%1(G)
+VY_load%1(Y,LBIO,G)
+
+YIELD%1(L,G)
+VYPL%1(Y,L,G)
+pa_road%1(Y,L,G)
+pa_emit%1(Y,G)
+pa_lab%1(Y)
+pa_irri%1(Y,L)
+MFA%1     management factor for bio crops in base year
+MFB%1     management factor for bio crops (coefficient)
+YIELDL%1(Y,L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
+YIELDLDM%1(Y,LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
+;
+
+;
+
+$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/%1.gdx'
+$load Psol_stat%1=Psol_stat
+$load GHGL%1=GHGL
+$load VYPL%1=VYP_load
+$load pa_road%1=pa_road
+$load pa_emit%1=pa_emit
+$load pa_lab%1=pa_lab
+$load pa_irri%1=pa_irri
+$load YIELDL%1=YIELDL_OUT
+$load YIELDLDM%1=YIELDLDM_OUT
+
+
+
+$gdxin '%prog_dir%/../output/gdx/base/%1/basedata.gdx'
+$load Area_base%1=Area_base
+$load YIELD%1=YIELD
+$load MFA%1=MFA
+$load MFB%1=MFB
+
+
+Psol_stat("%1",Y,ST,SP)$Psol_stat%1(Y,ST,SP)=Psol_stat%1(Y,ST,SP);
+Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
+GHGL("%1",Y,L)$GHGL%1(Y,L)=GHGL%1(Y,L);
+
+$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/analysis/%1.gdx'
+$load Area%1=Area_load
+$gdxin '%prog_dir%/../output/gdx/base/%1/analysis/%base_year%.gdx'
+$load CSB%1=CSB
+*$load VY_load%1=VY_load
+
+Area("%1",Y,L)$Area%1(Y,L)=Area%1(Y,L) /10**3;
+
+CSB("%1")$(CSB%1)=CSB%1;
+
+YIELD_load("%1",L,G)$YIELD%1(L,G)=YIELD%1(L,G);
+VYPL("%1",Y,L,G)$VYPL%1(Y,L,G)=VYPL%1(Y,L,G);
+pa_road("%1",Y,L,G)$pa_road%1(Y,L,G)=pa_road%1(Y,L,G);
+pa_emit("%1",Y,G)$pa_emit%1(Y,G)=pa_emit%1(Y,G);
+pa_lab("%1",Y)$pa_lab%1(Y)=pa_lab%1(Y);
+pa_irri("%1",Y,L)$pa_irri%1(Y,L)=pa_irri%1(Y,L);
+
+YIELDL_OUT("%1",Y,L)=YIELDL%1(Y,L);
+YIELDLDM_OUT("%1",Y,LDM)=YIELDLDM%1(Y,LDM);
+
+MFA("%1")$MFA%1=MFA%1;
+MFB("%1")$MFB%1=MFB%1;
+
+
+

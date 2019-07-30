@@ -1,0 +1,32 @@
+*-*-*-*- This program is included by ..\prog\scenario.gms
+
+$if %Sy%==1955 $setglobal pre_year 1950
+$if %Sy%==1960 $setglobal pre_year 1955
+$if %Sy%==1965 $setglobal pre_year 1960
+$if %Sy%==1970 $setglobal pre_year 1965
+$if %Sy%==1975 $setglobal pre_year 1970
+$if %Sy%==1980 $setglobal pre_year 1975
+$if %Sy%==1985 $setglobal pre_year 1980
+$if %Sy%==1990 $setglobal pre_year 1985
+$if %Sy%==1995 $setglobal pre_year 1990
+$if %Sy%==2000 $setglobal pre_year 1995
+$if %Sy%==2005 $setglobal pre_year 2000
+$if %Sy%==2010 $setglobal pre_year 2005
+$if %Sy%==2015 $setglobal pre_year 2010
+$if %Sy%==2020 $setglobal pre_year 2015
+$if %Sy%==2025 $setglobal pre_year 2020
+$if %Sy%==2030 $setglobal pre_year 2025
+$if %Sy%==2035 $setglobal pre_year 2030
+$if %Sy%==2040 $setglobal pre_year 2035
+$if %Sy%==2045 $setglobal pre_year 2040
+$if %Sy%==2050 $setglobal pre_year 2045
+$if %Sy%==2055 $setglobal pre_year 2050
+$if %Sy%==2060 $setglobal pre_year 2055
+$if %Sy%==2065 $setglobal pre_year 2060
+$if %Sy%==2070 $setglobal pre_year 2065
+$if %Sy%==2075 $setglobal pre_year 2070
+$if %Sy%==2080 $setglobal pre_year 2075
+$if %Sy%==2085 $setglobal pre_year 2080
+$if %Sy%==2090 $setglobal pre_year 2085
+$if %Sy%==2095 $setglobal pre_year 2090
+$if %Sy%==2100 $setglobal pre_year 2095
