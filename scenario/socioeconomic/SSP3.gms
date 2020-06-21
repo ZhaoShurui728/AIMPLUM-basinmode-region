@@ -1,1 +1,0 @@
-$setglobal ssp SSP3

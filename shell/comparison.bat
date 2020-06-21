@@ -18,11 +18,11 @@ for %%C in (%SCE%) do (
 for %%D in (%CLP%) do (
 for %%E in (%IAV%) do (
 
-gams ..\AIMPLUM\prog\comparison_scenario.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
+gams ..\prog\prog\comparison_scenario.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
 )))
 pause
 
-gams ..\AIMPLUM\prog\comparison.gms
+gams ..\prog\prog\comparison.gms
 
 pause
 

@@ -10,9 +10,10 @@ $setglobal parallel off
 $setglobal residue on
 $setglobal Ystep0 10
 $setglobal supcuvout off
+$setglobal biopmap on
+$setglobal mfbl 1.01
 
 ;
-
 
 
 $include %prog_dir%/inc_prog/pre_%Ystep0%year.gms
@@ -24,7 +25,7 @@ $include %prog_dir%/inc_prog/second_%Ystep0%year.gms
 $include %prog_dir%/scenario/socioeconomic/%sce%.gms
 
 Set
-R       17 regions      /
+R    17 regions      /
 $include %prog_dir%/\define\region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
@@ -71,6 +72,7 @@ LUC     land use change total
 LB              New or old bioenergy cropland/
 BION    new bioenergy cropland
 BIOO    old bioenergy cropland
+BION_DEG new bioenergyu crops on degraded land
 /
 LCL(L)/CL/
 LBIO(L)/BIO/
@@ -79,6 +81,25 @@ LNBIOP(L) land category NOT for bioenergy potential /CL,PAS,CROP_FLW,SL,OL,AFR/
 MAP_RG(R,G)     Relationship between country R and cell G
 
 ;
+
+parameter 
+degradedland(G)
+degradedland_usable(G)
+protectland(G)
+;
+
+$gdxin '%prog_dir%/data/policydata.gdx'
+$ifthen %protect%==on 
+$load protectland=%protectland% 
+$else protectland(G)=0
+$endif
+;
+$ifthen %soil%==on 
+$load degradedland=%degradedland%
+$else degradedland(G)=0
+$endif
+;
+
 Alias(R,R2),(G,G2);
 set
 MAP_RAGG(R,R2)  /
@@ -96,33 +117,54 @@ pa_bio(G)       land transition costs per unit area (million $ per ha)
 pc_bio(R)
 VYL(L,G)
 protect_wopas(G)
-YIELDBIO(G)
+YIELDBIO(G)	Biocrop yield [MgC per ha]
+CS(G)
 ;
 
 $gdxin '%prog_dir%/data/Data_prep.gdx'
 $load GA MAP_RG
 
-$batinclude %prog_dir%/prog/BiolandR.gms USA
-$batinclude %prog_dir%/prog/BiolandR.gms XE25
-$batinclude %prog_dir%/prog/BiolandR.gms XER
-$batinclude %prog_dir%/prog/BiolandR.gms TUR
-$batinclude %prog_dir%/prog/BiolandR.gms XOC
-$batinclude %prog_dir%/prog/BiolandR.gms CHN
-$batinclude %prog_dir%/prog/BiolandR.gms IND
-$batinclude %prog_dir%/prog/BiolandR.gms JPN
-$batinclude %prog_dir%/prog/BiolandR.gms XSE
-$batinclude %prog_dir%/prog/BiolandR.gms XSA
-$batinclude %prog_dir%/prog/BiolandR.gms CAN
-$batinclude %prog_dir%/prog/BiolandR.gms BRA
-$batinclude %prog_dir%/prog/BiolandR.gms XLM
-$batinclude %prog_dir%/prog/BiolandR.gms CIS
-$batinclude %prog_dir%/prog/BiolandR.gms XME
-$batinclude %prog_dir%/prog/BiolandR.gms XNF
-$batinclude %prog_dir%/prog/BiolandR.gms XAF
-
+$ifthen.base %Sy%==%base_year% 
+$if exist '%prog_dir%/../output/gdx/base/USA/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms USA
+$if exist '%prog_dir%/../output/gdx/base/XE25/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XE25
+$if exist '%prog_dir%/../output/gdx/base/XER/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XER
+$if exist '%prog_dir%/../output/gdx/base/TUR/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms TUR
+$if exist '%prog_dir%/../output/gdx/base/XOC/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XOC
+$if exist '%prog_dir%/../output/gdx/base/CHN/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms CHN
+$if exist '%prog_dir%/../output/gdx/base/IND/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms IND
+$if exist '%prog_dir%/../output/gdx/base/JPN/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms JPN
+$if exist '%prog_dir%/../output/gdx/base/XSE/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XSE
+$if exist '%prog_dir%/../output/gdx/base/XSA/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XSA
+$if exist '%prog_dir%/../output/gdx/base/CAN/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms CAN
+$if exist '%prog_dir%/../output/gdx/base/BRA/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms BRA
+$if exist '%prog_dir%/../output/gdx/base/XLM/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XLM
+$if exist '%prog_dir%/../output/gdx/base/CIS/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms CIS
+$if exist '%prog_dir%/../output/gdx/base/XME/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XME
+$if exist '%prog_dir%/../output/gdx/base/XNF/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XNF
+$if exist '%prog_dir%/../output/gdx/base/XAF/basedata.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XAF
+$else.base
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/USA/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms USA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XE25/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XE25
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XER/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XER
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/TUR/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms TUR
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XOC/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XOC
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/CHN/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms CHN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/IND/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms IND
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/JPN/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms JPN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XSE/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XSE
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XSA/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XSA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/CAN/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms CAN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/BRA/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms BRA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XLM/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XLM
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/CIS/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms CIS
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XME/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XME
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XNF/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XNF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/XAF/%Sy%.gdx' $batinclude %prog_dir%/prog/BiolandR.gms XAF
+$endif.base
 set
 A_BTR2 Biocrop residue4 /BTR2/
 ;
+
 parameter
 TBI(Y,R,A_BTR2) Bioenergy use [ktoe per year]
 EJ_ktoe         EJ_ktoe scaler [EJ per ktoe]
@@ -145,13 +187,14 @@ Ppopulation(YBASE,R)
 GDP_load(YBASE,R)
 MF(R)      management factor for bio crops
 MFA(R)     management factor for bio crops in base year
+MFAr(R)     management factor for bio crops in base year
 MFB(R)     management factor for bio crops (coefficient)
+MFBr(R)     management factor for bio crops (coefficient)
 MFC(L)     accessibility factor for bio crops
 MFAi(R)    inverce of management factor for bio crops in base year
 MFArev(R)    inverce of management factor for bio crops in base year
 ;
-
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
+$gdxin '%prog_dir%/../data/cbnal0/global_17_%scein%_BaU_%IAV%.gdx'
 $load Ppopulation GDP_load
 
 GDPCAP_base(R)$Ppopulation("%base_year%",R)=GDP_load("%base_year%",R)/Ppopulation("%base_year%",R);
@@ -160,11 +203,17 @@ MFA(R)$(GDPCAP_base(R)>=1)=1;
 MFA(R)$(GDPCAP_base(R)>0.35 AND GDPCAP_base(R)<1)=0.6;
 MFA(R)$(GDPCAP_base(R)>0 AND GDPCAP_base(R)<=0.35)=0.4;
 
-MFB(R)$(GDPCAP_base(R)>0.35)=1.005;
-MFB(R)$(GDPCAP_base(R)>0 AND GDPCAP_base(R)<=0.35)=1.01;
+MFB(R)$(GDPCAP_base(R)>=1)=1.005;
+MFB(R)$(GDPCAP_base(R)>0.35 AND GDPCAP_base(R)<1)=1.01;
+MFB(R)$(GDPCAP_base(R)>0 AND GDPCAP_base(R)<=0.35)=%mfbl%;
+
+MFAr(R)$(GDPCAP_base(R)>=1)=1;
+MFAr(R)$(GDPCAP_base(R)>0.35 AND GDPCAP_base(R)<1)=0.6;
+MFAr(R)$(GDPCAP_base(R)>0 AND GDPCAP_base(R)<=0.35)=0.4;
 
 
 MF(R)$MFA(R)=min(1.3/MFA(R),MFB(R)**max(0,%Sy%-2010));
+*MF(R)$MFA(R)=min(1.3/MFAr(R),MFB(R)**max(0,%Sy%-2010))*MFAr(R)/MFA(R);
 
 YIELDBIO(G)$(YIELDBIO(G))=YIELDBIO(G)*SUM(R$MAP_RG(R,G),MF(R));
 
@@ -193,8 +242,8 @@ RAREA_BIOP(G)   Ratio of potential area of biocrop in cell G in year Y [-]
 GJ_toe  /41.8/
 Rbg             Ratio of below-ground residues to above-ground biomass (IPCC guideline Table11.2) /0.20/
 PBIO(G,LB)      Price
-pca_bio(G,LB)    Cost for bioenergy production including land conversion cost (million $ per ha per year)
-CSB(R)	Carbon density threshold for dividing grassland and forest (MgC per C)
+pca_bio(G,LB)   Cost for bioenergy production including land conversion cost (million $ per ha per year)
+CSB(R)		Carbon density threshold for dividing grassland and forest (MgC per C)
 Avalab_FL	availablilty of light forestland source: van Vuuren et al. 2009 /0.5/
 Avalab_GL	availablilty of natural grassland source: van Vuuren et al. 2009 /0.5/
 ;
@@ -207,6 +256,8 @@ $load CSB
 * [GJ/ha/year] = [tonC/ha] * [tonCrop/tonC]  * [toe/tonCrop] * [GJ/toe]
 BIOENE(G)$(YIELDBIO(G)) = YIELDBIO(G) * 1/(1+Rbg) * 2.5 * 0.38 * GJ_toe;
 
+
+
 RAREA_BIOP(G) = 1-(SUM(L$(LNBIOP(L)),VYL(L,G))
 		  + protect_wopas(G)
 *		  + VYL("FRSGL",G)$(CS(G)>SUM(R$MAP_RG(R,G),CSB(R)))
@@ -214,11 +265,16 @@ RAREA_BIOP(G) = 1-(SUM(L$(LNBIOP(L)),VYL(L,G))
 		  + (Avalab_FL*(VYL("FRSGL",G)-protect_wopas(G)))$(VYL("FRSGL",G)>protect_wopas(G) AND CS(G)<15 AND CS(G)>SUM(R$MAP_RG(R,G),CSB(R)))
 		  + (Avalab_GL*(VYL("FRSGL",G)-protect_wopas(G)))$(VYL("FRSGL",G)>protect_wopas(G) AND CS(G)<SUM(R$MAP_RG(R,G),CSB(R)))
 		  );
+* adjust fraction
+degradedland_usable(G)$(degradedland(G)>0 AND RAREA_BIOP(G)>0) = degradedland(G) * (protect_wopas(G)/( protectland(G) + degradedland(G)))*0.5;
+
 RAREA_BIOP(G)$(RAREA_BIOP(G)<10**(-5))=0;
 
 *[mil$/ha/year]
 pca_bio(G,"BIOO")$(BIOENE(G) AND RAREA_BIOP(G))=SUM(R$MAP_RG(R,G),pc_bio(R));
 pca_bio(G,"BION")$(BIOENE(G) AND RAREA_BIOP(G))=SUM(R$MAP_RG(R,G),pc_bio(R)) + pa_bio(G);
+*pca_bio(G,"BION_DEG")$(BIOENE(G) AND RAREA_BIOP(G))=SUM(R$MAP_RG(R,G),pc_bio(R)) + pa_bio(G);
+pca_bio(G,"BION_DEG")$(BIOENE(G))=SUM(R$MAP_RG(R,G),pc_bio(R)) + pa_bio(G);
 
 * [$/GJ] = [mil$/ha/year] / [GJ/ha/year] * 10**6
 PBIO(G,LB)$(BIOENE(G) AND RAREA_BIOP(G))=pca_bio(G,LB)/BIOENE(G)*(10**6);
@@ -231,24 +287,38 @@ set
 Scol	/quantity,price,yield,area,fraction/
 ;
 parameter
-PBIOSUP(G,LB,*)	Biosupply curve data set fraction(grid-1) area (kha per grid) quantity (EJ per grid per year) price ($ per GJ) yield (MgC per ha per year)
+PBIOSUP(G,LB,*)	Biosupply curve data set
 ;
 
 * [grid-1]
 PBIOSUP(G,"BIOO","fraction")$(BIOENE(G)) = min(YBIOO(G),RAREA_BIOP(G)) ;
+* the new bioenergy fraction should deduced the 
 PBIOSUP(G,"BION","fraction")$(BIOENE(G)) = max(0, RAREA_BIOP(G)-YBIOO(G));
+** treat it as a new crop
+PBIOSUP(G,"BION_DEG","fraction")$(BIOENE(G)) = max(0, degradedland_usable(G));
 
 * [kha/grid]
 PBIOSUP(G,LB,"area")$(BIOENE(G)) = PBIOSUP(G,LB,"fraction") * GA(G);
 
 * [EJ/grid/year] = [GJ/ha/year] * [kha/grid]
-PBIOSUP(G,LB,"quantity")$(BIOENE(G)) = BIOENE(G) * PBIOSUP(G,LB,"area") / 10**6;
+PBIOSUP(G,'BIOO',"quantity")$(BIOENE(G)) = BIOENE(G) * PBIOSUP(G,'BIOO',"area") / 10**6;
+PBIOSUP(G,'BION',"quantity")$(BIOENE(G)) = BIOENE(G) * PBIOSUP(G,'BION',"area") / 10**6;
+** half yield reduction for bioenergy crops on degraded land
+PBIOSUP(G,'BION_DEG',"quantity")$(BIOENE(G)) = BIOENE(G)/2 * PBIOSUP(G,'BION_DEG',"area") / 10**6;
 
-* [$/GJ] = [mil$/ha/year] / [GJ/ha/year] * 10**6
-PBIOSUP(G,LB,"price")$(BIOENE(G) AND RAREA_BIOP(G)) = pca_bio(G,LB)/BIOENE(G)*(10**6);
+* [$/GJ] = [mil$/ha/year] / [GJ/ha/year] * 10**6                                                                           
+* PBIOSUP(G,LB,"price")$(BIOENE(G) AND RAREA_BIOP(G) AND PBIOSUP(G,LB,"quantity")>0) = pca_bio(G,LB) * PBIOSUP(G,LB,"area")/PBIOSUP(G,LB,"quantity");
+* PBIOSUP(G,LB,"price")$(BIOENE(G) AND PBIOSUP(G,LB,"quantity")>0) = pca_bio(G,LB) * PBIOSUP(G,LB,"area")/PBIOSUP(G,LB,"quantity");
+PBIOSUP(G,"BIOO","price")$(BIOENE(G) AND PBIOSUP(G,"BIOO","quantity")>0) = pca_bio(G,"BIOO") * PBIOSUP(G,"BIOO","area")/PBIOSUP(G,"BIOO","quantity");
+PBIOSUP(G,"BION","price")$(BIOENE(G) AND PBIOSUP(G,"BION","quantity")>0) = pca_bio(G,"BION") * PBIOSUP(G,"BION","area")/PBIOSUP(G,"BION","quantity");
+PBIOSUP(G,"BION_DEG","price")$(BIOENE(G) AND PBIOSUP(G,"BION_DEG","quantity")>0) = pca_bio(G,"BION_DEG") * PBIOSUP(G,"BION_DEG","area")/PBIOSUP(G,"BION_DEG","quantity");
+
+*pca_bio(G,LB)/BIOENE(G)*(10**6);
 
 *[MgC/ha/year]
 PBIOSUP(G,LB,"yield")$(BIOENE(G) AND RAREA_BIOP(G)) = YIELDBIO(G);
+* PBIOSUP(G,"BION_DEG","yield")$(BIOENE(G) AND RAREA_BIOP(G)) = YIELDBIO(G)/2;
+PBIOSUP(G,"BION_DEG","yield")$(BIOENE(G)) = YIELDBIO(G)/2;
 
 PBIOSUP(G,LB,Scol)$(NOT PBIOSUP(G,LB,"area"))=0;
 
@@ -289,7 +359,7 @@ $ifthen %bioscm%==BSP
 *YBIO(G)$(PBIO(G,LB)<%PBIOEXOP0%)=RAREA_BIOP(G);
 
 VYBIO.FX(G,LB)$(PBIO(G,LB)>%PBIOEXOP0%)=0;
-
+$if not %biodiversity%==off VYBIO.FX(SUBG(G),LB)=0；
 
 EQVQ..  VQ =E= SUM(LB,SUM(G$(BIOENE(G) AND RAREA_BIOP(G) AND (PBIO(G,LB)<=%PBIOEXOP0%)), BIOENE(G) * GA(G) * VYBIO(G,LB))) / 10**6;
 EQVYBIO(G)$(BIOENE(G) AND RAREA_BIOP(G))..      SUM(LB$(PBIO(G,LB)<=%PBIOEXOP0%),VYBIO(G,LB)) =L= RAREA_BIOP(G);
@@ -305,14 +375,7 @@ Psol_stat("SSOLVE")=BiolandP.SOLVESTAT;Psol_stat("SMODEL")=BiolandP.MODELSTAT;
 $elseif %bioscm%==BSQ
 
 *----Bioenergy potential SOATED ---*
-$ifthen %CLP%==BaU $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$elseif %CLP%==BaULP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$elseif %CLP%==C $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_C_%IAV%.gdx'
-$elseif %CLP%==CLP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_C_%IAV%.gdx'
-$elseif %CLP%==CNA $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_CNA_%IAV%.gdx'
-$elseif %CLP%==CNALP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_CNA_%IAV%.gdx'
-$else $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$endif
+$gdxin '%prog_dir%/../data/cbnal0/global_17_%scein%_%clpin%_%IAV%.gdx'
 $load TBI=TBI_load
 
 trend2100=%PBIOEXOQ0%/(2100-2010);
@@ -322,7 +385,7 @@ PBIOEXOQ$(2010<=%Sy%)=trend2100*(%Sy%-2010);
 $if %residue%==on PBIOEXOQ_2gen=PBIOEXOQ-SUM(R,TBI("%Sy%",R,"BTR2"))*EJ_ktoe*10;
 $if %residue%==off PBIOEXOQ_2gen=PBIOEXOQ;
 
-*                                         [$/GJ] * [GJ/ha/year] * [kha/grid] * [-]
+*                                         [$/GJ] * [EJ/ha/year] * [kha/grid] * [-]
 EQVC..  VC =E= SUM(LB,SUM(G$(BIOENE(G) AND RAREA_BIOP(G)),PBIO(G,LB)* BIOENE(G) * GA(G)* VYBIO(G,LB))) / 10**6;
 EQVYBIO(G)$(BIOENE(G) AND RAREA_BIOP(G))..      SUM(LB,VYBIO(G,LB)) =L= RAREA_BIOP(G);
 EQVYBIOO(G)$(YBIOO(G))..        VYBIO(G,"BIOO") =L= YBIOO(G);
@@ -343,6 +406,8 @@ YBIO(G)$(SUM(LB,VYBIO.L(G,LB)))=SUM(LB,VYBIO.L(G,LB));
 parameter
 AREA_BIOP(R,LB)    Area of biocrop in cell G in year Y [kha per year]
 YIELD_BIOP(R,LB)    Yield of biocrop in cell G in year Y [tonCrop per ha]
+TOTAREA_BIOP(R)    Total potential area of biocrop in cell G in year Y [kha per year]
+TOTBIOENE(R)    Total technical bioenergy potential [EJ per year]
 ;
 
 
@@ -354,6 +419,12 @@ YIELD_BIOP(R,LB)$SUM(G$MAP_RG(R,G),VYBIO.L(G,LB)*GA(G))=SUM(G$MAP_RG(R,G),YIELDB
 YIELD_BIOP(Sr,LB)$SUM(R$(MAP_RAGG(R,Sr) and AREA_BIOP(R,LB)*YIELD_BIOP(R,LB)),AREA_BIOP(R,LB))
 =SUM(R$(MAP_RAGG(R,Sr) and AREA_BIOP(R,LB)*YIELD_BIOP(R,LB)),AREA_BIOP(R,LB)*YIELD_BIOP(R,LB))/SUM(R$(MAP_RAGG(R,Sr) and AREA_BIOP(R,LB)*YIELD_BIOP(R,LB)),AREA_BIOP(R,LB));
 
+TOTAREA_BIOP(R)=SUM(G$MAP_RG(R,G),RAREA_BIOP(G)*GA(G));
+TOTAREA_BIOP(Sr)=SUM(R$MAP_RAGG(R,Sr),TOTAREA_BIOP(R));
+
+TOTBIOENE(R)=SUM(G$MAP_RG(R,G),BIOENE(G)*RAREA_BIOP(G)*GA(G)) / 10**6;
+TOTBIOENE(Sr)=SUM(R$MAP_RAGG(R,Sr),TOTBIOENE(R));
+
 
 *-----------------------------------*
 
@@ -364,9 +435,9 @@ PCBIO(R)        average price to meet the given bioenergy amount [$ per GJ]
 QCBIO(R)        quantity to meet the given bioenergy price [EJ per year]
 ;
 
-PCBIO(R)$SUM(LB,SUM(G$(MAP_RG(R,G) AND PBIO(G,LB)*BIOENE(G)*YBIOLB(G,LB)),BIOENE(G) * GA(G) *YBIOLB(G,LB)))
+PCBIO(R)$SUM(LB,SUM(G$(MAP_RG(R,G) AND PBIO(G,LB)*BIOENE(G)*YBIOLB(G,LB)),           BIOENE(G) * GA(G) *YBIOLB(G,LB)))
         =SUM(LB,SUM(G$(MAP_RG(R,G) AND PBIO(G,LB)*BIOENE(G)*YBIOLB(G,LB)),PBIO(G,LB)*BIOENE(G) * GA(G) *YBIOLB(G,LB)))
-                /SUM(LB,SUM(G$(MAP_RG(R,G) AND PBIO(G,LB)*BIOENE(G)*YBIOLB(G,LB)), BIOENE(G) * GA(G) *YBIOLB(G,LB)));
+        /SUM(LB,SUM(G$(MAP_RG(R,G) AND PBIO(G,LB)*BIOENE(G)*YBIOLB(G,LB)),           BIOENE(G) * GA(G) *YBIOLB(G,LB)));
 
 QCBIO(R)=SUM(LB,SUM(G$(MAP_RG(R,G) AND BIOENE(G)*YBIOLB(G,LB)), BIOENE(G) * GA(G) * YBIOLB(G,LB)))/ 10**6;
 
@@ -382,17 +453,27 @@ QCBIO(Sr)= SUM(R$MAP_RAGG(R,Sr),QCBIO(R));
 $if %parallel%==off execute_unload '../output/temp3.gdx'
 
 execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%Sy%.gdx'
+pca_bio
+YBIOLB
+YBIO
+VYBIO
 YBIO
 PCBIO
 QCBIO
 AREA_BIOP
 YIELD_BIOP
+TOTAREA_BIOP
 Psol_stat
 BIOENE
 PBIO
 GDPCAP_base
 MF
+TOTBIOENE
+YIELDBIO
+degradedland
+degradedland_usable
 $if %supcuvout%==on PBIOSUP
+$if %biopmap%==on RAREA_BIOP
 ;
 
 $exit

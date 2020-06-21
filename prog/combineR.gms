@@ -7,7 +7,7 @@ Area_base%1(L,Sacol)
 CSB%1
 PBIO%1(Y,G,Scol)
 *BIOENE%1(G)
-VY_load%1(Y,LBIO,G)
+VYL%1(Y,L,G)
 
 YIELD%1(L,G)
 VYPL%1(Y,L,G)
@@ -19,8 +19,9 @@ MFA%1     management factor for bio crops in base year
 MFB%1     management factor for bio crops (coefficient)
 YIELDL%1(Y,L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
 YIELDLDM%1(Y,LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
-;
-
+RR%1(G)	the range-rarity map
+BIIcoefG%1(L,G)	the Biodiversity Intactness Index (BII) coefficients
+sharepix%1(LULC_class,I,J)
 ;
 
 $gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/%1.gdx'
@@ -33,7 +34,10 @@ $load pa_lab%1=pa_lab
 $load pa_irri%1=pa_irri
 $load YIELDL%1=YIELDL_OUT
 $load YIELDLDM%1=YIELDLDM_OUT
+*$load VYL%1=VY_load
 
+$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/analysis/%1.gdx'
+$load VYL%1=VY_load
 
 
 $gdxin '%prog_dir%/../output/gdx/base/%1/basedata.gdx'
@@ -41,7 +45,6 @@ $load Area_base%1=Area_base
 $load YIELD%1=YIELD
 $load MFA%1=MFA
 $load MFB%1=MFB
-
 
 Psol_stat("%1",Y,ST,SP)$Psol_stat%1(Y,ST,SP)=Psol_stat%1(Y,ST,SP);
 Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
@@ -69,6 +72,10 @@ YIELDLDM_OUT("%1",Y,LDM)=YIELDLDM%1(Y,LDM);
 
 MFA("%1")$MFA%1=MFA%1;
 MFB("%1")$MFB%1=MFB%1;
+
+VYL("%1",Y,L,G)=VYL%1(Y,L,G);
+*VYL("%1",Y,"FRSGL",G)=VYL%1(Y,"FRS",G)+VYL%1(Y,"GL",G);
+
 
 
 

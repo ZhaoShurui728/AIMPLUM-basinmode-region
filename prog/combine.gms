@@ -4,10 +4,21 @@ $Setglobal prog_dir ..\prog
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
+
 $setglobal biocurve off
 $setglobal supcuvout off
 $setglobal costcalc off
 $setglobal bioyieldcalc off
+$setglobal biodivcalc on
+$setglobal rlimapcalc off
+$setglobal restoration off
+
+
+
+* Only for bending the curve
+*$include %prog_dir%/scenario/socioeconomic/%sce%.gms
+*$include %prog_dir%/scenario/climate_policy/%clp%.gms
+*$include %prog_dir%/scenario/IAV/%iav%.gms
 
 Set
 N /1*40000/
@@ -78,13 +89,13 @@ SP	/SMCP,SNLP,SLP/
 Scol	/quantity,price,yield,area/
 Sacol	/cge,base/
 L land use type /
-*PRM_SEC	forest + grassland + pasture
-FRSGL	forest + grassland
+*PRM_SEC forest + grassland + pasture
+FRSGL   forest + grassland
 FRS	forest
 GL
 HAV_FRS production forest
-AFR	afforestation
-PAS	grazing pasture
+AFR     afforestation
+PAS     grazing pasture
 PDRIR   rice irrigated
 WHTIR   wheat irrigated
 GROIR   other coarse grain irrigated
@@ -104,6 +115,9 @@ OL      ice or water
 CL	cropland
 LUC
 /
+LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
+LPAS(L)/PAS/
+LAFR(L)/AFR/
 LBIO(L)/BIO/
 LFRSGL(L)/FRSGL,FRS,GL/
 LDM land use type /
@@ -125,6 +139,7 @@ CROP_FLW	fallow land
 SL	built_up
 OL	ice or water
 CL      cropland
+CEREAL	cereal
 /
 LFRSGLDM(LDM)/FRSGL,FRS,GL/
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
@@ -149,10 +164,31 @@ BIO     .       BIO
 CROP_FLW        .       CROP_FLW
 SL      .       SL
 OL      .       OL
-CL      .       CL
+
 GL	.	GL
 FRS	.	FRS
 FRSGL	.	FRSGL
+PDRIR   .       CEREAL
+WHTIR   .       CEREAL
+GROIR   .       CEREAL
+PDRRF   .       CEREAL
+WHTRF   .       CEREAL
+GRORF   .       CEREAL
+*CL      .       CL
+PDRIR	.	CL
+WHTIR	.	CL
+GROIR	.	CL
+OSDIR	.	CL
+C_BIR	.	CL
+OTH_AIR	.	CL
+PDRRF	.	CL
+WHTRF	.	CL
+GRORF	.	CL
+OSDRF	.	CL
+C_BRF	.	CL
+OTH_ARF	.	CL
+BIO	.	CL
+CROP_FLW	.	CL
 /
 LB              New or old bioenergy cropland/
 BION    new bioenergy cropland
@@ -164,6 +200,15 @@ set
 MAP_RAGG(R,R2)	/
 $include %prog_dir%\define/region/region17_agg.map
 /
+I /1*360/
+J /1*720/
+LULC_class/
+$include %prog_dir%/individual/BendingTheCurve/LULC_class.set
+/
+MAP_GIJ(G,I,J)
+;
+$gdxin '%prog_dir%/data/data_prep.gdx'
+$load MAP_GIJ
 ;
 
 parameter
@@ -184,6 +229,7 @@ QCBIO(R,Y)	quantity to meet the given bioenergy price [EJ per year]
 
 YIELD(R,Y,L,G)
 YIELD_load(R,L,G)
+VYL(R,Y,L,G)	a fraction of land-use L region R in year Y grid G
 VYPL(R,Y,L,G)
 pa_road(R,Y,L,G)
 pa_emit(R,Y,G)
@@ -194,6 +240,9 @@ MFA(R)     management factor for bio crops in base year
 MFB(R)     management factor for bio crops (coefficient)
 YIELDL_OUT(R,Y,L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
 YIELDLDM_OUT(R,Y,LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
+RR(G)	the range-rarity map
+BIIcoefG(L,G)	the Biodiversity Intactness Index (BII) coefficients
+sharepix(LULC_class,I,J)
 ;
 
 ordy(Y) = ord(Y) + %base_year% -1;
@@ -304,7 +353,6 @@ PALDM(R,Y,LDM,"total")=sum(costitem,PALDM(R,Y,LDM,costitem));
 PATLDM(R,Y,LDM,costitem)=SUM(L$(MAP_LLDM(L,LDM)),PATL(R,Y,L,costitem));
 
 $endif
-
 *----Bioenergy supply curve SOATED ---*
 
 $ifthen %supcuvout%==on
@@ -349,12 +397,15 @@ $endif
 
 *--- Interporation of yield to fed back to AIM/CGE ---*
 parameter
+YIELDLDM_OUT(R,Y,LDM)
 YIELDLDM_ratio(R,Y,LDM)
 YIELDLDM_annual(R,Y,LDM)
 ;
 
-YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)>2010 and YIELDLDM_OUT(R,Y,LDM)>0 and YIELDLDM_OUT(R,Y-10,LDM)>0)=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-10,LDM))**(1/10);
-YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)=2010 and YIELDLDM_OUT(R,Y,LDM) and YIELDLDM_OUT(R,Y-5,LDM))=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-5,LDM))**(1/5);
+
+YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)>2010 and YIELDLDM_OUT(R,Y-10,LDM))=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-10,LDM))**(1/10);
+
+YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)=2010 and YIELDLDM_OUT(R,Y-5,LDM))=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-5,LDM))**(1/5);
 
 YIELDLDM_annual(R,Y,LDM)$(2005<=ordy(Y) and ordy(Y)<2010)=YIELDLDM_OUT(R,"2005",LDM)*YIELDLDM_ratio(R,"2010",LDM)**(ordy(Y)-2005);
 YIELDLDM_annual(R,Y,LDM)$(2010<=ordy(Y) and ordy(Y)<2020)=YIELDLDM_OUT(R,"2010",LDM)*YIELDLDM_ratio(R,"2020",LDM)**(ordy(Y)-2010);
@@ -365,8 +416,7 @@ YIELDLDM_annual(R,Y,LDM)$(2050<=ordy(Y) and ordy(Y)<2060)=YIELDLDM_OUT(R,"2050",
 YIELDLDM_annual(R,Y,LDM)$(2060<=ordy(Y) and ordy(Y)<2070)=YIELDLDM_OUT(R,"2060",LDM)*YIELDLDM_ratio(R,"2070",LDM)**(ordy(Y)-2060);
 YIELDLDM_annual(R,Y,LDM)$(2070<=ordy(Y) and ordy(Y)<2080)=YIELDLDM_OUT(R,"2070",LDM)*YIELDLDM_ratio(R,"2080",LDM)**(ordy(Y)-2070);
 YIELDLDM_annual(R,Y,LDM)$(2080<=ordy(Y) and ordy(Y)<2090)=YIELDLDM_OUT(R,"2080",LDM)*YIELDLDM_ratio(R,"2090",LDM)**(ordy(Y)-2080);
-YIELDLDM_annual(R,Y,LDM)$(2090<=ordy(Y) and ordy(Y)<=2100)=YIELDLDM_OUT(R,"2090",LDM)*YIELDLDM_ratio(R,"2100",LDM)**(ordy(Y)-2090);
-*-----------------------------------*
+YIELDLDM_annual(R,Y,LDM)$(2090<=ordy(Y) and ordy(Y)<2100)=YIELDLDM_OUT(R,"2090",LDM)*YIELDLDM_ratio(R,"2100",LDM)**(ordy(Y)-2090);
 
 execute_unload '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
 Psol_stat
@@ -378,14 +428,21 @@ GHGL
 $if %biocurve%==on PCBIO
 $if %biocurve%==on QCBIO
 $if %costcalc%==on PAL,PALDM,PATL,PATLDM
-$if %bioyieldcalc%==on YIELD_BIO
+*YIELD_BIO
 YIELDL_OUT
 YIELDLDM_OUT
 YIELDLDM_annual
 YIELDLDM_ratio
-
-
-
-
 ;
+$ifthen %rlimapcalc%==on
+
+execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%.gdx'
+PRLIestimator
+
+*execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%_check.gdx'
+*VYLclassIJ
+*deltaVYL
+*VYLtrans
+*;
+$endif
 

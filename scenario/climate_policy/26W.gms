@@ -1,1 +1,1 @@
-
+$setglobal protect on

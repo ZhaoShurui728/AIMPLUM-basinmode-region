@@ -2,11 +2,9 @@ cd ..\R\prog\
 R --vanilla < plot_all.R
 pause
 R --vanilla < plot_dif_all.R
-#pause
-
-
-
-
+pause
+R --vanilla < plot.R
+pause
 R --vanilla < plot_allcrop.R
 #pause
 R --vanilla < plot_dif_allcrop.R
@@ -17,8 +15,7 @@ R --vanilla < plot_yield.R
 
 
 
-R --vanilla < plot.R
-pause
+
 R --vanilla < plot_ybase.R
 pause
 

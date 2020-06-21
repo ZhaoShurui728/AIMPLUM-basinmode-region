@@ -9,7 +9,7 @@ protect_wopas%1(G)
 pa_bio%1(G)         land transition costs per unit area for BIO (million $ per ha)
 YIELD%1(LBIO,G)
 pc%1(LBIO)         land transition costs per unit area (million $ per ha)
-
+CS%1(G)		carbon density (MgC per ha)
 ;
 
 $ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%pre_year%.gdx'
@@ -30,14 +30,16 @@ $ifthen exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%Sy%.gdx'
 $gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%Sy%.gdx'
 *$load PBIO%1=PBIO RAREA_BIOP%1=RAREA_BIOP
 $load VYL%1=VY_load
-$load pa_bio%1=pa_bio pc%1=pc
+$load pa_bio%1=pa_bio pc%1=pc CS%1=CS
 
 $else
+
 *PBIO%1(G,LB)=0;
 *RAREA_BIOP%1(G)=0;
 VYL%1(LCL,G)=0;
 pa_bio%1(G)=0;
 pc%1(LBIO)=0;
+CS%1(G)=0;
 $endif
 
 $gdxin '%prog_dir%/../output/gdx/base/%1/basedata.gdx'
@@ -57,3 +59,4 @@ protect_wopas(G)$(protect_wopas%1(G))=protect_wopas%1(G);
 YIELDBIO(G)$(YIELD%1("BIO",G))=YIELD%1("BIO",G);
 pa_bio(G)$(pa_bio%1(G)) = pa_bio%1(G);
 pc_bio("%1")$pc%1("BIO")=pc%1("BIO");
+CS(G)$CS%1(G)=CS%1(G);

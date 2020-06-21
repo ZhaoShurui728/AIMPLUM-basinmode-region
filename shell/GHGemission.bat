@@ -18,7 +18,7 @@ for %%E in (%IAV%) do (
 
 	for %%A in (%COUNTRY%) do (
 
-	gams ..\AIMPLUM\prog\ghg_emission.gms --Sr=%%A --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
+	gams ..\prog\prog\ghg_emission.gms --Sr=%%A --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
 
 #	pause
 
@@ -28,7 +28,7 @@ for %%E in (%IAV%) do (
 for %%C in (%SCE%) do (
 for %%D in (%CLP%) do (
 for %%E in (%IAV%) do (
-gams ..\AIMPLUM\prog\ghg_combine.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
+gams ..\prog\prog\ghg_combine.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
 )))
 
 pause

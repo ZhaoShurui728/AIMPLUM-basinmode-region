@@ -7,8 +7,7 @@ $Setglobal prog_dir ..\prog
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
-$setglobal bioland off
-
+$include %prog_dir%/scenario/socioeconomic/%sce%.gms
 set
 dum/1*1000000/
 G       Cell number  /
@@ -88,7 +87,8 @@ Planduse_load(Y,R,LCGE)
 ;
 
 *$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
+
+$gdxin '%prog_dir%/../data/cbnal0/global_17_%scein%_BaU_%IAV%.gdx'
 $load Planduse_load=Planduse
 
 $gdxin '%prog_dir%/data/Data_prep.gdx'
@@ -110,7 +110,8 @@ $else
 $batinclude %prog_dir%/prog/disagg_FRSGLR.gms %Sr%
 $endif
 
-$if %bioland%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
+
+VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
 
 *--- Forest -----------
 
@@ -178,6 +179,10 @@ $load CSB
 $endif.baseyear
 
 
+
+
+
+
 *---------------
 
 VYL("FRS",G)$(G0(G) AND CS(G)>=CSB)=VYL("FRSGL",G);
@@ -188,7 +193,6 @@ VYL("FRSGL",G)=0;
 
 Area_load(L)= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 
-VYL(L,G)$(not G0(G))=0;
 VYL(L,G)=round(VYL(L,G),6);
 
 $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'
