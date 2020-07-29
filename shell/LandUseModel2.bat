@@ -5,8 +5,10 @@ mkdir ..\..\output\gdx\all
 
 rem-----------------------------
 rem call settings\default.bat
-call settings\%1
+call settings\%2_%3\%1
 rem-----------------------------
+
+set YEAR=2005 2010 2015 2020 2025 2030 2035 2040 2045 2050 2055 2060 2065 2070 2075 2080 2085 2090 2095 2100
 
 cd ..\..\exe
 
@@ -16,8 +18,6 @@ for %%C in (%SCE%) do (
 for %%D in (%CLP%) do (
 for %%E in (%IAV%) do (
 for %%A in (%COUNTRY%) do (
-	copy ..\output\gdx\base\%%A\analysis\2005.gdx ..\output\gdx\%%C_%%D_%%E\%%A\analysis\2005.gdx
-
 for %%B in (%YEAR%) do (
 
 	gams ..\prog\prog\Disagg_FRSGL.gms --Sr=%%A --Sy=%%B --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100

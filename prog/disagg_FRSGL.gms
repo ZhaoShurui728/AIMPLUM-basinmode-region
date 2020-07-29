@@ -3,11 +3,18 @@
 $Setglobal Sr JPN
 $Setglobal Sy 2006
 $Setglobal base_year 2005
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
+$setglobal biocurve off
+$setglobal not1stiter off
+$setglobal biodivprice off
+
 $include %prog_dir%/scenario/socioeconomic/%sce%.gms
+$include %prog_dir%/scenario/climate_policy/%clp%.gms
+$include %prog_dir%/scenario/IAV/%iav%.gms
+
 set
 dum/1*1000000/
 G       Cell number  /
@@ -66,9 +73,12 @@ GL      grassland
 SL      built_up
 OL      ice or water
 CL      cropland
+RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
 /
 LCROPB(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO/
 LPRMSEC(L)/PRM_SEC/
+LSUM(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,SL,OL/
+
 *LBIO(L)/PRM_SEC,CROP_FLW/
 ;
 Alias(G,G2),(L,L2);
@@ -86,9 +96,8 @@ CSB     carbon stock boundary in forest and grassland (MgC ha-1)
 Planduse_load(Y,R,LCGE)
 ;
 
-*$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%scein%_BaU_%IAV%.gdx'
+$if %not1stiter%==off $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
+$if %not1stiter%==on $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%preIAV%.gdx'
 $load Planduse_load=Planduse
 
 $gdxin '%prog_dir%/data/Data_prep.gdx'
@@ -110,8 +119,7 @@ $else
 $batinclude %prog_dir%/prog/disagg_FRSGLR.gms %Sr%
 $endif
 
-
-VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
+$if %biocurve%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
 
 *--- Forest -----------
 
@@ -178,21 +186,30 @@ $load CSB
 
 $endif.baseyear
 
+parameter
+CS_base(G)	carbon stock in base year
+;
 
-
-
-
+*$gdxin '%prog_dir%/../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '%prog_dir%/../output/gdx/base/%Sr%/%base_year%.gdx'
+$load CS_base=CS
 
 *---------------
 
-VYL("FRS",G)$(G0(G) AND CS(G)>=CSB)=VYL("FRSGL",G);
-VYL("GL",G)$(G0(G) AND CS(G)<CSB)=VYL("FRSGL",G);
+VYL("FRS",G)$(G0(G) AND CS_base(G)>=CSB)=VYL("FRSGL",G);
+VYL("GL",G)$(G0(G) AND CS_base(G)<CSB)=VYL("FRSGL",G);
+
+* Sum of pixel shares should be 1.
+*VYL("FRS",G)$VYL("FRS",G)=1-sum(L$(LSUM(L) and (not sameas(L,"FRS"))),VYL(L,G));
+*VYL("GL",G)$VYL("GL",G)=1-sum(L$(LSUM(L) and (not sameas(L,"GL"))),VYL(L,G));
 
 VYL("PRM_SEC",G)=0;
 VYL("FRSGL",G)=0;
 
+
 Area_load(L)= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 
+VYL(L,G)$(not G0(G))=0;
 VYL(L,G)=round(VYL(L,G),6);
 
 $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'

@@ -1,0 +1,9 @@
+*	LU	-->	LU2		
+	"share.GrsLnd"	.	"share.CrpLnd"	.	"share.GrsLnd.to.CrpLnd"
+	"share.NatLnd"	.	"share.CrpLnd"	.	"share.NatLnd.to.CrpLnd"
+	"share.PriFor"	.	"share.CrpLnd"	.	"share.PriFor.to.CrpLnd"
+	"share.CrpLnd"	.	"share.NatLnd"	.	"share.CrpLnd.to.NatLnd"
+	"share.NatLnd"	.	"share.GrsLnd"	.	"share.NatLnd.to.GrsLnd"
+	"share.PriFor"	.	"share.GrsLnd"	.	"share.PriFor.to.GrsLnd"
+	"share.GrsLnd"	.	"share.NatLnd"	.	"share.GrsLnd.to.NatLnd"
+	"share.PriFor"	.	"share.MngFor"	.	"share.PriFor.to.MngFor"

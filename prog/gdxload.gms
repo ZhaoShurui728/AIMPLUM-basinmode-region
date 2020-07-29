@@ -5,6 +5,7 @@ VY_1%1(L,G)
 Yield%1(L,G)
 Y_base%1(L,G)
 GHGLG%1(Y,L,G)
+VYLAFR_nocc%1(LAFR,G)
 
 ;
 
@@ -41,4 +42,17 @@ $endif.by2
 
 
 $offtext
+
+$ontext
+$ifthen not %IAV%==NoCC
+
+$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_NoCC/%1/analysis/%Sy%.gdx'
+$load VYLAFR_nocc%1=VY_load
+
+VYLAFR_nocc(G)$VYLAFR_nocc%1("AFR",G)=VYLAFR_nocc%1("AFR",G);
+
+$endif
+$offtext
+
+
 

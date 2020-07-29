@@ -7,7 +7,7 @@ $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 
 set
 R	17 regions	/%Sr%/

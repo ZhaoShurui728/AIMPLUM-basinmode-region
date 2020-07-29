@@ -7,42 +7,21 @@ setwd(getwd())
 library(ggplot2)
 library(plyr)
 library(reshape2)
-library(RColorBrewer)
-library(maps)
 
 colnames <- c("Variable","X1","X2","Value")
 
 regionin <- c("USA","XE25","XER","TUR","XOC","CHN","IND","JPN","XSE","XSA","CAN","BRA","XLM","CIS","XME","XNF","XAF")
-regionin <-  c("BRA","XLM","XSE","XSA","IND","XAF")
-#regionin <-  c("IND")
-yearin <-  c("2100")
+#regionin <-  c("USA","CHN","IND","XAF","BRA","XSE")
+regionin <- c("USA","XE25","XER","TUR","XOC","CHN","IND","JPN","XSE","XSA","CAN","BRA","XLM","XME","XNF")
+regionin <-  c("JPN","USA","XOC","CAN","XME","XNF","WLD")
+regionin <-  c("CIS")
+yearin <-  c("2005")
 landin <-  c("FRS","PAS","GL","CL","PDR","WHT","GRO","C_B","OSD","OTH_A","CROP_FLW")
-landin <-  c("BIO")
 scein <- c("SSP2")
-scein <- c("SSP2_D3")
-
-clpin <- c("BaU","BaULP","C","CLP")
-#clpin <- c("CNALP","CNA")
+clpin <- c("BaU")
 iavin <- c("NoCC")
 
 pres <- 150
-
-MyThemeLine <- theme_grey() +
-  theme(
-    panel.border=element_rect(fill=NA),
-    axis.title=element_text(size=10,face="bold"),
-    axis.text.x = element_text(hjust=1,size = 10, angle = 0),
-    axis.line=element_line(colour="black"),
-    panel.background=element_rect(fill = "white"),
-#    panel.background=element_blank(),
-    #    panel.grid.major=element_line(linetype="dashed",colour="grey",size=0.5),
-    panel.grid.major=element_blank(),
-    strip.background=element_rect(fill="white", colour="white"),
-    strip.text.x = element_text(size=10, colour = "black", angle = 0,face="bold")
-  )
-
-mypalette <- brewer.pal(11, "YlOrBr")
-world <- map_data("world")
 
 for(m in (1:length(scein))){
 for(n in (1:length(clpin))){
@@ -123,7 +102,7 @@ load_filename <- paste('../../../output/txt/',scein[m],'_',clpin[n],'_',iavin[l]
 		} else if (landin[i]=="OTH_ARF"){
 			land_name <- paste("other crops rainfed")
 		} else if (landin[i]=="BIO"){
-			land_name <- paste("BIO")
+			land_name <- paste("bio crops")
 		} else if (landin[i]=="PRM_SEC"){
 			land_name <- paste("primary/secondary land")
 		} else if (landin[i]=="PRM_FRS"){
@@ -152,25 +131,17 @@ load_filename <- paste('../../../output/txt/',scein[m],'_',clpin[n],'_',iavin[l]
 			land_name <- paste("aaaaaaaaaa")
 		} 
 
-		title_name <- paste(scein[m],"",clpin[n],"",regionin[r],"",yearin[t],"",land_name)
+		title_name <- paste(scein[m]," ",regionin[r]," ",yearin[t]," ",land_name)
 
 		png(filename=out_filename, width=(maxh-minh)*size_adj*14+pres, height=(maxv-minv)*size_adj*14, res=pres)
 
-		plot1 <- ggplot() + geom_raster(data=pdata, aes(x=X2, y=X1, fill=Value)) +
-		geom_path(data=world,aes(x = long*2+360, y = lat*(-2)+180, group = group), colour = "black", size = 0.15) +
+		plot <- ggplot(subset(pdata), aes(x=X2, y=X1, fill=Value)) + geom_raster() +
 		ylim(maxv,minv)+ xlim(minh,maxh)+ ggtitle(title_name) + 
-		ylab("") + xlab("") +
 #		scale_fill_gradient(low="grey", high="blue")
 #		scale_fill_gradient2(low="white", mid="grey", high="blue", midpoint=0, limits=c(-1,maxvalue))
-#		scale_fill_gradientn(colours = c("white", "lightblue", "blue"),breaks=c(-1,0,maxvalue),limits=c(-0.00001,maxvalue))
+		scale_fill_gradientn(colours = c("white", "lightblue", "blue"),breaks=c(-1,0,maxvalue),limits=c(-0.00001,maxvalue))
 #		scale_fill_gradient2(low="red", mid="white", high="blue",midpoint=0,limits=c(-0.00001,maxvalue))
-		scale_fill_gradientn(colours = mypalette, name="area ratio", breaks=c(-0.1,0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0),limits=c(-0.00001,1.0)) +
-		MyThemeLine
-
-		plot2 <- plot1 +coord_equal()
-#		plot3 <- plot2+  facet_wrap(~Variable,ncol = 2)
-		print(plot2)
-
+		print(plot)
 		dev.off()
 		}
 	}

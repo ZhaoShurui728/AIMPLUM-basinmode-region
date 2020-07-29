@@ -1,0 +1,3 @@
+set SCE=SSP1pTECHTRADE
+set CLP=20W
+set IAV=BIOD

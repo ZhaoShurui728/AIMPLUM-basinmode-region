@@ -1,4 +1,4 @@
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 
 set
 R	17 regions	/

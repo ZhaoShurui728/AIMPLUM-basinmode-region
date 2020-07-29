@@ -1,7 +1,7 @@
 $Setglobal Sr JPN
 $Setglobal Sy 2005
 $Setglobal base_year 2005
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -68,6 +68,7 @@ $endif.sr
 *$endif.sy
 
 /
+LAFR(L)/AFR/
 
 MAP_RIJ(R,I,J)
 ;
@@ -89,6 +90,9 @@ Yield_IJ(L,I,J)
 Ybase_IJ(L,I,J)
 GHGLG(Y,L,G)
 GHG_IJ(L,I,J)
+VYLAFR_nocc(G)
+VYLAFRIJ_nocc(I,J)
+
 
 ;
 
@@ -99,8 +103,29 @@ $if %Sr%==WLD $include %prog_dir%/prog/gdx2txt_wld.gms
 $if not %Sr%==WLD $include %prog_dir%/prog/gdx2txt_region.gms
 
 
-VY_IJ(L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),VY_load(L,G));
+VY_IJ(L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J)),VY_load(L,G));
+
+$ontext
+$ifthen.afr not %IAV%==NoCC
+
+VYLAFRIJ_nocc(I,J)$SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_nocc(R,G))),sum(R,VYLAFR_nocc(R,G)))=SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_nocc(R,G))),sum(R,VYLAFR_nocc(R,G)));
+
+VY_IJ("AFR",I,J)$(VY_IJ("AFR",I,J)-VYLAFRIJ_nocc(I,J)>0)=VYLAFRIJ_nocc(I,J);
+VY_IJ("RES",I,J)$(VY_IJ("AFR",I,J)-VYLAFRIJ_nocc(I,J)>0)=VY_IJ("AFR",I,J)-VYLAFRIJ_nocc(I,J);
+
+$else.afr
+
+VY_IJ("AFR",I,J)$(VY_IJ("AFR",I,J))=VY_IJ("AFR",I,J);
+VY_IJ("AFR",I,J)=0;
+
+$endif.afr
+$offtext
+
+
 VY_IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM((I2,J2),VY_IJ(L,I2,J2)) AND (VY_IJ(L,I,J)=0))=-0.00001;
+
+
+
 
 file resultsall /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\%Sy%.txt/;
 resultsall.pc=6;
@@ -114,7 +139,7 @@ loop((L,I,J)$(VY_IJ(L,I,J)),
 
 $ifthen %Sy%==2100
 
-VY_1IJ(L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G));
+VY_1IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G)))=SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G));
 Dif_Y(L,I,J)$FLAG_IJ(I,J)=VY_IJ(L,I,J)-VY_1IJ(L,I,J);
 
 file resultsall2 /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\%Sy%dif.txt/;

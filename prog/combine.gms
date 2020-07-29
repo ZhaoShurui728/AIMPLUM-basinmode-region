@@ -1,6 +1,6 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -9,16 +9,16 @@ $setglobal biocurve off
 $setglobal supcuvout off
 $setglobal costcalc off
 $setglobal bioyieldcalc off
-$setglobal biodivcalc on
-$setglobal rlimapcalc off
-$setglobal restoration off
+$setglobal biodivcalc off
+$setglobal rlimapcalc on
+*$setglobal restoration off
 
 
 
-* Only for bending the curve
-*$include %prog_dir%/scenario/socioeconomic/%sce%.gms
-*$include %prog_dir%/scenario/climate_policy/%clp%.gms
-*$include %prog_dir%/scenario/IAV/%iav%.gms
+
+$include %prog_dir%/scenario/socioeconomic/%sce%.gms
+$include %prog_dir%/scenario/climate_policy/%clp%.gms
+$include %prog_dir%/scenario/IAV/%iav%.gms
 
 Set
 N /1*40000/
@@ -89,13 +89,13 @@ SP	/SMCP,SNLP,SLP/
 Scol	/quantity,price,yield,area/
 Sacol	/cge,base/
 L land use type /
-*PRM_SEC forest + grassland + pasture
-FRSGL   forest + grassland
+*PRM_SEC	forest + grassland + pasture
+FRSGL	forest + grassland
 FRS	forest
 GL
 HAV_FRS production forest
-AFR     afforestation
-PAS     grazing pasture
+AFR	afforestation
+PAS	grazing pasture
 PDRIR   rice irrigated
 WHTIR   wheat irrigated
 GROIR   other coarse grain irrigated
@@ -114,6 +114,7 @@ SL      built_up
 OL      ice or water
 CL	cropland
 LUC
+RES
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
@@ -140,6 +141,7 @@ SL	built_up
 OL	ice or water
 CL      cropland
 CEREAL	cereal
+RES
 /
 LFRSGLDM(LDM)/FRSGL,FRS,GL/
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
@@ -164,7 +166,7 @@ BIO     .       BIO
 CROP_FLW        .       CROP_FLW
 SL      .       SL
 OL      .       OL
-
+*CL      .       CL
 GL	.	GL
 FRS	.	FRS
 FRSGL	.	FRSGL
@@ -187,8 +189,9 @@ GRORF	.	CL
 OSDRF	.	CL
 C_BRF	.	CL
 OTH_ARF	.	CL
-BIO	.	CL
-CROP_FLW	.	CL
+*BIO	.	CL
+*CROP_FLW	.	CL
+RES	.	RES
 /
 LB              New or old bioenergy cropland/
 BION    new bioenergy cropland
@@ -209,7 +212,7 @@ MAP_GIJ(G,I,J)
 ;
 $gdxin '%prog_dir%/data/data_prep.gdx'
 $load MAP_GIJ
-;
+
 
 parameter
 Psol_stat(R,Y,ST,SP)                  Solution report
@@ -243,6 +246,9 @@ YIELDLDM_OUT(R,Y,LDM)	Agerage yield of land category L region R in year Y [tonne
 RR(G)	the range-rarity map
 BIIcoefG(L,G)	the Biodiversity Intactness Index (BII) coefficients
 sharepix(LULC_class,I,J)
+VYLAFR_baunocc(R,Y,G)	a fraction of land-use 'AFR' region R in year Y grid G
+VYLAFR_baubiod(R,Y,G)	a fraction of land-use 'AFR' region R in year Y grid G
+protectfracL(R,G,L)	Protected area fraction (0 to 1) of land category L in land area of the category L in each cell G
 ;
 
 ordy(Y) = ord(Y) + %base_year% -1;
@@ -353,6 +359,7 @@ PALDM(R,Y,LDM,"total")=sum(costitem,PALDM(R,Y,LDM,costitem));
 PATLDM(R,Y,LDM,costitem)=SUM(L$(MAP_LLDM(L,LDM)),PATL(R,Y,L,costitem));
 
 $endif
+
 *----Bioenergy supply curve SOATED ---*
 
 $ifthen %supcuvout%==on
@@ -397,15 +404,12 @@ $endif
 
 *--- Interporation of yield to fed back to AIM/CGE ---*
 parameter
-YIELDLDM_OUT(R,Y,LDM)
 YIELDLDM_ratio(R,Y,LDM)
 YIELDLDM_annual(R,Y,LDM)
 ;
 
-
-YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)>2010 and YIELDLDM_OUT(R,Y-10,LDM))=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-10,LDM))**(1/10);
-
-YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)=2010 and YIELDLDM_OUT(R,Y-5,LDM))=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-5,LDM))**(1/5);
+YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)>2010 and YIELDLDM_OUT(R,Y,LDM)>0 and YIELDLDM_OUT(R,Y-10,LDM)>0)=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-10,LDM))**(1/10);
+YIELDLDM_ratio(R,Y,LDM)$(ordy(Y)=2010 and YIELDLDM_OUT(R,Y,LDM) and YIELDLDM_OUT(R,Y-5,LDM))=(YIELDLDM_OUT(R,Y,LDM)/YIELDLDM_OUT(R,Y-5,LDM))**(1/5);
 
 YIELDLDM_annual(R,Y,LDM)$(2005<=ordy(Y) and ordy(Y)<2010)=YIELDLDM_OUT(R,"2005",LDM)*YIELDLDM_ratio(R,"2010",LDM)**(ordy(Y)-2005);
 YIELDLDM_annual(R,Y,LDM)$(2010<=ordy(Y) and ordy(Y)<2020)=YIELDLDM_OUT(R,"2010",LDM)*YIELDLDM_ratio(R,"2020",LDM)**(ordy(Y)-2010);
@@ -416,7 +420,178 @@ YIELDLDM_annual(R,Y,LDM)$(2050<=ordy(Y) and ordy(Y)<2060)=YIELDLDM_OUT(R,"2050",
 YIELDLDM_annual(R,Y,LDM)$(2060<=ordy(Y) and ordy(Y)<2070)=YIELDLDM_OUT(R,"2060",LDM)*YIELDLDM_ratio(R,"2070",LDM)**(ordy(Y)-2060);
 YIELDLDM_annual(R,Y,LDM)$(2070<=ordy(Y) and ordy(Y)<2080)=YIELDLDM_OUT(R,"2070",LDM)*YIELDLDM_ratio(R,"2080",LDM)**(ordy(Y)-2070);
 YIELDLDM_annual(R,Y,LDM)$(2080<=ordy(Y) and ordy(Y)<2090)=YIELDLDM_OUT(R,"2080",LDM)*YIELDLDM_ratio(R,"2090",LDM)**(ordy(Y)-2080);
-YIELDLDM_annual(R,Y,LDM)$(2090<=ordy(Y) and ordy(Y)<2100)=YIELDLDM_OUT(R,"2090",LDM)*YIELDLDM_ratio(R,"2100",LDM)**(ordy(Y)-2090);
+YIELDLDM_annual(R,Y,LDM)$(2090<=ordy(Y) and ordy(Y)<=2100)=YIELDLDM_OUT(R,"2090",LDM)*YIELDLDM_ratio(R,"2100",LDM)**(ordy(Y)-2090);
+
+*----Biodiversity value estimates  (WWF project) ----*
+$ifthen %biodivcalc%==on
+
+Parameter
+BVSLG(R,Y,L,G)	biodiversity stock [*.Mha]
+BVSL(R,Y,L)      biodiversity stock [*.Mha]
+BVSLDM(R,Y,LDM)      biodiversity stock [*.Mha]
+BVS(R,Y)		biodiversity stock [*.Mha]
+BII(R,Y)		regional average BII coefficient [*]
+BIIL(R,Y,L)		regional average BII coefficient [*]
+BIIArea(R,Y)		regional average BII coefficient [*]
+BIILArea(R,Y,L)
+BVArea(R,Y)		regional average for estimating BV [*]
+BVLArea(R,Y,L)		regional average for estimating BV [*]
+;
+
+BVSLG(R,Y,L,G)$(VYL(R,Y,L,G))=RR(G)*BIIcoefG(L,G)*VYL(R,Y,L,G)*GA(G)/10**3;
+
+BVS(R,Y)=sum((L,G)$(BVSLG(R,Y,L,G)),BVSLG(R,Y,L,G));
+BVSL(R,Y,L)=sum((G)$(BVSLG(R,Y,L,G)),BVSLG(R,Y,L,G));
+BVSLDM(R,Y,LDM)=SUM((G,L)$(MAP_LLDM(L,LDM) AND BVSLG(R,Y,L,G)),BVSLG(R,Y,L,G));
+
+BVArea(R,Y)$SUM((L,G)$(BIIcoefG(L,G)),VYL(R,Y,L,G)*GA(G))=SUM((L,G)$(BIIcoefG(L,G)),VYL(R,Y,L,G)*GA(G))/10**3;
+BVLArea(R,Y,L)$SUM((G)$(BIIcoefG(L,G)),VYL(R,Y,L,G)*GA(G))=SUM((G)$(BIIcoefG(L,G)),VYL(R,Y,L,G)*GA(G))/10**3;
+
+BIIArea(R,Y)$SUM((L,G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))=SUM((L,G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))/10**3;
+BIILArea(R,Y,L)$SUM((G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))=SUM((G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))/10**3;
+
+* Reginoal aggregation
+BVS(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BVS(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVS(R,Y));
+BVSL(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),BVSL(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BVSL(R,Y,L));
+BVSLDM(Ragg,Y,LDM)$(SUM(R$MAP_RAGG(R,Ragg),BVSLDM(R,Y,LDM)))=SUM(R$MAP_RAGG(R,Ragg),BVSLDM(R,Y,LDM));
+BVArea(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BVArea(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVArea(R,Y));
+BVLArea(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),BVLArea(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BVLArea(R,Y,L));
+BIIArea(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BIIArea(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BIIArea(R,Y));
+BIILArea(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),BIILArea(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BIILArea(R,Y,L));
+*-*-
+
+BII(R,Y)$(BIIArea(R,Y))=BVS(R,Y)/BIIArea(R,Y);
+BIIL(R,Y,L)$(BIILArea(R,Y,L))=BVSL(R,Y,L)/BIILArea(R,Y,L);
+
+$ontext
+parameter
+VYLclass(R,Y,LULC_class,G)
+VYLclassIJ(Y,LULC_class,I,J)
+BIIcoefGclass(LULC_class,G)	the Biodiversity Intactness Index coefficients
+BVLGclass(R,Y,LULC_class,G)	biodiversity stock [*.Mha]
+BVLclass(R,Y,LULC_class)      biodiversity stock [*.Mha]
+BVclass(R,Y)		biodiversity stock [*.Mha]
+;
+
+VYLclass(R,Y,LULC_class,G)$sum(L$(map_LLULC_class(L,LULC_class) and (not (LPAS(L) or sameas(L,"FRS") or sameas(L,"GL")))),VYL(R,Y,L,G))
+=sum(L$(map_LLULC_class(L,LULC_class) and (not (LPAS(L) or sameas(L,"FRS") or sameas(L,"GL")))),VYL(R,Y,L,G));
+
+*VYLclass(R,Y,LULC_class,G)$(sharepixG(LULC_class,G) * SUM(L$(map_LLULC_class(L,LULC_class) and (LPAS(L) or sameas(L,"FRS") or sameas(L,"GL"))),VYL(R,Y,L,G)))
+*=sharepixG(LULC_class,G) * SUM(L$(map_LLULC_class(L,LULC_class) and (LPAS(L) or sameas(L,"FRS") or sameas(L,"GL"))),VYL(R,Y,L,G));
+
+VYLclass(R,Y,"Managed pasture",G)=SUM(L$(LPAS(L) and is_pasture1ORrRangeland0G(G)=1),VYL(R,Y,L,G));
+VYLclass(R,Y,"Rangeland",G)=SUM(L$(LPAS(L) and is_pasture1ORrRangeland0G(G)=0),VYL(R,Y,L,G));
+VYLclass(R,Y,"Primary vegetation",G)=SUM(L$((sameas(L,"FRS") or sameas(L,"GL")) and is_PrimVeg1ORSecoVeg0G(G)=1),VYL(R,Y,L,G));
+VYLclass(R,Y,"Mature and Intermediate secondary vegetation",G)=SUM(L$((sameas(L,"FRS") or sameas(L,"GL")) and is_PrimVeg1ORSecoVeg0G(G)=0),VYL(R,Y,L,G));
+
+VYLclassIJ(Y,LULC_class,I,J)=SUM((G,R)$MAP_GIJ(G,I,J),VYLclass(R,Y,LULC_class,G));
+
+BIIcoefGclass(LULC_class,G)=
+BIIcoef0("forested",LULC_class,"value")$(f10_potforest(G) > 0.5)  +
+BIIcoef0("nonforested",LULC_class,"value")$(f10_potforest(G) <= 0.5);
+
+BVLGclass(R,Y,LULC_class,G)$(VYLclass(R,Y,LULC_class,G))=RR(G)*BIIcoefGclass(LULC_class,G)*VYLclass(R,Y,LULC_class,G)*GA(G)/10**3;
+
+BVLclass(R,Y,LULC_class)=sum((G)$(BVLGclass(R,Y,LULC_class,G)),BVLGclass(R,Y,LULC_class,G));
+
+BVclass(R,Y)=sum((LULC_class,G)$(BVLGclass(R,Y,LULC_class,G)),BVLGclass(R,Y,LULC_class,G));
+
+BVLclass(Ragg,Y,LULC_class)$(SUM(R$MAP_RAGG(R,Ragg),BVLclass(R,Y,LULC_class)))=SUM(R$MAP_RAGG(R,Ragg),BVLclass(R,Y,LULC_class));
+BVclass(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BVclass(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVclass(R,Y));
+
+$offtext
+$endif
+
+$ifthen %rlimapcalc%==on
+
+* Conversion to 8 land-use categories and estimation of land transaction
+set
+LU_RLI/
+$include %prog_dir%/individual/BendingTheCurve/LUclass_RLIestimator.set
+/
+MAP_LU_RLI(L,LU_RLI)/
+$include %prog_dir%/individual/BendingTheCurve/LUclass_RLIestimator.map
+/
+MAP_LU_RLItrans(LU_RLI,LU_RLI,LU_RLI)/
+$include %prog_dir%/individual/BendingTheCurve/LUclass_RLIestimator_trans.map
+/
+;
+alias(LU_RLI,LU_RLI2,LU_RLI3);
+
+parameter
+VYLIJ(Y,L,I,J)
+VYLAFRIJ_baunocc(Y,I,J)
+VYLAFRIJ_baubiod(Y,I,J)
+
+VYLRLI(Y,LU_RLI,I,J)
+VYLRLIfrs(Y,LU_RLI,I,J)
+VYLRLIafr(Y,LU_RLI,I,J)
+VYLRLIres(Y,LU_RLI,I,J)
+
+deltaVYL(Y,LU_RLI,I,J)
+
+VYLtrans(Y,LU_RLI,LU_RLI2,I,J)
+
+PRLIestimator(Y,LU_RLI,I,J)
+
+;
+
+VYLIJ(Y,L,I,J)$SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYL(R,Y,L,G))),sum(R,VYL(R,Y,L,G)))=SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYL(R,Y,L,G))),sum(R,VYL(R,Y,L,G)));
+
+VYLRLI(Y,LU_RLI,I,J)$sum((L)$((not sameas(L,"FRS")) and (not sameas(L,"AFR")) and MAP_LU_RLI(L,LU_RLI) and VYLIJ(Y,L,I,J)),VYLIJ(Y,L,I,J))
+=sum((L)$((not sameas(L,"FRS")) and (not sameas(L,"AFR")) and MAP_LU_RLI(L,LU_RLI) and VYLIJ(Y,L,I,J)),VYLIJ(Y,L,I,J));
+*VYLRLI(Y,LU_RLI,I,J)$sum((L)$(MAP_LU_RLI(L,LU_RLI) and VYLIJ(Y,L,I,J)),VYLIJ(Y,L,I,J))=sum((L)$(MAP_LU_RLI(L,LU_RLI) and VYLIJ(Y,L,I,J)),VYLIJ(Y,L,I,J));
+
+* FRS
+VYLRLIfrs(Y,"share.PriFor",I,J)$(VYLIJ(Y,"FRS",I,J) * sharepix("Primary vegetation",I,J)) = VYLIJ(Y,"FRS",I,J) * sharepix("Primary vegetation",I,J);
+VYLRLIfrs(Y,"share.MngFor",I,J)$(VYLIJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J) + VYLIJ(Y,"AFR",I,J))
+= VYLIJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J) + VYLIJ(Y,"AFR",I,J);
+
+$ontext
+$if %IAV%==NoCC VYLRLIafr(Y,"share.MngFor",I,J)$(VYLIJ(Y,"AFR",I,J))=VYLIJ(Y,"AFR",I,J);
+$if %IAV%==NoCC VYLRLIres(Y,"share.RstLnd",I,J)=0;
+$if not %IAV%==NoCC VYLRLIafr(Y,"share.MngFor",I,J)=0;
+$if not %IAV%==NoCC VYLRLIres(Y,"share.RstLnd",I,J)$(VYLIJ(Y,"AFR",I,J))=VYLIJ(Y,"AFR",I,J);
+$offtext
+
+$ontext
+$ifthen.afr not %IAV%==NoCC
+
+VYLAFRIJ_baunocc(Y,I,J)$SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baunocc(R,Y,G))),sum(R,VYLAFR_baunocc(R,Y,G)))=SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baunocc(R,Y,G))),sum(R,VYLAFR_baunocc(R,Y,G)));
+VYLAFRIJ_baubiod(Y,I,J)$SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baubiod(R,Y,G))),sum(R,VYLAFR_baubiod(R,Y,G)))=SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baubiod(R,Y,G))),sum(R,VYLAFR_baubiod(R,Y,G)));
+
+
+VYLRLIafr(Y,"share.MngFor",I,J)=VYLAFRIJ_baunocc(Y,I,J) + (VYLIJ(Y,"AFR",I,J) -VYLAFRIJ_baubiod(Y,I,J))$((VYLIJ(Y,"AFR",I,J) -VYLAFRIJ_baubiod(Y,I,J))>0);
+VYLRLIres(Y,"share.RstLnd",I,J)$(VYLAFRIJ_baubiod(Y,I,J)-VYLAFRIJ_baunocc(Y,I,J)>0)=VYLAFRIJ_baubiod(Y,I,J)-VYLAFRIJ_baunocc(Y,I,J);
+
+$else.afr
+
+VYLRLIafr(Y,"share.MngFor",I,J)$(VYLIJ(Y,"AFR",I,J))=VYLIJ(Y,"AFR",I,J);
+VYLRLIres(Y,"share.RstLnd",I,J)=0;
+
+$endif.afr
+$offtext
+
+
+PRLIestimator(Y,LU_RLI,I,J)$(VYLRLI(Y,LU_RLI,I,J)+VYLRLIfrs(Y,LU_RLI,I,J))=VYLRLI(Y,LU_RLI,I,J)+VYLRLIfrs(Y,LU_RLI,I,J);
+*PRLIestimator(Y,LU_RLI,I,J)$(VYLRLI(Y,LU_RLI,I,J))=VYLRLI(Y,LU_RLI,I,J);
+
+
+$ontext
+deltaVYL(Y,LU_RLI,I,J)$((not sameas(Y,"2010")) and abs(VYLRLI(Y,LU_RLI,I,J)-VYLRLI(Y-10,LU_RLI,I,J))>10**(-5)) = VYLRLI(Y,LU_RLI,I,J)-VYLRLI(Y-10,LU_RLI,I,J);
+deltaVYL(Y,LU_RLI,I,J)$(sameas(Y,"2010") and abs(VYLRLI(Y,LU_RLI,I,J)-VYLRLI(Y-5,LU_RLI,I,J))>10**(-5)) = VYLRLI(Y,LU_RLI,I,J)-VYLRLI(Y-5,LU_RLI,I,J);
+
+VYLtrans(Y,LU_RLI,LU_RLI2,I,J)$(deltaVYL(Y,LU_RLI,I,J)<0 and deltaVYL(Y,LU_RLI2,I,J)>0 and sum(LU_RLI3$(deltaVYL(Y,LU_RLI3,I,J)>0),deltaVYL(Y,LU_RLI3,I,J)))
+=(-1)*deltaVYL(Y,LU_RLI,I,J)*deltaVYL(Y,LU_RLI2,I,J)/sum(LU_RLI3$(deltaVYL(Y,LU_RLI3,I,J)>0),deltaVYL(Y,LU_RLI3,I,J));
+
+PRLIestimator(Y,LU_RLI3,I,J)$SUM((LU_RLI,LU_RLI2)$MAP_LU_RLItrans(LU_RLI,LU_RLI2,LU_RLI3),VYLtrans(Y,LU_RLI,LU_RLI2,I,J))
+=SUM((LU_RLI,LU_RLI2)$MAP_LU_RLItrans(LU_RLI,LU_RLI2,LU_RLI3),VYLtrans(Y,LU_RLI,LU_RLI2,I,J));
+$offtext
+
+PRLIestimator(Y,"Area.1000ha",I,J)$(SUM(LU_RLI3,PRLIestimator(Y,LU_RLI3,I,J))>0)=SUM((G)$MAP_GIJ(G,I,J), GA(G));
+
+$endif
+*-----------------------------------*
 
 execute_unload '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
 Psol_stat
@@ -428,18 +603,36 @@ GHGL
 $if %biocurve%==on PCBIO
 $if %biocurve%==on QCBIO
 $if %costcalc%==on PAL,PALDM,PATL,PATLDM
-*YIELD_BIO
+$if %bioyieldcalc%==on YIELD_BIO
 YIELDL_OUT
 YIELDLDM_OUT
 YIELDLDM_annual
 YIELDLDM_ratio
+
+$ifthen %biodivcalc%==on
+BII,BIIL,BIIArea,BVS,BVSL,BVSLDM,BVArea,BVLArea,BIILArea
+$if not %IAV%==NoCC protectfracL
+*BIIcoefG
+*f10_potforest
+*BIIcoef0
+*map_LLULC_class
+*BIIcoefGclass
+*BVLGclass
+*BVLclass
+*BVclass
+$endif
 ;
+
 $ifthen %rlimapcalc%==on
 
 execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%.gdx'
 PRLIestimator
+*VYLIJ
 
-*execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%_check.gdx'
+*execute_unload '../output/gdx/landmap/sharepix.gdx'
+*sharepix
+*;
+
 *VYLclassIJ
 *deltaVYL
 *VYLtrans

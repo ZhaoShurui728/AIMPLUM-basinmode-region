@@ -1,0 +1,29 @@
+* Bending The Curve Scenario map
+* AIM scenario name			1st priority for the paper (done by all models before 22Dec2017)
+	SSP2_BaU_NoCC	.	RCPref_SSP2_NOBIOD
+	SSP2_BaU_BIOD	.	RCPref_SSP2_BIOD
+	SSP2_20W_SPA1_NoCC	.	RCP1p9_SSP2_NOBIOD
+	SSP2_20W_SPA1_BIOD	.	RCP1p9_SSP2_BIOD
+	SSP1p_BaU_NoCC	.	RCPref_SSP1p_NOBIOD
+	SSP1p_BaU_BIOD	.	RCPref_SSP1p_BIOD
+	SSP1p_20W_SPA1_BIOE	.	RCP1p9p_SSP1p_NOBIOD
+	SSP1p_20W_SPA1_BI3G	.	RCP1p9p_SSP1p_BIOD
+*		.	2nd priority for the paper (done by all models for 10Jan2018)
+*		.	Decomposing the wedges
+	SSP1DEM_BaU_BIOD	.	RCPref_SSP1pDEM_BIOD
+	SSP1TECHTRADE_BaU_BIOD	.	RCPref_SSP1pTECHTRADE_BIOD
+	SSP1DEM_20W_SPA1_BIOD	.	RCP1p9_SSP1pDEM_BIOD
+	SSP1TECHTRADE_20W_SPA1_BIOD	.	RCP1p9_SSP1pTECHTRADE_BIOD
+	SSP2_20W_SPA1_BI3G	.	RCP1p9p_SSP2_BIOD
+
+*		.	Other options beyond timeline for the paper
+*		.	Activating Wild Options
+*		.	RCPref_WILDSSP2_BIOD
+*		.	RCP1p9_WILDSSP2_BIOD
+*		.	RCPref_WILDSSP1p_BIOD
+*		.	RCP1p9p_WILDSSP1p_BIOD
+*		.	Looking at more extended scenarios for biodiversity preservation (beyond what biodiversity models would quantify)
+*		.	RCPref_SSP2_NATURE
+*		.	RCP1p9_SSP2_NATURE
+*		.	RCPref_SSP1p_NATURE
+*		.	RCP1p9_SSP1p_NATURE

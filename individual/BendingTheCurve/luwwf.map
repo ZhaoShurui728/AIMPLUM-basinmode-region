@@ -1,0 +1,12 @@
+*	WWFcode		AIMcode
+	cropland_other	.	CL
+	cropland_other	.	CROP_FLW
+	cropland_bioenergySRP	.	BIO
+	grassland	.	PAS
+	forest_unmanaged 	.	PRMFRS
+	forest_managed	.	MNGFRS
+	forest_managed	.	AFR
+	restored	.	RES
+	other	.	GL
+	other	.	OL
+	built_up_areas	.	SL

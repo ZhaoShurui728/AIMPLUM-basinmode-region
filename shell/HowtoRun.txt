@@ -1,18 +1,17 @@
-This read me is for run of more than one scenario in  parallel.
-all_execution3_sec.bat
-merge.bat
 
-####How to output biosupply curve
-As a post-process, run only-bioland mode.
+1) all_execution3_sec.bat --> LandUseModel_mcp.gms & Disagg_FRSGL.gms
+2) gdx2csv.bat
+3) csv2nc.bat
 
-1) bioland.gms & combine.gms
-'supcuvout' should on!
 
-2) Run all_execution3_sec.bat using  LandUseModel3_biotest.bat
-Ourput parameter (PBIOSUP)
+図示化の時
+gdx2txt.bat
 
-3) merge.bat
-Merge bio output files.
 
-4) combine.bat
-Soat using PBIOSUP
+
+1シナリオを地域でパラレルにして回すとき
+all_execution.bat --> LandUseModel_mcp.gms
+all_execution2.bat --> LandUseModel_mcp2.gms
+
+LUMIP version
+1) LandUseModel.bat --> LandUseModel_mcp.gms & Disagg_FRSGL.gms

@@ -1,6 +1,6 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC

@@ -1,0 +1,22 @@
+* For options 4 and 5
+*	lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed" ;
+*	WWFcode		AIMcode
+	1	.	CL
+	1	.	CROP_FLW
+	2	.	BIO
+	3	.	PAS
+*	4 	.	FRS
+	4 	.	PRMFRS
+	5	.	MNGFRS
+	5	.	AFR
+	6	.	RES
+	7	.	GL
+*	7	.	OL
+	8	.	SL
+	9	.	ABD_CL
+	9	.	ABD_CROP_FLW
+	10	.	ABD_BIO
+	11	.	ABD_PAS
+	12	.	ABD_MNGFRS
+	12	.	ABD_AFR
+

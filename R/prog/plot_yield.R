@@ -16,7 +16,7 @@ regionin <-  c("USA","CHN","IND","XAF","BRA","XSE")
 regionin <-  c("XAF")
 yearin <-  c("2005")
 #landin <-  c("GROIR","GRORF","WHTIR","WHTRF","OTH_AIR","OTH_ARF")
-##landin <-  c("FRS","PAS","GL","CL","PDR","WHT","GRO","C_B","OSD","OTH_A","BIO")
+#landin <-  c("FRS","PAS","GL","CL","PDR","WHT","GRO","C_B","OSD","OTH_A","BIO")
 pres <- 150
 scein <- c("SSP2")
 clpin <- c("BaU")
