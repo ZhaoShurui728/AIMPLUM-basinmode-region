@@ -61,8 +61,7 @@ $gdxin '%prog_dir%/../output/gdx/base/%1/analysis/%base_year%.gdx'
 $load CSB%1=CSB
 *$load VY_load%1=VY_load
 
-Area("%1",Y,L)$Area%1(Y,L)=Area%1(Y,L) /10**3;
-
+Area("%1",Y,L)$Area%1(Y,L)=Area%1(Y,L);
 CSB("%1")$(CSB%1)=CSB%1;
 
 YIELD_load("%1",L,G)$YIELD%1(L,G)=YIELD%1(L,G);

@@ -7,11 +7,10 @@ mkdir ..\..\output\gdx\base
 
 rem-----------------------------
 rem call settings\default.bat
-call settings\%1
+call settings\%1.bat
 
 set COUNTRY=JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF
-set COUNTRY=JPN
-
+set COUNTRY=BRA
 rem-----------------------------
 
 cd ..\..\exe
@@ -37,9 +36,8 @@ for %%A in (%COUNTRY%) do (
 for %%B in (%YEAR%) do (
 
 for %%A in (%COUNTRY%) do (
-#	biocurve=off: biocrop is allocated. biocurve=on: biocrop is output as a supply curve.
 	gams ..\AIMPLUM\prog\LandUseModel_mcp.gms --Sr=%%A --Sy=%%B --SCE=%%C --CLP=%%D --IAV=%%E --parallel=on --biocurve=off  MaxProcDir=100
-pause
+#pause
 )
 #pause
 #	activate this if biocurve=on
@@ -48,7 +46,7 @@ pause
 )
 
 )))
-#pause
+rem pause
 
 # 3) Disaggregation of FRS and grassland
 
@@ -62,7 +60,7 @@ for %%E in (%IAV%) do (
 for %%A in (%COUNTRY%) do (
 for %%B in (%YEAR%) do (
 	gams ..\AIMPLUM\prog\Disagg_FRSGL.gms --Sr=%%A --Sy=%%B --SCE=%%C --CLP=%%D --IAV=%%E --biocurve=off MaxProcDir=100
-#pause
+rem pause
 )))))
 #pause
 

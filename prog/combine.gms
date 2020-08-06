@@ -10,7 +10,7 @@ $setglobal supcuvout off
 $setglobal costcalc off
 $setglobal bioyieldcalc off
 $setglobal biodivcalc off
-$setglobal rlimapcalc on
+$setglobal rlimapcalc off
 *$setglobal restoration off
 
 
@@ -87,7 +87,7 @@ Ysupcuv(Y) year	/
 ST	/SSOLVE,SMODEL/
 SP	/SMCP,SNLP,SLP/
 Scol	/quantity,price,yield,area/
-Sacol	/cge,base/
+Sacol	/cge,base,estimates/
 L land use type /
 *PRM_SEC	forest + grassland + pasture
 FRSGL	forest + grassland
@@ -288,6 +288,8 @@ Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area
 AreaLDM(R,Y,LDM)=SUM(L$MAP_LLDM(L,LDM),Area(R,Y,L));
 
 Area_base(Ragg,L,Sacol)$(SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol)))=SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol));
+
+Area_base(R,L,"estimates")=Area(R,"%base_year%",L);
 
 GHGL(Ragg,Y,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L));
 
@@ -502,7 +504,7 @@ BVclass(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BVclass(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BV
 $offtext
 $endif
 
-$ifthen %rlimapcalc%==on
+$ifthen.rlimap %rlimapcalc%==on
 
 * Conversion to 8 land-use categories and estimation of land transaction
 set
@@ -520,9 +522,6 @@ alias(LU_RLI,LU_RLI2,LU_RLI3);
 
 parameter
 VYLIJ(Y,L,I,J)
-VYLAFRIJ_baunocc(Y,I,J)
-VYLAFRIJ_baubiod(Y,I,J)
-
 VYLRLI(Y,LU_RLI,I,J)
 VYLRLIfrs(Y,LU_RLI,I,J)
 VYLRLIafr(Y,LU_RLI,I,J)
@@ -554,24 +553,6 @@ $if not %IAV%==NoCC VYLRLIafr(Y,"share.MngFor",I,J)=0;
 $if not %IAV%==NoCC VYLRLIres(Y,"share.RstLnd",I,J)$(VYLIJ(Y,"AFR",I,J))=VYLIJ(Y,"AFR",I,J);
 $offtext
 
-$ontext
-$ifthen.afr not %IAV%==NoCC
-
-VYLAFRIJ_baunocc(Y,I,J)$SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baunocc(R,Y,G))),sum(R,VYLAFR_baunocc(R,Y,G)))=SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baunocc(R,Y,G))),sum(R,VYLAFR_baunocc(R,Y,G)));
-VYLAFRIJ_baubiod(Y,I,J)$SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baubiod(R,Y,G))),sum(R,VYLAFR_baubiod(R,Y,G)))=SUM((G)$(MAP_GIJ(G,I,J) and sum(R,VYLAFR_baubiod(R,Y,G))),sum(R,VYLAFR_baubiod(R,Y,G)));
-
-
-VYLRLIafr(Y,"share.MngFor",I,J)=VYLAFRIJ_baunocc(Y,I,J) + (VYLIJ(Y,"AFR",I,J) -VYLAFRIJ_baubiod(Y,I,J))$((VYLIJ(Y,"AFR",I,J) -VYLAFRIJ_baubiod(Y,I,J))>0);
-VYLRLIres(Y,"share.RstLnd",I,J)$(VYLAFRIJ_baubiod(Y,I,J)-VYLAFRIJ_baunocc(Y,I,J)>0)=VYLAFRIJ_baubiod(Y,I,J)-VYLAFRIJ_baunocc(Y,I,J);
-
-$else.afr
-
-VYLRLIafr(Y,"share.MngFor",I,J)$(VYLIJ(Y,"AFR",I,J))=VYLIJ(Y,"AFR",I,J);
-VYLRLIres(Y,"share.RstLnd",I,J)=0;
-
-$endif.afr
-$offtext
-
 
 PRLIestimator(Y,LU_RLI,I,J)$(VYLRLI(Y,LU_RLI,I,J)+VYLRLIfrs(Y,LU_RLI,I,J))=VYLRLI(Y,LU_RLI,I,J)+VYLRLIfrs(Y,LU_RLI,I,J);
 *PRLIestimator(Y,LU_RLI,I,J)$(VYLRLI(Y,LU_RLI,I,J))=VYLRLI(Y,LU_RLI,I,J);
@@ -590,7 +571,10 @@ $offtext
 
 PRLIestimator(Y,"Area.1000ha",I,J)$(SUM(LU_RLI3,PRLIestimator(Y,LU_RLI3,I,J))>0)=SUM((G)$MAP_GIJ(G,I,J), GA(G));
 
-$endif
+execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%.gdx'
+PRLIestimator
+
+$endif.rlimap
 *-----------------------------------*
 
 execute_unload '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
@@ -623,19 +607,8 @@ $if not %IAV%==NoCC protectfracL
 $endif
 ;
 
-$ifthen %rlimapcalc%==on
-
-execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%.gdx'
-PRLIestimator
-*VYLIJ
 
 *execute_unload '../output/gdx/landmap/sharepix.gdx'
 *sharepix
 *;
-
-*VYLclassIJ
-*deltaVYL
-*VYLtrans
-*;
-$endif
 

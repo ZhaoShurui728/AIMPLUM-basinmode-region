@@ -10,7 +10,8 @@ $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal parallel on
-$setglobal supcuv on
+$setglobal supcuv off
+* if biocurve=off, biocrop is allocated.If biocurve=on, biocrop is output as a supply curve.
 $setglobal biocurve off
 $setglobal Ystep0 10
 $setglobal carbonprice on
@@ -47,7 +48,6 @@ $include %prog_dir%/inc_prog/second_%Ystep0%year.gms
 $include %prog_dir%/scenario/socioeconomic/%sce%.gms
 $include %prog_dir%/scenario/climate_policy/%clp%.gms
 $include %prog_dir%/scenario/IAV/%iav%.gms
-
 
 Set
 R	17 regions	/
@@ -387,7 +387,6 @@ EQYPROTECTL
 EQFRSPRT
 EQYPMAX
 EQYNMAX
-
 /
 
 ;
@@ -659,6 +658,7 @@ $else
 
 $	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 $	load protectfrac
+
 
 $endif
 
@@ -1218,15 +1218,20 @@ $elseif %Sr%==XER
 $if %CLP%_%IAV%==20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2070 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2070))=0;
 $elseif %Sr%==XOC
 $if %CLP%_%IAV%==20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2060 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2060))=0;
-
 $if %CLP%_%IAV%==20Wp_NoCC Planduse("%Sy%","GRAZING")$(%Sy%=2100)=Planduse("%Sy%","GRAZING")*0.99;
 $elseif %Sr%==XE25
 $if %CLP%==20W  VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
 $if %SCENAME%_%CLP%_%IAV%==SSP1pTECHTRADE_20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
 $if %SCENAME%_%CLP%_%IAV%==SSP1p_20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
 
+$elseif %Sr%==BRA
+$if %CLP%==600C_CACNup200 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2060 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2060))=0;
+$if %CLP%==600C_CACNup200 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2060 AND CS(G)>=CSB*3)=0;
+
 $else
+
 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND CS(G)>=CSB)=0;
+
 $endif
 
 *$elseif %SCE%_%CLP%_%IAV%==SSP2_20W_SPA1p_BIOD2
@@ -1276,10 +1281,11 @@ $endif.mcp
 
 ********
 ********
-*YPNMAXCL=0.08;
-*FOR(ite_his=9 to maxite,
+*YPNMAXCL=0.10;
+*FOR(ite_his=11 to maxite,
 ********
 ********
+
 FOR(ite_his=2 to maxite,
 IF((NOT (Psol_stat("SMODEL","SLP")=1 AND Psol_stat("SSOLVE","SLP")=1)),
 
@@ -1291,6 +1297,7 @@ IF((NOT (Psol_stat("SMODEL","SLP")=1 AND Psol_stat("SSOLVE","SLP")=1)),
 
 
 $if %parallel%==off execute_unload '../output/temp2.gdx'
+
 
 parameter
 VYL(L,G)	output of VY
@@ -1305,6 +1312,8 @@ VYPL(L,G)$(VY.L(L,G))=VYP.L(L,G);
 
 
 VYL(L,G)$SUM(L2$MAP_Lagg(L2,L),VYL(L2,G))=SUM(L2$MAP_Lagg(L2,L),VYL(L2,G));
+
+frsprotect_check$(frsprotectarea)=SUM(G$(CS(G)>CSB),VY.L("PRM_SEC",G)*GA(G));
 
 *-------- Pasture --------*
 
@@ -1340,176 +1349,17 @@ $load protect_wopas
 
 $endif
 
-frsprotect_check$(frsprotectarea)=SUM(G$(CS(G)>CSB),VY.L("PRM_SEC",G)*GA(G));
+*------ Pasture -----------*
 
-*---Pasture---
-parameter
-Planduse_pas
-PASarea
-ADD_PAS
-SF_PAS
-SF_PASG(G)
-Y_NPROTPASG(G)	fraction  non-protected area = PRM_SEC - protected area - pasture
-Y_NPROTPAS	fraction  non-protected area = PRM_SEC - protected area - pasture (for check)
-AREA_NPAS	Area of potentail grassland
-SF_PAS2
-PNBPAS(G)
-Y_NPROT(G)	non-protected area = PRM_SEC - protected area
-R_ADD_PAS
-PASarea_NPROT	pasture area in the grid which has potential area for pasture
-SMALL/1.0E-10/
-FLAG_YIELD(G)	flag of grid where potential crop yields exist.
+$include %prog_dir%/prog/pasture.gms
 
-;
+*------ Crop fallow -----------*
 
-* STEP1
-
-SF_PAS=1;
-FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
-
-Planduse_pas=Planduse("%Sy%","GRAZING");
-Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-protect_wopas(G)>0)=VYL("PRM_SEC",G)-protect_wopas(G);
-*Šî€”N‚ÅPAS‚Ì‚ ‚éƒZƒ‹‚Å‚¢‚¯‚é‚Æ‚±‚ë‚Ü‚Å‚¢‚ê‚é
-VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)>=Y_pre("PAS",G))=Y_pre("PAS",G);
-VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)<Y_pre("PAS",G))=Y_NPROT(G);
-Y_NPROTPASG(G)$(Y_NPROT(G) and Y_NPROT(G) - VYL("PAS",G)>SMALL)=Y_NPROT(G) - VYL("PAS",G);
-PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
-PASarea=SUM(G$VYL("PAS",G),VYL("PAS",G)*GA(G));
-
-ADD_PAS=Planduse_pas-PASarea;
-
-* if pasture area decreases from previous year, pasture fraction is decreased at the same ratio.
-IF(ADD_PAS<0,
-VYL("PAS",G)$(Y_pre("PAS",G) AND PASarea)=VYL("PAS",G)*Planduse_pas/PASarea;
-)
-
-scalar iter;
-
-While(ADD_PAS>0 AND SF_PAS>0,
-Y_NPROTPASG(G)=0;
-SF_PASG(G)=0;
-SF_PAS=0;
-R_ADD_PAS=0;
-
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
-
-R_ADD_PAS$PASarea_NPROT=ADD_PAS/PASarea_NPROT;
-
-SF_PASG(G)$(Y_NPROTPASG(G) and VYL("PAS",G))=Y_NPROTPASG(G)/VYL("PAS",G);
-
-SF_PAS=min(R_ADD_PAS,smin(G$(SF_PASG(G)),SF_PASG(G)));
-
-VYL("PAS",G)$(VYL("PAS",G) AND SF_PASG(G)) =VYL("PAS",G)*(1+SF_PAS);
-
-Y_NPROTPASG(G)=0;
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
-
-PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
-
-PASarea=SUM(G$(VYL("PAS",G)),VYL("PAS",G)*GA(G));
-
-ADD_PAS=Planduse_pas-PASarea;
-
-*display ADD_PAS, SF_PAS;
-);
-*execute_unload '../output/temp3_step1.gdx'
-
-scalar
-BacktoStep1	/0/
-;
-
-* STEP2 neighborhood cell
-*For(iter=1 to 10,
-While ((ADD_PAS>0 AND BacktoStep1=0),
-PNBPAS(G)=0;
-AREA_NPAS=0;
-SF_PAS2=0;
-
-* The pasture expands to cell neighbor in order.
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G))=SUM(G2$(VYL("PAS",G2) AND MAP_WG(G,G2)),1);
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G) AND SUM(G2$PNBPAS(G2),PNBPAS(G2))=0)=SUM(G4$(MAP_WG(G,G4)),SUM(G3$(VYL("PAS",G3) AND MAP_WG(G4,G3)),1));
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G) AND SUM(G2$PNBPAS(G2),PNBPAS(G2))=0)=SUM(G5$(MAP_WG(G,G5)),SUM(G4$(MAP_WG(G5,G4)),SUM(G3$(VYL("PAS",G3) AND MAP_WG(G4,G3)),1)));
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G) AND SUM(G2$PNBPAS(G2),PNBPAS(G2))=0)=SUM(G6$(MAP_WG(G,G6)),SUM(G5$(MAP_WG(G6,G5)),SUM(G4$(MAP_WG(G5,G4)),SUM(G3$(VYL("PAS",G3) AND MAP_WG(G4,G3)),1))));
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G) AND SUM(G2$PNBPAS(G2),PNBPAS(G2))=0)=SUM(G7$(MAP_WG(G,G7)),SUM(G6$(MAP_WG(G7,G6)),SUM(G5$(MAP_WG(G6,G5)),SUM(G4$(MAP_WG(G5,G4)),SUM(G3$(VYL("PAS",G3) AND MAP_WG(G4,G3)),1)))));
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G) AND SUM(G2$PNBPAS(G2),PNBPAS(G2))=0)=SUM(G8$(MAP_WG(G,G8)),SUM(G7$(MAP_WG(G8,G7)),SUM(G6$(MAP_WG(G7,G6)),SUM(G5$(MAP_WG(G6,G5)),SUM(G4$(MAP_WG(G5,G4)),SUM(G3$(VYL("PAS",G3) AND MAP_WG(G4,G3)),1))))));
-* if theres is no potential area in neighbor cells, the pasture expands to cell where cropland or settlements exist.
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G) AND SUM(G2$PNBPAS(G2),PNBPAS(G2))=0 AND (VYL("SL",G) OR VYL("CL",G)))=1;
-
-
-AREA_NPAS=SUM(G$(PNBPAS(G)),Y_NPROT(G)*GA(G));
-
-SF_PAS2$(AREA_NPAS)= ADD_PAS/AREA_NPAS;
-
-VYL("PAS",G)$(SF_PAS2>0 AND SF_PAS2<=1 AND PNBPAS(G))=Y_NPROT(G)*SF_PAS2;
-VYL("PAS",G)$(SF_PAS2>1 AND PNBPAS(G))=Y_NPROT(G);
-
-PASarea=SUM(G$(VYL("PAS",G)),VYL("PAS",G)*GA(G));
-ADD_PAS=Planduse_pas-PASarea;
-
-Y_NPROTPAS=SUM(G$(VYL("PRM_SEC",G)-VYL("PAS",G)-protect_wopas(G)>SMALL),VYL("PRM_SEC",G)-VYL("PAS",G)-protect_wopas(G));
-
-* if there is no area left for pasture, pasture expands to protected area with low carbon density.
-IF((Y_NPROTPAS=0 and ADD_PAS>0),
-BacktoStep1=1;
-Y_NPROT(G)$(((CS(G) AND CS(G)<CSB) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)>0)=VYL("PRM_SEC",G);
-
-$ontext
-PNBPAS(G)$((NOT VYL("PAS",G)) AND Y_NPROT(G))=1;
-AREA_NPAS=SUM(G$(PNBPAS(G)),Y_NPROT(G)*GA(G));
-IF((AREA_NPAS=0),
-* if there is still no area left, pasture expands to protected area with high carbon density.
-Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)>0)=VYL("PRM_SEC",G);
-);
-$offtext
-);
-
-*display PNBPAS,AREA_NPAS,SF_PAS2,PASarea,ADD_PAS,Y_NPROTPAS;
-
-);
-
-
-
-SF_PAS=1;
-*###STEP1
-While(ADD_PAS>0 AND SF_PAS>0,
-Y_NPROTPASG(G)=0;
-SF_PASG(G)=0;
-SF_PAS=0;
-R_ADD_PAS=0;
-
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
-
-R_ADD_PAS$PASarea_NPROT=ADD_PAS/PASarea_NPROT;
-
-SF_PASG(G)$(Y_NPROTPASG(G) and VYL("PAS",G))=Y_NPROTPASG(G)/VYL("PAS",G);
-
-SF_PAS=min(R_ADD_PAS,smin(G$(SF_PASG(G)),SF_PASG(G)));
-
-VYL("PAS",G)$(VYL("PAS",G) AND SF_PASG(G)) =VYL("PAS",G)*(1+SF_PAS);
-
-Y_NPROTPASG(G)=0;
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
-
-PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
-
-PASarea=SUM(G$(VYL("PAS",G)),VYL("PAS",G)*GA(G));
-
-ADD_PAS=Planduse_pas-PASarea;
-
-*display ADD_PAS, SF_PAS;
-);
-
-
-VYL("FRSGL",G)$(VYL("PRM_SEC",G)-VYL("PAS",G)>=0)=VYL("PRM_SEC",G)-VYL("PAS",G);
-
-
-*-----------  Crop fallow -----------*
-
-$include %prog_dir%/prog/disagg_crop_flw.gms
+$include %prog_dir%/prog/crop_fallow.gms
 
 
 $ontext
-*-------Bioenergy potential curve ---*
+*------- Bioenergy potential curve -----*
 set
 LB              New or old bioenergy cropland   /BION,BIOO/;
 parameter
@@ -1569,7 +1419,7 @@ $endif
 
 VYLY("%Sy%",L,G)$(VYL(L,G))=VYL(L,G);
 
-delta_VYLY(Y,L,G)$(ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G)*VYLY(Y-Ystep,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
+delta_VYLY(Y,L,G)$(ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
 
 
 *--------GHG emissions --------*
@@ -1626,7 +1476,14 @@ YIELDLDM_OUT(LDM)$(LDMCROPA(LDM) AND SUM(L$MAP_LLDM(L,LDM),SUM(G$(YIELD(L,G)*VYL
 $if not %Sy%==%base_year% VYL(L,G)=round(VYL(L,G),6);
 $if not %Sy%==%base_year% VZL(L,G)=round(VZL(L,G),6);
 
+*------- Data check ----------*
+parameter
+data_check(G,L)
+;
+data_check(G,L)$(VYL(L,G)<0)=1;
+
 *------- Data output ----------*
+
 $if %parallel%==off execute_unload '../output/temp2.gdx'
 
 $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%.gdx'
@@ -1650,15 +1507,17 @@ GHGL
 VYLY
 delta_VYLY
 $if %Sy%==%second_year% protectfrac
+$if %Sy%==%second_year% protectfracL
 $if %Sy%==%second_year% protect_wopas
-protectland
-degradedland
+$if %Sy%==%second_year% protectland
+$if %Sy%==%second_year% degradedland
 *$if %supcuv%==on PBIO,RAREA_BIOP
 frsprotect_check,frsprotectarea
 pa_bio pa_road pa_emit pa_lab pa_irri pc MF
 VYPL=VYP_load
 YIELDL_OUT
 YIELDLDM_OUT
+data_check
 ;
 
 

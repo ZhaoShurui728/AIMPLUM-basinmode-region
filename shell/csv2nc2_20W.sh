@@ -1,19 +1,27 @@
-cp ../data/ncheader_all_lumip.txt ../output/csv/ncheader_all_lumip.txt
-cp ../data/ncheader_all.txt ../output/csv/ncheader_all.txt
-cp ../data/final.txt ../output/csv/final.txt
-cp ../data/ncheader_all_yield.txt ../output/csv/ncheader_all_yield.txt
-cp ../data/ncheader_all_aimssprcplu_landcategory.txt ../output/csv/ncheader_all_aimssprcplu_landcategory.txt
-cp ../data/ncheader_all_wwf.txt ../output/csv/ncheader_all_wwf.txt
-cp ../data/ncheader_all_wwf2.txt ../output/csv/ncheader_all_wwf2.txt
-cp ../data/ncheader_all_wwf_landcategory.txt ../output/csv/ncheader_all_wwf_landcategory.txt
-cp ../data/ncheader_all_wwf_landcategory2.txt ../output/csv/ncheader_all_wwf_landcategory2.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_lumip.txt ../output/csv/ncheader_all_lumip.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all.txt ../output/csv/ncheader_all.txt
+cp ../AIMPLUM/data/ncheader/final.txt ../output/csv/final.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_yield.txt ../output/csv/ncheader_all_yield.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_aimssprcplu_landcategory.txt ../output/csv/ncheader_all_aimssprcplu_landcategory.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_wwf.txt ../output/csv/ncheader_all_wwf.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_wwf2.txt ../output/csv/ncheader_all_wwf2.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_wwf_landcategory.txt ../output/csv/ncheader_all_wwf_landcategory.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_wwf_landcategory2.txt ../output/csv/ncheader_all_wwf_landcategory2.txt
+cp ../AIMPLUM/data/ncheader/ncheader_all_wwf_landcategoryall.txt ../output/csv/ncheader_all_wwf_landcategoryall.txt
 
-for ncfilename in SSP1-Baseline SSP1-45 SSP1-34 SSP1-26 SSP1-19 SSP2-Baseline SSP2-60 SSP2-45 SSP2-34 SSP2-26 SSP2-19 SSP3-Baseline SSP3-60 SSP3-45 SSP3-34 SSP4-Baseline SSP4-45 SSP4-34 SSP4-26 SSP5-Baseline SSP5-60 SSP5-45 SSP5-34 SSP5-26
-#for ncfilename in SSP2-Baseline
-#for ncfilename in SSP2-Baseline SSP2-60 SSP2-45 SSP2-34 SSP2-26 SSP2-19 SSP1-Baseline SSP1-45
+projectname="2-2002";
+
+#for ncfilename in SSP1-Baseline SSP1-45 SSP1-34 SSP1-26 SSP1-19 SSP2-Baseline SSP2-60 SSP2-45 SSP2-34 SSP2-26 SSP2-19 SSP3-Baseline SSP3-60 SSP3-45 SSP3-34 SSP4-Baseline SSP4-45 SSP4-34 SSP4-26 SSP5-Baseline SSP5-60 SSP5-45 SSP5-34 SSP5-26
+for ncfilename in S1_Baseline S1_Mitigation_NoAff S1_Mitigation_NoBio S1_Mitigation_Full
+#for ncfilename in S1_Baseline
 do
-for date in v.1.0.1
+for date in 200804
 do
+
+	if [ "${ncfilename}" = "S1_Baseline" ] ; then sce="SSP2"; clp="BaU"; iav="NoCC"; fi
+	if [ "${ncfilename}" = "S1_Mitigation_NoAff" ] ; then sce="SSP2NoAff"; clp="800Cf_CACNup200"; iav="NoCC"; fi
+	if [ "${ncfilename}" = "S1_Mitigation_NoBio" ] ; then sce="SSP2NoBio"; clp="600C_CACNup200"; iav="NoCC"; fi
+	if [ "${ncfilename}" = "S1_Mitigation_Full" ] ; then sce="SSP2"; clp="800Cf_CACNup200"; iav="NoCC"; fi
 
 #	if [ "${ncfilename}" = "RCPref_SSP2_NOBIOD" ] ; then sce="SSP2"; clp="BaU"; iav="NoCC"; fi
 
@@ -44,16 +52,17 @@ do
 
 echo ${sce}_${clp}_${iav}
 
+# Lumip
 #cat ../output/csv/ncheader_all_lumip.txt ../output/csv/${sce}_${clp}_${iav}/c3ann.csv ../output/csv/${sce}_${clp}_${iav}/c3nfx.csv ../output/csv/${sce}_${clp}_${iav}/c4ann.csv ../output/csv/${sce}_${clp}_${iav}/crpbf_c4ann.csv ../output/csv/${sce}_${clp}_${iav}/irrig_c3ann.csv ../output/csv/${sce}_${clp}_${iav}/irrig_c3nfx.csv ../output/csv/${sce}_${clp}_${iav}/irrig_c4ann.csv ../output/csv/${sce}_${clp}_${iav}/pastr.csv ../output/csv/${sce}_${clp}_${iav}/primf.csv ../output/csv/${sce}_${clp}_${iav}/range.csv ../output/csv/${sce}_${clp}_${iav}/secdf.csv ../output/csv/${sce}_${clp}_${iav}/urban.csv ../output/csv/${sce}_${clp}_${iav}/flood.csv ../output/csv/${sce}_${clp}_${iav}/fallow.csv ../output/csv/final.txt > ../output/cdl/${sce}_${clp}_${iav}_lumip.cdl
-
 #ncgen -o ../output/nc/${sce}_${clp}_${iav}_lumip.nc ../output/cdl/${sce}_${clp}_${iav}_lumip.cdl
 
-cat ../output/csv/ncheader_all_aimssprcplu_landcategory.txt ../output/csv/${sce}_${clp}_${iav}.csv ../output/csv/final.txt > ../output/cdl/${sce}_${clp}_${iav}.cdl
+#cat ../output/csv/ncheader_all_aimssprcplu_landcategory.txt ../output/csv/${sce}_${clp}_${iav}/PAS.csv ../output/csv/${sce}_${clp}_${iav}/CL.csv ../output/csv/${sce}_${clp}_${iav}/BIO.csv ../output/csv/${sce}_${clp}_${iav}/SL.csv ../output/csv/${sce}_${clp}_${iav}/OL.csv ../output/csv/${sce}_${clp}_${iav}/GL.csv ../output/csv/${sce}_${clp}_${iav}/PRMFRS.csv ../output/csv/${sce}_${clp}_${iav}/MNGFRS.csv ../output/csv/${sce}_${clp}_${iav}/RES.csv ../output/csv/${sce}_${clp}_${iav}/AFR.csv ../output/csv/final.txt > ../output/cdl/${sce}_${clp}_${iav}.cdl
 
+cat ../output/csv/ncheader_all_wwf_landcategoryall.txt ../output/csv/${sce}_${clp}_${iav}_opt1.csv ../output/csv/${sce}_${clp}_${iav}_opt3.csv  ../output/csv/${sce}_${clp}_${iav}_opt5.csv ../output/csv/pixel_area.csv ../output/csv/final.txt > ../output/cdl/${sce}_${clp}_${iav}.cdl
 
-#ncgen -o ../output/nc/${sce}_${clp}_${iav}.nc ../output/cdl/${sce}_${clp}_${iav}.cdl
-ncgen -o ../output/nc/AIM-SSPRCP-LUmap-${ncfilename}-${date}.nc -x ../output/cdl/${sce}_${clp}_${iav}.cdl
+ncgen -o ../output/nc/AIM-LUmap-${projectname}-${ncfilename}-${date}.nc -x ../output/cdl/${sce}_${clp}_${iav}.cdl
 
+# Yield
 #cat ../output/csv/ncheader_all_yield.txt ../output/csv/${sce}_${clp}_${iav}/yield_BIO.csv ../output/csv/final.txt > ../output/cdl/yield_${sce}_${clp}_${iav}.cdl
 #ncgen -o ../output/nc/yield_${sce}_${clp}_${iav}.nc ../output/cdl/yield_${sce}_${clp}_${iav}.cdl
 

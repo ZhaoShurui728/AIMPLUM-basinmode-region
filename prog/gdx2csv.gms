@@ -1,17 +1,32 @@
-
 $Setglobal prog_dir ..\AIMPLUM
 $setglobal sce SSP3
 $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal lumip off
 $setglobal bioyieldcalc off
-$setglobal wwf on_landcategory
+
+$setglobal wwfclass opt
+$setglobal wwfopt 1
+* wwf should be selected from  off, on, opt.
+*off)  native classifications.
+*on)   wwf classification
+*opt)  wwf classification with the following options.
+
+* wwfopt should be selected from  1 to 5.
+*OPTIONS
+*opt1) wwf classification in numbers as it is
+*opt2) all abandonned land that is not restored is re-classified as restored; no change in number of classes in LU netcdfs
+*opt3) all abandonned land that is not restored is re-classified as restored but only after 30 years - within these 30 years it remains classified as its original pre-abandonnment land use); no change in number of classes in LU netcdfs
+*opt4) same as 2, but with 4 additional LU classes(*) in the netcdfs (with a zero value, because it is restored straight away)
+*opt5) same as 3, but with 4 additional LU classes(*) in the netcdfs (with potentially non-zero values)
 
 $include %prog_dir%/scenario/socioeconomic/%sce%.gms
 $include %prog_dir%/scenario/climate_policy/%clp%.gms
 $include %prog_dir%/scenario/IAV/%iav%.gms
 
+
 $ifthen.split %split%==1
+
 Set
 R	17 regions	/
 $include %prog_dir%/\define\region/region17.set
@@ -101,24 +116,12 @@ $include %prog_dir%/individual/BendingTheCurve/luwwf.set
 MAP_WWF(Lwwf,L)/
 $include %prog_dir%/individual/BendingTheCurve/luwwf.map
 /
-Lwwfnum/1*12/
-LwwfnumLU(Lwwfnum)/1*7,9*12/
-Lwwfnum_8(Lwwfnum)/1*8/
-MAP_WWFnum(Lwwfnum,L)/
-$include %prog_dir%/individual/BendingTheCurve/luwwfnum.map
-/
-MAP_WWFnum2(Lwwfnum,L)/
-$include %prog_dir%/individual/BendingTheCurve/luwwfnum2.map
-/
-MAP_WWFnum_org(Lwwfnum,L) map for restoration land with original land category/
-$include %prog_dir%/individual/BendingTheCurve/luwwfnum_org.map
-/
 LULC_class/
 $include %prog_dir%/individual/BendingTheCurve/LULC_class.set
 /
 MAP_RIJ(R,I,J)
 ;
-Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(Lwwfnum,Lwwfnum2);
+Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3);
 
 parameter
 FLAG_G(G)		Grid flag
@@ -127,17 +130,11 @@ Rarea_bio(G)
 
 VY_load(R,Y,L,G)
 VY_IJ(Y,L,I,J)
-
 VY_IJmip(Y,Lmip,I,J)
 VY_IJwwf(Y,Lwwf,I,J)
-VY_IJwwfnum(Y,Lwwfnum,I,J)
-VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)
-VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)
-VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)
-VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)
-VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)
 YIELD_BIO(R,Y,G)
 YIELD_IJ(Y,L,I,J)
+
 VY_loadAFRbaunocc(R,Y,LAFR,G)
 VY_IJAFRbaunocc(Y,I,J)
 VY_loadAFRbaubiod(R,Y,LAFR,G)
@@ -147,7 +144,6 @@ VY_IJ_res(Y,L,I,J)
 VY_IJ_delay(Y,L,I,J)
 GAIJ(I,J)           Grid area of cell I J kha
 GAIJ0(I,J)           Grid area of cell I J million ha
-
 ;
 
 $gdxin '%prog_dir%/data/data_prep.gdx'
@@ -170,7 +166,7 @@ VY_IJ(Y,"GL",I,J)$VY_IJ(Y,"GL",I,J)=1-sum(L$(LSUM(L) and (not sameas(L,"GL"))),V
 
 * Forest is devided into managed and unmanaged.
 
-$gdxin '../output/gdx/landmap/sharepix.gdx'
+$gdxin '%prog_dir%/\data\sharepix.gdx'
 $load sharepix
 
 
@@ -178,13 +174,6 @@ VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J)
 VY_IJ(Y,"MNGFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J);
 VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J) AND sharepix("Primary vegetation",I,J)+sharepix("Mature and Intermediate secondary vegetation",I,J)=0)=VY_IJ(Y,"FRS",I,J);
 VY_IJ(Y,"FRS",I,J)=0;
-
-* Afforestation is allocated as afforestatoin and restoration.
-*VY_IJ(Y,"AFRRES",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"AFR",I,J))=VY_IJ(Y,"AFR",I,J);
-
-*$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
-*$load YIELD_BIO
-*YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
 
 * [BTC] Restored land
 set
@@ -204,7 +193,6 @@ ABD_PAS	.	RES
 ABD_MNGFRS	.	RES
 ABD_AFR	.	RES
 /
-
 ;
 
 parameter
@@ -221,11 +209,15 @@ RSfrom(Y,L,Y2,I,J)	Restore land area originally categorized as land use category
 RS(Y,L,Y2,I,J)	Restore land area of land use category L and year Y from the year Y2 (final outcome)
 RSF(Y,L,I,J)	Restore land area of land use category L and year Y
 ABD(Y,L,I,J)	Abandoned land area of land use category L and year Y
-VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abundance
-VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abundance
 *YND(Y,L,I,J)
 ZT(Y,I,J)
 ;
+
+RSF(Y,L,I,J)=0;
+ABD(Y,L,I,J)=0;
+XF(Y,L,I,J)=0;
+
+*$ifthen.rsfabd not %wwfopt%==1
 
 ordy(Y) = 2010 + (ord(Y)-1)*10;
 
@@ -264,20 +256,7 @@ Loop(Y2$(Y2.val>=2020),
 RSF(Y,L,I,J)$(SUM(Y2,RS(Y,L,Y2,I,J)))=SUM(Y2,RS(Y,L,Y2,I,J));
 ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J));
 
-parameter
-protectfracL(R,G,L)	Protected area fraction (0 to 1) of land category L in each cell G
-protectfracLIJ(Y,I,J)	Protected area fraction (0 to 1) of land category L in each cell I J
-;
-protectfracLIJ(Y,I,J)=0;
-
-$ifthen.protect not %IAV%==NoCC
-
-$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
-$load protectfracL
-
-protectfracLIJ(Y,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfracL(R,G,"PRM_SEC")+protectfracL(R,G,"CL")));
-
-$endif.protect
+*$endif.rsfabd
 
 $ifthen.bioyield %bioyieldcalc%==on
 $gdxin '../output/gdx/all/analysis_%SCE%_%CLP%_%IAV%.gdx'
@@ -286,35 +265,12 @@ $load YIELD_BIO
 YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
 $endif.bioyield
 
-$if %CLP%==BaU protectfracIJ(I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfrac(R,"2010",G)));
 
 $endif.split
 $if %split%==1 $exit
-$ontext
-$ifthen.afr not %IAV%==NoCC
-
-$gdxin '../output/gdx/results/results_%SCE%_BaU_NoCC.gdx'
-$load VY_loadAFRbaunocc=VY_load
-$gdxin '../output/gdx/results/results_%SCE%_BaU_BIOD.gdx'
-$load VY_loadAFRbaubiod=VY_load
-
-VY_IJAFRbaunocc(Y,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,VY_loadAFRbaunocc(R,Y,"AFR",G)));
-VY_IJAFRbaubiod(Y,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,VY_loadAFRbaubiod(R,Y,"AFR",G)));
-
-VY_IJ(Y,"AFR",I,J)$(VY_IJ(Y,"AFR",I,J)-VY_IJAFRbaubiod(Y,I,J)>0)=VY_IJAFRbaunocc(Y,I,J) + (VY_IJ(Y,"AFR",I,J)-VY_IJAFRbaubiod(Y,I,J));
-VY_IJ(Y,"RES",I,J)$(VY_IJAFRbaubiod(Y,I,J)-VY_IJAFRbaunocc(Y,I,J)>0)=VY_IJAFRbaubiod(Y,I,J)-VY_IJAFRbaunocc(Y,I,J);
-
-$else.afr
-
-VY_IJ(Y,"AFR",I,J)$(VY_IJ(Y,"AFR",I,J))=VY_IJ(Y,"AFR",I,J);
-VY_IJ(Y,"RES",I,J)=0;
-
-$endif.afr
-
-$offtext
-
 
 *$batinclude %prog_dir%/prog/outputcsv_yield.gms BIO
+
 
 $ifthen.p %lumip%==on
 
@@ -339,7 +295,7 @@ $batinclude %prog_dir%/prog/outputcsv_lumip.gms crpbf_c4ann
 $batinclude %prog_dir%/prog/outputcsv_lumip.gms flood
 $batinclude %prog_dir%/prog/outputcsv_lumip.gms fallow
 
-$elseif.p %wwf%==on
+$elseif.p %wwfclass%==on
 
 VY_IJwwf(Y,Lwwf,I,J)=SUM(L$MAP_WWF(Lwwf,L),VY_IJ(Y,L,I,J));
 
@@ -352,12 +308,33 @@ $batinclude %prog_dir%/prog/outputcsv_wwf.gms restored
 $batinclude %prog_dir%/prog/outputcsv_wwf.gms other
 $batinclude %prog_dir%/prog/outputcsv_wwf.gms built_up_areas
 
-$elseif.p %wwf%==on_landcategory
+$elseif.p %wwfclass%==opt
+
+set
+Lwwfnum/
+$if %wwfopt%==1 1*8
+$if %wwfopt%==2 1*8
+$if %wwfopt%==3 1*8
+$if %wwfopt%==4 1*12
+$if %wwfopt%==5 1*12
+/
+MAP_WWFnum(Lwwfnum,L)/
+$if %wwfopt%==1 $include %prog_dir%/individual/BendingTheCurve/luwwfnum.map
+$if %wwfopt%==2 $include %prog_dir%/individual/BendingTheCurve/luwwfnum.map
+$if %wwfopt%==3 $include %prog_dir%/individual/BendingTheCurve/luwwfnum2.map
+*--- luwwfnum_org.map is map for restoration land with original land category
+$if %wwfopt%==4 $include %prog_dir%/individual/BendingTheCurve/luwwfnum_org.map
+$if %wwfopt%==5 $include %prog_dir%/individual/BendingTheCurve/luwwfnum_org.map
+/
+;
+Alias (Lwwfnum,Lwwfnum2);
+parameter
+VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abundance
+VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abundance
+VY_IJwwfnum(Y,Lwwfnum,I,J)
+;
 
 * land category has number 1-8 for opt 1-3 and 1-12 for opt4,5).
-
-
-*$ifthen %biodivprice%==on
 
 VW(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VW(Y,L,I,J)$(LRES(L) and RSF(Y,L,I,J))=RSF(Y,L,I,J);
@@ -373,129 +350,37 @@ VU(Y,L,I,J)$(LRES(L) and SUM(L2,XF(Y,L2,I,J)))=SUM(L2,XF(Y,L2,I,J));
 VW(Y,L,I,J)$(VW(Y,L,I,J)<10**(-7) AND VW(Y,L,I,J)>(-1)*10**(-7))=0;
 VU(Y,L,I,J)$(VU(Y,L,I,J)<10**(-7) AND VU(Y,L,I,J)>(-1)*10**(-7))=0;
 
-* land category has number 1 to 7.
-*VY_IJwwfnum(Y,Lwwfnum,I,J)=SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J));
-*VY_IJwwfnum(Y,Lwwfnum,I,J)$(VY_IJwwfnum(Y,Lwwfnum,I,J)=0 AND FLAG_IJ(I,J))=0;
 
-VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
-VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J));
-VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum2(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum2(Lwwfnum,L),VW(Y,L,I,J));
-VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum_org(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum_org(Lwwfnum,L),VU(Y,L,I,J));
-VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum_org(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum_org(Lwwfnum,L),VW(Y,L,I,J));
+$if %wwfopt%==1 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J));
+$if %wwfopt%==2 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
+$if %wwfopt%==3 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
+$if %wwfopt%==4 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
+$if %wwfopt%==5 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
+
+VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),8);
 
 * put -999 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
-VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt1(Y,Lwwfnum2,I,J))=0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)=0)=-99;
-VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt2(Y,Lwwfnum2,I,J))=0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)=0)=-99;
-VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt3(Y,Lwwfnum2,I,J))=0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)=0)=-99;
-VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt4(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)=0)=-99;
-VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt5(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)=0)=-99;
+VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 
-$ontext
-VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt1(Y,Lwwfnum2,I,J))>0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;
-VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt2(Y,Lwwfnum2,I,J))>0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;
-VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt3(Y,Lwwfnum2,I,J))>0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;
-VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt4(Y,Lwwfnum2,I,J))>0 and VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;
-VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt5(Y,Lwwfnum2,I,J))>0 and VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;
+parameter
+plwwfnum/8/
+;
+$if %wwfopt%==4 plwwfnum=12;
+$if %wwfopt%==5 plwwfnum=12;
 
-
-VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt1(Y,Lwwfnum2,I,J))>0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)=0 AND FLAG_IJ(I,J))=0;
-VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt2(Y,Lwwfnum2,I,J))>0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)=0 AND FLAG_IJ(I,J))=0;
-VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt3(Y,Lwwfnum2,I,J))>0 and Lwwfnum_8(Lwwfnum) AND VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)=0 AND FLAG_IJ(I,J))=0;
-VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt4(Y,Lwwfnum2,I,J))>0 and VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)=0 AND FLAG_IJ(I,J))=0;
-VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum_opt5(Y,Lwwfnum2,I,J))>0 and VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)=0 AND FLAG_IJ(I,J))=0;
-$offtext
-
-
-VY_IJwwfnum_opt1(Y,Lwwfnum,I,J)=round(VY_IJwwfnum_opt1(Y,Lwwfnum,I,J),8);
-VY_IJwwfnum_opt2(Y,Lwwfnum,I,J)=round(VY_IJwwfnum_opt2(Y,Lwwfnum,I,J),8);
-VY_IJwwfnum_opt3(Y,Lwwfnum,I,J)=round(VY_IJwwfnum_opt3(Y,Lwwfnum,I,J),8);
-VY_IJwwfnum_opt4(Y,Lwwfnum,I,J)=round(VY_IJwwfnum_opt4(Y,Lwwfnum,I,J),8);
-VY_IJwwfnum_opt5(Y,Lwwfnum,I,J)=round(VY_IJwwfnum_opt5(Y,Lwwfnum,I,J),8);
-
-
-*$ontext
-
-file output1 /..\output\csv\%SCE%_%CLP%_%IAV%_opt1.csv/;
-put output1;
-output1.pw=100000;
-put "LC_area_share", "= "/;
-* 結果の出力
-
-loop(Y,
- loop(Lwwfnum$Lwwfnum_8(Lwwfnum),
-  loop(I,
-   loop(J,
-    output1.nd=8; output1.nz=0; output1.nr=0; output1.nw=15;
-    put VY_IJwwfnum_opt1(Y,Lwwfnum,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=8 AND ORD(Y)=10),put ",";
-    ELSE put ";";
-    );
-   );
- put /;
- );
- );
-);
-put /;
-
-file output2 /..\output\csv\%SCE%_%CLP%_%IAV%_opt2.csv/;
-put output2;
-output2.pw=100000;
-put "LC_area_share", "= "/;
-* 結果の出力
-
-loop(Y,
- loop(Lwwfnum$Lwwfnum_8(Lwwfnum),
-  loop(I,
-   loop(J,
-    output2.nd=8; output2.nz=0; output2.nr=0; output2.nw=15;
-    put VY_IJwwfnum_opt2(Y,Lwwfnum,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=8 AND ORD(Y)=10),put ",";
-    ELSE put ";";
-    );
-   );
- put /;
- );
- );
-);
-put /;
-
-
-file output3 /..\output\csv\%SCE%_%CLP%_%IAV%_opt3.csv/;
-put output3;
-output3.pw=100000;
-put "LC_area_share", "= "/;
-* 結果の出力
-
-loop(Y,
- loop(Lwwfnum$Lwwfnum_8(Lwwfnum),
-  loop(I,
-   loop(J,
-    output3.nd=8; output3.nz=0; output3.nr=0; output3.nw=15;
-    put VY_IJwwfnum_opt3(Y,Lwwfnum,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=8 AND ORD(Y)=10),put ",";
-    ELSE put ";";
-    );
-   );
- put /;
- );
- );
-);
-put /;
-
-
-file output4 /..\output\csv\%SCE%_%CLP%_%IAV%_opt4.csv/;
-put output4;
-output4.pw=100000;
-put "LC_area_share", "= "/;
+file output /%prog_dir%\..\output\csv\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
+put output;
+output.pw=100000;
+put "LC_area_share%wwfopt%", "= "/;
 * 結果の出力
 
 loop(Y,
  loop(Lwwfnum,
   loop(I,
    loop(J,
-    output4.nd=8; output4.nz=0; output4.nr=0; output4.nw=15;
-    put VY_IJwwfnum_opt4(Y,Lwwfnum,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=12 AND ORD(Y)=10),put ",";
+    output.nd=8; output.nz=0; output.nr=0; output.nw=15;
+    put VY_IJwwfnum(Y,Lwwfnum,I,J);
+    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=plwwfnum AND ORD(Y)=11),put ",";
     ELSE put ";";
     );
    );
@@ -505,36 +390,49 @@ loop(Y,
 );
 put /;
 
+* Pixel area
+$ifthen.wwfopt not %wwfopt%==1
 
-file output5 /..\output\csv\%SCE%_%CLP%_%IAV%_opt5.csv/;
-put output5;
-output5.pw=100000;
-put "LC_area_share", "= "/;
-* 結果の出力
+GAIJ0(I,J)$GAIJ(I,J)=GAIJ(I,J)/1000;
+GAIJ0(I,J)$(GAIJ(I,J)=0)=-99;
 
-loop(Y,
- loop(Lwwfnum,
-  loop(I,
-   loop(J,
-    output5.nd=8; output5.nz=0; output5.nr=0; output5.nw=15;
-    put VY_IJwwfnum_opt5(Y,Lwwfnum,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=12 AND ORD(Y)=10),put ",";
+file output_pixel_area /..\output\csv\pixel_area.csv/;
+put output_pixel_area;
+output_pixel_area.pw=100000;
+put "pixel_area", "= "/;
+
+ loop(I,
+  loop(J,
+    output_pixel_area.nd=8; output_pixel_area.nz=0; output_pixel_area.nr=0; output_pixel_area.nw=15;
+    put GAIJ0(I,J);
+    IF( NOT (ORD(J)=720 AND ORD(I)=360),put ",";
     ELSE put ";";
     );
    );
  put /;
  );
- );
-);
 put /;
-
-*$offtext
-
-
 
 
 * Protected area
 $ontext
+
+parameter
+protectfracL(R,G,L)	Protected area fraction (0 to 1) of land category L in each cell G
+protectfracLIJ(Y,I,J)	Protected area fraction (0 to 1) of land category L in each cell I J
+;
+protectfracLIJ(Y,I,J)=0;
+
+$ifthen.protect not %IAV%==NoCC
+
+$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
+$load protectfracL
+
+protectfracLIJ(Y,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfracL(R,G,"PRM_SEC")+protectfracL(R,G,"CL")));
+
+$endif.protect
+
+$if %CLP%==BaU protectfracIJ(I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfrac(R,"2010",G)));
 
 file output_protect /..\output\csv\%SCE%_%CLP%_%IAV%_protect.csv/;
 put output_protect;
@@ -561,101 +459,19 @@ loop(Y,
 put /;
 $offtext
 
-* Pixel area
 
-
-*$ifthen.pa %SCE%_%CLP%_%IAV%=SSP2_BaU_NOBIOD
-
-GAIJ0(I,J)$GAIJ(I,J)=GAIJ(I,J)/1000;
-GAIJ0(I,J)$(GAIJ(I,J)=0)=-99;
-
-file output_pixel_area /..\output\csv\pixel_area.csv/;
-put output_pixel_area;
-output_pixel_area.pw=100000;
-put "pixel_area", "= "/;
-
- loop(I,
-  loop(J,
-    output_pixel_area.nd=8; output_pixel_area.nz=0; output_pixel_area.nr=0; output_pixel_area.nw=15;
-    put GAIJ0(I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360),put ",";
-    ELSE put ";";
-    );
-   );
- put /;
- );
-put /;
-
-*$endif.pa
-
-SCALAR
-   tor/0.0000001/;
-
-parameter
-check_negativeW(Y,L,I,J)
-check_negativeU(Y,L,I,J)
-check_totalWL(Y,L,I,J)
-check_totalUL(Y,L,I,J)
-check_totalWL2(Y,I,J)
-check_totalUL2(Y,I,J)
-check_unmngW(Y,I,J)
-check_unmngWL(Y,L,I,J)
-check_unmngU(Y,I,J)
-check_unmngUL(Y,L,I,J)
-check_eq(Y,I,J)
-check_unmngW2(Y,I,J)
-check_unmngWL2(Y,L,I,J)
-check_unmngW3(Y,I,J)
-;
-
-check_totalWL(Y,L,I,J)$(LSUMabsres(L) and (SUM(L2$(LSUMabsres(L2)),VW(Y,L2,I,J))>1+tor OR SUM(L2$(LSUMabsres(L2)),VW(Y,L2,I,J))<1-tor))=VW(Y,L,I,J);
-check_totalUL(Y,L,I,J)$(LSUMabsres(L) and (SUM(L2$(LSUMabsres(L2)),VU(Y,L2,I,J))>1+tor OR SUM(L2$(LSUMabsres(L2)),VU(Y,L2,I,J))<1-tor))=VU(Y,L,I,J);
-
-check_totalWL2(Y,I,J)$((SUM(L2$(LSUMabsres(L2)),VW(Y,L2,I,J))>1+tor OR SUM(L2$(LSUMabsres(L2)),VW(Y,L2,I,J))<1-tor))=SUM(L2$(LSUMabsres(L2)),VW(Y,L2,I,J));
-check_totalUL2(Y,I,J)$((SUM(L2$(LSUMabsres(L2)),VU(Y,L2,I,J))>1+tor OR SUM(L2$(LSUMabsres(L2)),VU(Y,L2,I,J))<1-tor))=SUM(L2$(LSUMabsres(L2)),VU(Y,L2,I,J));
-
-check_negativeW(Y,L,I,J)$(VW(Y,L,I,J)<0)=VW(Y,L,I,J);
-check_negativeU(Y,L,I,J)$(VU(Y,L,I,J)<0)=VU(Y,L,I,J);
-
-check_unmngW(Y,I,J)$(y.val>=2020 AND SUM(L$(Lnat(L)),VW(Y,L,I,J))>SUM(L$(Lnat(L)),VW("2010",L,I,J))+tor AND SUM(L$(Lnat(L)),VW("2010",L,I,J)))=SUM(L$(Lnat(L)),VW(Y,L,I,J))/SUM(L$(Lnat(L)),VW("2010",L,I,J));
-check_unmngWL(Y,L,I,J)$(y.val>=2020 AND SUM(L2$(Lnat(L2)),VW(Y,L2,I,J))>SUM(L2$(Lnat(L2)),VW("2010",L2,I,J))+tor AND SUM(L2$(Lnat(L2)),VW("2010",L2,I,J)))=VW(Y,L,I,J);
-check_unmngU(Y,I,J)$(y.val>=2020 AND SUM(L$(Lnat(L)),VU(Y,L,I,J))>SUM(L$(Lnat(L)),VU("2010",L,I,J))+tor AND SUM(L$(Lnat(L)),VU("2010",L,I,J)))=SUM(L$(Lnat(L)),VU(Y,L,I,J))/SUM(L$(Lnat(L)),VU("2010",L,I,J));
-check_unmngUL(Y,L,I,J)$(y.val>=2020 AND SUM(L2$(Lnat(L2)),VU(Y,L2,I,J))>SUM(L2$(Lnat(L2)),VU("2010",L2,I,J))+tor AND SUM(L2$(Lnat(L2)),VU("2010",L2,I,J)))=VU(Y,L,I,J);
-
-*check_eq(Y,I,J)$((SUM(L2$LSUM(L2),VW(Y,L2,I,J))-SUM(L2$LSUM(L2),VU(Y,L2,I,J)))-SUM(L2$(LABD(L2)),VW(Y,L2,I,J)))=(SUM(L2$LSUM(L2),VW(Y,L2,I,J))-SUM(L2$LSUM(L2),VU(Y,L2,I,J)))-SUM(L2$(LRES(L2) OR LABD(L2)),VW(Y,L2,I,J));
-check_unmngW2(Y,I,J)$(y.val>=2020 AND SUM(L$(Lnat(L)),VW(Y,L,I,J))>SUM(L$(Lnat(L)),VW(Y-1,L,I,J))+tor AND SUM(L$(Lnat(L)),VW(Y-1,L,I,J)))=SUM(L$(Lnat(L)),VW(Y,L,I,J))/SUM(L$(Lnat(L)),VW(Y-1,L,I,J));
-check_unmngWL2(Y,L,I,J)$(y.val>=2020 AND SUM(L2$(Lnat(L2)),VW(Y,L2,I,J))>SUM(L2$(Lnat(L2)),VW(Y-1,L2,I,J))+tor AND SUM(L2$(Lnat(L2)),VW(Y-1,L2,I,J)))=VW(Y,L,I,J);
-
-*check_unmngW3(Y,I,J)$(y.val>=2020 AND SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y,L,I,J))-SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y-1,L,I,J))>+tor AND SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y-1,L,I,J)))=SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y,L,I,J))-SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y-1,L,I,J));
-check_unmngW3(Y,I,J)$(y.val>=2020 AND SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y-1,L,I,J)))=SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y,L,I,J))-SUM(L$(LSUMabsres(L) AND (NOT L_UNUSED(L))),VW(Y-1,L,I,J));
-check_unmngW3(Y,I,J)$(ABS(check_unmngW3(Y,I,J))<=tor)=0;
-
-SET
-opt/opt1*opt5/
-;
-PARAMETER
-VY_IJwwfnum_check(opt,Y,I,J)
-VY_IJwwfnum_all(opt,Y,Lwwfnum,I,J)
-;
-VY_IJwwfnum_all("opt1",Y,Lwwfnum,I,J)=VY_IJwwfnum_opt1(Y,Lwwfnum,I,J);
-VY_IJwwfnum_all("opt2",Y,Lwwfnum,I,J)=VY_IJwwfnum_opt2(Y,Lwwfnum,I,J);
-VY_IJwwfnum_all("opt3",Y,Lwwfnum,I,J)=VY_IJwwfnum_opt3(Y,Lwwfnum,I,J);
-VY_IJwwfnum_all("opt4",Y,Lwwfnum,I,J)=VY_IJwwfnum_opt4(Y,Lwwfnum,I,J);
-VY_IJwwfnum_all("opt5",Y,Lwwfnum,I,J)=VY_IJwwfnum_opt5(Y,Lwwfnum,I,J);
-VY_IJwwfnum_check(opt,Y,I,J)$(SUM(LwwfnumLU(Lwwfnum),VY_IJwwfnum_all(opt,Y-1,Lwwfnum,I,J)))=SUM(LwwfnumLU(Lwwfnum),VY_IJwwfnum_all(opt,Y,Lwwfnum,I,J)-VY_IJwwfnum_all(opt,Y-1,Lwwfnum,I,J));
-VY_IJwwfnum_check(opt,Y,I,J)$(ABS(VY_IJwwfnum_check(opt,Y,I,J))<tor)=0;
+$endif.wwfopt
 
 $else.p
 
 
-$batinclude %prog_dir%/prog/outputcsv.gms FRS
+*$batinclude %prog_dir%/prog/outputcsv.gms FRS
 $batinclude %prog_dir%/prog/outputcsv.gms PAS
 $batinclude %prog_dir%/prog/outputcsv.gms CL
 $batinclude %prog_dir%/prog/outputcsv.gms BIO
 $batinclude %prog_dir%/prog/outputcsv.gms SL
 $batinclude %prog_dir%/prog/outputcsv.gms OL
 $batinclude %prog_dir%/prog/outputcsv.gms GL
-*$batinclude %prog_dir%/prog/outputcsv.gms RES
 $batinclude %prog_dir%/prog/outputcsv.gms PRMFRS
 $batinclude %prog_dir%/prog/outputcsv.gms MNGFRS
 $batinclude %prog_dir%/prog/outputcsv.gms RES
@@ -664,24 +480,10 @@ $batinclude %prog_dir%/prog/outputcsv.gms AFR
 $endif.p
 
 
-*execute_unload '../output/csv/%SCE%_%CLP%_%IAV%.gdx'
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%_opt%wwfopt%.gdx'
+VY_IJwwfnum
+;
 
-execute_unload '../output/csv/check/%SCE%_%CLP%_%IAV%.gdx'
-check_negativeW
-check_negativeU
-check_totalWL
-check_totalUL
-check_totalWL2
-check_totalUL2
-check_unmngW
-check_unmngWL
-check_unmngU
-check_unmngUL
-check_eq
-check_unmngW2
-check_unmngWL2
-check_unmngW3
-VY_IJwwfnum_check;
 
 
 

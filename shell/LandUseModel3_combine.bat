@@ -17,7 +17,7 @@ for %%C in (%SCE%) do (
 for %%D in (%CLP%) do (
 for %%E in (%IAV%) do (
 
-gams ..\prog\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
+gams ..\AIMPLUM\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
 pause
 )))
 
