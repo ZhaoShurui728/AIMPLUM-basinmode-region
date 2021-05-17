@@ -86,6 +86,7 @@ RR(G)$RR%1(G)=RR%1(G);
 BIIcoefG(L,G)$BIIcoefG%1(L,G)=BIIcoefG%1(L,G);
 sharepix(LULC_class,I,J)$sharepix%1(LULC_class,I,J)=sharepix%1(LULC_class,I,J);
 
+$ontext
 $ifthen not %IAV%==NoCC
 
 $gdxin '%prog_dir%/../output/gdx/%SCE%_BaU_NoCC/analysis/%1.gdx'
@@ -107,4 +108,5 @@ $load protectfracL%1=protectfracL
 protectfracL("%1",G,L)$(protectfracL%1(G,L))=protectfracL%1(G,L);
 
 $endif
+$offtext
 
