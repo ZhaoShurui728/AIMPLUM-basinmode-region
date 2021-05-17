@@ -10,6 +10,7 @@ pa_bio%1(G)         land transition costs per unit area for BIO (million $ per h
 YIELD%1(LBIO,G)
 pc%1(LBIO)         land transition costs per unit area (million $ per ha)
 CS%1(G)		carbon density (MgC per ha)
+CS(G)
 ;
 
 $ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%pre_year%.gdx'

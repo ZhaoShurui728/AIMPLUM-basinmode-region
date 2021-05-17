@@ -312,11 +312,11 @@ $elseif.p %wwfclass%==opt
 
 set
 Lwwfnum/
-$if %wwfopt%==1 1*8
-$if %wwfopt%==2 1*8
-$if %wwfopt%==3 1*8
-$if %wwfopt%==4 1*12
-$if %wwfopt%==5 1*12
+$if %wwfopt%==1 1*10
+$if %wwfopt%==2 1*10
+$if %wwfopt%==3 1*10
+$if %wwfopt%==4 1*14
+$if %wwfopt%==5 1*14
 /
 MAP_WWFnum(Lwwfnum,L)/
 $if %wwfopt%==1 $include %prog_dir%/individual/BendingTheCurve/luwwfnum.map
@@ -334,7 +334,7 @@ VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored a
 VY_IJwwfnum(Y,Lwwfnum,I,J)
 ;
 
-* land category has number 1-8 for opt 1-3 and 1-12 for opt4,5).
+* land category has number 1-10 for opt 1-3 and 1-14 for opt4,5).
 
 VW(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VW(Y,L,I,J)$(LRES(L) and RSF(Y,L,I,J))=RSF(Y,L,I,J);
@@ -357,16 +357,16 @@ $if %wwfopt%==3 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I
 $if %wwfopt%==4 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
 $if %wwfopt%==5 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
 
-VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),8);
+VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
 * put -999 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 
 parameter
-plwwfnum/8/
+plwwfnum/10/
 ;
-$if %wwfopt%==4 plwwfnum=12;
-$if %wwfopt%==5 plwwfnum=12;
+$if %wwfopt%==4 plwwfnum=14;
+$if %wwfopt%==5 plwwfnum=14;
 
 file output /%prog_dir%\..\output\csv\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
 put output;
@@ -378,7 +378,7 @@ loop(Y,
  loop(Lwwfnum,
   loop(I,
    loop(J,
-    output.nd=8; output.nz=0; output.nr=0; output.nw=15;
+    output.nd=10; output.nz=0; output.nr=0; output.nw=15;
     put VY_IJwwfnum(Y,Lwwfnum,I,J);
     IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=plwwfnum AND ORD(Y)=11),put ",";
     ELSE put ";";
@@ -403,7 +403,7 @@ put "pixel_area", "= "/;
 
  loop(I,
   loop(J,
-    output_pixel_area.nd=8; output_pixel_area.nz=0; output_pixel_area.nr=0; output_pixel_area.nw=15;
+    output_pixel_area.nd=10; output_pixel_area.nz=0; output_pixel_area.nr=0; output_pixel_area.nw=15;
     put GAIJ0(I,J);
     IF( NOT (ORD(J)=720 AND ORD(I)=360),put ",";
     ELSE put ";";
@@ -447,7 +447,7 @@ protectfracLIJ(Y,I,J)$(protectfracLIJ(Y,I,J)=0 AND FLAG_IJ(I,J))=0;
 loop(Y,
  loop(I,
   loop(J,
-    output_protect.nd=8; output_protect.nz=0; output_protect.nr=0; output_protect.nw=15;
+    output_protect.nd=10; output_protect.nz=0; output_protect.nr=0; output_protect.nw=15;
     put protectfracLIJ(Y,I,J);
     IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Y)=10),put ",";
     ELSE put ";";

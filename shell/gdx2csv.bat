@@ -5,7 +5,7 @@ mkdir ..\output\nc\
 
 set SCE=SSP1 SSP2
 set CLP=BaU 26W
-set SCE=SSP3
+set SCE=SSP2
 set CLP=BaU
 
 set IAV=NoCC
@@ -22,9 +22,9 @@ mkdir ..\output\csv\%%C_%%D_%%E
 	del merged.gdx
 
 ### csv file created
-gams ..\prog\prog\gdx2csv.gms --split=1 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 S=gdx2csv2nc1_%%C_%%D_%%E
+gams ..\AIMPLUM\prog\gdx2csv.gms --split=1 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 S=gdx2csv2nc1_%%C_%%D_%%E
 #pause
-gams ..\prog\prog\gdx2csv.gms --split=2 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 R=gdx2csv2nc1_%%C_%%D_%%E
+gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 R=gdx2csv2nc1_%%C_%%D_%%E
 #pause
 )))
 pause

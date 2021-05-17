@@ -11,7 +11,8 @@ $setglobal residue on
 $setglobal Ystep0 10
 $setglobal supcuvout off
 $setglobal biopmap on
-
+$setglobal degradedlandprotect off
+$setglobal WDPAprotect protect_all
 ;
 
 
@@ -72,6 +73,7 @@ LUC     land use change total
 LB              New or old bioenergy cropland/
 BION    new bioenergy cropland
 BIOO    old bioenergy cropland
+BION_DEG
 /
 LCL(L)/CL/
 LBIO(L)/BIO/
@@ -199,12 +201,15 @@ pca_bio(G,LB)    Cost for bioenergy production including land conversion cost (m
 CSB(R)	Carbon density threshold for dividing grassland and forest (MgC per C)
 Avalab_FL	availablilty of light forestland source: van Vuuren et al. 2009 /0.5/
 Avalab_GL	availablilty of natural grassland source: van Vuuren et al. 2009 /0.5/
+degradedland(G)	Degraded land fraction (0 to 1)
+degradedland_usable(G)
+protectland(G)	Protected area fraction (0 to 1) of cell G (WDPA and IUCN)
 ;
 
 $gdxin '%prog_dir%/data/CSB.gdx'
 $load CSB
 
-*** CLOP_FLW --> BIO
+*** CROP_FLW --> BIO
 
 * [GJ/ha/year] = [tonC/ha] * [tonCrop/tonC]  * [toe/tonCrop] * [GJ/toe]
 BIOENE(G)$(YIELDBIO(G)) = YIELDBIO(G) * 1/(1+Rbg) * 2.5 * 0.38 * GJ_toe;
@@ -217,6 +222,13 @@ RAREA_BIOP(G) = 1-(SUM(L$(LNBIOP(L)),VYL(L,G))
 		  + (Avalab_GL*(VYL("FRSGL",G)-protect_wopas(G)))$(VYL("FRSGL",G)>protect_wopas(G) AND CS(G)<SUM(R$MAP_RG(R,G),CSB(R)))
 		  );
 * adjust fraction
+$if not %WDPAprotect%==off $gdxin '%prog_dir%/data/policydata.gdx'
+$if not %WDPAprotect%==off $load protectland=%WDPAprotect%
+$if %WDPAprotect%==off protectland(G)=0;
+
+$if not %degradedlandprotect%==off $gdxin '%prog_dir%/data/policydata.gdx'
+$if not %degradedlandprotect%==off $load degradedland=%degradedlandprotect%
+$if %degradedlandprotect%==off degradedland(G)=0;
 degradedland_usable(G)$(degradedland(G)>0 AND RAREA_BIOP(G)>0) = degradedland(G) * (protect_wopas(G)/( protectland(G) + degradedland(G)))*0.5;
 RAREA_BIOP(G)$(RAREA_BIOP(G)<10**(-5))=0;
 
@@ -265,7 +277,7 @@ PBIOSUP(G,LB,"price")$(BIOENE(G) AND RAREA_BIOP(G)) = pca_bio(G,LB)/BIOENE(G)*(1
 
 *[MgC/ha/year]
 PBIOSUP(G,LB,"yield")$(BIOENE(G) AND RAREA_BIOP(G)) = YIELDBIO(G);
-* PBIOSUP(G,"BION_DEG","yield")$(BIOENE(G) AND RAREA_BIOP(G)) = YIELDBIO(G)/2;
+PBIOSUP(G,"BION_DEG","yield")$(BIOENE(G) AND RAREA_BIOP(G)) = YIELDBIO(G)/2;
 PBIOSUP(G,"BION_DEG","yield")$(BIOENE(G)) = YIELDBIO(G)/2;
 
 PBIOSUP(G,LB,Scol)$(NOT PBIOSUP(G,LB,"area"))=0;
@@ -359,9 +371,9 @@ YBIOLB(G,LB)$VYBIO.L(G,LB)=VYBIO.L(G,LB);
 YBIO(G)$(SUM(LB,VYBIO.L(G,LB)))=SUM(LB,VYBIO.L(G,LB));
 
 parameter
-AREA_BIOP(R,LB)    Area of biocrop in cell G in year Y [kha per year]
-YIELD_BIOP(R,LB)    Yield of biocrop in cell G in year Y [tonCrop per ha]
-TOTAREA_BIOP(R)    Total potential area of biocrop in cell G in year Y [kha per year]
+AREA_BIOP(R,LB)    Area of biocrop in region R in year Y [kha per year]
+YIELD_BIOP(R,LB)    Yield of biocrop in region R in year Y [tonCrop per ha]
+TOTAREA_BIOP(R)    Total potential area of biocrop in region R in year Y [kha per year]
 TOTBIOENE(R)    Total technical bioenergy potential [EJ per year]
 ;
 
@@ -410,7 +422,7 @@ execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%Sy%.gdx'
 pca_bio
 YBIOLB
 YBIO
-VYBIOYBIO
+*VYBIOYBIO
 PCBIO
 QCBIO
 AREA_BIOP

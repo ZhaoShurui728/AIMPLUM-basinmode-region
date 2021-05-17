@@ -15,7 +15,7 @@ set SCE=SSP2i
 set CLP=BaU 20W_SPA1
 set CLP=BaU
 
-rem set SCE=SSP2
+set SCE=SSP2
 rem set CLP=INDC_CONT3
 
 
@@ -29,7 +29,7 @@ for %%C in (%SCE%) do (
 for %%D in (%CLP%) do (
 for %%E in (%IAV%) do (
 
-gams ..\prog\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E --supcuvout=off --bvcalc=off MaxProcDir=100
+gams ..\AIMPLUM\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E --supcuvout=off --bvcalc=off MaxProcDir=100
 pause
 
 )))

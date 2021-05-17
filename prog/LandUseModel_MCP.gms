@@ -30,14 +30,13 @@ $setglobal frsprotectexpand on
 * ohashiprotect should be 'ohashi' and 'percentage of species importance level' e.g. ohashi75 or 'off'
 $setglobal ohashiprotect off
 
-* WDPAproct should be selected from protect_bs, protect_all, off.
+* WDPAprotect should be selected from protect_bs, protect_all, off.
 *protect_bs(G) protect area belong to WDPA IUCN_CAT Ia, Ib, II, III, and excluded in the baseline scenario
 *protect_all(G) protect area including all categories of WDPA and KBA
 $setglobal WDPAprotect protect_all
 
-*degradedlandprotect should be selected from i) serious_land_allpolicy, ii) serious_land and iii) off.
+*degradedlandprotect should be selected from i) serious_land_allpolicy, ii) serious_land, iii) severe_land and iv) off.
 $setglobal degradedlandprotect off
-
 
 $if %Sy%==2005 $setglobal mcp off
 $if not %Sy%==2005 $setglobal mcp off
@@ -145,7 +144,7 @@ LCROPRF(L)/PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
 
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
 LDMCROPB(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO/
-LDMCROP(LDM) /PDR,WHT,GRO,OSD,C_B,OTH_A/
+LDMCROP(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A/
 LFRS(L)/PRM_SEC,HAV_FRS,AFR/
 LPRMSEC(L)/PRM_SEC/
 LFRSGL(L)/FRSGL/
@@ -154,7 +153,7 @@ LPAS(L)/PAS/
 LBIO(L)/BIO/
 LOBJ(L)
 LFIX(L)/SL,OL/
-MAP_RG(R,G)	Relationship between country R and cell G
+MAP_RG(R,G)	Relationship between region R and cell G
 ;
 Alias (G,G2,G3,G4,G5,G6,G7,G8),(L,L2),(Y,Y2,Y3);
 set
@@ -690,7 +689,7 @@ $endif
 $ifthen not %ohashiprotect%==off
 $gdxin '%prog_dir%/data/ohashiset.gdx'
 $if %Sr%==XER $load ohashi = ohashi75
-$it not %Sr%==XER $load ohashi = %ohashiprotect%
+$if not %Sr%==XER $load ohashi = %ohashiprotect%
 REVG(G)$ohashi("%Sr%", G)=no;
 $endif
 
@@ -1344,8 +1343,15 @@ protect_wopas(G)$(max(protectfracL(G,"PRM_SEC"),protectfrac(G))>VY_baseresults("
 
 $else
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
-$load protect_wopas
+*$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
+*$load protect_wopas
+
+$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$load VY_baseresults=VY_load
+
+protect_wopas(G)=0;
+protect_wopas(G)$max(protectfracL(G,"PRM_SEC"),protectfrac(G))=max(protectfracL(G,"PRM_SEC"),protectfrac(G));
+protect_wopas(G)$(max(protectfracL(G,"PRM_SEC"),protectfrac(G))>VY_baseresults("FRSGL",G) AND VY_baseresults("FRSGL",G)>0)=VY_baseresults("FRSGL",G);
 
 $endif
 
@@ -1506,9 +1512,9 @@ GHGL
 *checkArea
 VYLY
 delta_VYLY
-$if %Sy%==%second_year% protectfrac
-$if %Sy%==%second_year% protectfracL
-$if %Sy%==%second_year% protect_wopas
+protectfrac
+protectfracL
+protect_wopas
 $if %Sy%==%second_year% protectland
 $if %Sy%==%second_year% degradedland
 *$if %supcuv%==on PBIO,RAREA_BIOP
@@ -1527,27 +1533,34 @@ AREA_base(LDM,*)
 ;
 
 YIELD("PRM_SEC",G)$CS(G)=CS(G);
-Y_base("CL",G)=SUM(L$LCROP(L),Y_base(L,G));
+$if %Sy%==%base_year% Y_base("CL",G)=SUM(L$LCROP(L),Y_base(L,G));
 AREA_base(LDM,"estimates")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*VYL(L,G)));
-AREA_base(LDM,"base")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
-AREA_base("GL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
-AREA_base("FRS","base")=SUM(G,GA(G)*frac_rcp("%Sr%","PRM_FRS","%base_year%",G));
+$if %Sy%==%base_year% AREA_base(LDM,"base")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
+$if %Sy%==%base_year% AREA_base("GL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
+$if %Sy%==%base_year% AREA_base("FRS","base")=SUM(G,GA(G)*frac_rcp("%Sr%","PRM_FRS","%base_year%",G));
+$if %Sy%==%base_year% AREA_base("SL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","SL","%base_year%",G));
+
+*$if not %Sy%==%base_year% AREA_base("SL","base_ssp")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
+*$if %Sy%==%base_year% AREA_base("SL","base_ssp")=SUM(G,GA(G)*SSP_frac("SL","2010","%Sr%",G));
+
 AREA_base(LDM,"cge")=PLDM(LDM);
 AREA_base("CL","cge")=SUM(LDM$LDMCROP(LDM),PLDM(LDM));
 AREA_base("PAS","cge")=Planduse("%Sy%","GRAZING");
-AREA_base("GL","cge")=Planduse("%Sy%","GRASS");
-AREA_base("FRS","cge")=Planduse("%Sy%","PRM_FRS")+Planduse("%Sy%","MNG_FRS");
+$if %Sy%==%base_year% AREA_base("GL","cge")=Planduse("%Sy%","GRASS");
+$if %Sy%==%base_year% AREA_base("FRS","cge")=Planduse("%Sy%","PRM_FRS")+Planduse("%Sy%","MNG_FRS");
 AREA_base("CROP_FLW","cge")=Planduse("%Sy%","CROP_FLW");
 
 
 
-execute_unload '../output/gdx/base/%Sr%/basedata.gdx'
+$if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/basedata.gdx'
+$if not %Sy%==%base_year% execute_unload '../output/temp_area_check.gdx'
 plcc roaddens GL GLMIN0
 YIELD PC PA
-Y_base AREA_base
+$if %Sy%==%base_year% Y_base
+AREA_base
 MFA MFB
-RR BIIcoefG sharepix PBIODIVY0
-
+RR BIIcoefG PBIODIVY0
+$if %Sy%==%base_year% sharepix
 ;
 
 $endif

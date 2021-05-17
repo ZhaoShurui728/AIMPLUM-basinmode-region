@@ -10,7 +10,7 @@ rem call settings\default.bat
 call settings\%1.bat
 
 set COUNTRY=JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF
-set COUNTRY=BRA
+rem set COUNTRY=JPN
 rem-----------------------------
 
 cd ..\..\exe

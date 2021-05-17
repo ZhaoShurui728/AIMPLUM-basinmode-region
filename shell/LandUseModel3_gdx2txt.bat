@@ -14,7 +14,7 @@ set COUNTRY=WLD
 set YEAR=2005 2010 2020 2030 2040 2050 2060 2070 2080 2090 2100
 set YEAR=2005 2010 2030 2050 2080 2100
 set YEAR=2005 2050 2100
-set YEAR=2050 2070
+rem set YEAR=2050 2070
 rem set YEAR=2005
 rem-----------------------------
 
@@ -38,7 +38,7 @@ for %%E in (%IAV%) do (
 
 	for %%B in (%YEAR%) do (
 
-   	gams ..\prog\prog\gdx2txt.gms --Sr=%%A --Sy=%%B --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100
+   	gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=%%A --Sy=%%B --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100
 
 #	pause
   	)

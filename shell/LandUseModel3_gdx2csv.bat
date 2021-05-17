@@ -41,8 +41,8 @@ cd ..\
 rd /q /s %%C_%%D_%%E
 
 ### csv file created
-rem gams ..\AIMPLUM\prog\gdx2csv.gms --split=1 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 S=gdx2csv2nc1_%%C_%%D_%%E
-rem pause
+gams ..\AIMPLUM\prog\gdx2csv.gms --split=1 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 S=gdx2csv2nc1_%%C_%%D_%%E
+pause
 
 for %%A in (%OPTION%) do (
 

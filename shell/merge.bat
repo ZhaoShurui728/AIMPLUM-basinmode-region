@@ -40,7 +40,7 @@ for %%A in (%COUNTRY%) do (
 #	copy merged.gdx ..\output\gdx\%%C_%%D_%%E\bio.gdx
 #	del merged.gdx
 
-gams ..\prog\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E --supcuvout=off --bvcalc=on MaxProcDir=100
+gams ..\AIMPLUM\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E --supcuvout=off --bvcalc=on MaxProcDir=100
 )))
 #pause
 
