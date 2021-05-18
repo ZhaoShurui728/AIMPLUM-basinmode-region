@@ -489,7 +489,7 @@ AFR	.	COM_FRS
 /
 
 LCGE	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
-LRCP(L) /HAV_FRS,PAS,SL,OL/
+LRCP(L) /HAV_FRS,PAS,OL/
 SCENARIO /%SCE%_%CLP%_%IAV%/
 SSP	/%SSP%/
 ;
@@ -528,6 +528,7 @@ PGHG_load(Y0,R)	Carbon price [k$ per tonne CO2]
 PGHG	Carbon price [million $ per tonne C]
 Pirri(LDM,G)	Irrigation ratio of crop LDM cell G (0 to 1)
 SF_YIELD(LDM)   Scale factor to adjust average yield to CGE estimates
+SSP_frac(L,Y,R,G) Fraction of built-up (SL) per grid in year Y
 ;
 
 ordy(Y) = ord(Y) + %base_year% -1;
@@ -541,6 +542,10 @@ $load land_basemap=base_map
 * Base-year land type data
 $gdxin '%prog_dir%/data/land_map_rcp.gdx'
 $load frac_rcp=frac
+
+* Settled land type data
+$gdxin '%prog_dir%/data/urban/%SSP%_Frac.gdx'
+$load SSP_frac = Frac
 
 * Base-year cropland map data
 $gdxin '%prog_dir%/data/cropland_map_rmk.gdx'
@@ -586,6 +591,7 @@ $ifthen.baseyear %Sy%==%base_year%
 *---Y_base preparation
 
 Y_base(L,G)$(LRCP(L))=frac_rcp("%Sr%",L,"%base_year%",G);
+Y_base("SL",G)$(SSP_frac("SL","2010","%Sr%",G))= SSP_frac("SL","2010","%Sr%",G);
 Y_base(L,G)$(LPRMSEC(L))=frac_rcp("%Sr%","PRM_SEC","%base_year%",G) + frac_rcp("%Sr%","PAS","%base_year%",G);
 
 Y_base(L,G)$(LCROPIR(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*Pirri(LDM,G));
@@ -594,12 +600,15 @@ Y_base(L,G)$(LCROPRF(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*(1-Pirri(LD
 Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G))>0)=frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G));
 *Y_base("CROP_FLW",G)$(Y_base("CROP_FLW",G)<0)=0;
 
+
 Y_base("OL",G)$(Y_base("OL",G)>1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G) AND 1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)>=0)=1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G);
 Y_base("OL",G)$(Y_base("OL",G)>1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G) AND 1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)<0)=0;
+
 
 *--- Y_pre
 
 Y_pre(L,G)$(Y_base(L,G))=Y_base(L,G);
+
 Y_pre(L,G)$SUM(L2$MAP_Lagg(L2,L),Y_pre(L2,G))=SUM(L2$MAP_Lagg(L2,L),Y_pre(L2,G));
 
 VZ_load(L,G)=0;
@@ -616,8 +625,15 @@ $else.fileex
 VY_load(L,G)=0;
 $endif.fileex
 
-Y_pre(L,G)$(VY_load(L,G))=VY_load(L,G);
+*Y_pre(L,G)$(VY_load(L,G))=VY_load(L,G);
 
+Y_pre(L,G)$(VY_load(L,G) and not sameas(L,"SL"))=VY_load(L,G);
+
+*---load SL data for every year excl. base yr
+Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr%",G))= SSP_frac("SL","%Sy%","%Sr%",G);
+
+*---adjust exogenous variables to satisfy constraint
+Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
 
 $ifthen.bio %biocurve%==on
 $ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
@@ -658,6 +674,8 @@ $else
 $	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 $	load protectfrac
 
+*---minimize protected fraction to satify constraint
+protectfrac(G)$(protectfrac(G))=min(protectfrac(G),1-Y_pre("SL",G)-Y_pre("OL",G));
 
 $endif
 
@@ -1501,6 +1519,7 @@ VZL=VZ_load
 PLDM=PLDM_load
 PCDM=PCDM_load
 *ps,PLDM,pr,pr_price_base,pr_price_indx,pc,pc_input,pc_area
+SSP_frac
 Psol_stat
 *VYP,VYN
 VOBJ
@@ -1540,8 +1559,8 @@ $if %Sy%==%base_year% AREA_base("GL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%
 $if %Sy%==%base_year% AREA_base("FRS","base")=SUM(G,GA(G)*frac_rcp("%Sr%","PRM_FRS","%base_year%",G));
 $if %Sy%==%base_year% AREA_base("SL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","SL","%base_year%",G));
 
-*$if not %Sy%==%base_year% AREA_base("SL","base_ssp")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
-*$if %Sy%==%base_year% AREA_base("SL","base_ssp")=SUM(G,GA(G)*SSP_frac("SL","2010","%Sr%",G));
+$if not %Sy%==%base_year% AREA_base("SL","base_ssp")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
+$if %Sy%==%base_year% AREA_base("SL","base_ssp")=SUM(G,GA(G)*SSP_frac("SL","2010","%Sr%",G));
 
 AREA_base(LDM,"cge")=PLDM(LDM);
 AREA_base("CL","cge")=SUM(LDM$LDMCROP(LDM),PLDM(LDM));

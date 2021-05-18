@@ -21,11 +21,11 @@ for %%A in (%COUNTRY%) do (
 	mkdir ..\output\gdx\base\%%A
 	mkdir ..\output\gdx\base\%%A\analysis
 
-	gams ..\AIMPLUM\prog\LandUseModel_mcp.gms --Sr=%%A --Sy=2005 --SCE=SSP5 --CLP=BaU --IAV=NoCC --parallel=on MaxProcDir=100
+	gams ..\AIMPLUM\prog\LandUseModel_mcp.gms --Sr=%%A --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --parallel=on MaxProcDir=100
 rem pause
-	gams ..\AIMPLUM\prog\Disagg_FRSGL.gms --Sr=%%A --Sy=2005 --SCE=SSP5 --CLP=BaU --IAV=NoCC MaxProcDir=100
+	gams ..\AIMPLUM\prog\Disagg_FRSGL.gms --Sr=%%A --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC MaxProcDir=100
 rem pause
-#	gams ..\AIMPLUM\prog\Bioland.gms --Sr=%%A --Sy=2005 --SCE=SSP5 --CLP=BaU --IAV=NoCC --parallel=off MaxProcDir=100
+#	gams ..\AIMPLUM\prog\Bioland.gms --Sr=%%A --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --parallel=off MaxProcDir=100
 #pause
 )
 
