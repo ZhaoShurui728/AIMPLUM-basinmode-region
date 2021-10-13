@@ -1,63 +1,42 @@
-mkdir ..\..\exe
-mkdir ..\..\output
-mkdir ..\..\output\gdx
-mkdir ..\..\output\gdx\results
-mkdir ..\..\output\gdx\analysis
-mkdir ..\..\output\gdx\landmap
-mkdir ..\..\output\gdx\base
-mkdir ..\..\output\csv
-
-rem-----------------------------
+rem -----------------------------
 rem call settings\default.bat
 call settings\%1
 
-set COUNTRY=JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF
-#set COUNTRY=JPN
-set YEAR=2005 2010 2020 2030 2040 2050 2060 2070 2080 2090 2100
-
 rem abondonned land treatment option.
-set OPTION=1 3 5
-rem-----------------------------
-
+set OPT=1 3 5
+set pausemode=%2
+set closemode=%3
+set basecsv=%4
+set BTC3option=%5
+set lumip=%6
+set bioyielcal2=%7
+set ssprcp=%8
+rem -----------------------------
 cd ..\..\exe
 
-for %%C in (%SCE%) do (
-for %%D in (%CLP%) do (
-for %%E in (%IAV%) do (
+rem ### gdx files aggregation
+gdxmerge "..\output\gdx\%1\analysis\*.gdx" output="..\output\gdx\results\results_%1.gdx"
+rem ### csv file created
+if %basecsv%==on gams ..\AIMPLUM\prog\gdx2csv.gms --split=1 --sce=%SCE% --clp=%CLP% --iav=%IAV% MaxProcDir=100 S=gdx2csv2nc1_%1
+if %BTC3option%==on (
+  for %%A in (%OPT%) do (
+    gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --wwfopt=%%A --wwfclass=opt MaxProcDir=100 R=gdx2csv2nc1_%1
+  )
+)
+if %lumip%==on (
+  gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --wwfopt=1 --lumip=on MaxProcDir=100 R=gdx2csv2nc1_%1
+)
+if %bioyielcal2%==on (
+  gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --bioyieldcalc=on MaxProcDir=100 R=gdx2csv2nc1_%1
+)
+if %ssprcp%==on (
+  gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --lumip=off --wwfclass=off MaxProcDir=100 R=gdx2csv2nc1_%1
+)
 
-   echo %%C_%%D_%%E merge
-#   start  "<%%C_%%D_%%E>" call ..\prog\shell\inc_prog\merge_parallel.bat %%C %%D %%E
+echo a > ..\output\txt\scenario_merge_end_%1.txt
+del ..\output\txt\scenario_merge_%1.txt
 
-rem   mkdir ..\output\csv\%%C_%%D_%%E
-   mkdir %%C_%%D_%%E
-   cd %%C_%%D_%%E
+if not %closemode%==on pause
+exit
 
-### gdx files aggregation
-	gdxmerge "..\..\output\gdx\%%C_%%D_%%E\analysis\*.gdx"
-	copy merged.gdx ..\..\output\gdx\results\results_%%C_%%D_%%E.gdx
-	del merged.gdx
-
-cd ..\
-rd /q /s %%C_%%D_%%E
-
-### csv file created
-gams ..\AIMPLUM\prog\gdx2csv.gms --split=1 --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100 S=gdx2csv2nc1_%%C_%%D_%%E
-pause
-
-for %%A in (%OPTION%) do (
-
-	gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%%C --clp=%%D --iav=%%E --wwfopt=%%A MaxProcDir=100 R=gdx2csv2nc1_%%C_%%D_%%E
-	
-
-))))
-
-pause
-
-gdxmerge "..\output\gdx\analysis\*.gdx"
-copy merged.gdx ..\output\gdx\final_results.gdx
-del merged.gdx
-
-pause
-
-EXIT
 

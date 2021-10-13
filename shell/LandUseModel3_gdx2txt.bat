@@ -1,50 +1,27 @@
-mkdir ..\..\exe
-mkdir ..\..\output
-mkdir ..\..\output\gdx
-mkdir ..\..\output\gdx\analysis
-mkdir ..\..\output\gdx\landmap
-mkdir ..\..\output\gdx\base
 
 rem-----------------------------
 rem call settings\default.bat
 call settings\%1
 
 set COUNTRY=JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF
-set COUNTRY=WLD
-set YEAR=2005 2010 2020 2030 2040 2050 2060 2070 2080 2090 2100
-set YEAR=2005 2010 2030 2050 2080 2100
-set YEAR=2005 2050 2100
+rem set COUNTRY=WLD
+rem set YEAR=2005 2010 2020 2030 2040 2050 2060 2070 2080 2090 2100
+set YEAR=%~3
+
 rem set YEAR=2050 2070
 rem set YEAR=2005
 rem-----------------------------
 
 cd ..\..\exe
 
-for %%C in (%SCE%) do (
-for %%D in (%CLP%) do (
-for %%E in (%IAV%) do (
-
-   echo %%C_%%D_%%E gdx2txt
-
-  	mkdir ..\output\txt\%%C_%%D_%%E
-	mkdir ..\output\png\%%C_%%D_%%E
-	mkdir ..\output\gdxii\%%C_%%D_%%E
-
+for %%B in (%YEAR%) do (
+  gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=WLD --Sy=%%B --sce=%SCE% --clp=%CLP% --iav=%IAV% MaxProcDir=100
   for %%A in (%COUNTRY%) do (
+  rem 	gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=%%A --Sy=%%B --sce=%SCE% --clp=%CLP% --iav=%IAV% MaxProcDir=100
+  )
+)
 
-  	mkdir ..\output\txt\%%C_%%D_%%E\%%A
- 	mkdir ..\output\png\%%C_%%D_%%E\%%A
- 	mkdir ..\output\gdxii\%%C_%%D_%%E\%%A
-
-	for %%B in (%YEAR%) do (
-
-   	gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=%%A --Sy=%%B --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100
-
-#	pause
-  	)
-  ))))
-
-pause
+if %2==on pause
 
 EXIT
 

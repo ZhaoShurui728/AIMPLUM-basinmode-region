@@ -23,6 +23,7 @@ $setglobal biodivprice off
 $setglobal only3rdgenbio off
 $setglobal noAFRtarget off
 $setglobal not1stiter off
+$setglobal NThreads 3
 
 * FAO FRA protection
 $setglobal frsprotectexpand on
@@ -1100,7 +1101,7 @@ roaddens=ruralroadlength("%Sr%")/SUM(LDM$LDMCROP(LDM),PLDM(LDM))/1000;
 $gdxin '%prog_dir%/data/Data_prep.gdx'
 $load GL=GL%Sr%
 
-* ˆê’è‹——£ˆÈã—£‚ê‚½ƒGƒŠƒA‚É‚ÍÅ‘å’l‚ğ“ü‚ê‚é
+* ï¿½ï¿½è‹—ï¿½ï¿½ï¿½Èã—£ï¿½ê‚½ï¿½Gï¿½ï¿½ï¿½Aï¿½É‚ÍÅ‘ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 GLMAX=smax((G,G2)$GL(G,G2),GL(G,G2));
 GL(G,G2)$(GL(G,G2)=0 AND (NOT sameas(G,G2)))=GLMAX;
 GLMIN0(L,G)$(LAFR(L) AND NOT Y_base("HAV_FRS",G))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
@@ -1272,6 +1273,7 @@ option sysout=off;
 option limrow=2000;
 option limcol=0;
 option profile=0;
+option threads=%NThreads%;
 
 $if %parallel%==on option SOLPRINT=ON;
 LandUseModel_LP.HOLDFIXED   = 1 ;

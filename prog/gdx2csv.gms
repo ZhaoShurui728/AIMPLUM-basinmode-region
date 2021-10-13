@@ -258,18 +258,18 @@ ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(
 
 *$endif.rsfabd
 
-$ifthen.bioyield %bioyieldcalc%==on
-$gdxin '../output/gdx/all/analysis_%SCE%_%CLP%_%IAV%.gdx'
-$load YIELD_BIO
-
-YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
-$endif.bioyield
-
 
 $endif.split
 $if %split%==1 $exit
 
-*$batinclude %prog_dir%/prog/outputcsv_yield.gms BIO
+$ifthen.bioyield %bioyieldcalc%==on
+$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
+$load YIELD_BIO
+
+YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
+$batinclude %prog_dir%/prog/outputcsv_yield.gms BIO
+$exit
+$endif.bioyield
 
 
 $ifthen.p %lumip%==on
@@ -295,7 +295,7 @@ $batinclude %prog_dir%/prog/outputcsv_lumip.gms crpbf_c4ann
 $batinclude %prog_dir%/prog/outputcsv_lumip.gms flood
 $batinclude %prog_dir%/prog/outputcsv_lumip.gms fallow
 
-$elseif.p %wwfclass%==on
+$elseif.p %lumip%_%wwfclass%==off_on
 
 VY_IJwwf(Y,Lwwf,I,J)=SUM(L$MAP_WWF(Lwwf,L),VY_IJ(Y,L,I,J));
 
@@ -308,7 +308,7 @@ $batinclude %prog_dir%/prog/outputcsv_wwf.gms restored
 $batinclude %prog_dir%/prog/outputcsv_wwf.gms other
 $batinclude %prog_dir%/prog/outputcsv_wwf.gms built_up_areas
 
-$elseif.p %wwfclass%==opt
+$elseif.p %lumip%_%wwfclass%==off_opt
 
 set
 Lwwfnum/
@@ -361,6 +361,9 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
 * put -999 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%_opt%wwfopt%.gdx'
+VY_IJwwfnum
+;
 
 parameter
 plwwfnum/10/
@@ -372,7 +375,7 @@ file output /%prog_dir%\..\output\csv\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
 put output;
 output.pw=100000;
 put "LC_area_share%wwfopt%", "= "/;
-* åãâ ÇÃèoóÕ
+* ÔøΩÔøΩÔøΩ ÇÃèoÔøΩÔøΩ
 
 loop(Y,
  loop(Lwwfnum,
@@ -480,9 +483,6 @@ $batinclude %prog_dir%/prog/outputcsv.gms AFR
 $endif.p
 
 
-execute_unload '../output/csv/%SCE%_%CLP%_%IAV%_opt%wwfopt%.gdx'
-VY_IJwwfnum
-;
 
 
 

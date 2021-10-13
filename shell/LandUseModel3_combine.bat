@@ -1,33 +1,29 @@
-mkdir ..\..\exe
-mkdir ..\..\output
-mkdir ..\..\output\gdx
-mkdir ..\..\output\gdx\analysis
-mkdir ..\..\output\gdx\landmap
-mkdir ..\..\output\gdx\base
 
 rem-----------------------------
 rem call settings\default.bat
 call settings\%1
-
+set pausemode=%2
+set COUNTRY=%~3
+set closemode=%4
 rem-----------------------------
 
 cd ..\..\exe
 
-for %%C in (%SCE%) do (
-for %%D in (%CLP%) do (
-for %%E in (%IAV%) do (
+mkdir %1
+cd %1
+for %%A in (%COUNTRY%) do (
+  gdxmerge "..\..\output\gdx\%1\%%A\*.gdx" output="..\..\output\gdx\%1\cbnal\%%A.gdx"
+  gdxmerge "..\..\output\gdx\%1\%%A\analysis\*.gdx" output="..\..\output\gdx\%1\analysis\%%A.gdx"
+)
+gdxmerge "..\..\output\gdx\%1\bio\*.gdx" output="..\..\output\gdx\%1\bio.gdx"
 
-gams ..\AIMPLUM\prog\combine.gms --SCE=%%C --CLP=%%D --IAV=%%E MaxProcDir=100
-pause
-)))
+cd ..\
+rd /q /s %1
+gams ..\AIMPLUM\prog\combine.gms --SCE=%SCE% --CLP=%CLP% --IAV=%IAV% MaxProcDir=100 --bioyieldcalc=%4
 
-pause
+echo a > ..\output\txt\scenario_merge2_end_%1.txt
+del ..\output\txt\scenario_merge2_%1.txt
 
-gdxmerge "..\output\gdx\analysis\*.gdx"
-copy merged.gdx ..\output\gdx\final_results.gdx
-del merged.gdx
+if not %closemode%==on pause
 
-pause
-
-EXIT
-
+exit
