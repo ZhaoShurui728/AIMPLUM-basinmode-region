@@ -30,5 +30,7 @@ loop((L,I,J)$(Ybase_IJ(L,I,J)),
 
 $endif
 
-$if %Sy%==2100 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%base_year%.gdx'
-$if %Sy%==2100 $load VY_1=VY_load
+$ifthen not %Sy%==2005 
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%base_year%.gdx'
+$load VY_1=VY_load
+$endif

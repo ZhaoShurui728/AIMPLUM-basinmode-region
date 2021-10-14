@@ -19,7 +19,7 @@ gdxmerge "..\..\output\gdx\%1\bio\*.gdx" output="..\..\output\gdx\%1\bio.gdx"
 
 cd ..\
 rd /q /s %1
-gams ..\AIMPLUM\prog\combine.gms --SCE=%SCE% --CLP=%CLP% --IAV=%IAV% MaxProcDir=100 --bioyieldcalc=%4
+gams ..\AIMPLUM\prog\combine.gms --SCE=%SCE% --CLP=%CLP% --IAV=%IAV% --bioyielcal=on MaxProcDir=100
 
 echo a > ..\output\txt\scenario_merge2_end_%1.txt
 del ..\output\txt\scenario_merge2_%1.txt

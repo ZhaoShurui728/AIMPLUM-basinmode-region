@@ -4,7 +4,7 @@ $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal lumip off
 $setglobal bioyieldcalc off
-
+$setglobal gdxout off
 $setglobal wwfclass opt
 $setglobal wwfopt 1
 * wwf should be selected from  off, on, opt.
@@ -361,9 +361,11 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
 * put -999 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
-execute_unload '../output/csv/%SCE%_%CLP%_%IAV%_opt%wwfopt%.gdx'
+$ifthen.gdxout %gdxout%==on
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%/%SCE%_%CLP%_%IAV%_opt%wwfopt%.gdx'
 VY_IJwwfnum
 ;
+$endif.gdxout
 
 parameter
 plwwfnum/10/
@@ -371,7 +373,7 @@ plwwfnum/10/
 $if %wwfopt%==4 plwwfnum=14;
 $if %wwfopt%==5 plwwfnum=14;
 
-file output /%prog_dir%\..\output\csv\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
+file output /%prog_dir%\..\output\csv\%SCE%_%CLP%_%IAV%\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
 put output;
 output.pw=100000;
 put "LC_area_share%wwfopt%", "= "/;

@@ -9,7 +9,7 @@ set closemode=%3
 set basecsv=%4
 set BTC3option=%5
 set lumip=%6
-set bioyielcal2=%7
+set bioyielcal=%7
 set ssprcp=%8
 rem -----------------------------
 cd ..\..\exe
@@ -26,13 +26,14 @@ if %BTC3option%==on (
 if %lumip%==on (
   gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --wwfopt=1 --lumip=on MaxProcDir=100 R=gdx2csv2nc1_%1
 )
-if %bioyielcal2%==on (
+if %bioyielcal%==on (
   gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --bioyieldcalc=on MaxProcDir=100 R=gdx2csv2nc1_%1
 )
 if %ssprcp%==on (
   gams ..\AIMPLUM\prog\gdx2csv.gms --split=2 --sce=%SCE% --clp=%CLP% --iav=%IAV% --lumip=off --wwfclass=off MaxProcDir=100 R=gdx2csv2nc1_%1
 )
 
+del "..\output\gdx\results\results_%1.gdx"
 echo a > ..\output\txt\scenario_merge_end_%1.txt
 del ..\output\txt\scenario_merge_%1.txt
 

@@ -123,37 +123,15 @@ $offtext
 
 
 VY_IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM((I2,J2),VY_IJ(L,I2,J2)) AND (VY_IJ(L,I,J)=0))=-0.00001;
-
-
-
-
-file resultsall /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\%Sy%.txt/;
-resultsall.pc=6;
-put resultsall;
-loop((L,I,J)$(VY_IJ(L,I,J)),
-     put L.tl,I.tl,J.tl,VY_IJ(L,I,J):10:5/
-);
-
-
 *----- Difference
 
-$ifthen %Sy%==2100
-
-VY_1IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G)))=SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G));
-Dif_Y(L,I,J)$FLAG_IJ(I,J)=VY_IJ(L,I,J)-VY_1IJ(L,I,J);
-
-file resultsall2 /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\%Sy%dif.txt/;
-resultsall2.pc=6;
-put resultsall2;
-loop((L,I,J)$(Dif_Y(L,I,J)),
-     put L.tl,I.tl,J.tl,Dif_Y(L,I,J):10:5/
-);
-
+$ifthen not %Sy%==2005
+  VY_1IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G)))=SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G));
+  Dif_Y(L,I,J)$FLAG_IJ(I,J)=VY_IJ(L,I,J)-VY_1IJ(L,I,J);
 $endif
 
-
 execute_unload '../output/gdxii/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%ij.gdx'
-
+Dif_Y,VY_IJ;
 $exit
 
 
