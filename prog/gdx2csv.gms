@@ -267,7 +267,7 @@ $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
 $load YIELD_BIO
 
 YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
-$batinclude %prog_dir%/prog/outputcsv_yield.gms BIO
+$batinclude %prog_dir%/inc_prog/outputcsv_yield.gms BIO
 $exit
 $endif.bioyield
 
@@ -276,24 +276,24 @@ $ifthen.p %lumip%==on
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
 
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms c3ann
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms c4ann
-*$batinclude %prog_dir%/prog/outputcsv_lumip.gms c3per
-*$batinclude %prog_dir%/prog/outputcsv_lumip.gms c4per
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms c3nfx
-*$batinclude %prog_dir%/prog/outputcsv_lumip.gms range
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms pastr
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms primf
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms secdf
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms urban
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms irrig_c3ann
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms irrig_c4ann
-*$batinclude %prog_dir%/prog/outputcsv_lumip.gms irrig_c3per
-*$batinclude %prog_dir%/prog/outputcsv_lumip.gms irrig_c4per
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms irrig_c3nfx
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms crpbf_c4ann
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms flood
-$batinclude %prog_dir%/prog/outputcsv_lumip.gms fallow
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c3ann
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c4ann
+*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c3per
+*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c4per
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c3nfx
+*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms range
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms pastr
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms primf
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms secdf
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms urban
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c3ann
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c4ann
+*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c3per
+*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c4per
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c3nfx
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms crpbf_c4ann
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms flood
+$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms fallow
 
 $elseif.p %lumip%_%wwfclass%==off_on
 
@@ -470,17 +470,17 @@ $endif.wwfopt
 $else.p
 
 
-*$batinclude %prog_dir%/prog/outputcsv.gms FRS
-$batinclude %prog_dir%/prog/outputcsv.gms PAS
-$batinclude %prog_dir%/prog/outputcsv.gms CL
-$batinclude %prog_dir%/prog/outputcsv.gms BIO
-$batinclude %prog_dir%/prog/outputcsv.gms SL
-$batinclude %prog_dir%/prog/outputcsv.gms OL
-$batinclude %prog_dir%/prog/outputcsv.gms GL
-$batinclude %prog_dir%/prog/outputcsv.gms PRMFRS
-$batinclude %prog_dir%/prog/outputcsv.gms MNGFRS
-$batinclude %prog_dir%/prog/outputcsv.gms RES
-$batinclude %prog_dir%/prog/outputcsv.gms AFR
+*$batinclude %prog_dir%/inc_prog/outputcsv.gms FRS
+$batinclude %prog_dir%/inc_prog/outputcsv.gms PAS
+$batinclude %prog_dir%/inc_prog/outputcsv.gms CL
+$batinclude %prog_dir%/inc_prog/outputcsv.gms BIO
+$batinclude %prog_dir%/inc_prog/outputcsv.gms SL
+$batinclude %prog_dir%/inc_prog/outputcsv.gms OL
+$batinclude %prog_dir%/inc_prog/outputcsv.gms GL
+$batinclude %prog_dir%/inc_prog/outputcsv.gms PRMFRS
+$batinclude %prog_dir%/inc_prog/outputcsv.gms MNGFRS
+$batinclude %prog_dir%/inc_prog/outputcsv.gms RES
+$batinclude %prog_dir%/inc_prog/outputcsv.gms AFR
 
 $endif.p
 

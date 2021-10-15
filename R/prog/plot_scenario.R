@@ -34,10 +34,10 @@ MyThemeLine <- theme_grey() +
   )
 
 
-regionin <- c("USA","XE25","XER","TUR","XOC","CHN","IND","JPN","XSE","XSA","CAN","BRA","XLM","CIS","XME","XNF","XAF")
-regionin <-  c("BRA","XLM","XSE","XSA","IND","XAF")
-regionin <-  c("WLD")
+#regionin <- c("USA","XE25","XER","TUR","XOC","CHN","IND","JPN","XSE","XSA","CAN","BRA","XLM","CIS","XME","XNF","XAF")
+#regionin <-  c("WLD")
 #yearin <-  c("2005","2050","2100")
+regionin <- read.table(file=paste0("../../../output/txt/",scenarioname,"_region.txt"),dec=" ") 
 yearin <- scan(file=paste0("../../../output/txt/",scenarioname,"_year.txt"),dec=" ") 
 landin <-  c("FRS")
 if(regionin=="WLD"){
@@ -70,8 +70,8 @@ for(r in (1:length(regionin))){
           pdata0 <- rgdx.param(load_filename,load_paraname)
           if (nrow(pdata0)>1) {
           	names(pdata0) <- colnames
-          	pdata0$X1 <- as.numeric(pdata0$X1)
-          	pdata0$X2 <- as.numeric(pdata0$X2)
+          	pdata0$X1 <- as.numeric(levels(pdata0$X1))[pdata0$X1]
+          	pdata0$X2 <- as.numeric(levels(pdata0$X2))[pdata0$X2]
           	pdata0$Variable <- as.character(pdata0$Variable)
           	if(landtype=="all"){
           	  porg <- pdata0[pdata0$Variable==c("FRS")|pdata0$Variable==c("PAS")|pdata0$Variable==c("GL")|pdata0$Variable==c("CL")|pdata0$Variable==c("BIO")|pdata0$Variable==c("AFR"), c(1,2,3,4)]

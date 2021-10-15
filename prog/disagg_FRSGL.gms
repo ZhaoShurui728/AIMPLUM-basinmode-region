@@ -110,13 +110,13 @@ Area_load(L)
 ;
 
 $ifthen %Sr%==USA
-$batinclude %prog_dir%/prog/disagg_FRSGLR.gms USA
-$batinclude %prog_dir%/prog/disagg_FRSGLR.gms CAN
+$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms USA
+$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms CAN
 $elseif %Sr%==CAN
-$batinclude %prog_dir%/prog/disagg_FRSGLR.gms USA
-$batinclude %prog_dir%/prog/disagg_FRSGLR.gms CAN
+$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms USA
+$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms CAN
 $else
-$batinclude %prog_dir%/prog/disagg_FRSGLR.gms %Sr%
+$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms %Sr%
 $endif
 
 $if %biocurve%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);

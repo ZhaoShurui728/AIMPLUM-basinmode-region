@@ -6,7 +6,7 @@ $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal Ystep0 10
-
+$setglobal dif off
 
 *$if %Sy%==2005 $setglobal supcuv on
 *$if %Sy%==2030 $setglobal supcuv on
@@ -99,8 +99,8 @@ VYLAFRIJ_nocc(I,J)
 $gdxin '%prog_dir%/data/data_prep.gdx'
 $load Map_GIJ MAP_RIJ
 
-$if %Sr%==WLD $include %prog_dir%/prog/gdx2txt_wld.gms
-$if not %Sr%==WLD $include %prog_dir%/prog/gdx2txt_region.gms
+$if %Sr%==WLD $include %prog_dir%/inc_prog/gdx2txt_wld.gms
+$if not %Sr%==WLD $include %prog_dir%/inc_prog/gdx2txt_region.gms
 
 
 VY_IJ(L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J)),VY_load(L,G));
@@ -122,16 +122,18 @@ $endif.afr
 $offtext
 
 
-VY_IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM((I2,J2),VY_IJ(L,I2,J2)) AND (VY_IJ(L,I,J)=0))=-0.00001;
+*VY_IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM((I2,J2),VY_IJ(L,I2,J2)) AND (VY_IJ(L,I,J)=0))=-0.00001;
 *----- Difference
 
-$ifthen not %Sy%==2005
+$ifthen.dif %dif%==on
+$ifthen.b not %Sy%==2005
   VY_1IJ(L,I,J)$(FLAG_IJ(I,J) AND SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G)))=SUM(G$(MAP_GIJ(G,I,J)),VY_1(L,G));
   Dif_Y(L,I,J)$FLAG_IJ(I,J)=VY_IJ(L,I,J)-VY_1IJ(L,I,J);
-$endif
+$endif.b
+$endif.dif
 
 execute_unload '../output/gdxii/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%ij.gdx'
-Dif_Y,VY_IJ;
+Dif_Y,VY_IJ,Yield_IJ;
 $exit
 
 

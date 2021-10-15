@@ -3,7 +3,7 @@
 $Setglobal Sr JPN
 $Setglobal Sy 2006
 $Setglobal base_year 2005
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ..\AIMPLUM
 
 $include %prog_dir%/inc_prog/pre_year.gms
 

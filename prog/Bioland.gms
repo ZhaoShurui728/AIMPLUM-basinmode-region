@@ -105,23 +105,23 @@ YIELDBIO(G)
 $gdxin '%prog_dir%/data/Data_prep.gdx'
 $load GA MAP_RG
 
-$batinclude %prog_dir%/prog/BiolandR.gms USA
-$batinclude %prog_dir%/prog/BiolandR.gms XE25
-$batinclude %prog_dir%/prog/BiolandR.gms XER
-$batinclude %prog_dir%/prog/BiolandR.gms TUR
-$batinclude %prog_dir%/prog/BiolandR.gms XOC
-$batinclude %prog_dir%/prog/BiolandR.gms CHN
-$batinclude %prog_dir%/prog/BiolandR.gms IND
-$batinclude %prog_dir%/prog/BiolandR.gms JPN
-$batinclude %prog_dir%/prog/BiolandR.gms XSE
-$batinclude %prog_dir%/prog/BiolandR.gms XSA
-$batinclude %prog_dir%/prog/BiolandR.gms CAN
-$batinclude %prog_dir%/prog/BiolandR.gms BRA
-$batinclude %prog_dir%/prog/BiolandR.gms XLM
-$batinclude %prog_dir%/prog/BiolandR.gms CIS
-$batinclude %prog_dir%/prog/BiolandR.gms XME
-$batinclude %prog_dir%/prog/BiolandR.gms XNF
-$batinclude %prog_dir%/prog/BiolandR.gms XAF
+$batinclude %prog_dir%/inc_prog/BiolandR.gms USA
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XE25
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XER
+$batinclude %prog_dir%/inc_prog/BiolandR.gms TUR
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XOC
+$batinclude %prog_dir%/inc_prog/BiolandR.gms CHN
+$batinclude %prog_dir%/inc_prog/BiolandR.gms IND
+$batinclude %prog_dir%/inc_prog/BiolandR.gms JPN
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XSE
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XSA
+$batinclude %prog_dir%/inc_prog/BiolandR.gms CAN
+$batinclude %prog_dir%/inc_prog/BiolandR.gms BRA
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XLM
+$batinclude %prog_dir%/inc_prog/BiolandR.gms CIS
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XME
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XNF
+$batinclude %prog_dir%/inc_prog/BiolandR.gms XAF
 
 set
 A_BTR2 Biocrop residue4 /BTR2/
@@ -319,7 +319,7 @@ $ifthen %bioscm%==BSP
 *YBIO(G)$(PBIO(G,LB)<%PBIOEXOP0%)=RAREA_BIOP(G);
 
 VYBIO.FX(G,LB)$(PBIO(G,LB)>%PBIOEXOP0%)=0;
-$if not %biodiversity%==off VYBIO.FX(SUBG(G),LB)=0ÅG
+$if not %biodiversity%==off VYBIO.FX(SUBG(G),LB)=0ÔøΩG
 
 EQVQ..  VQ =E= SUM(LB,SUM(G$(BIOENE(G) AND RAREA_BIOP(G) AND (PBIO(G,LB)<=%PBIOEXOP0%)), BIOENE(G) * GA(G) * VYBIO(G,LB))) / 10**6;
 EQVYBIO(G)$(BIOENE(G) AND RAREA_BIOP(G))..      SUM(LB$(PBIO(G,LB)<=%PBIOEXOP0%),VYBIO(G,LB)) =L= RAREA_BIOP(G);

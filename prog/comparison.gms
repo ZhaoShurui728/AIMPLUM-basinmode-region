@@ -39,12 +39,12 @@ RatioLUCHEM_P(R,Y,SCE_CLP)
 ;
 
 
-$if exist '../output/gdx/all/comparison_SSP1_BaU_NoCC.gdx' $batinclude %prog_dir%/prog/comparisonR.gms SSP1 BaU
-$if exist '../output/gdx/all/comparison_SSP2_BaU_NoCC.gdx' $batinclude %prog_dir%/prog/comparisonR.gms SSP2 BaU
-$if exist '../output/gdx/all/comparison_SSP2_26W_NoCC.gdx' $batinclude %prog_dir%/prog/comparisonR.gms SSP2 26W
-$if exist '../output/gdx/all/comparison_SSP3_BaU_NoCC.gdx' $batinclude %prog_dir%/prog/comparisonR.gms SSP3 BaU
-$if exist '../output/gdx/all/comparison_SSP4_BaU_NoCC.gdx' $batinclude %prog_dir%/prog/comparisonR.gms SSP4 BaU
-$if exist '../output/gdx/all/comparison_SSP5_BaU_NoCC.gdx' $batinclude %prog_dir%/prog/comparisonR.gms SSP5 BaU
+$if exist '../output/gdx/all/comparison_SSP1_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP1 BaU
+$if exist '../output/gdx/all/comparison_SSP2_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP2 BaU
+$if exist '../output/gdx/all/comparison_SSP2_26W_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP2 26W
+$if exist '../output/gdx/all/comparison_SSP3_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP3 BaU
+$if exist '../output/gdx/all/comparison_SSP4_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP4 BaU
+$if exist '../output/gdx/all/comparison_SSP5_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP5 BaU
 
 
 

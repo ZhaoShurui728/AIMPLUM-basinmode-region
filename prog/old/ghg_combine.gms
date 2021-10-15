@@ -44,23 +44,23 @@ parameter
 GHGL(R,Y,L)
 ;
 
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms USA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XE25
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XER
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms TUR
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XOC
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms CHN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms IND
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms JPN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XSE
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XSA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms CAN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms BRA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XLM
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms CIS
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XME
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XNF
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude %prog_dir%/prog/ghg_combineR.gms XAF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms USA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XE25
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XER
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms TUR
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XOC
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CHN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms IND
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms JPN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XSE
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XSA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CAN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms BRA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XLM
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CIS
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XME
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XNF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XAF
 
 
 GHGL(R2,Y,L)$SUM(R$MAP_RAGG(R,R2),GHGL(R,Y,L))=SUM(R$MAP_RAGG(R,R2),GHGL(R,Y,L));

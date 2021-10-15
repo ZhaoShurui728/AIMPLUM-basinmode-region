@@ -23,7 +23,7 @@ $setglobal biodivprice off
 $setglobal only3rdgenbio off
 $setglobal noAFRtarget off
 $setglobal not1stiter off
-$setglobal NThreads 3
+$setglobal CPLEXThreadOp 3
 
 * FAO FRA protection
 $setglobal frsprotectexpand on
@@ -1273,7 +1273,7 @@ option sysout=off;
 option limrow=2000;
 option limcol=0;
 option profile=0;
-option threads=%NThreads%;
+option threads=%CPLEXThreadOp%;
 
 $if %parallel%==on option SOLPRINT=ON;
 LandUseModel_LP.HOLDFIXED   = 1 ;
@@ -1377,11 +1377,11 @@ $endif
 
 *------ Pasture -----------*
 
-$include %prog_dir%/prog/pasture.gms
+$include %prog_dir%/inc_prog/pasture.gms
 
 *------ Crop fallow -----------*
 
-$include %prog_dir%/prog/crop_fallow.gms
+$include %prog_dir%/inc_prog/crop_fallow.gms
 
 
 $ontext

@@ -8,10 +8,12 @@ $setglobal iav NoCC
 $setglobal biocurve off
 $setglobal supcuvout off
 $setglobal costcalc off
-$setglobal bioyieldcalc off
+$setglobal bioyieldcalc on
 $setglobal biodivcalc off
 $setglobal rlimapcalc off
 *$setglobal restoration off
+$if %supcuvout%==on $setglobal biocurve on
+
 
 
 
@@ -198,7 +200,7 @@ BION    new bioenergy cropland
 BIOO    old bioenergy cropland
 /
 ;
-Alias(R,R2),(G,G2),(LB,LB2);
+Alias(R,R2),(G,G2),(LB,LB2),(L,L2);
 set
 MAP_RAGG(R,R2)	/
 $include %prog_dir%\define/region/region17_agg.map
@@ -265,23 +267,23 @@ $endif
 $gdxin '%prog_dir%/data/Data_prep.gdx'
 $load GA
 
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude %prog_dir%/prog/combineR.gms USA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude %prog_dir%/prog/combineR.gms XE25
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude %prog_dir%/prog/combineR.gms XER
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude %prog_dir%/prog/combineR.gms TUR
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude %prog_dir%/prog/combineR.gms XOC
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude %prog_dir%/prog/combineR.gms CHN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude %prog_dir%/prog/combineR.gms IND
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude %prog_dir%/prog/combineR.gms JPN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude %prog_dir%/prog/combineR.gms XSE
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude %prog_dir%/prog/combineR.gms XSA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude %prog_dir%/prog/combineR.gms CAN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude %prog_dir%/prog/combineR.gms BRA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude %prog_dir%/prog/combineR.gms XLM
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude %prog_dir%/prog/combineR.gms CIS
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude %prog_dir%/prog/combineR.gms XME
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude %prog_dir%/prog/combineR.gms XNF
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude %prog_dir%/prog/combineR.gms XAF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms USA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XE25
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XER
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms TUR
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XOC
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms CHN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms IND
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms JPN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XSE
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XSA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms CAN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms BRA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XLM
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms CIS
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XME
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XNF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XAF
 
 Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 
@@ -298,16 +300,13 @@ GHGL(Ragg,Y,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R
 $ifthen %bioyieldcalc%==on
 
 parameter
-MF(L,R,Y)      management factor for bio crops
-
+  MF(L,R,Y)      management factor for bio crops
+  YIELD_BIO(R,Y,G)
 ;
-MF(L,R,Y)$(NOT LBIO(L))=1;
+MF(L,R,Y)$(SUM((Ragg,L2),Area(Ragg,Y,L2)) AND NOT LBIO(L))=1;
 MF(L,R,Y)$(MFA(R) AND LBIO(L))=min(0.8/MFA(R),MFB(R)**max(0,ordy(Y)-2010));
 
-YIELD(R,Y,L,G)$(YIELD_load(R,L,G))=YIELD_load(R,L,G)*MF(L,R,Y);
-parameter
-YIELD_BIO(R,Y,G)
-;
+YIELD(R,Y,L,G)$(YIELD_load(R,L,G) AND SUM((Ragg,L2),Area(Ragg,Y,L2)))=YIELD_load(R,L,G)*MF(L,R,Y);
 YIELD_BIO(R,Y,G)=YIELD(R,Y,"BIO",G);
 
 $endif
@@ -362,7 +361,7 @@ PATLDM(R,Y,LDM,costitem)=SUM(L$(MAP_LLDM(L,LDM)),PATL(R,Y,L,costitem));
 
 $endif
 
-*----Bioenergy supply curve SOATED ---*
+*----Bioenergy supply curve SORTED ---*
 
 $ifthen %supcuvout%==on
 
@@ -372,7 +371,6 @@ MAP_SrG(Sr,G)	Relationship between country Sr and cell G
 ;
 $gdxin '%prog_dir%/data/Data_prep.gdx'
 $load MAP_RG
-$gdxin '%prog_dir%/data/MAP_SrG_tmp.gdx'
 $load MAP_SrG
 
 PBIOSUP(R,Y,G,LB,Scol)$MAP_RG(R,G)=PBIOSUP_load(Y,G,LB,Scol);
@@ -398,7 +396,7 @@ PBIOSOAT(Rall,Y,N,Scol)$(RBION(Rall) and Ysupcuv(Y) and Scolsum(Scol)) =sum((G,L
 PBIOSOAT(Rall,Y,N,"area_acm")$(RBION(Rall) and Ysupcuv(Y) and PBIOSOAT(Rall,Y,N,"area"))=sum(N2$(ord(N)>ord(N2) OR ord(N)=ord(N2)),PBIOSOAT(Rall,Y,N2,"area"));
 PBIOSOAT(Rall,Y,N,"quantity_acm")$(RBION(Rall) and Ysupcuv(Y) and PBIOSOAT(Rall,Y,N,"quantity"))=sum(N2$(ord(N)>ord(N2) OR ord(N)=ord(N2)),PBIOSOAT(Rall,Y,N2,"quantity"));
 
-execute_unload '../output/gdx/all/biosupcuv/biosupcuv_%SCE%_%CLP%_%IAV%.gdx'
+execute_unload '../output/gdx/all/biosupcuv_%SCE%_%CLP%_%IAV%.gdx'
 PBIOSOAT
 ;
 
@@ -572,7 +570,7 @@ $offtext
 PRLIestimator(Y,"Area.1000ha",I,J)$(SUM(LU_RLI3,PRLIestimator(Y,LU_RLI3,I,J))>0)=SUM((G)$MAP_GIJ(G,I,J), GA(G));
 
 execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%.gdx'
-PRLIestimator
+PRLIestimator;
 
 $endif.rlimap
 *-----------------------------------*
