@@ -57,16 +57,17 @@ for %%M in (%dirlist%) do (
   if not exist %%M mkdir %%M
 )
 echo a > ..\..\exe\mkdircomplete.txt
-for %%A in (%COUNTRY0%) do (
+if %global%==on set COUNTRY_dir=%COUNTRY0% WLD
+for %%A in (%COUNTRY_dir%) do (
 	if not exist ..\..\output\gdx\base\%%A\analysis mkdir ..\..\output\gdx\base\%%A\analysis
 )
 for %%F in (%scn%) do (
   set dirlist2=..\..\output\gdx\%%F ..\..\output\gdx\%%F\cbnal ..\..\output\gdx\%%F\analysis ..\..\output\gdx\%%F\bio ..\..\output\gdxii\%%F ^
-              ..\..\output\csv\%%F ..\..\output\png\%%F
+              ..\..\output\csv\%%F
   for %%M in (!dirlist2!) do (
     if not exist %%M mkdir %%M
   )
-  for %%A in (%COUNTRY0%) do (
+  for %%A in (%COUNTRY_dir%) do (
   	if not exist ..\..\output\gdx\%%F\%%A\analysis mkdir ..\..\output\gdx\%%F\%%A\analysis
   	if not exist ..\..\output\gdxii\%%F\%%A mkdir ..\..\output\gdxii\%%F\%%A
   )
