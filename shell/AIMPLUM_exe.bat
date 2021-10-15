@@ -27,7 +27,7 @@ cd shell
 rem #### end of basic configuration
 
 rem #### process run
-if not exist ..\..\exe\mkdircomplete.txt ( call :makedirectory )
+call :makedirectory 
 if %DataPrep%==on ( call src\DataPrep.bat )
 if %Basesim%==on ( call :Basesim )
 if %Futuresim%==on ( call :Futuresim )
@@ -71,7 +71,7 @@ for %%F in (%scn%) do (
   	if not exist ..\..\output\gdxii\%%F\%%A mkdir ..\..\output\gdxii\%%F\%%A
   )
 )
-pause
+
 exit /b
 
 rem Base simulation

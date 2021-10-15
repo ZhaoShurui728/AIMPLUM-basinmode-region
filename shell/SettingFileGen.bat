@@ -1,1 +1,1 @@
-bash ../src/SettingFileGen.sh
+bash src/SettingFileGen.sh
