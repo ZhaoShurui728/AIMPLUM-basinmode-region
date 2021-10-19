@@ -1,4 +1,4 @@
-*-*-*-*- This program is included by ..\prog\gdx2txt_wld.gms
+*-*-*-*- This program is included by ..\prog\gdx4png_wld.gms
 parameter
 VY_load%1(L,G)
 VY_1%1(L,G)

@@ -10,6 +10,7 @@ set NSc=0
 for %%F in (%scn%) do (
   set /a NSc = %NSc% + 1
 )
+rem CPLEX number of threds options 
 set CPLEXThreadOp=1
 for %%A in ( 2 3 ) do (
   set /a NScMl = %NSc% * %%A
@@ -164,7 +165,7 @@ setlocal enabledelayedexpansion
 if %pausemode%==on pause
 exit /b
 
-rem ######  To creat PNG file of land use map using R, run LandUseModel3_gdx2txt.bat and a R code (R/prog/plot_all.R)
+rem ######  To creat PNG file of land use map using R, run LandUseModel3_gdx4png.bat and a R code (R/prog/plot_all.R)
 :gdx4png
 setlocal enabledelayedexpansion
   del ..\..\output\txt\scenario_plot_*.txt

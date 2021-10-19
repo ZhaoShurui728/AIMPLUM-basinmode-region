@@ -541,7 +541,7 @@ $gdxin '%prog_dir%/data/land_map_gtap.gdx'
 $load land_basemap=base_map
 
 * Base-year land type data
-$gdxin '%prog_dir%/data/land_map_rcp.gdx'
+$gdxin '%prog_dir%/../data/land_map_rcp.gdx'
 $load frac_rcp=frac
 
 * Settled land type data

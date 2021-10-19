@@ -17,10 +17,10 @@ echo %YesrListFig% > ../output/txt/%SCENARIO%_year.txt
 echo a > ..\output\txt\scenario_plot_%SCENARIO%.txt
 for %%B in (%YesrListFig%) do (
   if %global%==on (
-    gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=WLD --Sy=%%B --sce=%SCE% --clp=%CLP% --iav=%IAV% --dif=%dif% MaxProcDir=100
+    gams ..\AIMPLUM\prog\gdx4png.gms --Sr=WLD --Sy=%%B --sce=%SCE% --clp=%CLP% --iav=%IAV% --dif=%dif% MaxProcDir=100
   ) else (
     for %%A in (%COUNTRY%) do (
-      gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=%%A --Sy=%%B --sce=%SCE% --clp=%CLP% --iav=%IAV% --dif=%dif% MaxProcDir=100
+      gams ..\AIMPLUM\prog\gdx4png.gms --Sr=%%A --Sy=%%B --sce=%SCE% --clp=%CLP% --iav=%IAV% --dif=%dif% MaxProcDir=100
     )
   )
 )

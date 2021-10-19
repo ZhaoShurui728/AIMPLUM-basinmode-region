@@ -26,7 +26,7 @@ for %%E in (%IAV%) do (
 
 	for %%B in (%YEAR%) do (
 
-   	gams ..\AIMPLUM\prog\gdx2txt.gms --Sr=%%A --Sy=%%B --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100
+   	gams ..\AIMPLUM\prog\gdx4png.gms --Sr=%%A --Sy=%%B --sce=%%C --clp=%%D --iav=%%E MaxProcDir=100
 
 #	pause
   	)

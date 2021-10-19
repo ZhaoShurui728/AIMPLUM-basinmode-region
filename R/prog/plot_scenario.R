@@ -102,7 +102,7 @@ for(r in (1:length(regionin))){
         
         	size_adj <- 550/((maxv-minv)*14)
         	title_name <- paste(scenarioname," ",regionin[r]," ",yearin[t])
-      #Hear geom_tile can be geom_raster
+      #Here geom_tile can be geom_raster
       		plot1 <- ggplot() + geom_tile(data=porg, aes(x=X2, y=X1, fill=Value)) +
       		geom_path(data=world,aes(x = long*2+360, y = lat*(-2)+180, group = group), colour = "black", size = 0.15) +
       		ylim(maxv,minv)+ xlim(minh,maxh)+ ggtitle(title_name) +

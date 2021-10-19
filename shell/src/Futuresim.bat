@@ -37,7 +37,7 @@ rem 3) Disaggregation of FRS and grassland
 if %DisagrrFRS%==on (
   for %%A in (%COUNTRY%) do (
     for %%B in (%YEAR%) do (
-	  gams ..\AIMPLUM\prog\Disagg_FRSGL.gms --Sr=%%A --Sy=%%B --SCE=%SCE% --CLP=%CLP% --IAV=%IAV% --biocurve=off MaxProcDir=100
+	    gams ..\AIMPLUM\prog\Disagg_FRSGL.gms --Sr=%%A --Sy=%%B --SCE=%SCE% --CLP=%CLP% --IAV=%IAV% --biocurve=off MaxProcDir=100
     )
   )
 )
