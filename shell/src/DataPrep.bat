@@ -1,4 +1,5 @@
 if not exist ../../exe mkdir ../../exe
 cd ../../exe
 gams ../AIMPLUM/prog/data_prep.gms
-pause
+cd ..\AIMPLUM\shell
+if %pausemode%==on pause
