@@ -93,12 +93,15 @@ parameter
 CS(G)           carbon density (stock or flow) of havested forest in cell G (MgC ha-1 (year-1))
 GA(G)           Grid area of cell G kha
 CSB     carbon stock boundary in forest and grassland (MgC ha-1)
-Planduse_load(Y,R,LCGE)
+Planduse_load(*,Y,R,LCGE)
+Planduse(Y,R,LCGE)
 ;
 
-$if %not1stiter%==off $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$if %not1stiter%==on $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%preIAV%.gdx'
+$if %not1stiter%==off $setglobal IAVload %IAV%
+$if %not1stiter%==on $setglobal IAVload %preIAV%
+$gdxin '%prog_dir%/../data/analysis.gdx'
 $load Planduse_load=Planduse
+Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,R,LCGE);
 
 $gdxin '%prog_dir%/data/Data_prep.gdx'
 $load GA
@@ -148,11 +151,11 @@ $ifthen.baseyear %Sy%==%base_year%
 *Pvalue(G,"cstock")$Pvalue(G,"area")=CS(G);
 
 $ifthen %Sr%==USA
-FRSArea=Planduse_load("%Sy%","USA","PRM_FRS")+Planduse_load("%Sy%","USA","MNG_FRS")+Planduse_load("%Sy%","CAN","PRM_FRS")+Planduse_load("%Sy%","CAN","MNG_FRS");
+FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Planduse("%Sy%","CAN","PRM_FRS")+Planduse("%Sy%","CAN","MNG_FRS");
 $elseif %Sr%==CAN
-FRSArea=Planduse_load("%Sy%","USA","PRM_FRS")+Planduse_load("%Sy%","USA","MNG_FRS")+Planduse_load("%Sy%","CAN","PRM_FRS")+Planduse_load("%Sy%","CAN","MNG_FRS");
+FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Planduse("%Sy%","CAN","PRM_FRS")+Planduse("%Sy%","CAN","MNG_FRS");
 $else
-FRSArea=Planduse_load("%Sy%","%Sr%","PRM_FRS")+Planduse_load("%Sy%","%Sr%","MNG_FRS");
+FRSArea=Planduse("%Sy%","%Sr%","PRM_FRS")+Planduse("%Sy%","%Sr%","MNG_FRS");
 $endif
 
 OTHFRSArea=SUM(G,VYL("AFR",G)*GA(G));

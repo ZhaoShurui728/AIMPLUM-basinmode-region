@@ -17,8 +17,9 @@ TX(AC)/YTAX,STAX,TAR,ETAX/
 Alias(AC,ACP);
 
 parameter
-PSAM_value(Y,R,AC,ACP)
-PSAM_volume(Y,R,AC,ACP)
+OUTPUTALL_Nominal(*,Y,R,AC)                         Output of sector AC nominal value| Million USD per year
+Pland_load(*,Y,R,A)                                     Land area by sectors
+Planduse_load(*,Y,R,LCGE)                                Land use | kha
 pc_input_bio
 pc_area_bio
 pc_bio(G)
@@ -34,27 +35,22 @@ CS_BIO(G)	carbon stock in base year in cell G (MgC ha-1)
 
 ;
 
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$load PSAM_value PSAM_volume
+$gdxin '%prog_dir%/../data/analysis.gdx'
+$load Outputall_nominal Planduse_load=Planduse Pland_load=pland_phs
 
 $gdxin '%prog_dir%/data/visit_data.gdx'
 $load PVISIT
 
 PVISIT(CVST,G)$(PVISIT(CVST,G)<0)=0;
-
 GJ_toe=41.8;
-
 CS_BIO(G)=PVISIT("C4",G);
 
 * [mil$]
-pc_input_bio=SUM(A$AGRO(A), SUM(C,PSAM_value("%Sy%","%Sr%",C,A)) + SUM(F,PSAM_value("%Sy%","%Sr%",F,A)) + SUM(TX,PSAM_value("%Sy%","%Sr%",TX,A)) + PSAM_value("%Sy%","%Sr%","ATAX",A));
-
-* [10^5ha --> ha]
-pc_area_bio=SUM(A$AGRO(A), SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) * 10**5;
-
+pc_input_bio=SUM(A$AGRO(A), OUTPUTALL_Nominal("%SCE%_%CLP%_%IAV%","%Sy%","%Sr%",A));
+* [10^3ha --> ha]
+pc_area_bio=("%SCE%_%CLP%_%IAV%","%Sy%","%Sr%","GRO") * 10**3;
 * [mil$/ha/year]
-pc_ctax(G)$SUM(L$LBIO(L),VY_load(L,G))=SUM(L$LBIO(L),VY_load(L,G)*CS_BIO(G)*PGHG)/SUM(L$LBIO(L),VY_load(L,G));
-
+pc_ctax(G)$SUM(L$LBIO(L),VY_load(L,G))=SUM(L$LBIO(L),VY_load(L,G)*CS_BIO(G)*PGHG("%Sy%"))/SUM(L$LBIO(L),VY_load(L,G));
 * [mil$/ha/year]
 pc_bio(G)$(pc_area_bio)=pc_input_bio/pc_area_bio+pc_ctax(G);
 

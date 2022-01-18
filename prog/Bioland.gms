@@ -128,6 +128,7 @@ A_BTR2 Biocrop residue4 /BTR2/
 ;
 parameter
 TBI(Y,R,A_BTR2) Bioenergy use [ktoe per year]
+TBI_load(*,Y,R,A_BTR2) Bioenergy use [ktoe per year]
 EJ_ktoe         EJ_ktoe scaler [EJ per ktoe]
 PBIOEXOQ        Global bioenergy amount (Biocrops + residue) [EJ per year] (exogenous)
 PBIOEXOQ_2gen   Global bioenergy amount (Biocrops) [EJ per year] (exogenous)
@@ -143,6 +144,8 @@ set
 YBASE/ %base_year% /
 ;
 parameter
+POP(*,YBASE,R)
+GDP(*,YBASE,R)
 GDPCAP_base(R)
 Ppopulation(YBASE,R)
 GDP_load(YBASE,R)
@@ -154,8 +157,11 @@ MFAi(R)    inverce of management factor for bio crops in base year
 MFArev(R)    inverce of management factor for bio crops in base year
 ;
 
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$load Ppopulation GDP_load
+$gdxin '%prog_dir%/../data/analysis.gdx'
+$load POP 
+$load GDP 
+Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
+GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);
 
 GDPCAP_base(R)$Ppopulation("%base_year%",R)=GDP_load("%base_year%",R)/Ppopulation("%base_year%",R);
 
@@ -335,15 +341,19 @@ Psol_stat("SSOLVE")=BiolandP.SOLVESTAT;Psol_stat("SMODEL")=BiolandP.MODELSTAT;
 $elseif %bioscm%==BSQ
 
 *----Bioenergy potential SOATED ---*
-$ifthen %CLP%==BaU $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$elseif %CLP%==BaULP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$elseif %CLP%==C $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_C_%IAV%.gdx'
-$elseif %CLP%==CLP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_C_%IAV%.gdx'
-$elseif %CLP%==CNA $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_CNA_%IAV%.gdx'
-$elseif %CLP%==CNALP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_CNA_%IAV%.gdx'
-$else $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$endif
-$load TBI=TBI_load
+$ifthen.clpl %CLP%==BaU $setglobal CLPLoad BaU
+$elseif.clpl %CLP%==BaULP $setglobal CLPLoad BaU
+$elseif.clpl %CLP%==C $setglobal CLPLoad C
+$elseif.clpl %CLP%==CLP $setglobal CLPLoad C
+$elseif.clpl %CLP%==CNA $gdxin $setglobal CLPLoad CNA
+$elseif.clpl %CLP%==CNALP $gdxin $setglobal CLPLoad CNA
+$else.clpl $setglobal CLPLoad %CLP%
+$endif.clpl
+
+$gdxin '%prog_dir%/../data/analysis.gdx'
+$load TBI_load=TBI
+
+TBI(Y,R,A_BTR2)=TBI_load("%SCE%_%CLPload%_%IAV%",Y,R,A_BTR2);
 
 trend2100=%PBIOEXOQ0%/(2100-2010);
 
