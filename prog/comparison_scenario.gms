@@ -55,23 +55,19 @@ $load Area_load=Area
 parameter
 LUCHEM_P(Y,R,AEZ)
 LUCHEM_N(Y,R,AEZ)
-PEMI_load(Y,R,SGHG,C,A)
-PEMI(Y,R)
+LUCHEM_P_load(*,Y,R,AEZ)
+LUCHEM_N_load(*,Y,R,AEZ)
 ;
 
-$gdxin '../data/cbnal0/global_17_%sce%_%CLP%_%IAV%.gdx'
+$gdxin '%prog_dir%/../data/analysis.gdx'
 $load LUCHEM_P=LUCHEM_P_load
 $load LUCHEM_N=LUCHEM_N_load
-$load PEMI_load=PEMI
 
+LUCHEM_P(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_P("%sce%_%CLP%_%IAV%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_P_load("%sce%_%CLP%_%IAV%",Y,R,AEZ));
+LUCHEM_N(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_N("%sce%_%CLP%_%IAV%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_N_load("%sce%_%CLP%_%IAV%",Y,R,AEZ));
 LUCHEM_P(Y,R,AEZ)=LUCHEM_P(Y,R,AEZ)/10**2;
 LUCHEM_N(Y,R,AEZ)=LUCHEM_N(Y,R,AEZ)/10**2;
 
-PEMI(Y,R)=PEMI_load(Y,R,"CO2","AL","FRS");
-
-LUCHEM_P(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_P(Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_P(Y,R,AEZ));
-LUCHEM_N(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_N(Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_N(Y,R,AEZ));
-PEMI(Y,R2)$SUM(R$MAP_RAGG(R,R2),PEMI(Y,R))=SUM(R$MAP_RAGG(R,R2),PEMI(Y,R));
 
 parameter
 GHG(R,Y,*,SMODEL)
@@ -104,10 +100,14 @@ OL	.	OTH
 ;
 parameter
 Planduse(Y,R,LCGE)
+Planduse_load(*,Y,R,LCGE)
 ;
 
-$gdxin '../data/cbnal0/global_17_%sce%_%CLP%_%IAV%.gdx'
-$load Planduse
+$gdxin '%prog_dir%/../data/analysis.gdx'
+$load Planduse_load=Planduse
+
+Planduse(Y,R,LCGE)=Planduse_load("%sce%_%CLP%_%IAV%",Y,R,LCGE);
+
 
 parameter
 AREA(R,Y,L,SMODEL)

@@ -127,6 +127,7 @@ set
 A_BTR2 Biocrop residue4 /BTR2/
 ;
 parameter
+TBI_load(*,Y,R,A_BTR2) Bioenergy use [ktoe per year]
 TBI(Y,R,A_BTR2) Bioenergy use [ktoe per year]
 EJ_ktoe         EJ_ktoe scaler [EJ per ktoe]
 PBIOEXOQ        Global bioenergy amount (Biocrops + residue) [EJ per year] (exogenous)
@@ -143,6 +144,8 @@ set
 YBASE/ %base_year% /
 ;
 parameter
+POP(*,YBASE,R)
+GDP(*,YBASE,R)
 GDPCAP_base(R)
 Ppopulation(YBASE,R)
 GDP_load(YBASE,R)
@@ -153,9 +156,20 @@ MFC(L)     accessibility factor for bio crops
 MFAi(R)    inverce of management factor for bio crops in base year
 MFArev(R)    inverce of management factor for bio crops in base year
 ;
+$ifthen %CLP%==BaU $setglobal TBIloadSce %SCE%_BaU_%IAV%
+$elseif %CLP%==BaULP $setglobal TBIloadSce %SCE%_BaU_%IAV%
+$elseif %CLP%==C $setglobal TBIloadSce %SCE%_C_%IAV%
+$elseif %CLP%==CLP $setglobal TBIloadSce %SCE%_C_%IAV%
+$elseif %CLP%==CNA $setglobal TBIloadSce %SCE%_CNA_%IAV%
+$elseif %CLP%==CNALP $setglobal TBIloadSce %SCE%_CNA_%IAV%
+$else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%
+$endif
 
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$load Ppopulation GDP_load
+$gdxin '%prog_dir%/../data/analysis.gdx'
+$load POP GDP TBI_load=TBI 
+Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAVload%",YBASE,R);
+GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAVload%",YBASE,R);
+TBI(Y,R,A_BTR2)=TBI_load("%TBIloadSce%",Y,R,A_BTR2);
 
 GDPCAP_base(R)$Ppopulation("%base_year%",R)=GDP_load("%base_year%",R)/Ppopulation("%base_year%",R);
 
@@ -335,15 +349,6 @@ Psol_stat("SSOLVE")=BiolandP.SOLVESTAT;Psol_stat("SMODEL")=BiolandP.MODELSTAT;
 $elseif %bioscm%==BSQ
 
 *----Bioenergy potential SOATED ---*
-$ifthen %CLP%==BaU $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$elseif %CLP%==BaULP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_BaU_%IAV%.gdx'
-$elseif %CLP%==C $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_C_%IAV%.gdx'
-$elseif %CLP%==CLP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_C_%IAV%.gdx'
-$elseif %CLP%==CNA $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_CNA_%IAV%.gdx'
-$elseif %CLP%==CNALP $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_CNA_%IAV%.gdx'
-$else $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$endif
-$load TBI=TBI_load
 
 trend2100=%PBIOEXOQ0%/(2100-2010);
 

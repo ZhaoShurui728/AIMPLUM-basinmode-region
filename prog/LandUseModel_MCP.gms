@@ -511,25 +511,31 @@ DW_TON	Ratio of dry matter tonne to tonne [dry matter tonne per ton] source: GAE
 C_DW		Ratio of tonne carbon to tonne dry matter of biomass [tonne C per dry matter tonne]/
 0.47
 /
-PSAM_value(Y,R,AC,ACP)
-PSAM_volume(Y,R,AC,ACP)
-PSAM_price(Y,R,AC,ACP)
-Planduse_load(Y,R,LCGE)
+Planduse_load(*,Y,R,LCGE)                                Land use | kha
+
 Planduse(Y,LCGE)
 PlanduseT	total land demand (kha or tonne carbon)
 SF_planduse	scale factor
 ordy(Y)
-LUCHEM_N_load(Y,R,FL)
 Ppopulation(Y0,R)
+POP(*,Y0,R)
 GDP_load(Y0,R)
+GDP(*,Y0,R)
 GDPCAP_WLD	global average of gdp per capita in base year (10 thousand $ per capita)	/0.68/
 GDPCAP		GDP per capita (10 thousand $ per capita)
 GDPCAP_base     GDP per capita in base year (10 thousand $ per capita)
-PGHG_load(Y0,R)	Carbon price [k$ per tonne CO2]
+PGHG_load(*,Y0,R)	Carbon price [k$ per tonne CO2]
 PGHG	Carbon price [million $ per tonne C]
 Pirri(LDM,G)	Irrigation ratio of crop LDM cell G (0 to 1)
 SF_YIELD(LDM)   Scale factor to adjust average yield to CGE estimates
 SSP_frac(L,Y,R,G) Fraction of built-up (SL) per grid in year Y
+
+Pland_load(*,Y,R,A)                                     Land area by sectors
+OUTPUTALL_Nominal_load(*,Y,R,AC)                         Output of sector AC nominal value| Million USD per year
+OUTPUTAC_load(*,Y,R,A,C)                                 Output of C from A | mil.$ or ktoe
+Pland(Y,AC)                                     Land area by sectors
+OUTPUTALL_Nominal(Y,AC)                         Output of sector AC nominal value| Million USD per year
+OUTPUTAC(Y,A,C)                                 Output of C from A | mil.$ or ktoe
 ;
 
 ordy(Y) = ord(Y) + %base_year% -1;
@@ -552,18 +558,28 @@ $load SSP_frac = Frac
 $gdxin '%prog_dir%/data/cropland_map_rmk.gdx'
 $load crop_basemap
 
-$if %not1stiter%==off $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
-$if %not1stiter%==on $gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%preIAV%.gdx'
-$load PSAM_value PSAM_volume PSAM_price LUCHEM_N_load Ppopulation GDP_load Planduse_load=Planduse
-$load PGHG_load
+$gdxin '%prog_dir%/../data/analysis.gdx'
+$load Pland_load=Pland_phs
+$load Outputall_nominal_load=Outputall_nominal OUTPUTAC_load=OUTPUTAC
+$load PGHG_load=PGHG
+$load POP 
+$load GDP 
+$load Planduse_load=Planduse
+
+$if %not1stiter%==off $setglobal IAVload %IAV%
+$if %not1stiter%==on $setglobal IAVload %preIAV%
+Ppopulation(Y0,R)=POP("%SCE%_%CLP%_%IAVload%",Y0,R);
+GDP_load(Y0,R)=GDP("%SCE%_%CLP%_%IAVload%",Y0,R);
+$if %carbonprice%==off PGHG_load("%SCE%_%CLP%_%IAVload%",Y0,R)=0;
+Planduse(Y,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",LCGE);
+PGHG(Y0)=PGHG_load("%SCE%_%CLP%_%IAVload%",Y0,"%Sr%")/1000*44/12;
+Pland(Y,A)=Pland_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A);
+OUTPUTALL_Nominal(Y,A)=OUTPUTALL_Nominal_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A);
+OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A,C);
 
 * Base-year irrigation map data
 $gdxin '%prog_dir%/data/mirca.gdx'
 $load Pirri
-
-$if %carbonprice%==off PGHG_load(Y0,R)=0;
-
-Planduse(Y,LCGE)=Planduse_load(Y,"%Sr%",LCGE);
 
 parameter
 popdens_load(Y0,SSP,G)
@@ -590,11 +606,14 @@ PCDM_load(L)
 $ifthen.baseyear %Sy%==%base_year%
 
 *---Y_base preparation
-
+$setglobal UrbanLandData RCP
 Y_base(L,G)$(LRCP(L))=frac_rcp("%Sr%",L,"%base_year%",G);
+$ifthen.urban %UrbanLandData%==SSP 
 Y_base("SL",G)$(SSP_frac("SL","2010","%Sr%",G))= SSP_frac("SL","2010","%Sr%",G);
+$else.urban
+Y_base("SL",G)=frac_rcp("%Sr%","SL","%base_year%",G);
+$endif.urban
 Y_base(L,G)$(LPRMSEC(L))=frac_rcp("%Sr%","PRM_SEC","%base_year%",G) + frac_rcp("%Sr%","PAS","%base_year%",G);
-
 Y_base(L,G)$(LCROPIR(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*Pirri(LDM,G));
 Y_base(L,G)$(LCROPRF(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*(1-Pirri(LDM,G)));
 
@@ -890,9 +909,6 @@ MF=min(1.3/MFA,MFB**max(0,%Sy%-2010));
 
 YIELD(L,G)$(LBIO(L) AND YIELD(L,G))=YIELD(L,G)*MF;
 
-*---- Carbon price ---*
-
-PGHG=PGHG_load("%Sy%","%Sr%")/1000*44/12;
 
 *-----Carbon stock ---*
 
@@ -975,69 +991,52 @@ PCDM0(Y,L)
 ;
 PCDM0(Y,L)=0;
 
-* [10^5ha --> 000ha]
-$if %CLP%==20Wp PLDM0(Y,LDM)$(LDMCROPB(LDM))=SUM(A$MAP_LDMA(LDM,A), SUM(FL,PSAM_volume(Y,"%Sr%",FL,A) )) * 10**2;
-$if not %CLP%==20Wp PLDM0(Y,LDM)$(LDMCROPB(LDM))=SUM(A$MAP_LDMA(LDM,A), SUM(FL,PSAM_volume(Y,"%Sr%",FL,A) )) * 10**2;
-*PLDM0(Y,"CROP_FLW")=Planduse(Y,"CROP_FLW");
-*PLDM0(Y,"HAV_FRS")=Planduse(Y,"MNG_FRS");
-
-*PLDM0(Y,"AFR")=SUM(Y2$(ordy("%base_year%")+1<=ordy(Y2) AND ordy(Y2)<=ordy(Y) AND (Planduse(Y2,"PRM_FRS")-Planduse(Y2-1,"PRM_FRS"))>0),Planduse(Y2,"PRM_FRS")-Planduse(Y2-1,"PRM_FRS"));
+* [1000ha]
+PLDM0(Y,LDM)$(LDMCROPB(LDM))=SUM(A$MAP_LDMA(LDM,A), Pland("%Sy%",A));
 PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
 
-*PLDM0(Y,"AFR")$(PLDM0(Y,"AFR")<0)=0;
-
 *[tonne carbon]
-*PCDM0(Y,"HAV_FRS")$PSAM_volume("%base_year%","%Sr%","FRS","COM_FRS")=Pprod("%base_year%","%Sr%","HAV_FRS","C") *PSAM_volume(Y,"%Sr%","FRS","COM_FRS")/PSAM_volume("%base_year%","%Sr%","FRS","COM_FRS");
-*PCDM0(Y,"AFR")$(SUM(FL,LUCHEM_N_load(Y,"%Sr%",FL))*(-1)>10**(-9))=SUM(FL,LUCHEM_N_load(Y,"%Sr%",FL))*(-1)*10**4*(12/44);
-
 PCDM(L)$(PCDM0("%Sy%",L))=PCDM0("%Sy%",L);
 PLDM(LDM)$(PLDM0("%Sy%",LDM)>0.01)=PLDM0("%Sy%",LDM);
 PLDM("SL")=SUM(G,GA(G)*Y_pre("SL",G));
 PLDM("OL")=SUM(G,GA(G)*Y_pre("OL",G));
 
-
-*$if %only3rdgenbio%==on PLDM("BIO")=0;
-*$if %noAFRtarget%==on PLDM("AFR")=0;
-
 FLAGDM(L)$(SUM(LDM$MAP_LLDM(L,LDM),PLDM(LDM)) OR PCDM(L))=1;
 
 * mil.$/ton or mil.$/tonC
-pr_price_base0(LDM)$(LDMCTON(LDM) AND Pprod("%base_year%","%Sr%",LDM,"TON")) =  SUM(A$MAP_LDMA(LDM,A),SUM(C$MAP_LDMC(LDM,C),PSAM_value("%base_year%","%Sr%",A,C))) / Pprod("%base_year%","%Sr%",LDM,"TON");
-pr_price_base0(LDM)$(LDMCC(LDM) AND Pprod("%base_year%","%Sr%",LDM,"C")) =  SUM(A$MAP_LDMA(LDM,A),SUM(C$MAP_LDMC(LDM,C),PSAM_value("%base_year%","%Sr%",A,C))) / Pprod("%base_year%","%Sr%",LDM,"C");
+pr_price_base0(LDM)$(LDMCTON(LDM) AND Pprod("%base_year%","%Sr%",LDM,"TON")) =  SUM(A$MAP_LDMA(LDM,A),OUTPUTALL_Nominal("%base_year%",A)) / Pprod("%base_year%","%Sr%",LDM,"TON");
+pr_price_base0(LDM)$(LDMCC(LDM) AND Pprod("%base_year%","%Sr%",LDM,"C")) =  SUM(A$MAP_LDMA(LDM,A),OUTPUTALL_Nominal("%base_year%",A)) / Pprod("%base_year%","%Sr%",LDM,"C");
 
 pr_price_base(L)$(FLAGDM(L))=SUM(LDM$MAP_LLDM(L,LDM),pr_price_base0(LDM));
-pr_price_base("CROP_FLW")$SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr%",LDM,"TON")) =  SUM(A$(ACROP(A)),SUM(C$(CCROP(C)),PSAM_value("%base_year%","%Sr%",A,C))) / SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr%",LDM,"TON"));
+pr_price_base("CROP_FLW")$SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr%",LDM,"TON")) =  SUM(A$(ACROP(A)),OUTPUTALL_Nominal("%base_year%",A)) / SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr%",LDM,"TON"));
 
-pr_pricey(Y,L)$(FLAGDM(L) AND SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),PSAM_volume(Y,"%Sr%",A,C)))) =  SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),PSAM_value(Y,"%Sr%",A,C))) / SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),PSAM_volume(Y,"%Sr%",A,C)));
-pr_pricey(Y,"CROP_FLW")$SUM(A$ACROP(A),SUM(C$CCROP(C),PSAM_volume(Y,"%Sr%",A,C))) = SUM(A$ACROP(A),SUM(C$CCROP(C),PSAM_value(Y,"%Sr%",A,C))) / SUM(A$ACROP(A),SUM(C$CCROP(C),PSAM_volume(Y,"%Sr%",A,C)));
-
+pr_pricey(Y,L)$(FLAGDM(L) AND SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),OUTPUTAC(Y,A,C)))) = 
+  SUM(A$MAP_LA(L,A),OUTPUTALL_Nominal(Y,A)) / SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),OUTPUTAC(Y,A,C)));
+pr_pricey(Y,"CROP_FLW")$SUM(A$ACROP(A),SUM(C$CCROP(C),OUTPUTAC(Y,A,C))) = 
+  SUM(A$ACROP(A),OUTPUTALL_Nominal(Y,A)) / SUM(A$ACROP(A),SUM(C$CCROP(C),OUTPUTAC(Y,A,C)));
 pr_price_indx(L)$pr_pricey("%base_year%",L)=pr_pricey("%Sy%",L)/pr_pricey("%base_year%",L);
 
 * mil.$/ton or mil.$/tonC
+*Be careful to deal with Biomass sector name has been changed.
 pr_price(L)=pr_price_base(L) * pr_price_indx(L);
-pr_price("BIO")$PSAM_volume("%Sy%","%Sr%","BTR3","COM_BIO") = PSAM_value("%Sy%","%Sr%","BTR3","COM_BIO") / (PSAM_volume("%Sy%","%Sr%","BTR3","COM_BIO")*10**3) * 0.38 * C_TON;
-
+pr_price("BIO")$(OUTPUTALL_Nominal("%Sy%","ECR") AND OUTPUTAC("%Sy%","ECR","COM_ECR")) = 
+  OUTPUTALL_Nominal("%Sy%","ECR") / (OUTPUTAC("%Sy%","ECR","COM_ECR")*10**3) * 0.38 * C_TON;
 
 * mil.$/ha/year = mil.$/ton * ton/ha/year
 pr(L,G)$(FLAGDM(L))= pr_price(L) * YIELD(L,G);
-
-pr("AFR",G)$(PB(G))=PB(G) + PGHG * SUM(Y$(ordy(Y)<=ordy(Y)+YPP),CFT(G,"%end_year%",Y)/((1+DR)**(ordy(Y)-ordy("%base_year%")))) / YPP;
+pr("AFR",G)$(PB(G))=PB(G) + PGHG("%Sy%") * SUM(Y$(ordy(Y)<=ordy(Y)+YPP),CFT(G,"%end_year%",Y)/((1+DR)**(ordy(Y)-ordy("%base_year%")))) / YPP;
 
 * [mil. $]
-*pc_input(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A), SUM(C,PSAM_value("%Sy%","%Sr%",C,A)) + SUM(F,PSAM_value("%Sy%","%Sr%",F,A)) - SUM(FL,PSAM_value("%Sy%","%Sr%",FL,A)) + SUM(TX,PSAM_value("%Sy%","%Sr%",TX,A)) + PSAM_value("%Sy%","%Sr%","ATAX",A));
-*pc_input("CROP_FLW")=SUM(A$(ACROP(A)),SUM(C,PSAM_value("%Sy%","%Sr%",C,A)) + SUM(F,PSAM_value("%Sy%","%Sr%",F,A)) - SUM(FL,PSAM_value("%Sy%","%Sr%",FL,A)) + SUM(TX,PSAM_value("%Sy%","%Sr%",TX,A)) + PSAM_value("%Sy%","%Sr%","ATAX",A));
-pc_input(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A), SUM(C,PSAM_value("%Sy%","%Sr%",C,A)) + SUM(F,PSAM_value("%Sy%","%Sr%",F,A)) + SUM(TX,PSAM_value("%Sy%","%Sr%",TX,A)) + PSAM_value("%Sy%","%Sr%","ATAX",A));
-pc_input("CROP_FLW")=SUM(A$(ACROP(A)),SUM(C,PSAM_value("%Sy%","%Sr%",C,A)) + SUM(F,PSAM_value("%Sy%","%Sr%",F,A)) + SUM(TX,PSAM_value("%Sy%","%Sr%",TX,A)) + PSAM_value("%Sy%","%Sr%","ATAX",A));
+pc_input(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A),OUTPUTALL_Nominal("%Sy%",A));
+pc_input("CROP_FLW")=SUM(A$(ACROP(A)),OUTPUTALL_Nominal("%Sy%",A));
 * use 2020 value for after 2020 not to reflect yield improve to bioenergy potential
-*pc_input("BIO")=SUM(A$(ACROP(A)),SUM(C,PSAM_value("2020","%Sr%",C,A)) + SUM(F,PSAM_value("2020","%Sr%",F,A)) + SUM(TX,PSAM_value("2020","%Sr%",TX,A)) + PSAM_value("2020","%Sr%","ATAX",A));
-pc_input("BIO")=0.5*SUM(A$(sameas(A,"GRO")),SUM(C,PSAM_value("2020","%Sr%",C,A)) + SUM(F,PSAM_value("2020","%Sr%",F,A)) + SUM(TX,PSAM_value("2020","%Sr%",TX,A)) + PSAM_value("2020","%Sr%","ATAX",A));
+pc_input("BIO")=0.5*SUM(A$(sameas(A,"GRO")),OUTPUTALL_Nominal("2020",A));
 
 * [10^5ha --> ha]
-pc_area(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A),SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) * 10**5;
-pc_area("CROP_FLW")=SUM(A$(ACROP(A)),SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) * 10**5;
+pc_area(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A),Pland("%Sy%",A)) * 10**3;
+pc_area("CROP_FLW")=SUM(A$(ACROP(A)),Pland("%Sy%",A)) * 10**3;
 * use 2020 value for after 2020 not to reflect yield improve to bioenergy potential
-*pc_area("BIO")=SUM(A$(ACROP(A)),SUM(FL,PSAM_volume("2020","%Sr%",FL,A))) * 10**5;
-pc_area("BIO")=SUM(A$(sameas(A,"GRO")),SUM(FL,PSAM_volume("2020","%Sr%",FL,A))) * 10**5;
+pc_area("BIO")=SUM(A$(sameas(A,"GRO")),Pland("2020",A)) * 10**3;
 
 * [mil.$/ha/year]
 pc(L)$(pc_area(L))=pc_input(L)/pc_area(L);
@@ -1059,12 +1058,6 @@ PLDM("PAS")=0;
 
 
 *------- Land conversion cost ----------*
-
-*mil$/ha
-*plandrent(L)$SUM(A$MAP_LA(L,A),SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) =  SUM(A$MAP_LA(L,A),SUM(FL,PSAM_value("%Sy%","%Sr%",FL,A))) / (SUM(A$MAP_LA(L,A),SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) * 10**5);
-*plandrent("CROP_FLW")$SUM(A$(ACROP(A)),SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) = SUM(A$ACROP(A),SUM(FL,PSAM_value("%Sy%","%Sr%",FL,A))) / (SUM(A$(ACROP(A)),SUM(FL,PSAM_volume("%Sy%","%Sr%",FL,A))) * 10**5);
-*plandrent("HAV_FRS")=plandrent("HAV_FRS")/30;
-*plandrent("AFR")=plandrent("AFR")/30;
 
 parameter
 pldc_WLD	global average of road construction cost per unit distance (million $ per km)
@@ -1130,16 +1123,6 @@ GLMIN(L,G)$(LBIO(L) AND (NOT SUM(L2$LCROPA(L2),Y_pre(L2,G))))=smin(G2$(SUM(L2$LC
 *GLMIN(L,G)$(LAFR(L) AND (NOT Y_base("HAV_FRS",G)))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
 GLMINHA(L,G)$(LAFR(L) OR LCROPA(L)) = GLMIN(L,G)/(GA(G)*1000);
 
-
-$ontext
-plcc(L)$SUM(A$MAP_LA(L,A),PSAM_price("%base_year%","%Sr%","LAB",A))=plcc(L)*SUM(A$MAP_LA(L,A),PSAM_price("%Sy%","%Sr%","LAB",A))/SUM(A$MAP_LA(L,A),PSAM_price("%base_year%","%Sr%","LAB",A));
-plcc("CROP_FLW")$(SUM(A$(ACROP(A)),PSAM_volume("%Sy%","%Sr%","LAB",A)) AND SUM(A$(ACROP(A)),PSAM_value("%base_year%","%Sr%","LAB",A)) AND SUM(A$(ACROP(A)),PSAM_volume("%base_year%","%Sr%","LAB",A)))
-=plcc("CROP_FLW")*
-(SUM(A$(ACROP(A)),PSAM_value("%Sy%","%Sr%","LAB",A))/SUM(A$(ACROP(A)),PSAM_volume("%Sy%","%Sr%","LAB",A)))/
-(SUM(A$(ACROP(A)),PSAM_value("%base_year%","%Sr%","LAB",A))/SUM(A$(ACROP(A)),PSAM_volume("%base_year%","%Sr%","LAB",A)))
-;
-$offtext
-
 parameter
 YPP_lab         Payback period of investment cost for agriculture /10/
 YPP_road	Payback period of investment cost for road constraction /50/
@@ -1171,17 +1154,12 @@ pannual_biodiv=(DR*(1+DR)**YPP_biodiv)/((1+DR)**YPP_biodiv-1);
 pa_lab = wage * labor * pannual_lab;
 pa_road(L,G)$(NOT LPRMSEC(L)) =  (plcc(L)*100 + pldc*(roaddens + GLMINHA(L,G))) * pannual_road;
 pa_irri(L)$(LCROPIR(L)) = irricost * pannual_irri;
-pa_emit(G)$(CS(G)) =  PGHG * CS(G) * pannual_emit;
+pa_emit(G)$(CS(G)) =  PGHG("%Sy%") * CS(G) * pannual_emit;
 pa_biodiv(G,L)$(PBIODIV(L,G)) =  PBIODIV(L,G) * pannual_biodiv;
 
 
-
 pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
-
 pa_bio(G)$pa("BIO",G)=pa("BIO",G);
-
-*pa(L,G)$(LOBJ(L) OR LBIO(L))= wage * labor * pannual_lab + (plcc(L) + pldc*(roaddens + GLMINHA(L,G))) * pannual_road  + (irricost* pannual_irri)$(LCROPIR(L)) + (PGHG * CS(G) * pannual_emit)$((NOT LPRMSEC(L)) AND CS(G));
-
 YPNMAXCL=0.01;
 
 *------- Initial data ----------*
@@ -1251,15 +1229,6 @@ $else
 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND CS(G)>=CSB)=0;
 
 $endif
-
-*$elseif %SCE%_%CLP%_%IAV%==SSP2_20W_SPA1p_BIOD2
-
-*$else
-
-
-
-*$endif
-
 
 
 F_PLDM(L,G)$(LAFR(L) AND (SUM(LDM$MAP_LLDM(L,LDM),PLDM(LDM)-PLDM_load(LDM))=0) AND Y_pre(L,G))=1;
