@@ -1,0 +1,3 @@
+SCE=SSP5
+CLP=BaU
+IAV=NoCC

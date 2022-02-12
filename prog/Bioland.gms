@@ -167,8 +167,8 @@ $endif
 
 $gdxin '%prog_dir%/../data/analysis.gdx'
 $load POP GDP TBI_load=TBI 
-Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAVload%",YBASE,R);
-GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAVload%",YBASE,R);
+Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
+GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);
 TBI(Y,R,A_BTR2)=TBI_load("%TBIloadSce%",Y,R,A_BTR2);
 
 GDPCAP_base(R)$Ppopulation("%base_year%",R)=GDP_load("%base_year%",R)/Ppopulation("%base_year%",R);
