@@ -1,5 +1,6 @@
 exe
 output
+output/png
 output/gdx
 output/gdx/all
 output/gdx/base

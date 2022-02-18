@@ -1,6 +1,6 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_loc
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -17,17 +17,17 @@ $setglobal WDPAprotect protect_all
 
 
 
-$include %prog_dir%/inc_prog/pre_%Ystep0%year.gms
-$include %prog_dir%/inc_prog/second_%Ystep0%year.gms
+$include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
+$include ../%prog_loc%/inc_prog/second_%Ystep0%year.gms
 
 *PBIOEXOQ0 the given global bioenergy amount EJ per year
 *PBIOEXOP0 the given global bioenergy price $ per GJ
 
-$include %prog_dir%/scenario/socioeconomic/%sce%.gms
+$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 
 Set
 R       17 regions      /
-$include %prog_dir%/\define\region/region17.set
+$include ../%prog_loc%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Sr(R)/
@@ -35,24 +35,24 @@ WLD,OECD90,REF,ASIA,MAF,LAM
 /
 G       Cell number  /
 $offlisting
-*$include %prog_dir%/\define\set_g\G_WLD.set
-$include %prog_dir%/\define\set_g\G_USA.set
-$include %prog_dir%/\define\set_g\G_XE25.set
-$include %prog_dir%/\define\set_g\G_XER.set
-$include %prog_dir%/\define\set_g\G_TUR.set
-$include %prog_dir%/\define\set_g\G_XOC.set
-$include %prog_dir%/\define\set_g\G_CHN.set
-$include %prog_dir%/\define\set_g\G_IND.set
-$include %prog_dir%/\define\set_g\G_JPN.set
-$include %prog_dir%/\define\set_g\G_XSE.set
-$include %prog_dir%/\define\set_g\G_XSA.set
-$include %prog_dir%/\define\set_g\G_CAN.set
-$include %prog_dir%/\define\set_g\G_BRA.set
-$include %prog_dir%/\define\set_g\G_XLM.set
-$include %prog_dir%/\define\set_g\G_CIS.set
-$include %prog_dir%/\define\set_g\G_XME.set
-$include %prog_dir%/\define\set_g\G_XNF.set
-$include %prog_dir%/\define\set_g\G_XAF.set
+*$include %prog_loc%/\define\set_g\G_WLD.set
+$include ../%prog_loc%/define/set_g/G_USA.set
+$include ../%prog_loc%/define/set_g/G_XE25.set
+$include ../%prog_loc%/define/set_g/G_XER.set
+$include ../%prog_loc%/define/set_g/G_TUR.set
+$include ../%prog_loc%/define/set_g/G_XOC.set
+$include ../%prog_loc%/define/set_g/G_CHN.set
+$include ../%prog_loc%/define/set_g/G_IND.set
+$include ../%prog_loc%/define/set_g/G_JPN.set
+$include ../%prog_loc%/define/set_g/G_XSE.set
+$include ../%prog_loc%/define/set_g/G_XSA.set
+$include ../%prog_loc%/define/set_g/G_CAN.set
+$include ../%prog_loc%/define/set_g/G_BRA.set
+$include ../%prog_loc%/define/set_g/G_XLM.set
+$include ../%prog_loc%/define/set_g/G_CIS.set
+$include ../%prog_loc%/define/set_g/G_XME.set
+$include ../%prog_loc%/define/set_g/G_XNF.set
+$include ../%prog_loc%/define/set_g/G_XAF.set
 $onlisting
 /
 Y year  /  %Sy%  /
@@ -85,7 +85,7 @@ MAP_RG(R,G)     Relationship between country R and cell G
 Alias(R,R2),(G,G2);
 set
 MAP_RAGG(R,R2)  /
-$include %prog_dir%\define/region/region17_agg.map
+$include ../%prog_loc%/define/region/region17_agg.map
 /
 ;
 parameter
@@ -102,26 +102,26 @@ protect_wopas(G)
 YIELDBIO(G)
 ;
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load GA MAP_RG
 
-$batinclude %prog_dir%/inc_prog/BiolandR.gms USA
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XE25
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XER
-$batinclude %prog_dir%/inc_prog/BiolandR.gms TUR
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XOC
-$batinclude %prog_dir%/inc_prog/BiolandR.gms CHN
-$batinclude %prog_dir%/inc_prog/BiolandR.gms IND
-$batinclude %prog_dir%/inc_prog/BiolandR.gms JPN
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XSE
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XSA
-$batinclude %prog_dir%/inc_prog/BiolandR.gms CAN
-$batinclude %prog_dir%/inc_prog/BiolandR.gms BRA
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XLM
-$batinclude %prog_dir%/inc_prog/BiolandR.gms CIS
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XME
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XNF
-$batinclude %prog_dir%/inc_prog/BiolandR.gms XAF
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms USA
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XE25
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XER
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms TUR
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XOC
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms CHN
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms IND
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms JPN
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XSE
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XSA
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms CAN
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms BRA
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XLM
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms CIS
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XME
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XNF
+$batinclude ../%prog_loc%/inc_prog/BiolandR.gms XAF
 
 set
 A_BTR2 Biocrop residue4 /BTR2/
@@ -165,7 +165,7 @@ $elseif %CLP%==CNALP $setglobal TBIloadSce %SCE%_CNA_%IAV%
 $else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%
 $endif
 
-$gdxin '%prog_dir%/../data/analysis.gdx'
+$gdxin '../data/analysis.gdx'
 $load POP GDP TBI_load=TBI 
 Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
 GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);
@@ -192,8 +192,8 @@ YBIO_load(G)
 YBIOO(G)        Potentail area for OLD bioenergy cropland
 ;
 
-$ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
-$       gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
+$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
 $       load YBIO_load=YBIO
 $else.fileex
 YBIO_load(G)=0;
@@ -220,7 +220,7 @@ degradedland_usable(G)
 protectland(G)	Protected area fraction (0 to 1) of cell G (WDPA and IUCN)
 ;
 
-$gdxin '%prog_dir%/data/CSB.gdx'
+$gdxin '../%prog_loc%/data/CSB.gdx'
 $load CSB
 
 *** CROP_FLW --> BIO
@@ -236,11 +236,11 @@ RAREA_BIOP(G) = 1-(SUM(L$(LNBIOP(L)),VYL(L,G))
 		  + (Avalab_GL*(VYL("FRSGL",G)-protect_wopas(G)))$(VYL("FRSGL",G)>protect_wopas(G) AND CS(G)<SUM(R$MAP_RG(R,G),CSB(R)))
 		  );
 * adjust fraction
-$if not %WDPAprotect%==off $gdxin '%prog_dir%/data/policydata.gdx'
+$if not %WDPAprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $if not %WDPAprotect%==off $load protectland=%WDPAprotect%
 $if %WDPAprotect%==off protectland(G)=0;
 
-$if not %degradedlandprotect%==off $gdxin '%prog_dir%/data/policydata.gdx'
+$if not %degradedlandprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $if not %degradedlandprotect%==off $load degradedland=%degradedlandprotect%
 $if %degradedlandprotect%==off degradedland(G)=0;
 degradedland_usable(G)$(degradedland(G)>0 AND RAREA_BIOP(G)>0) = degradedland(G) * (protect_wopas(G)/( protectland(G) + degradedland(G)))*0.5;

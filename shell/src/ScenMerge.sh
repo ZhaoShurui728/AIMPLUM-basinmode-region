@@ -19,7 +19,7 @@ ScenMergeRun() {
   gdxmerge *.gdx output=../bio.gdx
 
   cd ../../../../exe
-  gams ../$1/prog/combine.gms --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine.lst
+  gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine.lst
 
   echo $(TimeDif `cat ../output/txt/cpu/merge1/$2.txt`) > ../output/txt/cpu/merge1/end_$2.txt
   rm ../output/txt/cpu/merge1/$2.txt

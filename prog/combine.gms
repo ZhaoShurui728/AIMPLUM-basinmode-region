@@ -1,6 +1,6 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_loc
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -18,9 +18,9 @@ $if %supcuvout%==on $setglobal biocurve on
 
 
 
-$include %prog_dir%/scenario/socioeconomic/%sce%.gms
-$include %prog_dir%/scenario/climate_policy/%clp%.gms
-$include %prog_dir%/scenario/IAV/%iav%.gms
+$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
+$include ../%prog_loc%/scenario/climate_policy/%clp%.gms
+$include ../%prog_loc%/scenario/IAV/%iav%.gms
 
 Set
 N /1*40000/
@@ -30,12 +30,12 @@ XLM	Rest of Brazil
 CIS	Former USSR
 XNF	North Africa
 XAF	Sub-Sahara
-*$include %prog_dir%/\define\region/region17.set
-$include %prog_dir%/\define\country.set
+*$include %prog_loc%/\define\region/region17.set
+$include ../%prog_loc%/define/country.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 R(Rall)	17 regions	/
-$include %prog_dir%/\define\region/region17.set
+$include ../%prog_loc%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Ragg(R)/
@@ -47,36 +47,36 @@ XLM	Rest of Brazil
 CIS	Former USSR
 XNF	North Africa
 XAF	Sub-Sahara
-*$include %prog_dir%/\define\region/region17.set
-$include %prog_dir%/\define\country.set
+*$include %prog_loc%/\define\region/region17.set
+$include ../%prog_loc%/define/country.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Sr(Rall)	106 countries /
-$include %prog_dir%/\define\country.set
+$include ../%prog_loc%/define/country.set
 /
 Map_R(Sr,R) /
-$include %prog_dir%/\define\region/region17.map
+$include ../%prog_loc%/define/region/region17.map
 /
 G	Cell number  /
 $offlisting
-*$include %prog_dir%/\define\set_g\G_WLD.set
-$include %prog_dir%/\define\set_g\G_USA.set
-$include %prog_dir%/\define\set_g\G_XE25.set
-$include %prog_dir%/\define\set_g\G_XER.set
-$include %prog_dir%/\define\set_g\G_TUR.set
-$include %prog_dir%/\define\set_g\G_XOC.set
-$include %prog_dir%/\define\set_g\G_CHN.set
-$include %prog_dir%/\define\set_g\G_IND.set
-$include %prog_dir%/\define\set_g\G_JPN.set
-$include %prog_dir%/\define\set_g\G_XSE.set
-$include %prog_dir%/\define\set_g\G_XSA.set
-$include %prog_dir%/\define\set_g\G_CAN.set
-$include %prog_dir%/\define\set_g\G_BRA.set
-$include %prog_dir%/\define\set_g\G_XLM.set
-$include %prog_dir%/\define\set_g\G_CIS.set
-$include %prog_dir%/\define\set_g\G_XME.set
-$include %prog_dir%/\define\set_g\G_XNF.set
-$include %prog_dir%/\define\set_g\G_XAF.set
+*$include %prog_loc%/\define\set_g\G_WLD.set
+$include ../%prog_loc%/define/set_g/G_USA.set
+$include ../%prog_loc%/define/set_g/G_XE25.set
+$include ../%prog_loc%/define/set_g/G_XER.set
+$include ../%prog_loc%/define/set_g/G_TUR.set
+$include ../%prog_loc%/define/set_g/G_XOC.set
+$include ../%prog_loc%/define/set_g/G_CHN.set
+$include ../%prog_loc%/define/set_g/G_IND.set
+$include ../%prog_loc%/define/set_g/G_JPN.set
+$include ../%prog_loc%/define/set_g/G_XSE.set
+$include ../%prog_loc%/define/set_g/G_XSA.set
+$include ../%prog_loc%/define/set_g/G_CAN.set
+$include ../%prog_loc%/define/set_g/G_BRA.set
+$include ../%prog_loc%/define/set_g/G_XLM.set
+$include ../%prog_loc%/define/set_g/G_CIS.set
+$include ../%prog_loc%/define/set_g/G_XME.set
+$include ../%prog_loc%/define/set_g/G_XNF.set
+$include ../%prog_loc%/define/set_g/G_XAF.set
 $onlisting
 /
 
@@ -203,16 +203,16 @@ BIOO    old bioenergy cropland
 Alias(R,R2),(G,G2),(LB,LB2),(L,L2);
 set
 MAP_RAGG(R,R2)	/
-$include %prog_dir%\define/region/region17_agg.map
+$include ../%prog_loc%/define/region/region17_agg.map
 /
 I /1*360/
 J /1*720/
 LULC_class/
-$include %prog_dir%/individual/BendingTheCurve/LULC_class.set
+$include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
 MAP_GIJ(G,I,J)
 ;
-$gdxin '%prog_dir%/data/data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load MAP_GIJ
 
 
@@ -256,7 +256,7 @@ protectfracL(R,G,L)	Protected area fraction (0 to 1) of land category L in land 
 ordy(Y) = ord(Y) + %base_year% -1;
 
 $ifthen %biocurve%==on
-$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/bio.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/bio.gdx'
 $load PCBIO_load=PCBIO QCBIO_load=QCBIO
 $if %supcuvout%==on $load PBIOSUP_load=PBIOSUP
 
@@ -264,26 +264,26 @@ PCBIO(R,Y)=PCBIO_load(Y,R);
 QCBIO(R,Y)=QCBIO_load(Y,R);
 $endif
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load GA
 
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms USA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XE25
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XER
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms TUR
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XOC
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms CHN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms IND
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms JPN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XSE
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XSA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms CAN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms BRA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XLM
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms CIS
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XME
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XNF
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude %prog_dir%/inc_prog/combineR.gms XAF
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XE25
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XER
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XOC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JPN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XSE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XSA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XLM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CIS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XME
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XNF
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XAF
 
 Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 
@@ -369,7 +369,7 @@ set
 MAP_RG(R,G)     Relationship between country R and cell G
 MAP_SrG(Sr,G)	Relationship between country Sr and cell G
 ;
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load MAP_RG
 $load MAP_SrG
 
@@ -507,13 +507,13 @@ $ifthen.rlimap %rlimapcalc%==on
 * Conversion to 8 land-use categories and estimation of land transaction
 set
 LU_RLI/
-$include %prog_dir%/individual/BendingTheCurve/LUclass_RLIestimator.set
+$include ../%prog_loc%/individual/BendingTheCurve/LUclass_RLIestimator.set
 /
 MAP_LU_RLI(L,LU_RLI)/
-$include %prog_dir%/individual/BendingTheCurve/LUclass_RLIestimator.map
+$include ../%prog_loc%/individual/BendingTheCurve/LUclass_RLIestimator.map
 /
 MAP_LU_RLItrans(LU_RLI,LU_RLI,LU_RLI)/
-$include %prog_dir%/individual/BendingTheCurve/LUclass_RLIestimator_trans.map
+$include ../%prog_loc%/individual/BendingTheCurve/LUclass_RLIestimator_trans.map
 /
 ;
 alias(LU_RLI,LU_RLI2,LU_RLI3);

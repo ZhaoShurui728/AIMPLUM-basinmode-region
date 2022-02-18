@@ -3,15 +3,15 @@
 
 set
 LULC_class/
-$include %prog_dir%/individual/BendingTheCurve/LULC_class.set
+$include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
 map_LLULC_class(L,LULC_class)/
-$include %prog_dir%/individual/BendingTheCurve/map_LLULC_class.map
+$include ../%prog_loc%/individual/BendingTheCurve/map_LLULC_class.map
 /
 weightType /"weighted.rescaled.logTransCstBase"/
 PotBiomeMask	potential biom vegetation /forested,nonforested/
 map_LBiomeMask(L,PotBiomeMask,LULC_class)/
-$include %prog_dir%/individual/BendingTheCurve/map_LBiomeMask.map
+$include ../%prog_loc%/individual/BendingTheCurve/map_LBiomeMask.map
 /
 value /value/
 ;
@@ -45,10 +45,10 @@ PBIODIVY0(Y)$(Y.val=2080)=850;
 PBIODIVY0(Y)$(Y.val=2090)=950;
 PBIODIVY0(Y)$(Y.val=2100)=1000;
 
-$gdxin '%prog_dir%/individual/BendingTheCurve/table_weights_30Nov2017.gdx'
+$gdxin '../%prog_loc%/individual/BendingTheCurve/table_weights_30Nov2017.gdx'
 $load weightIJ=weight
 
-$gdxin '%prog_dir%/individual/BendingTheCurve/table_LUH_side_data_16Nov2017.gdx'
+$gdxin '../%prog_loc%/individual/BendingTheCurve/table_LUH_side_data_16Nov2017.gdx'
 $load MaskFvsNF_aggval
 $load sharepix_pasture
 $load sharepix_rangeland
@@ -70,7 +70,7 @@ table BIIcoef0(PotBiomeMask,LULC_class,value)	the Biodiversity Intactness Index 
 $offlisting
 $ondelim
 *PotBiomeMask,LULC_class,value
-$include %prog_dir%/individual/BendingTheCurve/BII_coefficients_BendingTheCurve_30Jan2018_AIM.csv
+$include ../%prog_loc%/individual/BendingTheCurve/BII_coefficients_BendingTheCurve_30Jan2018_AIM.csv
 $offdelim
 $onlisting
 ;

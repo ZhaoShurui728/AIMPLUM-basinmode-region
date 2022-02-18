@@ -3,7 +3,7 @@
 $Setglobal Sr JPN
 $Setglobal Sy 2006
 $Setglobal base_year 2005
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_loc
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -11,28 +11,28 @@ $setglobal biocurve off
 $setglobal not1stiter off
 $setglobal biodivprice off
 
-$include %prog_dir%/scenario/socioeconomic/%sce%.gms
-$include %prog_dir%/scenario/climate_policy/%clp%.gms
-$include %prog_dir%/scenario/IAV/%iav%.gms
+$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
+$include ../%prog_loc%/scenario/climate_policy/%clp%.gms
+$include ../%prog_loc%/scenario/IAV/%iav%.gms
 
 set
 dum/1*1000000/
 G       Cell number  /
 $offlisting
 $ifthen %Sr%==USA
-$include %prog_dir%\define\set_g\G_USA.set
-$include %prog_dir%\define\set_g\G_CAN.set
+$include ../%prog_loc%/define/set_g/G_USA.set
+$include ../%prog_loc%/define/set_g/G_CAN.set
 $elseif %Sr%==CAN
-$include %prog_dir%\define\set_g\G_USA.set
-$include %prog_dir%\define\set_g\G_CAN.set
+$include ../%prog_loc%/define/set_g/G_USA.set
+$include ../%prog_loc%/define/set_g/G_CAN.set
 $else
-$include %prog_dir%\define\set_g\G_%Sr%.set
+$include ../%prog_loc%/define/set_g/G_%Sr%.set
 $endif
 $onlisting
 /
 G0(G)   Cell number  /
 $offlisting
-$include %prog_dir%/\define\set_g\G_%Sr%.set
+$include ../%prog_loc%/define/set_g/G_%Sr%.set
 $onlisting
 /
 Y       / %Sy%
@@ -99,11 +99,11 @@ Planduse(Y,R,LCGE)
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
 $if %not1stiter%==on $setglobal IAVload %preIAV%
-$gdxin '%prog_dir%/../data/analysis.gdx'
+$gdxin '../data/analysis.gdx'
 $load Planduse_load=Planduse
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,R,LCGE);
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load GA
 
 parameter
@@ -113,13 +113,13 @@ Area_load(L)
 ;
 
 $ifthen %Sr%==USA
-$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms USA
-$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms CAN
+$batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms USA
+$batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms CAN
 $elseif %Sr%==CAN
-$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms USA
-$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms CAN
+$batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms USA
+$batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms CAN
 $else
-$batinclude %prog_dir%/inc_prog/disagg_FRSGLR.gms %Sr%
+$batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms %Sr%
 $endif
 
 $if %biocurve%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
@@ -193,8 +193,8 @@ parameter
 CS_base(G)	carbon stock in base year
 ;
 
-*$gdxin '%prog_dir%/../data/biomass/output/biomass%Sr%.gdx'
-$gdxin '%prog_dir%/../output/gdx/base/%Sr%/%base_year%.gdx'
+*$gdxin '%prog_loc%/../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '../output/gdx/base/%Sr%/%base_year%.gdx'
 $load CS_base=CS
 
 *---------------

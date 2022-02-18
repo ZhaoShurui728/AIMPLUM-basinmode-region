@@ -14,11 +14,11 @@ gdx4pngRun() {
   for Y in ${YListFig[@]} 
   do
     if [ ${global} = "on" ]; then
-      gams ../$1/prog/gdx4png.gms --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png1.lst
+      gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png1.lst
     else
       for A in ${COUNTRY[@]} 
       do
-        gams ../$1/prog/gdx4png.gms --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png2.lst
+        gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png2.lst
       done
     fi
   done

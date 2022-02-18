@@ -26,7 +26,7 @@ Futuresim_loop_scn_Run() {
         mkdir -p ../output/txt/cpu/futuresim/$2/${Y}/NormalRun
         echo "`date '+%s'`" > ../output/txt/cpu/futuresim/$2/${Y}/NormalRun/${A}.txt
 
-        gams ../$1/prog/LandUseModel_mcp.gms --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp.lst 
+        gams ../$1/prog/LandUseModel_mcp.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp.lst 
 
         echo $(TimeDif `cat ../output/txt/cpu/futuresim/$2/${Y}/NormalRun/${A}.txt`) > ../output/txt/cpu/futuresim/$2/${Y}/NormalRun/end_${A}.txt
         rm ../output/txt/cpu/futuresim/$2/${Y}/NormalRun/${A}.txt
@@ -40,7 +40,7 @@ Futuresim_loop_scn_Run() {
         mkdir -p ../output/txt/cpu/futuresim/$2/${Y}/biocurve
         echo "`date '+%s'`" > ../output/txt/cpu/futuresim/$2/${Y}/biocurve/${A}.txt
 
-        gams ../$1/prog/Bioland.gms --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --supcuvout=on MaxProcDir=100 o=../output/lst/Futuresim/Bioland.lst 
+        gams ../$1/prog/Bioland.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --supcuvout=on MaxProcDir=100 o=../output/lst/Futuresim/Bioland.lst 
 
         echo $(TimeDif `cat ../output/txt/cpu/futuresim/$2/${Y}/biocurve/${A}.txt`) > ../output/txt/cpu/futuresim/$2/${Y}/biocurve/end_${A}.txt
         rm ../output/txt/cpu/futuresim/$2/${Y}/biocurve/${A}.txt
@@ -54,7 +54,7 @@ Futuresim_loop_scn_Run() {
         mkdir -p ../output/txt/cpu/futuresim/$2/${Y}/DisagrrFRS
         echo "`date '+%s'`" > ../output/txt/cpu/futuresim/$2/${Y}/DisagrrFRS/${A}.txt
 
-        gams ../$1/prog/Disagg_FRSGL.gms --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --biocurve=off MaxProcDir=100 o=../output/lst/Futuresim/Disagg_FRSGL.lst
+        gams ../$1/prog/Disagg_FRSGL.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --biocurve=off MaxProcDir=100 o=../output/lst/Futuresim/Disagg_FRSGL.lst
 
         echo $(TimeDif `cat ../output/txt/cpu/futuresim/$2/${Y}/biocurve/${A}.txt`) > ../output/txt/cpu/futuresim/$2/${Y}/DisagrrFRS/end_${A}.txt
         rm ../output/txt/cpu/futuresim/$2/${Y}/DisagrrFRS/${A}.txt

@@ -15,16 +15,16 @@ scn=(SSP2_BaU_NoCC)
 CPUthreads=60
 
 # if you would like to use pause for each program, turn on this switch
-pausemode=off
+pausemode=on
 
 # data preparation process
 DataPrep=off
 # base year simulation switch
-Basesim=on
+Basesim=off
 # future year simulation switch
-Futuresim=on
+Futuresim=off
 # loop level change: CTY, SCN
-Futuresim_loop=SCN
+Futuresim_loop=CTY
 # switch whether normal scenario core run is carried out or not (normally it should be on)
 Sub_Futuresim_NormalRun=on
 # switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
@@ -33,7 +33,7 @@ Sub_Futuresim_DisagrrFRS=on
 Sub_Futuresim_biocurve=on
 
 # scenario merge
-ScenMerge=on
+ScenMerge=off
 # option to calculation biomass supply curve
 Sub_ScenMerge_BiocurveSort=on
 

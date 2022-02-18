@@ -18,26 +18,26 @@ MergeResCSV4NCRun() {
     cd ../output/gdx/$2/analysis
     gdxmerge *.gdx output=../../results/results_$2.gdx
     cd ../../../../exe
-    gams ../$1/prog/gdx2csv.gms --split=1 --sce=${SCE} --clp=${CLP} --iav=${IAV} MaxProcDir=100 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=1 --sce=${SCE} --clp=${CLP} --iav=${IAV} MaxProcDir=100 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1.lst
   fi
 
   if [ ${BTC3option} = "on" ]; then
     for O in ${OPT[@]} 
     do
-      gams ../$1/prog/gdx2csv.gms --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=${O} --wwfclass=opt MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2.lst
+      gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=${O} --wwfclass=opt MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2.lst
     done
   fi
 
   if [ ${lumip} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=1 --lumip=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=1 --lumip=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip.lst
   fi
 
   if [ ${bioyielcal} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --bioyieldcalc=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_bioyielcal.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --bioyieldcalc=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_bioyielcal.lst
   fi
 
   if [ ${ssprcp} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --lumip=off --wwfclass=off MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --lumip=off --wwfclass=off MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp.lst
   fi
 
 #  rm ../output/gdx/results/results_$2.gdx
