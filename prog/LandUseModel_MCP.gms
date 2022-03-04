@@ -4,7 +4,7 @@ $Setglobal Sr JPN
 $Setglobal Sy 2006
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_loc
 $setglobal mcp off
 $setglobal sce SSP2
 $setglobal clp BaU
@@ -46,21 +46,21 @@ $setglobal UrbanLandData SSP
 $if %Sy%==2005 $setglobal mcp off
 $if not %Sy%==2005 $setglobal mcp off
 
-$include %prog_dir%/inc_prog/pre_%Ystep0%year.gms
-$include %prog_dir%/inc_prog/second_%Ystep0%year.gms
+$include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
+$include ../%prog_loc%/inc_prog/second_%Ystep0%year.gms
 
-$include %prog_dir%/scenario/socioeconomic/%sce%.gms
-$include %prog_dir%/scenario/climate_policy/%clp%.gms
-$include %prog_dir%/scenario/IAV/%iav%.gms
+$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
+$include ../%prog_loc%/scenario/climate_policy/%clp%.gms
+$include ../%prog_loc%/scenario/IAV/%iav%.gms
 
 Set
 R	17 regions	/
 %Sr%
-*$include %prog_dir%/\define\region/region17.set
+*$include ../%prog_loc%/define\region/region17.set
 /
 G	Cell number  /
 $offlisting
-$include %prog_dir%/\define\set_g\G_%Sr%.set
+$include ../%prog_loc%/define/set_g/G_%Sr%.set
 $onlisting
 /
 I /1*360/
@@ -251,7 +251,7 @@ FLAG_G(G)		Grid flag
 GL(G,G2)		Distance between grid G and G2
 ;
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load Map_RG GA
 $load MAP_GIJ
 
@@ -417,7 +417,7 @@ F(AC)  factors
 FL(AC) Land use AEZ
 Produnit /TON,C/
 ;
-$gdxin '%prog_dir%/data/set.gdx'
+$gdxin '../%prog_loc%/data/set.gdx'
 $load AC A ACROP C CCROP F FL
 Alias(AC,ACP),(A,AP),(C,CP);
 CCROP("COM_ECR")=YES;
@@ -547,22 +547,22 @@ ordy(Y) = ord(Y) + %base_year% -1;
 *-------Base-year map data load ----------*
 
 * Base-year land type data
-$gdxin '%prog_dir%/data/land_map_gtap.gdx'
+$gdxin '../%prog_loc%/data/land_map_gtap.gdx'
 $load land_basemap=base_map
 
 * Base-year land type data
-$gdxin '%prog_dir%/../data/land_map_rcp.gdx'
+$gdxin '../data/land_map_rcp.gdx'
 $load frac_rcp=frac
 
 * Settled land type data
-$gdxin '%prog_dir%/data/urban/%SSP%_Frac.gdx'
+$gdxin '../%prog_loc%/data/urban/%SSP%_Frac.gdx'
 $load SSP_frac = Frac
 
 * Base-year cropland map data
-$gdxin '%prog_dir%/data/cropland_map_rmk.gdx'
+$gdxin '../%prog_loc%/data/cropland_map_rmk.gdx'
 $load crop_basemap
 
-$gdxin '%prog_dir%/../data/analysis.gdx'
+$gdxin '../data/analysis.gdx'
 $load Pland_load=Pland_phs
 $load Outputall_nominal_load=Outputall_nominal OUTPUTAC_load=OUTPUTAC
 $load PGHG_load=PGHG
@@ -582,7 +582,7 @@ OUTPUTALL_Nominal(Y,A)=OUTPUTALL_Nominal_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A
 OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A,C);
 
 * Base-year irrigation map data
-$gdxin '%prog_dir%/data/mirca.gdx'
+$gdxin '../%prog_loc%/data/mirca.gdx'
 $load Pirri
 
 parameter
@@ -590,7 +590,7 @@ popdens_load(Y0,SSP,G)
 popdens(G)	population density (inhabitants per km2)
 ;
 
-$gdxin '%prog_dir%/data/ssppopmap.gdx'
+$gdxin '../%prog_loc%/data/ssppopmap.gdx'
 $load popdens_load=popdens
 
 popdens(G)=popdens_load("%Sy%","%SSP%",G);
@@ -637,8 +637,8 @@ PCDM_load(L)=0;
 
 $else.baseyear
 
-$ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
-$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
+$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
+$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
 $	load VY_load VZ_load
 $	load PLDM_load PCDM_load
 $else.fileex
@@ -656,8 +656,8 @@ Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr%",G))= SSP_frac("SL","%Sy%","%Sr%",G);
 Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
 
 $ifthen.bio %biocurve%==on
-$ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
-$       gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
+$ifthen.fileex exist '%../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
 $       load YBIO_load=YBIO
 $else.fileex
 YBIO_load(G)=0;
@@ -677,11 +677,11 @@ protectfrac(G)=0;
 
 $elseif %Sy%==%second_year%
 
-$if not %WDPAprotect%==off $gdxin '%prog_dir%/data/policydata.gdx'
+$if not %WDPAprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $if not %WDPAprotect%==off $load protectland=%WDPAprotect%
 $if %WDPAprotect%==off protectland(G)=0;
 
-$if not %degradedlandprotect%==off $gdxin '%prog_dir%/data/policydata.gdx'
+$if not %degradedlandprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $if not %degradedlandprotect%==off $load degradedland=%degradedlandprotect%
 $if %degradedlandprotect%==off degradedland(G)=0;
 
@@ -691,7 +691,7 @@ protectfrac(G)$(protectfrac(G)>Y_pre("PRM_SEC",G) or (popdens(G)<0.1))=Y_pre("PR
 
 $else
 
-$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
+$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 $	load protectfrac
 
 *---minimize protected fraction to satify constraint
@@ -710,7 +710,7 @@ FRA_load(R,Y,i_FRA)  protected forest area (kha) in FRA(2010)
 frsprotect_check
 ;
 
-$gdxin '%prog_dir%/data/fra_data.gdx'
+$gdxin '../%prog_loc%/data/fra_data.gdx'
 $load FRA_load=FRA
 
 
@@ -725,7 +725,7 @@ $endif
 *-----Ohashi's protected area-----*
 
 $ifthen not %ohashiprotect%==off
-$gdxin '%prog_dir%/data/ohashiset.gdx'
+$gdxin '../%prog_loc%/data/ohashiset.gdx'
 $if %Sr%==XER $load ohashi = ohashi75
 $if not %Sr%==XER $load ohashi = %ohashiprotect%
 REVG(G)$ohashi("%Sr%", G)=no;
@@ -768,7 +768,7 @@ protectfracL(G,L)=0;
 
 $elseif.year %Sy%==%second_year%
 
-$gdxin '%prog_dir%/individual/BendingTheCurve/LC_cons_AIM_omit0_v3.gdx'
+$gdxin '../%prog_loc%/individual/BendingTheCurve/LC_cons_AIM_omit0_v3.gdx'
 $load protectfracIJL=LC_cons_AIM_v3
 
 protectfracL(G,L)$(SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC))))= SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC)));
@@ -777,7 +777,7 @@ protectfracL(G,L2)$(protectfracL(G,L2) and protectfracL(G,L2)>sum(L$MAP_Lagg(L,L
 
 $else.year
 
-$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
+$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 $	load protectfracL
 
 $endif.year
@@ -792,10 +792,10 @@ MACF            mean value of average carbon flow in each region        (MgC ha-
 CFT(G,Y,Y2)             carbon flow in year Y of forest planed in year Y2 in grid G     (MgC ha-1 year-1)
 ;
 
-$gdxin '%prog_dir%/../data/biomass/output/biomass%Sr%_aez.gdx'
+$gdxin '../data/biomass/output/biomass%Sr%_aez.gdx'
 $load ACF CFT MACF
 
-$gdxin '%prog_dir%/data/fao_data.gdx'
+$gdxin '../%prog_loc%/data/fao_data.gdx'
 $load TON_C Pprod
 
 
@@ -830,7 +830,7 @@ MFB$(GDPCAP_base>0 AND GDPCAP_base<=0.35)=1.01;
 
 $else
 
-$gdxin '%prog_dir%/../output/gdx/base/%Sr%/basedata.gdx'
+$gdxin '../output/gdx/base/%Sr%/basedata.gdx'
 $load MFA MFB
 
 
@@ -840,18 +840,18 @@ $endif
 
 $ifthen %Sy%==%base_year%
 
-*$gdxin '%prog_dir%/data/yield_map_gaez.gdx'
+*$gdxin '%prog_loc%/data/yield_map_gaez.gdx'
 *$load YIELD_gaez=crop_yieldmap_gaez
 
-$gdxin '%prog_dir%/data/isimipagr.gdx'
+$gdxin '../%prog_loc%/data/isimipagr.gdx'
 $load Pisimip
 
-$gdxin '%prog_dir%/data/visit_data.gdx'
+$gdxin '../%prog_loc%/data/visit_data.gdx'
 $load PVISIT
 
 PVISIT(CVST,G)$(PVISIT(CVST,G)<10**(-2) AND (NOT sameas(CVST,"co2flux")))=0;
 
-$gdxin '%prog_dir%/data/analysis_agr.gdx'
+$gdxin '../%prog_loc%/data/analysis_agr.gdx'
 $load YIELD_cge=YIELD
 
 parameter
@@ -860,7 +860,7 @@ yield_swichgrass_rainfed_num(I,J)	swichgrass biocrop yield (kg per ha)
 YIELDBIO_H08(G)	average biocrop yield (tonne per ha)
 ;
 
-$gdxin '%prog_dir%/data/H08_yield_num_gdx.gdx'
+$gdxin '../%prog_loc%/data/H08_yield_num_gdx.gdx'
 $load yield_miscanthus_rainfed_num
 $load yield_swichgrass_rainfed_num
 
@@ -898,7 +898,7 @@ YIELD(L,G)$(LBIO(L) AND YIELD(L,G))=YIELD(L,G)*MFA;
 
 $else
 
-$gdxin '%prog_dir%/../output/gdx/base/%Sr%/basedata.gdx'
+$gdxin '../output/gdx/base/%Sr%/basedata.gdx'
 $load YIELD
 
 $endif
@@ -914,16 +914,16 @@ YIELD(L,G)$(LBIO(L) AND YIELD(L,G))=YIELD(L,G)*MF;
 
 $ifthen %Sy%==%base_year%
 
-$gdxin '%prog_dir%/../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '../data/biomass/output/biomass%Sr%.gdx'
 $load CS
 
 CSB=0;
 
 $else
 
-$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
 $load CS
-$gdxin '%prog_dir%/../output/gdx/base/%Sr%/analysis/%base_year%.gdx'
+$gdxin '../output/gdx/base/%Sr%/analysis/%base_year%.gdx'
 $load CSB
 
 $endif
@@ -944,7 +944,7 @@ BIIcoefG(L,G)	the Biodiversity Intactness Index (BII) coefficients
 
 PBIODIV(L,G)=0;
 
-$if %Sy%==%base_year% $include %prog_dir%/inc_prog/BiodiversityPrice.gms
+$if %Sy%==%base_year% $include ../%prog_loc%/inc_prog/BiodiversityPrice.gms
 
 $ifthen.pbiodiv  %biodivprice%==on
 
@@ -954,7 +954,7 @@ PBIODIV(L,G)=0;
 
 $else.year
 
-$gdxin '%prog_dir%/../output/gdx/base/%Sr%/basedata.gdx'
+$gdxin '../output/gdx/base/%Sr%/basedata.gdx'
 $load BIIcoefG,RR,PBIODIVY0
 
 PBIODIV(L,G)=PBIODIVY0("%Sy%")*RR(G)*BIIcoefG(L,G)/10**6;
@@ -1086,12 +1086,12 @@ irricost=irricost_WLD*(GDPCAP/GDPCAP_WLD)**0.5;
 
 $ifthen %Sy%==%base_year%
 
-$gdxin '%prog_dir%/data/roads.gdx'
+$gdxin '../%prog_loc%/data/roads.gdx'
 $load ruralroadlength
 
 roaddens=ruralroadlength("%Sr%")/SUM(LDM$LDMCROP(LDM),PLDM(LDM))/1000;
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load GL=GL%Sr%
 
 * ��苗���ȏ㗣�ꂽ�G���A�ɂ͍ő�l������
@@ -1107,7 +1107,7 @@ plcc(L)=psmax(L)-psmin(L);
 
 $else
 
-$gdxin '%prog_dir%/../output/gdx/base/%Sr%/basedata.gdx'
+$gdxin '../output/gdx/base/%Sr%/basedata.gdx'
 $load plcc
 $load roaddens
 $load GL
@@ -1308,7 +1308,7 @@ frsprotect_check$(frsprotectarea)=SUM(G$(CS(G)>CSB),VY.L("PRM_SEC",G)*GA(G));
 set
 MAP_WG(G,G2)        Neighboring relationship between cell G and cell G2
 ;
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/Data_prep.gdx'
 $load MAP_WG
 
 *-----Protected area-----*
@@ -1321,7 +1321,7 @@ $ifthen %Sy%==%base_year%
 protect_wopas(G)=0;
 $elseif %Sy%==%second_year%
 
-$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
 $load VY_baseresults=VY_load
 
 protect_wopas(G)=0;
@@ -1335,7 +1335,7 @@ $else
 *$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 *$load protect_wopas
 
-$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
 $load VY_baseresults=VY_load
 
 protect_wopas(G)=0;
@@ -1346,11 +1346,11 @@ $endif
 
 *------ Pasture -----------*
 
-$include %prog_dir%/inc_prog/pasture.gms
+$include ../%prog_loc%/inc_prog/pasture.gms
 
 *------ Crop fallow -----------*
 
-$include %prog_dir%/inc_prog/crop_fallow.gms
+$include ../%prog_loc%/inc_prog/crop_fallow.gms
 
 
 $ontext

@@ -1,0 +1,3 @@
+SCE=SSP1p
+CLP=20W
+IAV=NoCC

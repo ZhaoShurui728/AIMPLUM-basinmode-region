@@ -1,3 +1,0 @@
-set SCE=SSP1p
-set CLP=20Wp
-set IAV=BIOD

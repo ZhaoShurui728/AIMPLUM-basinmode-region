@@ -1,17 +1,12 @@
-getwd()
-setwd(getwd())
-
-#setwd("C:/_LandUseModel/prog/R/prog")
-
 library(gdxrrw)
 library(ggplot2)
 library(plyr)
 library(reshape2)
 library(RColorBrewer)
 library(maps)
-args <- commandArgs(trailingOnly = T)
+args <- commandArgs()
 colnames <- c("Variable","X1","X2","Value")
-scenarioname <- args[1]
+scenarioname <- as.character(args[7])
 pres <- 150
 
 
@@ -37,8 +32,8 @@ MyThemeLine <- theme_grey() +
 #regionin <- c("USA","XE25","XER","TUR","XOC","CHN","IND","JPN","XSE","XSA","CAN","BRA","XLM","CIS","XME","XNF","XAF")
 #regionin <-  c("WLD")
 #yearin <-  c("2005","2050","2100")
-regionin <- read.table(file=paste0("../../../output/txt/",scenarioname,"_region.txt"),dec=" ") 
-yearin <- scan(file=paste0("../../../output/txt/",scenarioname,"_year.txt"),dec=" ") 
+regionin <- read.table(file=paste0("../output/txt/",scenarioname,"_region.txt"),dec=" ") 
+yearin <- scan(file=paste0("../output/txt/",scenarioname,"_year.txt"),dec=" ") 
 landin <-  c("FRS")
 if(regionin=="WLD"){
   landtypelist <- c("all")
@@ -64,8 +59,8 @@ for(r in (1:length(regionin))){
           limitvalue <- c(-0.00001,1.0)
         }
         if(landtype=="crop"){pngheight <- 15}else{pngheight <- 10}
-        out_filename <- paste('../../../output/png/',scenarioname,'_',regionin[r],'_',yearin[t],'_',landtype,'_',absdif,'.png', sep = '')
-        load_filename <- paste0('../../../output/gdxii/',scenarioname,'/',regionin[r],'/',yearin[t],'ij.gdx')
+        out_filename <- paste('../output/png/',scenarioname,'_',regionin[r],'_',yearin[t],'_',landtype,'_',absdif,'.png', sep = '')
+        load_filename <- paste0('../output/gdxii/',scenarioname,'/',regionin[r],'/',yearin[t],'ij.gdx')
         if (file.exists(load_filename)) {
           pdata0 <- rgdx.param(load_filename,load_paraname)
           if (nrow(pdata0)>1) {

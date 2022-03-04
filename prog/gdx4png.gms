@@ -1,7 +1,7 @@
 $Setglobal Sr JPN
 $Setglobal Sy 2005
 $Setglobal base_year 2005
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_loc
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -13,16 +13,16 @@ $setglobal dif off
 *$if %Sy%==2050 $setglobal supcuv on
 *$if %Sy%==2100 $setglobal supcuv on
 
-$include %prog_dir%/inc_prog/pre_%Ystep0%year.gms
+$include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 
 
 Set
 R	17 regions	/
-$include %prog_dir%/\define\region/region17.set
+$include ../%prog_loc%/define/region/region17.set
 /
 G	Cell number  /
 $offlisting
-$include %prog_dir%/\define\set_g\G_%Sr%.set
+$include ../%prog_loc%/define/set_g/G_%Sr%.set
 $onlisting
 /
 I	Vertical position	/ 1*360 /
@@ -96,11 +96,11 @@ VYLAFRIJ_nocc(I,J)
 
 ;
 
-$gdxin '%prog_dir%/data/data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load Map_GIJ MAP_RIJ
 
-$if %Sr%==WLD $include %prog_dir%/inc_prog/gdx4png_wld.gms
-$if not %Sr%==WLD $include %prog_dir%/inc_prog/gdx4png_region.gms
+$if %Sr%==WLD $include ../%prog_loc%/inc_prog/gdx4png_wld.gms
+$if not %Sr%==WLD $include ../%prog_loc%/inc_prog/gdx4png_region.gms
 
 
 VY_IJ(L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J)),VY_load(L,G));

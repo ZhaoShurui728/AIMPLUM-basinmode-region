@@ -13,22 +13,22 @@ CS%1(G)		carbon density (MgC per ha)
 CS(G)
 ;
 
-$ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%pre_year%.gdx'
-$       gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%pre_year%.gdx'
+$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%/%1/%pre_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%1/%pre_year%.gdx'
 $       load Y_pre%1=VY_load
 $else.fileex
 Y_pre%1(LCL,G)=0;
 $endif.fileex
 
-$ifthen.fileex exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%second_year%.gdx'
-$       gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%second_year%.gdx'
+$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%/%1/%second_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%1/%second_year%.gdx'
 $       load protect_wopas%1=protect_wopas
 $else.fileex
 protect_wopas%1(G)=0;
 $endif.fileex
 
-$ifthen exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%Sy%.gdx'
-$gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%1/%Sy%.gdx'
+$ifthen exist '../output/gdx/%SCE%_%CLP%_%IAV%/%1/%Sy%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%1/%Sy%.gdx'
 *$load PBIO%1=PBIO RAREA_BIOP%1=RAREA_BIOP
 $load VYL%1=VY_load
 $load pa_bio%1=pa_bio pc%1=pc CS%1=CS
@@ -42,7 +42,7 @@ pc%1(LBIO)=0;
 CS%1(G)=0;
 $endif
 
-$gdxin '%prog_dir%/../output/gdx/base/%1/basedata.gdx'
+$gdxin '../output/gdx/base/%1/basedata.gdx'
 *$load BIOENE%1=BIOENE
 $load YIELD%1=YIELD
 

@@ -1,4 +1,4 @@
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_loc
 $setglobal sce SSP3
 $setglobal clp BaU
 $setglobal iav NoCC
@@ -20,20 +20,20 @@ $setglobal wwfopt 1
 *opt4) same as 2, but with 4 additional LU classes(*) in the netcdfs (with a zero value, because it is restored straight away)
 *opt5) same as 3, but with 4 additional LU classes(*) in the netcdfs (with potentially non-zero values)
 
-$include %prog_dir%/scenario/socioeconomic/%sce%.gms
-$include %prog_dir%/scenario/climate_policy/%clp%.gms
-$include %prog_dir%/scenario/IAV/%iav%.gms
+$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
+$include ../%prog_loc%/scenario/climate_policy/%clp%.gms
+$include ../%prog_loc%/scenario/IAV/%iav%.gms
 
 
 $ifthen.split %split%==1
 
 Set
 R	17 regions	/
-$include %prog_dir%/\define\region/region17.set
+$include ../%prog_loc%/define/region/region17.set
 /
 G	Cell number  /
 $offlisting
-$include %prog_dir%/\define\set_g\G_WLD.set
+$include ../%prog_loc%/define/set_g/G_WLD.set
 $onlisting
 /
 I	Vertical position (LAT)	/ 1*360 /
@@ -103,21 +103,21 @@ LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
 LRES(L)/RES/
 NLFRSGL/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR,ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR,SL,OL/
 Lmip/
-$include %prog_dir%/define/lumip.set
+$include ../%prog_loc%/define/lumip.set
 /
 MAP_LUMIP(Lmip,L)/
 *SL	.	urban
-$include %prog_dir%/define/lumip.map
+$include ../%prog_loc%/define/lumip.map
 
 /
 Lwwf/
-$include %prog_dir%/individual/BendingTheCurve/luwwf.set
+$include ../%prog_loc%/individual/BendingTheCurve/luwwf.set
 /
 MAP_WWF(Lwwf,L)/
-$include %prog_dir%/individual/BendingTheCurve/luwwf.map
+$include ../%prog_loc%/individual/BendingTheCurve/luwwf.map
 /
 LULC_class/
-$include %prog_dir%/individual/BendingTheCurve/LULC_class.set
+$include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
 MAP_RIJ(R,I,J)
 ;
@@ -146,7 +146,7 @@ GAIJ(I,J)           Grid area of cell I J kha
 GAIJ0(I,J)           Grid area of cell I J million ha
 ;
 
-$gdxin '%prog_dir%/data/data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load Map_GIJ MAP_RIJ GAIJ
 
 FLAG_IJ(I,J)$SUM(R,MAP_RIJ(R,I,J))=1;
@@ -166,7 +166,7 @@ VY_IJ(Y,"GL",I,J)$VY_IJ(Y,"GL",I,J)=1-sum(L$(LSUM(L) and (not sameas(L,"GL"))),V
 
 * Forest is devided into managed and unmanaged.
 
-$gdxin '%prog_dir%/\data\sharepix.gdx'
+$gdxin '../%prog_loc%/data/sharepix.gdx'
 $load sharepix
 
 
@@ -267,7 +267,7 @@ $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
 $load YIELD_BIO
 
 YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
-$batinclude %prog_dir%/inc_prog/outputcsv_yield.gms BIO
+$batinclude ../%prog_loc%/inc_prog/outputcsv_yield.gms BIO
 $exit
 $endif.bioyield
 
@@ -276,37 +276,37 @@ $ifthen.p %lumip%==on
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
 
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c3ann
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c4ann
-*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c3per
-*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c4per
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms c3nfx
-*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms range
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms pastr
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms primf
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms secdf
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms urban
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c3ann
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c4ann
-*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c3per
-*$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c4per
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms irrig_c3nfx
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms crpbf_c4ann
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms flood
-$batinclude %prog_dir%/inc_prog/outputcsv_lumip.gms fallow
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3ann
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c4ann
+*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms c3per
+*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms c4per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3nfx
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms range
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms pastr
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms primf
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms secdf
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms urban
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3ann
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4ann
+*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3per
+*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3nfx
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms crpbf_c4ann
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms flood
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms fallow
 
 $elseif.p %lumip%_%wwfclass%==off_on
 
 VY_IJwwf(Y,Lwwf,I,J)=SUM(L$MAP_WWF(Lwwf,L),VY_IJ(Y,L,I,J));
 
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms cropland_other
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms cropland_bioenergySRP
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms grassland
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms forest_unmanaged
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms forest_managed
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms restored
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms other
-$batinclude %prog_dir%/prog/outputcsv_wwf.gms built_up_areas
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms cropland_other
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms cropland_bioenergySRP
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms grassland
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms forest_unmanaged
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms forest_managed
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms restored
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms other
+$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms built_up_areas
 
 $elseif.p %lumip%_%wwfclass%==off_opt
 
@@ -319,12 +319,12 @@ $if %wwfopt%==4 1*14
 $if %wwfopt%==5 1*14
 /
 MAP_WWFnum(Lwwfnum,L)/
-$if %wwfopt%==1 $include %prog_dir%/individual/BendingTheCurve/luwwfnum.map
-$if %wwfopt%==2 $include %prog_dir%/individual/BendingTheCurve/luwwfnum.map
-$if %wwfopt%==3 $include %prog_dir%/individual/BendingTheCurve/luwwfnum2.map
+$if %wwfopt%==1 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
+$if %wwfopt%==2 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
+$if %wwfopt%==3 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum2.map
 *--- luwwfnum_org.map is map for restoration land with original land category
-$if %wwfopt%==4 $include %prog_dir%/individual/BendingTheCurve/luwwfnum_org.map
-$if %wwfopt%==5 $include %prog_dir%/individual/BendingTheCurve/luwwfnum_org.map
+$if %wwfopt%==4 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
+$if %wwfopt%==5 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
 /
 ;
 Alias (Lwwfnum,Lwwfnum2);
@@ -373,7 +373,7 @@ plwwfnum/10/
 $if %wwfopt%==4 plwwfnum=14;
 $if %wwfopt%==5 plwwfnum=14;
 
-file output /%prog_dir%\..\output\csv\%SCE%_%CLP%_%IAV%\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
+file output /..\output\csv\%SCE%_%CLP%_%IAV%\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
 put output;
 output.pw=100000;
 put "LC_area_share%wwfopt%", "= "/;
@@ -470,17 +470,17 @@ $endif.wwfopt
 $else.p
 
 
-*$batinclude %prog_dir%/inc_prog/outputcsv.gms FRS
-$batinclude %prog_dir%/inc_prog/outputcsv.gms PAS
-$batinclude %prog_dir%/inc_prog/outputcsv.gms CL
-$batinclude %prog_dir%/inc_prog/outputcsv.gms BIO
-$batinclude %prog_dir%/inc_prog/outputcsv.gms SL
-$batinclude %prog_dir%/inc_prog/outputcsv.gms OL
-$batinclude %prog_dir%/inc_prog/outputcsv.gms GL
-$batinclude %prog_dir%/inc_prog/outputcsv.gms PRMFRS
-$batinclude %prog_dir%/inc_prog/outputcsv.gms MNGFRS
-$batinclude %prog_dir%/inc_prog/outputcsv.gms RES
-$batinclude %prog_dir%/inc_prog/outputcsv.gms AFR
+*$batinclude %prog_loc%/inc_prog/outputcsv.gms FRS
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms PAS
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms CL
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms BIO
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms SL
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms OL
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms GL
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms PRMFRS
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms MNGFRS
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms RES
+$batinclude ../%prog_loc%/inc_prog/outputcsv.gms AFR
 
 $endif.p
 
