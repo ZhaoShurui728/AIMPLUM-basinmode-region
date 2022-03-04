@@ -127,8 +127,8 @@ set
 A_BTR2 Biocrop residue4 /BTR2/
 ;
 parameter
-TBI(Y,R,A_BTR2) Bioenergy use [ktoe per year]
 TBI_load(*,Y,R,A_BTR2) Bioenergy use [ktoe per year]
+TBI(Y,R,A_BTR2) Bioenergy use [ktoe per year]
 EJ_ktoe         EJ_ktoe scaler [EJ per ktoe]
 PBIOEXOQ        Global bioenergy amount (Biocrops + residue) [EJ per year] (exogenous)
 PBIOEXOQ_2gen   Global bioenergy amount (Biocrops) [EJ per year] (exogenous)
@@ -156,12 +156,20 @@ MFC(L)     accessibility factor for bio crops
 MFAi(R)    inverce of management factor for bio crops in base year
 MFArev(R)    inverce of management factor for bio crops in base year
 ;
+$ifthen %CLP%==BaU $setglobal TBIloadSce %SCE%_BaU_%IAV%
+$elseif %CLP%==BaULP $setglobal TBIloadSce %SCE%_BaU_%IAV%
+$elseif %CLP%==C $setglobal TBIloadSce %SCE%_C_%IAV%
+$elseif %CLP%==CLP $setglobal TBIloadSce %SCE%_C_%IAV%
+$elseif %CLP%==CNA $setglobal TBIloadSce %SCE%_CNA_%IAV%
+$elseif %CLP%==CNALP $setglobal TBIloadSce %SCE%_CNA_%IAV%
+$else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%
+$endif
 
 $gdxin '%prog_dir%/../data/analysis.gdx'
-$load POP 
-$load GDP 
-Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
-GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);
+$load POP GDP TBI_load=TBI 
+Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAVload%",YBASE,R);
+GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAVload%",YBASE,R);
+TBI(Y,R,A_BTR2)=TBI_load("%TBIloadSce%",Y,R,A_BTR2);
 
 GDPCAP_base(R)$Ppopulation("%base_year%",R)=GDP_load("%base_year%",R)/Ppopulation("%base_year%",R);
 
@@ -341,19 +349,6 @@ Psol_stat("SSOLVE")=BiolandP.SOLVESTAT;Psol_stat("SMODEL")=BiolandP.MODELSTAT;
 $elseif %bioscm%==BSQ
 
 *----Bioenergy potential SOATED ---*
-$ifthen.clpl %CLP%==BaU $setglobal CLPLoad BaU
-$elseif.clpl %CLP%==BaULP $setglobal CLPLoad BaU
-$elseif.clpl %CLP%==C $setglobal CLPLoad C
-$elseif.clpl %CLP%==CLP $setglobal CLPLoad C
-$elseif.clpl %CLP%==CNA $gdxin $setglobal CLPLoad CNA
-$elseif.clpl %CLP%==CNALP $gdxin $setglobal CLPLoad CNA
-$else.clpl $setglobal CLPLoad %CLP%
-$endif.clpl
-
-$gdxin '%prog_dir%/../data/analysis.gdx'
-$load TBI_load=TBI
-
-TBI(Y,R,A_BTR2)=TBI_load("%SCE%_%CLPload%_%IAV%",Y,R,A_BTR2);
 
 trend2100=%PBIOEXOQ0%/(2100-2010);
 
