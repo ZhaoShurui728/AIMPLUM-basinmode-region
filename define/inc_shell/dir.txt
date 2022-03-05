@@ -1,5 +1,6 @@
 exe
 output
+output/cdl
 output/png
 output/gdx
 output/gdx/all
@@ -17,7 +18,6 @@ output/txt/cpu/futuresim
 output/txt/cpu/merge1
 output/txt/cpu/merge2
 output/txt/cpu/gdx4png
-output/cdl
 output/lst
 output/lst/Basesim
 output/lst/Futuresim
