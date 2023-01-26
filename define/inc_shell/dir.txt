@@ -22,3 +22,4 @@ output/lst
 output/lst/Basesim
 output/lst/Futuresim
 output/save
+output/log

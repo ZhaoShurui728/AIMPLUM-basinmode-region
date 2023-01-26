@@ -14,14 +14,14 @@ $load Yield Y_base
 Yield_IJ(L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)), YIELD(L,G))  + (-0.00001)$(SUM(G,YIELD(L,G)) AND SUM(G$(MAP_GIJ(G,I,J)), YIELD(L,G))=0);
 Ybase_IJ(L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)), Y_base(L,G))  + (-0.00001)$(SUM(G,Y_base(L,G)) AND SUM(G$(MAP_GIJ(G,I,J)), Y_base(L,G))=0);
 
-file resultsall4 /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\yield.txt/;
+file resultsall4 / "../output/txt/%SCE%_%CLP%_%IAV%/%Sr%/yield.txt" /;
 resultsall4.pc=6;
 put resultsall4;
 loop((L,I,J)$(Yield_IJ(L,I,J)),
      put L.tl,I.tl,J.tl,Yield_IJ(L,I,J):10:5/
 );
 
-file resultsall5 /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\ybase.txt/;
+file resultsall5 / "../output/txt/%SCE%_%CLP%_%IAV%/%Sr%/ybase.txt" /;
 resultsall5.pc=6;
 put resultsall5;
 loop((L,I,J)$(Ybase_IJ(L,I,J)),

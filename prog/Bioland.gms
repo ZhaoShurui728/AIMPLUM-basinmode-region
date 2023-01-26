@@ -35,7 +35,7 @@ WLD,OECD90,REF,ASIA,MAF,LAM
 /
 G       Cell number  /
 $offlisting
-*$include %prog_loc%/\define\set_g\G_WLD.set
+*$include %prog_loc%/define/set_g/G_WLD.set
 $include ../%prog_loc%/define/set_g/G_USA.set
 $include ../%prog_loc%/define/set_g/G_XE25.set
 $include ../%prog_loc%/define/set_g/G_XER.set
@@ -166,7 +166,7 @@ $else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%
 $endif
 
 $gdxin '../data/analysis.gdx'
-$load POP GDP TBI_load=TBI 
+$load POP GDP TBI_load=TBI
 Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
 GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);
 TBI(Y,R,A_BTR2)=TBI_load("%TBIloadSce%",Y,R,A_BTR2);
@@ -178,7 +178,7 @@ MFA(R)$(GDPCAP_base(R)>0.35 AND GDPCAP_base(R)<1)=0.6;
 MFA(R)$(GDPCAP_base(R)>0 AND GDPCAP_base(R)<=0.35)=0.4;
 
 MFB(R)$(GDPCAP_base(R)>=1)=1.005;
-MFB(R)$(GDPCAP_base(R)>0.35 AND GDPCAP_base(R)<1)=1.01;
+MFB(R)$(GDPCAP_base(R)>0.35 AND GDPCAP_base(R)<1)=1.005;
 MFB(R)$(GDPCAP_base(R)>0 AND GDPCAP_base(R)<=0.35)=1.01;
 
 
@@ -267,7 +267,7 @@ PBIOSUP(G,LB,*)	Biosupply curve data set fraction(grid-1) area (kha per grid) qu
 
 * [grid-1]
 PBIOSUP(G,"BIOO","fraction")$(BIOENE(G)) = min(YBIOO(G),RAREA_BIOP(G)) ;
-* the new bioenergy fraction should deduced the 
+* the new bioenergy fraction should deduced the
 PBIOSUP(G,"BION","fraction")$(BIOENE(G)) = max(0, RAREA_BIOP(G)-YBIOO(G));
 ** treat it as a new crop
 PBIOSUP(G,"BION_DEG","fraction")$(BIOENE(G)) = max(0, degradedland_usable(G));
@@ -280,7 +280,7 @@ PBIOSUP(G,'BION',"quantity")$(BIOENE(G)) = BIOENE(G) * PBIOSUP(G,'BION',"area") 
 ** half yield reduction for bioenergy crops on degraded land
 PBIOSUP(G,'BION_DEG',"quantity")$(BIOENE(G)) = BIOENE(G)/2 * PBIOSUP(G,'BION_DEG',"area") / 10**6;
 
-* [$/GJ] = [mil$/ha/year] / [GJ/ha/year] * 10**6                                                                           
+* [$/GJ] = [mil$/ha/year] / [GJ/ha/year] * 10**6
 * PBIOSUP(G,LB,"price")$(BIOENE(G) AND RAREA_BIOP(G) AND PBIOSUP(G,LB,"quantity")>0) = pca_bio(G,LB) * PBIOSUP(G,LB,"area")/PBIOSUP(G,LB,"quantity");
 * PBIOSUP(G,LB,"price")$(BIOENE(G) AND PBIOSUP(G,LB,"quantity")>0) = pca_bio(G,LB) * PBIOSUP(G,LB,"area")/PBIOSUP(G,LB,"quantity");
 PBIOSUP(G,"BIOO","price")$(BIOENE(G) AND PBIOSUP(G,"BIOO","quantity")>0) = pca_bio(G,"BIOO") * PBIOSUP(G,"BIOO","area")/PBIOSUP(G,"BIOO","quantity");

@@ -140,7 +140,7 @@ $exit
 $ontext
 
 
-file resultsall3 /..\output\txt\%Sr%\%Sy%org.txt/;
+file resultsall3 / "../output/txt/%Sr%/%Sy%org.txt" /;
 resultsall3.pc=6;
 put resultsall3;
 loop((L,I,J)$(Y_pre_IJ(L,I,J)),
@@ -157,7 +157,7 @@ $load GHGLG
 
 GHG_IJ(L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)), GHGLG("%Sy%",L,G))  + eps$(SUM(G,GHGLG("%Sy%",L,G)) AND SUM(G$(MAP_GIJ(G,I,J)), GHGLG("%Sy%",L,G))=0);
 
-file resultsall6 /..\output\txt\%SCE%_%CLP%_%IAV%\%Sr%\%Sy%ghg.txt/;
+file resultsall6 / "../output/txt/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%ghg.txt" /;
 resultsall6.pc=6;
 put resultsall6;
 loop((L,I,J)$(GHG_IJ(L,I,J)),

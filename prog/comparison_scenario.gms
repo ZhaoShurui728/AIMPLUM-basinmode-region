@@ -1,13 +1,13 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_dir ../AIMPLUM
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 
 set
 R	17 regions	/
-$include %prog_dir%\define\region/region17.set
+$include %prog_dir%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
@@ -35,7 +35,7 @@ Alias(R,R2);
 
 set
 MAP_RAGG(R,R2)	/
-$include %prog_dir%\define/region/region17_agg.map
+$include %prog_dir%/define/region/region17_agg.map
 /
 LCGE	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
 MAP_LCGE(L,LCGE)/

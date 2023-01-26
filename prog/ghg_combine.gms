@@ -1,13 +1,13 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_dir ../AIMPLUM
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 
 Set
 R	17 regions	/
-$include %prog_dir%\define\region/region17.set
+$include %prog_dir%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Y year	/ %base_year%*%end_year% /
@@ -34,7 +34,7 @@ TOT	total
 Alias(R,R2);
 set
 MAP_RAGG(R,R2)	/
-$include %prog_dir%\define/region/region17_agg.map
+$include %prog_dir%/define/region/region17_agg.map
 /
 ;
 parameter

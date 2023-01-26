@@ -1,6 +1,7 @@
 *-*-*-*- This program is included by ..\prog\combine.gms
 parameter
 GHGL%1(Y,L)
+GHGLG%1(Y,L,G)
 Psol_stat%1(Y,ST,SP)                  Solution report
 Area%1(Y,L)
 Area_base%1(L,Sacol)
@@ -30,6 +31,7 @@ protectfracL%1(G,L)	Protected area fraction (0 to 1) of land category L in land 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/%1.gdx'
 $load Psol_stat%1=Psol_stat
 $load GHGL%1=GHGL
+$load GHGLG%1=GHGLG
 $load VYPL%1=VYP_load
 $load pa_road%1=pa_road
 $load pa_emit%1=pa_emit
@@ -54,6 +56,7 @@ $load sharepix%1=sharepix
 Psol_stat("%1",Y,ST,SP)$Psol_stat%1(Y,ST,SP)=Psol_stat%1(Y,ST,SP);
 Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
 GHGL("%1",Y,L)$GHGL%1(Y,L)=GHGL%1(Y,L);
+GHGLG(Y,L,G)$GHGLG%1(Y,L,G)=GHGLG%1(Y,L,G);
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/analysis/%1.gdx'
 $load Area%1=Area_load

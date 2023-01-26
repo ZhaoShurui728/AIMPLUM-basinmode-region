@@ -1,0 +1,87 @@
+*This program aims to adjust base year map by using cross-entropy method
+
+SET
+MAP_LLDM2(L,LDM)/
+FRSGL	.	PRM_SEC
+AFR	.	AFR
+PAS	.	PAS
+PDRIR	.	PDR
+WHTIR	.	WHT
+GROIR	.	GRO
+OSDIR	.	OSD
+C_BIR	.	C_B
+OTH_AIR	.	OTH_A
+PDRRF	.	PDR
+WHTRF	.	WHT
+GRORF	.	GRO
+OSDRF	.	OSD
+C_BRF	.	C_B
+OTH_ARF	.	OTH_A
+BIO	.	BIO
+CROP_FLW	.	CROP_FLW
+SL	.	SL
+OL	.	OL
+/
+;
+PARAMETER
+exclflag(L,G)
+epsi/0.00001/
+Y_pretmp(L,G)
+PLDMtmp(LDM)
+;
+EQUATIONS
+EQCEObj
+EQYPRMSEC2
+EQLDM2
+;
+MODEL 
+CEBaseAdjModel/
+EQCEObj,EQYPRMSEC2,EQLDM2/
+;
+CEBaseAdjModel.HOLDFIXED   = 1 ;
+CEBaseAdjModel.scaleopt=1;
+
+EQCEObj.. VOBJ =E= SUM((L,G)$(Y_pre(L,G) AND (NOT exclflag(L,G))),VY(L,G)*(LOG(VY(L,G)+epsi)-LOG(Y_pre(L,G)+epsi))) ;
+EQLDM2(LDM)$(PLDM(LDM) AND (NOT SUM(L$(MAP_LLDM2(L,LDM) AND LFix(L)),1))).. SUM((G,L)$(MAP_LLDM2(L,LDM) AND Y_pre(L,G)),ga(G)*VY(L,G)) =E= PLDM(LDM);
+EQYPRMSEC2(G)$(SUM(L$(Y_pre(L,G) AND (NOT exclflag(L,G))),1) AND (NOT Y_pre("SL",G) +Y_pre("OL",G)=SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),Y_pre(L,G)))).. 
+  SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),VY(L,G)) =E= 1 ;
+
+Y_pretmp(L,G)=Y_pre(L,G);
+PLDMtmp(LDM)=PLDM(LDM);
+Y_pre("FRSGL",G)=1-SUM(L$LRCPnonNat(L),frac_rcp("%Sr%",L,"%base_year%",G));
+Y_pre("PAS",G)=frac_rcp("%Sr%","PAS","%base_year%",G);
+
+VY.SCALE(L,G)$(Y_pre(L,G))=SQRT(ABS(Y_pre(L,G)));
+VY.L(L,G)=Y_pre(L,G);
+exclflag(L,G)$(LFIX(L) OR Y_pre(L,G)=0 OR (NOT SUM(LDM$(MAP_LLDM2(L,LDM)),1)))=1;
+VY.FX(L,G)$(exclflag(L,G))=Y_pre(L,G);
+VY.LO(L,G)$(Y_pre(L,G) AND NOT exclflag(L,G))=0;
+PLDM("PAS")=Planduse("%Sy%","GRAZING");
+PLDM("CROP_FLW")=Planduse("%Sy%","CROP_FLW");
+*Special treatment for ajdustment of total land area
+PLDM("PRM_SEC")=0;
+PLDM("PRM_SEC")=SUM(G,ga(G))-SUM(LDM,PLDM(LDM));
+
+*if some land category is missing in CGE results, then cancel (normally crop fallow is expected ) 
+Y_pre(L,G)$(SUM(LDM,MAP_LLDM2(L,LDM)) AND SUM(LDM$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),1)=0)=0;
+
+EQLDM.SCALE(LDM)$(PLDM(LDM))=SQRT(ABS(PLDM(LDM)));
+
+parameter aaa;
+aaa(G)$(SUM(L$(Y_pre(L,G) AND (NOT exclflag(L,G))),1) AND SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),1)=0)= 1 ;
+Y_pre("OL",G)$(Y_pre("SL",G) +Y_pre("OL",G)=SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),Y_pre(L,G)))=1-Y_pre("SL",G) ;
+PLDM("OL")=SUM(G,Y_pre("OL",G)*ga(G)); 
+PLDM("PRM_SEC")=SUM(G,ga(G))-(SUM(LDM,PLDM(LDM))-PLDM("PRM_SEC"));
+aaa(G)$(Y_pre("SL",G) +Y_pre("OL",G)=SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),Y_pre(L,G)))=Y_pre("OL",G)+Y_pre("SL",G) ; 
+$if %parallel%==off execute_unload '../output/temp.gdx';
+SOLVE CEBaseAdjModel using NLP minimizing VOBJ;
+
+*post process
+Y_pre(L,G)=Y_pretmp(L,G);
+PLDM(LDM)=PLDMtmp(LDM);
+Y_pre(L,G)=VY.L(L,G);
+Y_pre("PRM_SEC",G)=VY.L("FRSGL",G)+VY.L("PAS",G);
+VY.SCALE(L,G)=1;
+VY.UP(L,G)=+INF;
+VY.LO(L,G)=-INF;
+VY.L(L,G)=0;

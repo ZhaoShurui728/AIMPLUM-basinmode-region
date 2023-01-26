@@ -7,14 +7,14 @@ $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_dir ../AIMPLUM
 
 set
 R	17 regions	/%Sr%/
 G	Cell number  /
 * 1 * 259200
 $offlisting
-$include %prog_dir%/\define\set_g\G_%Sr%.set
+$include %prog_dir%/define/set_g/G_%Sr%.set
 $onlisting
 /
 Y year	/ %base_year%*%end_year% /

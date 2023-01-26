@@ -192,7 +192,7 @@ SF_PAS0$PASarea_base=Planduse_pas/PASarea_base;
 
 Y_NPROT(G)$(CDT("PRM_SEC",G))=VY_results("PRM_SEC",G)-protectfrac(G);
 
-*Šî€”N‚ÅPAS‚Ì‚ ‚éƒZƒ‹‚Å‚¢‚¯‚é‚Æ‚±‚ë‚Ü‚Å‚¢‚ê‚é
+*ï¿½î€ï¿½Nï¿½ï¿½PASï¿½Ì‚ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Å‚
 VY_load("PAS",G)$(Y_base("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)>=Y_base("PAS",G)*SF_PAS0)=Y_base("PAS",G)*SF_PAS0;
 VY_load("PAS",G)$(Y_base("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)<Y_base("PAS",G)*SF_PAS0)=Y_NPROT(G);
 

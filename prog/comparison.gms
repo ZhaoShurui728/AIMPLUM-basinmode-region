@@ -1,8 +1,8 @@
-$Setglobal prog_dir ..\AIMPLUM
+$Setglobal prog_dir ../AIMPLUM
 
 set
 R	17 regions	/
-$include %prog_dir%\define\region/region17.set
+$include %prog_dir%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/

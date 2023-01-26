@@ -7,6 +7,8 @@ $setglobal bioyieldcalc off
 $setglobal gdxout off
 $setglobal wwfclass opt
 $setglobal wwfopt 1
+$setglobal carseq off
+$setglobal afftype off
 * wwf should be selected from  off, on, opt.
 *off)  native classifications.
 *on)   wwf classification
@@ -31,11 +33,7 @@ Set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 /
-G	Cell number  /
-$offlisting
-$include ../%prog_loc%/define/set_g/G_WLD.set
-$onlisting
-/
+G	Cell number  /1 * 259200/
 I	Vertical position (LAT)	/ 1*360 /
 J	Horizontal position (LON)	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
@@ -89,6 +87,7 @@ ABD_BIO
 ABD_PAS
 ABD_MNGFRS
 ABD_AFR
+LUC
 /
 
 L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRS/
@@ -101,6 +100,7 @@ Lused(L)/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR/
 Lnat(L)/GL,PRMFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
 LRES(L)/RES/
+LABL(L)/AFR,BIO,LUC/
 NLFRSGL/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR,ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR,SL,OL/
 Lmip/
 $include ../%prog_loc%/define/lumip.set
@@ -134,7 +134,10 @@ VY_IJmip(Y,Lmip,I,J)
 VY_IJwwf(Y,Lwwf,I,J)
 YIELD_BIO(R,Y,G)
 YIELD_IJ(Y,L,I,J)
-
+GHGLG(Y,L,G)	MtCO2 per grid per year
+GHG_IJ(Y,L,I,J)	MtCO2 per grid per year
+GHGLGC(Y,L,G)	cumulative emissions or sequestration from base year to the year Y (MtCO2 per grid)
+GHGC_IJ(Y,L,I,J)	cumulative emissions or sequestration from base year to the year Y (MtCO2 per grid)
 VY_loadAFRbaunocc(R,Y,LAFR,G)
 VY_IJAFRbaunocc(Y,I,J)
 VY_loadAFRbaubiod(R,Y,LAFR,G)
@@ -144,6 +147,7 @@ VY_IJ_res(Y,L,I,J)
 VY_IJ_delay(Y,L,I,J)
 GAIJ(I,J)           Grid area of cell I J kha
 GAIJ0(I,J)           Grid area of cell I J million ha
+Y_step /10/
 ;
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
@@ -262,14 +266,58 @@ ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(
 $endif.split
 $if %split%==1 $exit
 
+set
+LVST/
+AFR00	control(actual biome)
+AFRMAX	foresttype with maximum carbon sink in each grid
+AFRDIV	foresttype with maximum carbon sink considering biodiversity in each grid
+AFRCUR
+/
+;
+parameter
+ACFout(LVST,R,G)	average carbon flow in grid G adjusted using VISIT estimates [MgC per ha per year]
+;
+
 $ifthen.bioyield %bioyieldcalc%==on
 $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
 $load YIELD_BIO
 
 YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
+
+$gdxin '../data/visit_forest_growth_function.gdx'
+$load ACFout
+
+$ifthen %afftype%==cact_vst
+YIELD_IJ("2005","AFR",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,ACFout("AFR00",R,G)));
+$elseif %afftype%==cdiv_vst
+YIELD_IJ("2005","AFR",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,ACFout("AFRDIV",R,G)));
+$elseif %afftype%==cmax_vst
+YIELD_IJ("2005","AFR",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,ACFout("AFRMAX",R,G)));
+$elseif %afftype%==ccur_vst
+YIELD_IJ("2005","AFR",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,ACFout("AFRCUR",R,G)));
+$else
+YIELD_IJ("2005","AFR",I,J)$FLAG_IJ(I,J)=0;
+$endif
+
 $batinclude ../%prog_loc%/inc_prog/outputcsv_yield.gms BIO
+$batinclude ../%prog_loc%/inc_prog/outputcsv_yield.gms AFR
+
 $exit
 $endif.bioyield
+
+$ifthen.carseq %carseq%==on
+$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
+$load GHGLG
+
+GHG_IJ(Y,L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J) and GHGLG(Y,L,G)),GHGLG(Y,L,G));
+GHGC_IJ(Y,L,I,J)$(LABL(L) and FLAG_IJ(I,J))=GHG_IJ("2010",L,I,J)*5 + sum(Y2$(ordy("2020")<=ordy(Y2) and ordy(Y2)<=ordy(Y) and GHG_IJ(Y2,L,I,J)),GHG_IJ(Y2,L,I,J)*Y_step);
+
+$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms AFR
+$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms BIO
+$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms LUC
+
+$exit
+$endif.carseq
 
 
 $ifthen.p %lumip%==on
@@ -373,11 +421,11 @@ plwwfnum/10/
 $if %wwfopt%==4 plwwfnum=14;
 $if %wwfopt%==5 plwwfnum=14;
 
-file output /..\output\csv\%SCE%_%CLP%_%IAV%\%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv/;
+file output / "../output/csv/%SCE%_%CLP%_%IAV%/%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv" /;
 put output;
-output.pw=100000;
+*output.pw=100000;
+output.pw=32767;
 put "LC_area_share%wwfopt%", "= "/;
-* ���ʂ̏o��
 
 loop(Y,
  loop(Lwwfnum,
@@ -401,9 +449,10 @@ $ifthen.wwfopt not %wwfopt%==1
 GAIJ0(I,J)$GAIJ(I,J)=GAIJ(I,J)/1000;
 GAIJ0(I,J)$(GAIJ(I,J)=0)=-99;
 
-file output_pixel_area /..\output\csv\pixel_area.csv/;
+file output_pixel_area / "../output/csv/pixel_area.csv" /;
 put output_pixel_area;
-output_pixel_area.pw=100000;
+*output_pixel_area.pw=100000;
+output_pixel_area.pw=32767;
 put "pixel_area", "= "/;
 
  loop(I,
@@ -439,9 +488,10 @@ $endif.protect
 
 $if %CLP%==BaU protectfracIJ(I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfrac(R,"2010",G)));
 
-file output_protect /..\output\csv\%SCE%_%CLP%_%IAV%_protect.csv/;
+file output_protect / "../output/csv/%SCE%_%CLP%_%IAV%_protect.csv" /;
 put output_protect;
-output_protect.pw=100000;
+*output_protect.pw=100000;
+output_protect.pw=32767;
 put " protected_pixel_area_share", "= "/;
 
 protectfracLIJ(Y,I,J)$(protectfracLIJ(Y,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;

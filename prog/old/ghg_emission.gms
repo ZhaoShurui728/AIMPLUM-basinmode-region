@@ -7,14 +7,14 @@ $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
 
-$Setglobal prog_dir ..\prog
+$Setglobal prog_dir ../prog
 
 set
 R	17 regions	/%Sr%/
 G	Cell number  /
 * 1 * 259200
 $offlisting
-$include %prog_dir%/\define\set_g\G_%Sr%.set
+$include %prog_dir%//define/set_g/G_%Sr%.set
 $onlisting
 /
 Y year	/ %base_year%*%end_year% /
@@ -93,7 +93,7 @@ CSL("PAS",G)=2.5;
 CSL("PRM_SEC",G)=CS(G);
 
 $ontext
-*-----X—Ñ‚Ì‚İ‚ÌƒXƒgƒbƒN—Ê‚ğŒvZ
+*-----ï¿½Xï¿½Ñ‚Ì‚İ‚ÌƒXï¿½gï¿½bï¿½Nï¿½Ê‚ï¿½ï¿½vï¿½Z
 parameter
 CDTmax	maximam carbon density of forest planed (MgC ha-1 year-1)
 ;

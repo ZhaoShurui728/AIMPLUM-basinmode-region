@@ -30,7 +30,7 @@ XLM	Rest of Brazil
 CIS	Former USSR
 XNF	North Africa
 XAF	Sub-Sahara
-*$include %prog_loc%/\define\region/region17.set
+*$include %prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/country.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
@@ -47,7 +47,7 @@ XLM	Rest of Brazil
 CIS	Former USSR
 XNF	North Africa
 XAF	Sub-Sahara
-*$include %prog_loc%/\define\region/region17.set
+*$include %prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/country.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
@@ -59,7 +59,7 @@ $include ../%prog_loc%/define/region/region17.map
 /
 G	Cell number  /
 $offlisting
-*$include %prog_loc%/\define\set_g\G_WLD.set
+*$include %prog_loc%/define/set_g/G_WLD.set
 $include ../%prog_loc%/define/set_g/G_USA.set
 $include ../%prog_loc%/define/set_g/G_XE25.set
 $include ../%prog_loc%/define/set_g/G_XER.set
@@ -224,7 +224,8 @@ Area(R,Y,L)	million ha
 AreaLDM(R,Y,LDM)	million ha
 Area_base(R,L,Sacol)
 CSB(R)
-GHGL(R,Y,L)
+GHGL(R,Y,L)	MtCO2 per year in region R
+GHGLG(Y,L,G)    MtCO2 per grid per year
 GA(G)		Grid area of cell G kha
 YBIO(R,Y,G)
 PCBIO_load(Y,R)	average price to meet the given bioenergy amount [$ per GJ]
@@ -295,7 +296,6 @@ Area_base(R,L,"estimates")=Area(R,"%base_year%",L);
 
 GHGL(Ragg,Y,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L));
 
-
 *----- Yield
 $ifthen %bioyieldcalc%==on
 
@@ -304,12 +304,16 @@ parameter
   YIELD_BIO(R,Y,G)
 ;
 MF(L,R,Y)$(SUM((Ragg,L2),Area(Ragg,Y,L2)) AND NOT LBIO(L))=1;
-MF(L,R,Y)$(MFA(R) AND LBIO(L))=min(0.8/MFA(R),MFB(R)**max(0,ordy(Y)-2010));
+MF(L,R,Y)$(MFA(R) AND LBIO(L))=min(1.3/MFA(R),MFB(R)**max(0,ordy(Y)-2010));
 
 YIELD(R,Y,L,G)$(YIELD_load(R,L,G) AND SUM((Ragg,L2),Area(Ragg,Y,L2)))=YIELD_load(R,L,G)*MF(L,R,Y);
 YIELD_BIO(R,Y,G)=YIELD(R,Y,"BIO",G);
 
 $endif
+
+*GHGLG(Y,"BIO",G)$GHGLG(Y,"BIO",G)=GHGLG(Y,"BIO",G)*;
+
+
 
 *-----Land transition cost
 $ifthen %costcalc%==on
@@ -582,6 +586,7 @@ AreaLDM
 Area_base
 CSB
 GHGL
+GHGLG
 $if %biocurve%==on PCBIO
 $if %biocurve%==on QCBIO
 $if %costcalc%==on PAL,PALDM,PATL,PATLDM

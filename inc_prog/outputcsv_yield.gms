@@ -1,10 +1,11 @@
-file output_yield_%1 /..\output\csv\%SCE%_%CLP%_%IAV%\yield_%1.csv/;
+file output_yield_%1 / "../output/csv/%SCE%_%CLP%_%IAV%/yield_%1.csv" /;
 put output_yield_%1;
 output_yield_%1.pw=100000;
-put " %1", "= "/;
-* ���ʂ̏o��
-Yield_IJ(Y,"%1",I,J)$(Yield_IJ(Y,"%1",I,J)=0)=-999;
 
+Yield_IJ(Y,"%1",I,J)$(Yield_IJ(Y,"%1",I,J)=0)=-999;
+Yield_IJ(Y,"%1",I,J)$(Yield_IJ(Y,"%1",I,J)=-INF)=-999;
+
+put " %1", "= "/;
 loop(Y,
  loop(I,
   loop(J,

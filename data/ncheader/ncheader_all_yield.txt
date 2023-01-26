@@ -2,7 +2,7 @@ netcdf LUH2v1.0h_AIM {
 dimensions:
 	lon = 720 ;
 	lat = 360 ;
-	time = 20 ;
+	time = 11 ;
 variables:
 	float lon(lon) ;
 		lon:long_name = "Longitude" ;
@@ -23,8 +23,13 @@ variables:
 	float BIO(time, lat, lon) ;
 		BIO:standard_name = "bioenergy crops yield of grid cell area";
 		BIO:long_name = "bioenergy crops yield of grid cell area";
-		BIO:units = "MgC per ha";
+		BIO:units = "MgC per ha per year";
 		BIO:missing_value = -999.f ;
+	float AFR(time, lat, lon) ;
+		AFR:standard_name = "afforestation yield of grid cell area";
+		AFR:long_name = "afforestation yield of grid cell area";
+		AFR:units = "MgC per ha per year";
+		AFR:missing_value = -999.f ;
 
 data:
 
@@ -148,7 +153,6 @@ data:
     -82.25, -82.75, -83.25, -83.75, -84.25, -84.75, -85.25, -85.75, -86.25, -86.75, 
     -87.25, -87.75, -88.25, -88.75, -89.25, -89.75 ;
 
- year = 2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100;
-
- time = 38351, 40177, 42003, 43829, 45656, 47482, 49308, 51134, 52961, 54787, 56613, 58439, 60266, 62092, 63918, 65744, 67571, 69397, 71223, 73049 ;
+ year = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
+ time = 38351, 40177, 43829, 47482, 51134, 54787, 58439, 62092, 65744, 69397, 73049 ;
 

@@ -6,9 +6,8 @@ library(RColorBrewer)
 library(maps)
 args <- commandArgs()
 colnames <- c("Variable","X1","X2","Value")
-scenarioname <- as.character(args[7])
+scenarioname <- as.character(args[6])
 pres <- 150
-
 
 world <- map_data("world")
 

@@ -1,4 +1,4 @@
-file output_%1 /..\output\csv\%SCE%_%CLP%_%IAV%\%1.csv/;
+file output_%1 / "../output/csv/%SCE%_%CLP%_%IAV%/%1.csv" /;
 put output_%1;
 output_%1.pw=100000;
 put " %1", "= "/;
