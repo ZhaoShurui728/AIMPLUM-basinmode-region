@@ -3,7 +3,7 @@ put output_%1;
 output_%1.pw=100000;
 put " %1", "= "/;
 * ���ʂ̏o��
-VY_IJ(Y,"%1",I,J)$(VY_IJ(Y,"%1",I,J)=0)=-999;
+VY_IJ(Y,"%1",I,J)$(VY_IJ(Y,"%1",I,J)=0)=-99;
 
 loop(Y,
  loop(I,

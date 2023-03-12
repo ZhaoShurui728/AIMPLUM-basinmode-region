@@ -10,10 +10,12 @@ $setglobal iav NoCC
 $setglobal biocurve off
 $setglobal not1stiter off
 $setglobal biodivprice off
+$setglobal Ystep0 10
 
 $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $include ../%prog_loc%/scenario/climate_policy/%clp%.gms
 $include ../%prog_loc%/scenario/IAV/%iav%.gms
+$include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 
 set
 dum/1*1000000/
@@ -47,6 +49,10 @@ PRM_SEC forest + grassland + pasture
 FRSGL   forest + grassland
 *HAV_FRS        production forest
 FRS     forest
+MNGFRS  managed forest
+UMNFRS  unmanage forest
+PLNFRS  planted forest
+NRMFRS  naturally regenerating managed forest
 AFR     afforestation
 PAS     grazing pasture
 PDR     rice
@@ -77,12 +83,14 @@ RES	restoration land that was used for cropland or pasture and set aside for res
 /
 LCROPB(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO/
 LPRMSEC(L)/PRM_SEC/
-LSUM(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,SL,OL/
+LSUM(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL,SL,OL/
+L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
+L_UNUSED(L)/SL,OL/
 
 *LBIO(L)/PRM_SEC,CROP_FLW/
 ;
-Alias(G,G2),(L,L2);
-
+Alias(G,G2),(L,L2,LL);
+$include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 *------- Carbon stock ----------*
 set
 Ybase/ %base_year% /
@@ -108,7 +116,7 @@ $load GA
 
 parameter
 VYL(L,G)
-VY_load(L,G)
+VYL_anapre(L,G)
 Area_load(L)
 ;
 
@@ -123,6 +131,14 @@ $batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms %Sr%
 $endif
 
 $if %biocurve%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
+
+*----Total adjustment
+
+VYL(L,G)$(SUM(LL$(L_USEDTOTAL(LL)),VYL(LL,G)) AND NOT L_UNUSED(L))=VYL(L,G)*(1-SUM(LL$(L_UNUSED(LL)),VYL(LL,G)))/SUM(LL$(L_USEDTOTAL(LL)),VYL(LL,G));
+
+* Sum of pixel shares should be 1.
+VYL("FRSGL",G)$VYL("FRSGL",G)=1-sum(L$(LSUM(L) and (not sameas(L,"FRSGL"))),VYL(L,G));
+
 
 *--- Forest -----------
 
@@ -198,28 +214,64 @@ $gdxin '../output/gdx/base/%Sr%/%base_year%.gdx'
 $load CS_base=CS
 
 *---------------
+* Forest is devided into managed and unmanaged.
+set
+landcatall /
+1	total
+2	forest
+3	managed_forest
+11	naturallyRegeneratingForest_unmanage
+20	naturallyRegeneratingForest_managed
+31	Planted_forests >15yrs
+32	Planted_forests <=15yrs
+40	Oilpalmplantation
+53	Agroforestry
+/
+;
+parameter
+forest_management_shareG(G) A ratio of managed forest area to total forest area  in a grid cell G (0-1)
+forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
+;
+$gdxin '../%prog_loc%/data/forest_class_export.gdx'
+$load forest_management_shareG,forest_class_shareG
+
 
 VYL("FRS",G)$(G0(G) AND CS_base(G)>=CSB)=VYL("FRSGL",G);
 VYL("GL",G)$(G0(G) AND CS_base(G)<CSB)=VYL("FRSGL",G);
 
-* Sum of pixel shares should be 1.
-*VYL("FRS",G)$VYL("FRS",G)=1-sum(L$(LSUM(L) and (not sameas(L,"FRS"))),VYL(L,G));
-*VYL("GL",G)$VYL("GL",G)=1-sum(L$(LSUM(L) and (not sameas(L,"GL"))),VYL(L,G));
+$ifthen.mng %Sy%==%base_year%
+VYL("UMNFRS",G)$(VYL("FRS",G))=VYL("FRS",G)*(1-forest_management_shareG(G));
+VYL("MNGFRS",G)$(VYL("FRS",G))=VYL("FRS",G)-VYL("UMNFRS",G);
+
+VYL("NRMFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*forest_class_shareG("20",G)/forest_class_shareG("3",G);
+VYL("PLNFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+
+$else.mng
+
+VYL("UMNFRS",G)$(VYL("FRS",G))=min(VYL_anapre("UMNFRS",G),VYL("FRS",G)*(1-forest_management_shareG(G)));
+VYL("MNGFRS",G)$(VYL("FRS",G))=VYL("FRS",G)-VYL("UMNFRS",G);
+
+VYL("NRMFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*forest_class_shareG("20",G)/forest_class_shareG("3",G);
+VYL("PLNFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+
+$endif.mng
 
 VYL("PRM_SEC",G)=0;
 VYL("FRSGL",G)=0;
 
-
 Area_load(L)= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 
 VYL(L,G)$(not G0(G))=0;
-VYL(L,G)=round(VYL(L,G),6);
+*VYL(L,G)=round(VYL(L,G),6);
 
 $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/analysis/%Sy%.gdx'
 VYL=VY_load
 Area_load
 $if %Sy%==%base_year% CSB,Psol_stat,FRSArea2
+VYL_anapre
+CS
+YFRS
 ;
 
 
