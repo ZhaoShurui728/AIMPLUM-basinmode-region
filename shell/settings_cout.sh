@@ -28,7 +28,7 @@ CPUthreads=20
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=off
+DataPrep=on
 
 # Set Base Year Simulation [on/off]
 Basesim=on
