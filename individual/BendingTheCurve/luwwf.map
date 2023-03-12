@@ -3,7 +3,7 @@
 	cropland_other	.	CROP_FLW
 	cropland_bioenergySRP	.	BIO
 	grassland	.	PAS
-	forest_unmanaged 	.	PRMFRS
+	forest_unmanaged 	.	UMNFRS
 	forest_managed	.	MNGFRS
 	forest_managed	.	AFR
 	restored	.	RES

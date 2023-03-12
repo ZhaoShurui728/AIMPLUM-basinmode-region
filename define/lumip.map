@@ -15,7 +15,8 @@
 	c3nfx	.	OSDIR
 	range	.	GL
 	pastr	.	PAS
-	primf	.	FRS
+	primf	.	PRMFRS
+	secdf	.	SECFRS
 	secdf	.	AFR
 	urban	.	SL
 	irrig_c3ann	.	PDRIR

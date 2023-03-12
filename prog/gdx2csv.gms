@@ -37,7 +37,6 @@ G	Cell number  /1 * 259200/
 I	Vertical position (LAT)	/ 1*360 /
 J	Horizontal position (LON)	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
-*Y	Year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
 Y	Year	/2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100/
 
 L land use type /
@@ -77,7 +76,9 @@ OTH_ARF	other crops rainfed
 ONV	other natural vegetation
 *AFRRES	afforestation or restoration
 PRMFRS	primary forest
+SECFRS	secoundary forest
 MNGFRS	managed forest
+UMNFRS	unmanged forest
 PROTECT protected area
 RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
 *restoration land with original land category
@@ -89,19 +90,13 @@ ABD_MNGFRS
 ABD_AFR
 LUC
 /
-
-L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRS/
-L_UNUSED(L)/SL,OL/
-LSUM(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,SL,OL,FRS/
-
-LSUMabsres(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,SL,OL,PRMFRS,MNGFRS,RES,ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
 LAFR(L)/AFR/
 Lused(L)/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR/
-Lnat(L)/GL,PRMFRS/
+Lnat(L)/GL,UMNFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
 LRES(L)/RES/
 LABL(L)/AFR,BIO,LUC/
-NLFRSGL/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR,ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR,SL,OL/
+*NLFRSGL/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR,ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR,SL,OL/
 Lmip/
 $include ../%prog_loc%/define/lumip.set
 /
@@ -160,22 +155,17 @@ $load VY_load
 
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,VY_load(R,Y,L,G)));
 
-VY_IJ(Y,L,I,J)$(SUM(LL$(L_USEDTOTAL(LL)),VY_IJ(Y,LL,I,J)) AND NOT L_UNUSED(L))
-=VY_IJ(Y,L,I,J)*(1-SUM(LL$(L_UNUSED(LL)),VY_IJ(Y,LL,I,J)))/SUM(LL$(L_USEDTOTAL(LL)),VY_IJ(Y,LL,I,J));
-
-* Sum of pixel shares should be 1.
-VY_IJ(Y,"FRS",I,J)$VY_IJ(Y,"FRS",I,J)=1-sum(L$(LSUM(L) and (not sameas(L,"FRS"))),VY_IJ(Y,L,I,J));
-VY_IJ(Y,"GL",I,J)$VY_IJ(Y,"GL",I,J)=1-sum(L$(LSUM(L) and (not sameas(L,"GL"))),VY_IJ(Y,L,I,J));
 
 
-* Forest is devided into managed and unmanaged.
+
+* Forest is devided into primary and secoundary.
 
 $gdxin '../%prog_loc%/data/sharepix.gdx'
 $load sharepix
 
 
 VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Primary vegetation",I,J);
-VY_IJ(Y,"MNGFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J);
+VY_IJ(Y,"SECFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J);
 VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J) AND sharepix("Primary vegetation",I,J)+sharepix("Mature and Intermediate secondary vegetation",I,J)=0)=VY_IJ(Y,"FRS",I,J);
 VY_IJ(Y,"FRS",I,J)=0;
 
@@ -347,14 +337,14 @@ $elseif.p %lumip%_%wwfclass%==off_on
 
 VY_IJwwf(Y,Lwwf,I,J)=SUM(L$MAP_WWF(Lwwf,L),VY_IJ(Y,L,I,J));
 
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms cropland_other
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms cropland_bioenergySRP
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms grassland
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms forest_unmanaged
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms forest_managed
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms restored
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms other
-$batinclude ../%prog_loc%/prog/outputcsv_wwf.gms built_up_areas
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms cropland_other
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms cropland_bioenergySRP
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms grassland
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms forest_unmanaged
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms forest_managed
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms restored
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms other
+$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms built_up_areas
 
 $elseif.p %lumip%_%wwfclass%==off_opt
 
@@ -388,11 +378,11 @@ VW(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VW(Y,L,I,J)$(LRES(L) and RSF(Y,L,I,J))=RSF(Y,L,I,J);
 VW(Y,L,I,J)$(LABD(L) and ABD(Y,L,I,J))=ABD(Y,L,I,J);
 VW(Y,L,I,J)$(Lnat(L) and VY_IJ(Y,L,I,J)>0)=max(0,VY_IJ(Y,L,I,J)-SUM(L2,RSF(Y,L2,I,J))-SUM(L3,ABD(Y,L3,I,J)));
-*VW(Y,L,I,J)$(Lnat(L) and VY_IJ(Y,L,I,J)-deltaZ(Y,I,J))=1-SUM(L2$(LSUMabsres(L2) and not Lnat(L2)),VY_IJ(Y,L2,I,J));
+
 
 VU(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VU(Y,L,I,J)$(Lnat(L) and VY_IJ(Y,L,I,J) and SUM(L2,XF(Y,L2,I,J)))=max(0,VY_IJ(Y,L,I,J)-SUM(L2,XF(Y,L2,I,J)));
-*VU(Y,L,I,J)$(Lnat(L) and VY_IJ(Y,L,I,J)-deltaZ(Y,I,J))=1-SUM(L2$(LSUMabsres(L2) and not Lnat(L2)),VY_IJ(Y,L2,I,J));
+
 VU(Y,L,I,J)$(LRES(L) and SUM(L2,XF(Y,L2,I,J)))=SUM(L2,XF(Y,L2,I,J));
 
 VW(Y,L,I,J)$(VW(Y,L,I,J)<10**(-7) AND VW(Y,L,I,J)>(-1)*10**(-7))=0;

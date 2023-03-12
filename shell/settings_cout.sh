@@ -2,8 +2,6 @@
 
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
-#YEAR0=(2060 2070 2080 2090 2100)
-#YEAR0=(2030 2040 2050 2060 2070 2080 2090 2100)
 # Set Global [on/off]
 global=on
 # if global=off, the following country code should be assigned
@@ -12,12 +10,12 @@ global=on
 #CountryC=(USA XOC XE25)
 CountryC=(USA)
 # Set Scenarios
-scn=(SSP2NoAff_600C_CACNup200_NoCC SSP2NoBio_600C_CACNup200_affcact SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_affcmax SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affcmax SSP2NoAff_600C_CACNup200_All_lancet SSP2NoBio_600C_CACNup200_NoCC)
-
+scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
+scn=(SSP2_BaU_NoCC)
 #group1
-scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
+#scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
 #group2
-scn=(SSP2NoBio_600C_CACNup200_affcmax SSP2NoBio_600C_CACNup200_All_lancet_affcmax SSP2_600C_CACNup200_All_lancet_affccur SSP2_600C_CACNup200_affcdiv SSP2_600C_CACNup200_affcmax SSP2_600C_CACNup200_All_lancet_affcdiv SSP2_600C_CACNup200_All_lancet_affcmax)
+#scn=(SSP2NoBio_600C_CACNup200_affcmax SSP2NoBio_600C_CACNup200_All_lancet_affcmax SSP2_600C_CACNup200_All_lancet_affccur SSP2_600C_CACNup200_affcdiv SSP2_600C_CACNup200_affcmax SSP2_600C_CACNup200_All_lancet_affcdiv SSP2_600C_CACNup200_All_lancet_affcmax)
 #group3
 #scn=(SSP2_600C_CACNup200_affcact SSP2NoBio_600C_CACNup200_affcact SSP2NoBio_600C_CACNup200_All_lancet_affcact)
 #group4
@@ -30,31 +28,31 @@ CPUthreads=20
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=off
+DataPrep=on
 
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=off
+Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
-    Sub_Futuresim_NormalRun=on
+    Sub_Futuresim_NormalRun=off
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
     Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=off
+ScnMerge=on
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
 MergeResCSV4NC=on
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
-    Sub_MergeResCSV4NC_basecsv=off
+    Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
     Sub_MergeResCSV4NC_lumip=off
     ## if you would like to make BTC basis 5 options, then turn on BTC3option. This switch will be also used in :netcdfgen (around 3GB per scenario memory and 5min are taken in this process)
@@ -69,12 +67,12 @@ MergeResCSV4NC=on
 # Set Netcdf Creation [on/off]
 netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
-    Sub_Netcdfgen_projectname=Affc
+    Sub_Netcdfgen_projectname=Frsmng
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off
     ## set year for map visualization.
-    YearListFig=(2010 2050 2100)
+    YearListFig=(2010 2100)
     ## difference from base year is ploted if this switch on
     Sub_gdx4png_dif=off
 
