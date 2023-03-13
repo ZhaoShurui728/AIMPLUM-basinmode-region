@@ -111,7 +111,7 @@ $gdxin '../data/analysis.gdx'
 $load Planduse_load=Planduse
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,R,LCGE);
 
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA
 
 parameter

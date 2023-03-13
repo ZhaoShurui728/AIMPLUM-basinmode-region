@@ -58,7 +58,7 @@ ordy(Y)
 
 ;
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '%prog_dir%/data/data_prep.gdx'
 $load GA Map_RG
 
 FLAG_G(G)$MAP_RG("%Sr%",G)=1;

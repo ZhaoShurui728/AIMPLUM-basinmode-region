@@ -268,7 +268,7 @@ FLAG_G(G)		Grid flag
 GL(G,G2)		Distance between grid G and G2
 ;
 
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load Map_RG GA
 $load MAP_GIJ
 
@@ -1175,7 +1175,7 @@ $load ruralroadlength
 
 roaddens=ruralroadlength("%Sr%")/SUM(LDM$LDMCROP(LDM),PLDM(LDM))/1000;
 
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GL=GL%Sr%
 
 * ��苗���ȏ㗣�ꂽ�G���A�ɂ͍ő�l������
@@ -1412,7 +1412,7 @@ frsprotect_check$(frsprotectarea)=SUM(G$(CS(G)>CSB),VY.L("PRM_SEC",G)*GA(G));
 set
 MAP_WG(G,G2)        Neighboring relationship between cell G and cell G2
 ;
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load MAP_WG
 
 *-----Protected area-----*

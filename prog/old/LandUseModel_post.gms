@@ -127,7 +127,7 @@ $load CDT_load=CDT
 
 CDT("PRM_SEC",G)=CDT_load("PRM_SEC",G,"%base_year%","%base_year%");
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '%prog_dir%/data/data_prep.gdx'
 $load GA MAP_WG
 
 $	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%.gdx'

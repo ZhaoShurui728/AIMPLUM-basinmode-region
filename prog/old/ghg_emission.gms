@@ -65,7 +65,7 @@ ACF(G)		average carbon flow in year Y of forest planed in year Y2 in grid G	(MgC
 ;
 
 
-$gdxin '%prog_dir%/data/Data_prep.gdx'
+$gdxin '%prog_dir%/data/data_prep.gdx'
 $load GA
 
 ordy(Y) = ord(Y) + %base_year% -1;

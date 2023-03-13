@@ -53,7 +53,7 @@ GA(G)		Grid area of cell G kha
 FLAG_G(G)		Grid flag
 ;
 
-$gdxin '%prog_dir%/prog/Data_prep.gdx'
+$gdxin '%prog_dir%/prog/data_prep.gdx'
 $load Map_RG GA MAP_WG
 
 

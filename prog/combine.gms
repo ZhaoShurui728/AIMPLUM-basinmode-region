@@ -265,7 +265,7 @@ PCBIO(R,Y)=PCBIO_load(Y,R);
 QCBIO(R,Y)=QCBIO_load(Y,R);
 $endif
 
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA
 
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA
@@ -373,7 +373,7 @@ set
 MAP_RG(R,G)     Relationship between country R and cell G
 MAP_SrG(Sr,G)	Relationship between country Sr and cell G
 ;
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load MAP_RG
 $load MAP_SrG
 

@@ -102,7 +102,7 @@ protect_wopas(G)
 YIELDBIO(G)
 ;
 
-$gdxin '../%prog_loc%/data/Data_prep.gdx'
+$gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA MAP_RG
 
 $batinclude ../%prog_loc%/inc_prog/BiolandR.gms USA
