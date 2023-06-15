@@ -579,7 +579,7 @@ $load SSP_frac = Frac
 $gdxin '../%prog_loc%/data/cropland_map_rmk.gdx'
 $load crop_basemap
 
-$gdxin '../data/analysis.gdx'
+$gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
 $load Pland_load=Pland_phs
 $load Outputall_nominal_load=Outputall_nominal OUTPUTAC_load=OUTPUTAC
 $load PGHG_load=PGHG
@@ -829,7 +829,7 @@ CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in ye
 $gdxin '../%prog_loc%/data/fao_data.gdx'
 $load TON_C Pprod
 
-$gdxin '../data/visit_forest_growth_function.gdx'
+$gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load ACF_vst=ACFout MACF_vst=MACFout CFT_vst=CFTout
 
 $ifthen %afftype%==cact_vst
@@ -859,7 +859,7 @@ CFT(G,Y,Y2)=CFT_vst("AFRCUR","%Sr%",G,Y,Y2);
 
 $elseif %afftype%==cprevisit
 
-$gdxin '../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
 $load ACF_aez=ACF MACF_aez=MACF
 $load CFT_aez=CFT
 
@@ -869,7 +869,7 @@ CFT(G,Y,Y2)=CFT_aez(G,Y,Y2);
 
 $else
 
-$gdxin '../data/biomass/output/biomass%Sr%_aez.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%_aez.gdx'
 $load ACF_aez=ACF MACF_aez=MACF
 $load CFT_aez=CFT
 
@@ -995,7 +995,7 @@ YIELD(L,G)$(LBIO(L) AND YIELD(L,G))=YIELD(L,G)*MF;
 
 $ifthen.baseyear2 %Sy%==%base_year%
 
-$gdxin '../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
 $load CS
 
 CSB=0;

@@ -72,7 +72,7 @@ Planduse(Y,R,LCGE)
 Planduse_load(*,Y,R,LCGE)
 ;
 
-$gdxin '%prog_dir%/../data/analysis.gdx'
+$gdxin '%prog_dir%/data/cgeoutput/analysis.gdx'
 $load LUCHEM_P=LUCHEM_P_load
 $load LUCHEM_N=LUCHEM_N_load
 $load Planduse_load=Planduse

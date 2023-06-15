@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 .prog.Rproj
+data/visit_forest_growth_function.gdx
+data/biomass*
+data/cgeoutput/analysis.gdx

@@ -165,7 +165,7 @@ $elseif %CLP%==CNALP $setglobal TBIloadSce %SCE%_CNA_%IAV%
 $else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%
 $endif
 
-$gdxin '../data/analysis.gdx'
+$gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
 $load POP GDP TBI_load=TBI
 Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
 GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);

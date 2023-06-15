@@ -121,7 +121,7 @@ FuturesimRun() {
       A=${L}
     fi
 
-    source ../$1/shell/settings/${S}.sh
+#    source ../$1/shell/settings/${S}.sh
     cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
     cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
 
@@ -146,14 +146,14 @@ FuturesimRun() {
      done
     fi
   done
-
+  
   echo $(TimeDif `cat ../output/txt/cpu/futuresim/${PARALLEL}.txt`) > ../output/txt/cpu/futuresim/end_${PARALLEL}.txt
   rm ../output/txt/cpu/futuresim/${PARALLEL}.txt
 }
   
 Futuresim() {
   rm ../output/txt/cpu/futuresim/* 2> /dev/null
-
+  echo future scenario simulation is run
   if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
     for A in ${COUNTRY0[@]}
     do
@@ -178,7 +178,6 @@ ScnMergeRun() {
   source ../$1/shell/settings/$2.sh
   declare -n COUNTRY=$3
   Biocurvesort=$4
-
   echo "`date '+%s'`" > ../output/txt/cpu/merge1/$2.txt
 
   cd ../output/gdx/$2/
@@ -202,6 +201,7 @@ ScnMergeRun() {
 
 ScnMerge() {
   rm ../output/txt/cpu/merge1/*.txt 2> /dev/null
+  echo scenario results merge
   
   for S in ${scn[@]}
   do
@@ -411,6 +411,16 @@ Allmerge() {
 cd ../
 parent_dir=`basename ${PWD}`
 echo "Parent directory is ${parent_dir}"
+
+#Unzip large files
+targzlist=(land_map_rcp visit_forest_growth_function)
+cat ../${parent_dir}/largefile/DataBiomass.* >> ../${parent_dir}/largefile/biomassdata.tar.gz  ##Original directory is zip by "tar czvf - biomass | split -d -b 50M - DataBiomass.tar.gz"
+for fl in ${targzlist[@]}
+do
+  if [ ! -e ../${parent_dir}/data/${fl}.gdx ]; then tar -zxvf ../${parent_dir}/largefile/${fl}.tar.gz -C ../${parent_dir}/data; fi
+done
+if [ ! -e ../${parent_dir}/data/biomass/data/rcp_grid.gdx ]; then tar zxfvmp ../${parent_dir}/largefile/biomassdata.tar.gz -C ../${parent_dir}/data; fi
+rm ../${parent_dir}/largefile/biomassdata.tar.gz
 
 # Settings
 ## load settings

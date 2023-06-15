@@ -274,7 +274,7 @@ $load YIELD_BIO
 
 YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
 
-$gdxin '../data/visit_forest_growth_function.gdx'
+$gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load ACFout
 
 $ifthen %afftype%==cact_vst

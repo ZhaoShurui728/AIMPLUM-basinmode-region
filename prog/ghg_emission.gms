@@ -70,7 +70,7 @@ $load VY_load
 
 delta_Y(Y,L,G)$(FLAG_G(G) AND ordy(Y)<ordy("%end_year%"))=VY_load(Y+1,L,G)-VY_load(Y,L,G);
 
-$gdxin '%prog_dir%/../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '%prog_dir%/data/biomass/output/biomass%Sr%.gdx'
 $load CDT
 
 GHGLG(Y,L,G)$(FLAG_G(G) AND (NOT LHAVFRS(L)))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy(Y)),CDT(L,G,Y,Y2)*delta_Y(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
