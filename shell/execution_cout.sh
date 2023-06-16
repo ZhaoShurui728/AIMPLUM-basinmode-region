@@ -121,7 +121,7 @@ FuturesimRun() {
       A=${L}
     fi
 
-#    source ../$1/shell/settings/${S}.sh
+    source ../$1/shell/settings/${S}.sh
     cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
     cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
 
@@ -413,7 +413,7 @@ parent_dir=`basename ${PWD}`
 echo "Parent directory is ${parent_dir}"
 
 #Unzip large files
-targzlist=(land_map_rcp visit_forest_growth_function)
+targzlist=(visit_forest_growth_function)
 cat ../${parent_dir}/largefile/DataBiomass.* >> ../${parent_dir}/largefile/biomassdata.tar.gz  ##Original directory is zip by "tar czvf - biomass | split -d -b 50M - DataBiomass.tar.gz"
 for fl in ${targzlist[@]}
 do
