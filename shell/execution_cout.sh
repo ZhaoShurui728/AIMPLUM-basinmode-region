@@ -163,7 +163,7 @@ Futuresim() {
   elif [ ${Sub_Futuresim_Loop} = "SCN" ]; then 
     for S in ${scn[@]}
     do
-      FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${Sub_Futuresim_Biocurve} ${Sub_Futuresim_NormalRun} ${Sub_Futuresim_DisagrrFRS} ${CPLEXThreadOp} > ../output/log/futuresim_${A}.log 2>&1 &
+      FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${Sub_Futuresim_Biocurve} ${Sub_Futuresim_NormalRun} ${Sub_Futuresim_DisagrrFRS} ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
       LoopmultiCPU 5 scn "futuresim" ${CPUthreads}
     done
   fi
