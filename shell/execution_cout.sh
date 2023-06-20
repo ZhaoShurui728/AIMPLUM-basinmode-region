@@ -78,23 +78,35 @@ DataPrep() {
 ## 2. Base Simulation
 BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
-  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --CPLEXThreadOp=$3 --parallel=on MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp_$2_base.lst
-  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC MaxProcDir=100 o=../output/lst/Basesim/disagg_FRSGL_$2.lst
+  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --CPLEXThreadOp=$3 --parallel=on MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp_$2_base.lst lo=4
 #  gams ../$1/prog/Bioland.gms --prog_loc=$1 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --parallel=on MaxProcDir=100 o=../output/lst/Basesim/Bioland.lst
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
   rm ../output/txt/cpu/basesim/$2.txt
 }
+BaseRunDisaggfrs() {
+  echo "`date '+%s'`" > ../output/txt/cpu/basedsaggfrs/$2.txt
+  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC MaxProcDir=100 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
+  echo $(TimeDif `cat ../output/txt/cpu/basedsaggfrs/$2.txt`) > ../output/txt/cpu/basedsaggfrs/end_$2.txt
+  rm ../output/txt/cpu/basedsaggfrs/$2.txt
+}
 
 Basesim() {
   rm ../output/txt/cpu/basesim/*.txt 2> /dev/null
+  rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
   for A in ${COUNTRY0[@]} 
   do
-    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
-    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
+    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basedisagg_${A}.log 2>&1 &
+    LoopmultiCPU 5 COUNTRY0 "basedsaggfrs" ${CPUthreads}
   done
   wait
-  echo "All base simulations have been done."
+  echo "All base disaggregation have been done."
+
+  for A in ${COUNTRY0[@]} 
+  do
+    BaseRunDisaggfrs ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
+    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
+  done
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
@@ -104,10 +116,7 @@ FuturesimRun() {
   PARALLEL=$2
   declare -n LOOP=$3
   declare -n YEAR=$4
-  biocurve=$5
-  NormalRun=$6
-  DisagrrFRS=$7
-  CPLEXThreadOp=$8
+  CPLEXThreadOp=$5
 
   echo "`date '+%s'`" > ../output/txt/cpu/futuresim/${PARALLEL}.txt
 
@@ -125,50 +134,59 @@ FuturesimRun() {
     cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
     cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
 
-    if [ ${NormalRun} = "on" ]; then
-      for Y in ${YEAR[@]} 
-      do
-        gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}.lst 
-      done
-    fi
-
-    if [ ${biocurve} = "on" ]; then
-      for Y in ${YEAR[@]}
-      do
-        gams ../$1/prog/Bioland.gms --prog_loc=$1 --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --supcuvout=on MaxProcDir=100 o=../output/lst/Futuresim/Bioland_${A}_${SCE}_${CLP}_${IAV}.lst 
-      done
-    fi
-
-    if [ ${DisagrrFRS} = "on" ]; then
-      for Y in ${YEAR[@]}
-      do
-        gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --biocurve=off MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL_${A}_${SCE}_${CLP}_${IAV}.lst
-     done
-    fi
+    for Y in ${YEAR[@]} 
+    do
+      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}.lst   lo=4
+    done
   done
   
   echo $(TimeDif `cat ../output/txt/cpu/futuresim/${PARALLEL}.txt`) > ../output/txt/cpu/futuresim/end_${PARALLEL}.txt
   rm ../output/txt/cpu/futuresim/${PARALLEL}.txt
 }
-  
+
+
 Futuresim() {
   rm ../output/txt/cpu/futuresim/* 2> /dev/null
+  rm ../output/txt/cpu/futuresimpost/* 2> /dev/null
   echo future scenario simulation is run
+  if [ ${Sub_Futuresim_NormalRun} = "on" ]; then
   if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
     for A in ${COUNTRY0[@]}
     do
-      FuturesimRun ${parent_dir} ${A} scn YEAR0 ${Sub_Futuresim_Biocurve} ${Sub_Futuresim_NormalRun} ${Sub_Futuresim_DisagrrFRS} ${CPLEXThreadOp}  > ../output/log/futuresim_${A}.log 2>&1 &
+      FuturesimRun ${parent_dir} ${A} scn YEAR0 ${CPLEXThreadOp}  > ../output/log/futuresim_${A}.log 2>&1 &
       LoopmultiCPU 5 COUNTRY0 "futuresim" ${CPUthreads}
     done
   elif [ ${Sub_Futuresim_Loop} = "SCN" ]; then 
     for S in ${scn[@]}
     do
-      FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${Sub_Futuresim_Biocurve} ${Sub_Futuresim_NormalRun} ${Sub_Futuresim_DisagrrFRS} ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
+      FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
       LoopmultiCPU 5 scn "futuresim" ${CPUthreads}
     done
   fi
+  fi
   wait
-  echo "All future simulations have been done."
+  echo "All future simulations have been done. Post process is running"
+
+#Post process for disaggregation of forest and bioenergy
+  source ../${parent_dir}/shell/settings/${S}.sh
+  if [ ${Sub_Futuresim_Biocurve} = "on" ]; then
+    for Y in ${YEAR0[@]}
+    do
+      gams ../${parent_dir}/prog/Bioland.gms --prog_loc=${parent_dir} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --supcuvout=on MaxProcDir=100 o=../output/lst/Futuresim/Bioland_${SCE}_${CLP}_${IAV}_${Y}.lst lf=../output/log/Futuresim/Bioland_${SCE}_${CLP}_${IAV}_${Y}.log lo=4  > ../output/log/futuresim_${A}.log 2>&1 & 
+    done
+  wait
+  fi
+  if [ ${Sub_Futuresim_DisagrrFRS} = "on" ]; then
+  for Y in ${YEAR0[@]}
+    do
+      for A in ${COUNTRY0[@]}
+      do
+        gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --biocurve=off MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL_${A}_${SCE}_${CLP}_${IAV}_${Y}.lst lo=4  > ../output/log/futuresim_${A}.log 2>&1 & 
+      done
+    wait
+  done
+  fi
+  echo "All post processes have been done." 
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
@@ -180,20 +198,14 @@ ScnMergeRun() {
   Biocurvesort=$4
   echo "`date '+%s'`" > ../output/txt/cpu/merge1/$2.txt
 
-  cd ../output/gdx/$2/
   for A in ${COUNTRY[@]}
   do
-    cd ./${A}
-    gdxmerge *.gdx output=../cbnal/${A}.gdx
-    cd ./analysis
-    gdxmerge *.gdx output=../../analysis/${A}.gdx
-    cd ../../
+    gdxmerge ../output/gdx/$2/${A}/*.gdx output=../output/gdx/$2/cbnal/${A}.gdx
+    gdxmerge ../output/gdx/$2/${A}/analysis/*.gdx output=../output/gdx/$2/analysis/${A}.gdx
   done
-  cd ./bio
-  gdxmerge *.gdx output=../bio.gdx
+  gdxmerge ../output/gdx/$2/bio/*.gdx output=../output/gdx/$2/bio.gdx
 
-  cd ../../../../exe
-  gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine.lst
+  gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine.lst  lo=4
 
   echo $(TimeDif `cat ../output/txt/cpu/merge1/$2.txt`) > ../output/txt/cpu/merge1/end_$2.txt
   rm ../output/txt/cpu/merge1/$2.txt
@@ -233,30 +245,30 @@ MergeResCSV4NCRun() {
     cd ../output/gdx/$2/analysis
     gdxmerge *.gdx output=../../results/results_$2.gdx
     cd ../../../../exe
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=1 --sce=${SCE} --clp=${CLP} --iav=${IAV} MaxProcDir=100 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=1 --sce=${SCE} --clp=${CLP} --iav=${IAV} MaxProcDir=100 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1.lst  lo=4
   fi
 
   if [ ${BTC3option} = "on" ]; then
     for O in ${OPT[@]} 
     do
-      gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=${O} --wwfclass=opt MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2.lst
+      gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=${O} --wwfclass=opt MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2.lst lo=4
     done
   fi
 
   if [ ${lumip} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=1 --lumip=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=1 --lumip=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip.lst  lo=4
   fi
 
   if [ ${bioyielcal} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --bioyieldcalc=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_bioyielcal.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --bioyieldcalc=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_bioyielcal.lst  lo=4
   fi
 
   if [ ${ssprcp} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --lumip=off --wwfclass=off MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --lumip=off --wwfclass=off MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp.lst  lo=4
   fi
 
 if [ ${carseq} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --carseq=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_carseq.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --carseq=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_carseq.lst  lo=4
   fi
 
   echo $(TimeDif `cat ../output/txt/cpu/merge2/$2.txt`) > ../output/txt/cpu/merge2/end_$2.txt
