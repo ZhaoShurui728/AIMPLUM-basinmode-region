@@ -56,7 +56,7 @@ GHGL(R,Y,L)
 Area_load(R,Y,L)
 ;
 
-$gdxin '../output/gdx/all/analysis_%sce%_%CLP%_%IAV%.gdx'
+$gdxin '../output/gdx/all/analysis_%sce%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGL
 $load Area_load=Area
 
@@ -77,8 +77,8 @@ $load LUCHEM_P=LUCHEM_P_load
 $load LUCHEM_N=LUCHEM_N_load
 $load Planduse_load=Planduse
 
-LUCHEM_P(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_P("%sce%_%CLP%_%IAV%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_P_load("%sce%_%CLP%_%IAV%",Y,R,AEZ));
-LUCHEM_N(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_N("%sce%_%CLP%_%IAV%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_N_load("%sce%_%CLP%_%IAV%",Y,R,AEZ));
+LUCHEM_P(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_P("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_P_load("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ));
+LUCHEM_N(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_N("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_N_load("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ));
 LUCHEM_P(Y,R,AEZ)=LUCHEM_P(Y,R,AEZ)/10**2;
 LUCHEM_N(Y,R,AEZ)=LUCHEM_N(Y,R,AEZ)/10**2;
 
@@ -99,7 +99,7 @@ GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODE
 * AREA comparison
 
 
-Planduse(Y,R,LCGE)=Planduse_load("%sce%_%CLP%_%IAV%",Y,R,LCGE);
+Planduse(Y,R,LCGE)=Planduse_load("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
 
 
 parameter
@@ -114,6 +114,6 @@ AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2
 
 
 
-execute_unload '../output/gdx/all/comparison_%sce%_%CLP%_%IAV%.gdx'
+execute_unload '../output/gdx/all/comparison_%sce%_%CLP%_%IAV%%ModelInt%.gdx'
 GHG,AREA;
 

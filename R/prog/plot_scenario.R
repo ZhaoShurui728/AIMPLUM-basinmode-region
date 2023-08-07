@@ -4,10 +4,20 @@ library(plyr)
 library(reshape2)
 library(RColorBrewer)
 library(maps)
-args <- commandArgs()
+
 colnames <- c("Variable","X1","X2","Value")
-scenarioname <- as.character(args[6])
 pres <- 150
+
+args <- commandArgs(trailingOnly = TRUE)
+
+default_args <- c("SSP2_BaU_NoCC","/opt/gams/gams37.1_linux_x64_64_sfx")   # Default value but gams path should be modified if GUI based R is used
+default_flg <- is.na(args[1:2])
+args[default_flg] <- default_args[default_flg]
+scenarioname <- as.character(args[1])
+gams_sys_dir <- as.character(args[2])
+igdx(gams_sys_dir)
+sizememory <- 1000*1024^2 
+options(future.globals.maxSize= sizememory)
 
 world <- map_data("world")
 

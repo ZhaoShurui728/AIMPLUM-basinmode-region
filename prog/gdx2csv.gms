@@ -150,7 +150,7 @@ $load Map_GIJ MAP_RIJ GAIJ
 
 FLAG_IJ(I,J)$SUM(R,MAP_RIJ(R,I,J))=1;
 
-$gdxin '../output/gdx/results/results_%SCE%_%CLP%_%IAV%.gdx'
+$gdxin '../output/gdx/results/results_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_load
 
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,VY_load(R,Y,L,G)));
@@ -269,7 +269,7 @@ ACFout(LVST,R,G)	average carbon flow in grid G adjusted using VISIT estimates [M
 ;
 
 $ifthen.bioyield %bioyieldcalc%==on
-$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
+$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load YIELD_BIO
 
 YIELD_IJ(Y,"BIO",I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,YIELD_BIO(R,Y,G)));
@@ -296,7 +296,7 @@ $exit
 $endif.bioyield
 
 $ifthen.carseq %carseq%==on
-$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
+$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGLG
 
 GHG_IJ(Y,L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J) and GHGLG(Y,L,G)),GHGLG(Y,L,G));
@@ -400,7 +400,7 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 * put -999 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 $ifthen.gdxout %gdxout%==on
-execute_unload '../output/csv/%SCE%_%CLP%_%IAV%/%SCE%_%CLP%_%IAV%_opt%wwfopt%.gdx'
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
 VY_IJwwfnum
 ;
 $endif.gdxout
@@ -411,7 +411,7 @@ plwwfnum/10/
 $if %wwfopt%==4 plwwfnum=14;
 $if %wwfopt%==5 plwwfnum=14;
 
-file output / "../output/csv/%SCE%_%CLP%_%IAV%/%SCE%_%CLP%_%IAV%_opt%wwfopt%.csv" /;
+file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.csv" /;
 put output;
 *output.pw=100000;
 output.pw=32767;

@@ -9,20 +9,20 @@ VYLAFR_nocc%1(LAFR,G)
 
 ;
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%1/analysis/%Sy%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/analysis/%Sy%.gdx'
 $load VY_load%1=VY_load
 
 VY_load(L,G)$VY_load%1(L,G)=VY_load%1(L,G);
 
 $ifthen.y2005 not %Sy%==2005 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%1/analysis/%base_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/analysis/%base_year%.gdx'
 $load VY_1%1=VY_load
 VY_1(L,G)$VY_1%1(L,G)=VY_1%1(L,G);
 $endif.y2005
 
 $ontext
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/GHG/%1.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/%1.gdx'
 $load GHGLG%1=GHGLG
 
 GHGLG("%Sy%",L,G)$GHGLG%1("%Sy%",L,G)=GHGLG%1("%Sy%",L,G);

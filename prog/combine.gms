@@ -257,7 +257,7 @@ protectfracL(R,G,L)	Protected area fraction (0 to 1) of land category L in land 
 ordy(Y) = ord(Y) + %base_year% -1;
 
 $ifthen %biocurve%==on
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/bio.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio.gdx'
 $load PCBIO_load=PCBIO QCBIO_load=QCBIO
 $if %supcuvout%==on $load PBIOSUP_load=PBIOSUP
 
@@ -268,23 +268,23 @@ $endif
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA
 
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/USA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XE25.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XE25
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XER.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XER
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/TUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XOC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XOC
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CHN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/IND.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/JPN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JPN
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XSE
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XSA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XSA
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/BRA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XLM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XLM
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/CIS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CIS
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XME.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XME
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XNF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XNF
-$if exist '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/XAF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XAF
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XE25.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XE25
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XER.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XER
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XOC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XOC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IND.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/JPN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JPN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XSE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XSE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XSA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XSA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XLM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XLM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CIS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CIS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XME.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XME
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XNF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XNF
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XAF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XAF
 
 Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 
@@ -400,7 +400,7 @@ PBIOSOAT(Rall,Y,N,Scol)$(RBION(Rall) and Ysupcuv(Y) and Scolsum(Scol)) =sum((G,L
 PBIOSOAT(Rall,Y,N,"area_acm")$(RBION(Rall) and Ysupcuv(Y) and PBIOSOAT(Rall,Y,N,"area"))=sum(N2$(ord(N)>ord(N2) OR ord(N)=ord(N2)),PBIOSOAT(Rall,Y,N2,"area"));
 PBIOSOAT(Rall,Y,N,"quantity_acm")$(RBION(Rall) and Ysupcuv(Y) and PBIOSOAT(Rall,Y,N,"quantity"))=sum(N2$(ord(N)>ord(N2) OR ord(N)=ord(N2)),PBIOSOAT(Rall,Y,N2,"quantity"));
 
-execute_unload '../output/gdx/all/biosupcuv_%SCE%_%CLP%_%IAV%.gdx'
+execute_unload '../output/gdx/all/biosupcuv_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 PBIOSOAT
 ;
 
@@ -573,13 +573,13 @@ $offtext
 
 PRLIestimator(Y,"Area.1000ha",I,J)$(SUM(LU_RLI3,PRLIestimator(Y,LU_RLI3,I,J))>0)=SUM((G)$MAP_GIJ(G,I,J), GA(G));
 
-execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%.gdx'
+execute_unload '../output/gdx/landmap/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 PRLIestimator;
 
 $endif.rlimap
 *-----------------------------------*
 
-execute_unload '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
+execute_unload '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 Psol_stat
 Area
 AreaLDM

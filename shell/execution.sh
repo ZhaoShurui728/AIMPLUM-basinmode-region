@@ -74,8 +74,8 @@ DataPrep() {
 ## 2. Base Simulation
 BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
-  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --CPLEXThreadOp=$3 --parallel=on MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp.lst
-  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC MaxProcDir=100 o=../output/lst/Basesim/disagg_FRSGL.lst
+  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --ModelInt=${ModelInt} --CPLEXThreadOp=$3 --parallel=on MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp.lst
+  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --ModelInt=${ModelInt} MaxProcDir=100 o=../output/lst/Basesim/disagg_FRSGL.lst
 #  gams ../$1/prog/Bioland.gms --prog_loc=$1 --Sy=2005 --SCE=SSP2 --CLP=BaU --IAV=NoCC --parallel=on MaxProcDir=100 o=../output/lst/Basesim/Bioland.lst
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
@@ -124,21 +124,21 @@ FuturesimRun() {
     if [ ${NormalRun} = "on" ]; then
       for Y in ${YEAR[@]} 
       do
-        gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp.lst 
+        gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt=${ModelInt} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp.lst 
       done
     fi
 
     if [ ${biocurve} = "on" ]; then
       for Y in ${YEAR[@]}
       do
-        gams ../$1/prog/Bioland.gms --prog_loc=$1 --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --parallel=on --supcuvout=on MaxProcDir=100 o=../output/lst/Futuresim/Bioland.lst 
+        gams ../$1/prog/Bioland.gms --prog_loc=$1 --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt=${ModelInt} --parallel=on --supcuvout=on MaxProcDir=100 o=../output/lst/Futuresim/Bioland.lst 
       done
     fi
 
     if [ ${DisagrrFRS} = "on" ]; then
       for Y in ${YEAR[@]}
       do
-        gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --biocurve=off MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL.lst
+        gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt=${ModelInt} --biocurve=off MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL.lst
      done
     fi
   done
@@ -228,26 +228,26 @@ MergeResCSV4NCRun() {
     cd ../output/gdx/$2/analysis
     gdxmerge *.gdx output=../../results/results_$2.gdx
     cd ../../../../exe
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=1 --sce=${SCE} --clp=${CLP} --iav=${IAV} MaxProcDir=100 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=1 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} MaxProcDir=100 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1.lst
   fi
 
   if [ ${BTC3option} = "on" ]; then
     for O in ${OPT[@]} 
     do
-      gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=${O} --wwfclass=opt MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2.lst
+      gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} --wwfopt=${O} --wwfclass=opt MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2.lst
     done
   fi
 
   if [ ${lumip} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --wwfopt=1 --lumip=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} --wwfopt=1 --lumip=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip.lst
   fi
 
   if [ ${bioyielcal} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --bioyieldcalc=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_bioyielcal.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} --bioyieldcalc=on MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_bioyielcal.lst
   fi
 
   if [ ${ssprcp} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --lumip=off --wwfclass=off MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp.lst
+    gams ../$1/prog/gdx2csv.gms --prog_loc=$1 --split=2 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} --lumip=off --wwfclass=off MaxProcDir=100 R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp.lst
   fi
 
   echo $(TimeDif `cat ../output/txt/cpu/merge2/$2.txt`) > ../output/txt/cpu/merge2/end_$2.txt
@@ -341,11 +341,11 @@ gdx4pngRun() {
   for Y in ${YListFig[@]} 
   do
     if [ ${global} = "on" ]; then
-      gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png1.lst
+      gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png1.lst
     elif [ ${global} = "off" ]; then
       for A in ${COUNTRY[@]} 
       do
-        gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png2.lst
+        gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt=${ModelInt} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png2.lst
       done
     fi
   done

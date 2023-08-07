@@ -41,26 +41,26 @@ parameter
 GHGL(R,Y,L)
 ;
 
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/USA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms USA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XE25.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XE25
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XER.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XER
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/TUR.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms TUR
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XOC.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XOC
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/CHN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CHN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/IND.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms IND
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/JPN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms JPN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XSE.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XSE
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XSA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XSA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/CAN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CAN
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/BRA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms BRA
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XLM.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XLM
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/CIS.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CIS
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XME.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XME
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XNF.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XNF
-$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/GHG/XAF.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XAF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/USA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms USA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XE25.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XE25
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XER.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XER
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/TUR.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms TUR
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XOC.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XOC
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/CHN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CHN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/IND.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms IND
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/JPN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms JPN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XSE.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XSE
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XSA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XSA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/CAN.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CAN
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/BRA.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms BRA
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XLM.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XLM
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/CIS.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms CIS
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XME.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XME
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XNF.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XNF
+$if exist '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/XAF.gdx' $batinclude %prog_dir%/inc_prog/ghg_combineR.gms XAF
 
 GHGL(R2,Y,L)$SUM(R$MAP_RAGG(R,R2),GHGL(R,Y,L))=SUM(R$MAP_RAGG(R,R2),GHGL(R,Y,L));
 
-execute_unload '../output/gdx/all/emission_%sce%_%CLP%_%IAV%.gdx'
+execute_unload '../output/gdx/all/emission_%sce%_%CLP%_%IAV%%ModelInt%.gdx'
 GHGL;
 

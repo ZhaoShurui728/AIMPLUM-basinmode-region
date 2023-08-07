@@ -1,8 +1,8 @@
-file output_%1 /..\output\csv\%SCE%_%CLP%_%IAV%\%1.csv/;
+file output_%1 / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%1.csv" /;
 put output_%1;
 output_%1.pw=100000;
 put " %1", "= "/;
-* Œ‹‰Ê‚Ìo—Í
+* ï¿½ï¿½ï¿½Ê‚Ìoï¿½ï¿½
 VY_IJwwf(Y,"%1",I,J)$(VY_IJwwf(Y,"%1",I,J)=0)=-999;
 
 loop(Y,

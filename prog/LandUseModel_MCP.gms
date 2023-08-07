@@ -11,6 +11,7 @@ $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal parallel off
 $setglobal supcuv off
+$setglobal ModelInt
 * if biocurve=off, biocrop is allocated.If biocurve=on, biocrop is output as a supply curve.
 $setglobal biocurve off
 $setglobal Ystep0 10
@@ -51,7 +52,7 @@ $setglobal UrbanLandData SSP
 $if %Sr%==XNF $setglobal UrbanLandData RCP
 
 *Base year cross entropy adjustment can be implemented by turning on. default is on. options are [on/off]
-$setglobal baseadjust off
+$setglobal baseadjust on
 
 $if %Sy%==2005 $setglobal mcp off
 $if not %Sy%==2005 $setglobal mcp off
@@ -512,7 +513,7 @@ AFR	.	COM_FRS
 /
 LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
 LRCP(L) /HAV_FRS,PAS,OL/
-SCENARIO /%SCE%_%CLP%_%IAV%/
+SCENARIO /%SCE%_%CLP%_%IAV%%ModelInt%/
 SSP	/%SSP%/
 ;
 
@@ -589,14 +590,14 @@ $load Planduse_load=Planduse
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
 $if %not1stiter%==on $setglobal IAVload %preIAV%
-Ppopulation(Y0,R)=POP("%SCE%_%CLP%_%IAVload%",Y0,R);
-GDP_load(Y0,R)=GDP("%SCE%_%CLP%_%IAVload%",Y0,R);
-$if %carbonprice%==off PGHG_load("%SCE%_%CLP%_%IAVload%",Y0,R)=0;
-Planduse(Y,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",LCGE);
-PGHG(Y0)=PGHG_load("%SCE%_%CLP%_%IAVload%",Y0,"%Sr%")/1000*44/12;
-Pland(Y,A)=Pland_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A);
-OUTPUTALL_Nominal(Y,A)=OUTPUTALL_Nominal_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A);
-OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%",Y,"%Sr%",A,C);
+Ppopulation(Y0,R)=POP("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R);
+GDP_load(Y0,R)=GDP("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R);
+$if %carbonprice%==off PGHG_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R)=0;
+Planduse(Y,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",LCGE);
+PGHG(Y0)=PGHG_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,"%Sr%")/1000*44/12;
+Pland(Y,A)=Pland_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A);
+OUTPUTALL_Nominal(Y,A)=OUTPUTALL_Nominal_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A);
+OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A,C);
 
 * Base-year irrigation map data
 $gdxin '../%prog_loc%/data/mirca.gdx'
@@ -654,8 +655,8 @@ PCDM_load(L)=0;
 
 $else.baseyear
 
-$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
-$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
+$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
+$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $	load VY_load VZ_load
 $	load PLDM_load PCDM_load
 $else.fileex
@@ -673,8 +674,8 @@ Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr%",G))= SSP_frac("SL","%Sy%","%Sr%",G);
 Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
 
 $ifthen.bio %biocurve%==on
-$ifthen.fileex exist '%../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
-$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
+$ifthen.fileex exist '%../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
 $       load YBIO_load=YBIO
 $else.fileex
 YBIO_load(G)=0;
@@ -709,7 +710,7 @@ protectfrac(G)$(protectfrac(G)>Y_pre("PRM_SEC",G) or (popdens(G)<0.1))=Y_pre("PR
 
 $else
 
-$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
+$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%second_year%.gdx'
 $	load protectfrac
 
 *---minimize protected fraction to satify constraint
@@ -795,7 +796,7 @@ protectfracL(G,L2)$(protectfracL(G,L2) and protectfracL(G,L2)>sum(L$MAP_Lagg(L,L
 
 $else.year
 
-$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
+$	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%second_year%.gdx'
 $	load protectfracL
 
 $endif.year
@@ -1002,7 +1003,7 @@ CSB=0;
 
 $else.baseyear2
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $load CS
 $gdxin '../output/gdx/base/%Sr%/analysis/%base_year%.gdx'
 $load CSB
@@ -1315,8 +1316,8 @@ $if %CLP%==800Cf_CACNup200 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2060 A
 
 $elseif %Sr%==XE25
 $if %CLP%==20W  VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
-$if %SCENAME%_%CLP%_%IAV%==SSP1pTECHTRADE_20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
-$if %SCENAME%_%CLP%_%IAV%==SSP1p_20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
+$if %SCE%_%CLP%_%IAV%==SSP1pTECHTRADE_20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
+$if %SCE%_%CLP%_%IAV%==SSP1p_20W_NoCC VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2090))=0;
 $if %CLP%==600C_CACNup200 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*10*1.02**(%Sy%-2090))=0;
 $if %CLP%==800Cf_CACNup200 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 AND CS(G)>=CSB*10*1.02**(%Sy%-2090))=0;
 
@@ -1425,7 +1426,7 @@ $ifthen %Sy%==%base_year%
 protect_wopas(G)=0;
 $elseif %Sy%==%second_year%
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%base_year%.gdx'
 $load VY_baseresults=VY_load
 
 protect_wopas(G)=0;
@@ -1439,7 +1440,7 @@ $else
 *$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 *$load protect_wopas
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%base_year%.gdx'
 $load VY_baseresults=VY_load
 
 protect_wopas(G)=0;
@@ -1512,7 +1513,7 @@ delta_VYLY(Y,L,G)
 
 $ifthen not %Sy%==%base_year%
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%pre_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $load VYLY
 $endif
 
@@ -1585,7 +1586,7 @@ data_check(G,L)$(VYL(L,G)<0)=1;
 
 $if %parallel%==off execute_unload '../output/temp2.gdx'
 
-$if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%.gdx'
+$if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%Sy%.gdx'
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/%Sy%.gdx'
 
 ohashi

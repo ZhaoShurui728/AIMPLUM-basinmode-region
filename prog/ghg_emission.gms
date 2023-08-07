@@ -65,7 +65,7 @@ FLAG_G(G)$MAP_RG("%Sr%",G)=1;
 
 ordy(Y) = ord(Y) + %base_year% -1;
 
-$gdxin '%prog_dir%/../output/gdx/%sce%_%CLP%_%IAV%/cbnal/%Sr%.gdx'
+$gdxin '%prog_dir%/../output/gdx/%sce%_%CLP%_%IAV%%ModelInt%/cbnal/%Sr%.gdx'
 $load VY_load
 
 delta_Y(Y,L,G)$(FLAG_G(G) AND ordy(Y)<ordy("%end_year%"))=VY_load(Y+1,L,G)-VY_load(Y,L,G);
@@ -82,4 +82,4 @@ GHGLG(Y,"LUC",G)= GHGLG(Y,"TOT",G)-GHGLG(Y,"HAV_FRS",G);
 
 GHGL(Y,L)= SUM(G$(FLAG_G(G)),GHGLG(Y,L,G));
 
-execute_unload '../output/gdx/%sce%_%CLP%_%IAV%/GHG/%Sr%.gdx'
+execute_unload '../output/gdx/%sce%_%CLP%_%IAV%%ModelInt%/GHG/%Sr%.gdx'

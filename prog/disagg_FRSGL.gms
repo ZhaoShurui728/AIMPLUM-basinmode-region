@@ -109,7 +109,7 @@ $if %not1stiter%==off $setglobal IAVload %IAV%
 $if %not1stiter%==on $setglobal IAVload %preIAV%
 $gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
 $load Planduse_load=Planduse
-Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,R,LCGE);
+Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,LCGE);
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA
@@ -263,7 +263,7 @@ Area_load(L)= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 VYL(L,G)$(not G0(G))=0;
 *VYL(L,G)=round(VYL(L,G),6);
 
-$if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'
+$if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/analysis/%Sy%.gdx'
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/analysis/%Sy%.gdx'
 VYL=VY_load
 Area_load

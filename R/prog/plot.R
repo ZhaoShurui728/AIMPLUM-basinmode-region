@@ -1,6 +1,13 @@
 getwd()
-getwd()
 setwd(getwd())
+args <- commandArgs(trailingOnly = TRUE)
+default_args <- c("/opt/gams/gams37.1_linux_x64_64_sfx"))   # Default value but gams path should be modified if GUI based R is used
+default_flg <- is.na(args[1:1])
+args[default_flg] <- default_args[default_flg]
+gams_sys_dir <- as.character(args[1])
+igdx(gams_sys_dir)
+sizememory <- 1000*1024^2 
+options(future.globals.maxSize= sizememory)
 
 #setwd("C:/_LandUseModel/prog/R/prog")
 

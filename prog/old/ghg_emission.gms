@@ -70,7 +70,7 @@ $load GA
 
 ordy(Y) = ord(Y) + %base_year% -1;
 
-$gdxin '%prog_dir%/../output/gdx/%sce%_%CLP%_%IAV%/analysis/%Sr%.gdx'
+$gdxin '%prog_dir%/../output/gdx/%sce%_%CLP%_%IAV%%ModelInt%/analysis/%Sr%.gdx'
 $load VY_load
 
 delta_Y(Y,L,G)$(ordy(Y)>=ordy("%base_year%")+5 AND ordy(Y)<=ordy("%end_year%"))=(VY_load(Y,L,G)-VY_load(Y-5,L,G))/5;
@@ -101,7 +101,7 @@ CDTmax	maximam carbon density of forest planed (MgC ha-1 year-1)
 CDTmax=smax(G,CSL("PRM_SEC",G,"2005","2005"));
 
 
-$gdxin '%prog_dir%/../output/gdx/%sce%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$gdxin '%prog_dir%/../output/gdx/%sce%_%CLP%_%IAV%%ModelInt%/%Sr%/%base_year%.gdx'
 $load Y_base
 
 CSL("PRM_SEC",G,Y,Y)$(1-Y_base("CL",G)-Y_base("PAS",G)>0)
@@ -134,4 +134,4 @@ GHGLG(Y,"LUC",G)= SUM(L,GHGLG(Y,L,G));
 
 GHGL(Y,L)= SUM(G,GHGLG(Y,L,G));
 
-execute_unload '../output/gdx/%sce%_%CLP%_%IAV%/GHG/%Sr%.gdx'
+execute_unload '../output/gdx/%sce%_%CLP%_%IAV%%ModelInt%/GHG/%Sr%.gdx'
