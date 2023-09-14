@@ -399,7 +399,7 @@ gdx4pngRun() {
 gdx4png() {
   rm ../output/txt/cpu/gdx4png/*.txt 2> /dev/null
   
-  for S in ${scn} 
+  for S in ${scn[@]} 
   do
     gdx4pngRun ${parent_dir} ${S} YearListFig ${global} COUNTRY0 ${Sub_gdx4png_dif} &
     LoopmultiCPU 5 scn "gdx4png" ${CPUthreads}
@@ -510,4 +510,4 @@ if [ ${gdx4png}        = "on" ]; then gdx4png        ; fi
 if [ ${plot}           = "on" ]; then plot           ; fi
 if [ ${Allmerge}       = "on" ]; then Allmerge       ; fi
 
-read -p "All calculations have been done. [enter]"
+#read -p "All calculations have been done. [enter]"
