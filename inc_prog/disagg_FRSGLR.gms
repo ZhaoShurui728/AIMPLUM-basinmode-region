@@ -13,7 +13,7 @@ $load CS%1=CS
 VYL(L,G)$(VY%1(L,G))=VY%1(L,G);
 CS(G)$CS%1(G)=CS%1(G);
 
-$ifthen exist '../output/gdx/%SCE%_%CLP%_%ModelInt%/bio/%Sy%.gdx'
+$ifthen exist '../output/gdx/%SCE%_%CLP%%ModelInt%/bio/%Sy%.gdx'
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%Sy%.gdx'
 $load YBIO%1=YBIO
 VYL("BIO",G)$(YBIO%1(G))=YBIO%1(G);

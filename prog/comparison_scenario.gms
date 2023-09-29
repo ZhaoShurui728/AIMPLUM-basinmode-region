@@ -1,14 +1,21 @@
 $Setglobal base_year 2005
 $Setglobal end_year 2100
-$Setglobal prog_dir ../AIMPLUM
-$setglobal sce SSP2
-$setglobal clp BaU
-$setglobal iav NoCC
+$Setglobal prog_loc ../AIMPLUM
+$Setglobal prog_loc
+$setglobal SCE SSP2
+$setglobal CLP BaU
+$setglobal IAV NoCC
+$setglobal ModelInt
 
 set
 R	17 regions	/
-$include %prog_dir%/define/region/region17.set
-WLD,OECD90,REF,ASIA,MAF,LAM
+$include ../%prog_loc%/define/region/region17.set
+World
+R5ASIA
+"R5OECD90+EU"
+R5REF
+R5MAF
+R5LAM
 /
 Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
 L land use type /
@@ -35,7 +42,7 @@ Alias(R,R2);
 
 set
 MAP_RAGG(R,R2)	/
-$include %prog_dir%/define/region/region17_agg.map
+$include ../%prog_loc%/define/region/region17_agg.map
 /
 LCGE	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
 MAP_LCGE(L,LCGE)/
@@ -49,6 +56,51 @@ BIO	.	BIOCROP
 SL	.	URB
 OL	.	OTH
 /
+V/
+Lan_Cov
+Lan_Cov_Bui_Are
+Lan_Cov_Cro
+Lan_Cov_Cro_Irr
+Lan_Cov_Cro_Ene_Cro
+Lan_Cov_Cro_Ene_Cro_Irr
+Lan_Cov_Frs
+Lan_Cov_Frs_Aff_and_Ref
+Lan_Cov_Frs_Frs
+Lan_Cov_Frs_Frs_Har_Are
+Lan_Cov_Frs_Nat_Frs
+Lan_Cov_Oth_Ara_Lan
+Lan_Cov_Oth_Lan
+Lan_Cov_Oth_Nat_Lan
+Lan_Cov_Pst
+Lan_Cov_Frs_Man
+Lan_Cov_Cro_Cer
+Lan_Cov_Cro_Ric
+Lan_Cov_Cro_Whe
+Lan_Cov_Cro_Coa_gra
+Lan_Cov_Cro_Oil_See
+Lan_Cov_Cro_Dou
+Lan_Cov_Cro_Rai
+Lan_Cov_Wat_Eco_Frs
+Lan_Cov_Wat_Eco_Gla
+Lan_Cov_Wat_Eco_Lak
+Lan_Cov_Wat_Eco_Mou
+Lan_Cov_Wat_Eco_Wet
+Lan_Cov_Cro_Non_Ene_Cro
+Lan_Cov_Cro_Ene_Cro_1st_gen
+Lan_Cov_Cro_Ene_Cro_2nd_gen
+Lan_Cov_Frs_Sec/
+
+MapLIAMPC(L,V)/
+CL	.	Lan_Cov_Cro
+FRS	.	Lan_Cov_Frs
+*CROP_FLW	.	CROP_FLW
+PAS	.	Lan_Cov_Pst
+GL	.	Lan_Cov_Oth_Lan
+BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
+BIO	.	Lan_Cov_Cro_Ene_Cro
+SL	.	Lan_Cov_Bui_Are
+/
+U/"million ha","Mt CO2/yr"/
 ;
 
 parameter
@@ -56,7 +108,7 @@ GHGL(R,Y,L)
 Area_load(R,Y,L)
 ;
 
-$gdxin '../output/gdx/all/analysis_%sce%_%CLP%_%IAV%%ModelInt%.gdx'
+$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGL
 $load Area_load=Area
 
@@ -70,50 +122,41 @@ LUCHEM_P_load(*,Y,R,AEZ)
 LUCHEM_N_load(*,Y,R,AEZ)
 Planduse(Y,R,LCGE)
 Planduse_load(*,Y,R,LCGE)
+GHG(R,Y,*,SMODEL)
+AREA(R,Y,L,SMODEL)
+IAMCTemp(*,*,*,*)
 ;
 
-$gdxin '%prog_dir%/data/cgeoutput/analysis.gdx'
+$gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
+$load Planduse_load=Planduse
+$ontext
 $load LUCHEM_P=LUCHEM_P_load
 $load LUCHEM_N=LUCHEM_N_load
-$load Planduse_load=Planduse
 
-LUCHEM_P(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_P("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_P_load("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ));
-LUCHEM_N(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_N("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_N_load("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ));
+LUCHEM_P(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_P("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_P_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ));
+LUCHEM_N(Y,R2,AEZ)$SUM(R$MAP_RAGG(R,R2),LUCHEM_N("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ))=SUM(R$MAP_RAGG(R,R2),LUCHEM_N_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,AEZ));
 LUCHEM_P(Y,R,AEZ)=LUCHEM_P(Y,R,AEZ)/10**2;
 LUCHEM_N(Y,R,AEZ)=LUCHEM_N(Y,R,AEZ)/10**2;
+GHG(R,Y,"Emissions","CGE")=SUM(AEZ,LUCHEM_P(Y,R,AEZ));
+GHG(R,Y,"Sink","CGE")=SUM(AEZ,LUCHEM_N(Y,R,AEZ));
+$offtext
 
-
-parameter
-GHG(R,Y,*,SMODEL)
-;
 
 GHG(R,Y,"Emissions","LUM")=GHGL(R,Y,"LUC")-GHGL(R,Y,"AFR");
 GHG(R,Y,"Sink","LUM")=GHGL(R,Y,"AFR");
-
-GHG(R,Y,"Emissions","CGE")=SUM(AEZ,LUCHEM_P(Y,R,AEZ));
-GHG(R,Y,"Sink","CGE")=SUM(AEZ,LUCHEM_N(Y,R,AEZ));
-
 GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODEL);
 
-
 * AREA comparison
-
-
-Planduse(Y,R,LCGE)=Planduse_load("%sce%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
-
-
-parameter
-AREA(R,Y,L,SMODEL)
-;
-AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
-*AREA(R,Y,"FRS","LUM")=Area_load(R,Y,"FRS")+Area_load(R,Y,"AFR");
-
+Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
 AREA(R,Y,L,"CGE")$SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE))=SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE));
-
+AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
+IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"));
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
+IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 
-
-execute_unload '../output/gdx/all/comparison_%sce%_%CLP%_%IAV%%ModelInt%.gdx'
-GHG,AREA;
+execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+GHG,GHGL,AREA,IAMCTemp;
 

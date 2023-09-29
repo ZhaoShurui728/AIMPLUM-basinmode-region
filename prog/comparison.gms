@@ -1,8 +1,8 @@
-$Setglobal prog_dir ../AIMPLUM
+$Setglobal prog_loc ../AIMPLUM
 
 set
 R	17 regions	/
-$include %prog_dir%/define/region/region17.set
+$include ../%prog_loc%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
 Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
@@ -39,12 +39,12 @@ RatioLUCHEM_P(R,Y,SCE_CLP)
 ;
 
 
-$if exist '../output/gdx/all/comparison_SSP1_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP1 BaU
-$if exist '../output/gdx/all/comparison_SSP2_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP2 BaU
-$if exist '../output/gdx/all/comparison_SSP2_26W_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP2 26W
-$if exist '../output/gdx/all/comparison_SSP3_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP3 BaU
-$if exist '../output/gdx/all/comparison_SSP4_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP4 BaU
-$if exist '../output/gdx/all/comparison_SSP5_BaU_NoCC.gdx' $batinclude %prog_dir%/inc_prog/comparisonR.gms SSP5 BaU
+$if exist '../output/gdx/all/comparison_SSP1_BaU_NoCC.gdx' $batinclude ../%prog_loc%/inc_prog/comparisonR.gms SSP1 BaU
+$if exist '../output/gdx/all/comparison_SSP2_BaU_NoCC.gdx' $batinclude ../%prog_loc%/inc_prog/comparisonR.gms SSP2 BaU
+$if exist '../output/gdx/all/comparison_SSP2_26W_NoCC.gdx' $batinclude ../%prog_loc%/inc_prog/comparisonR.gms SSP2 26W
+$if exist '../output/gdx/all/comparison_SSP3_BaU_NoCC.gdx' $batinclude ../%prog_loc%/inc_prog/comparisonR.gms SSP3 BaU
+$if exist '../output/gdx/all/comparison_SSP4_BaU_NoCC.gdx' $batinclude ../%prog_loc%/inc_prog/comparisonR.gms SSP4 BaU
+$if exist '../output/gdx/all/comparison_SSP5_BaU_NoCC.gdx' $batinclude ../%prog_loc%/inc_prog/comparisonR.gms SSP5 BaU
 
 
 
