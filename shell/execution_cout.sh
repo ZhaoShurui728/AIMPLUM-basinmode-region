@@ -221,7 +221,7 @@ ScnMergeRun() {
   gdxmerge ../output/gdx/$2/bio/*.gdx output=../output/gdx/$2/bio.gdx
 
   gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt=${ModelInt} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine_$2.lst  lo=4
-  gams ../$1/prog/comparison_scenario.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt=${ModelInt} MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
+  gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt=${ModelInt} MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
 
   echo $(TimeDif `cat ../output/txt/cpu/merge1/$2.txt`) > ../output/txt/cpu/merge1/end_$2.txt
   rm ../output/txt/cpu/merge1/$2.txt
