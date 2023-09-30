@@ -1,3 +1,0 @@
-set SCE=SSP1pDEM
-set CLP=20W_SPA1
-set IAV=NoCC
