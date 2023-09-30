@@ -48,7 +48,6 @@ $setglobal degradedlandprotect off
 
 *Urban area data. If this option is SSP, SSP based urban area is used. Otherwise, fixed to RCP current land. [SSP, RCP]
 $setglobal UrbanLandData SSP
-*$setglobal UrbanLandData RCP
 $if %Sr%==XNF $setglobal UrbanLandData RCP
 
 *Base year cross entropy adjustment can be implemented by turning on. default is on. options are [on/off]
@@ -798,6 +797,10 @@ $else.year
 
 $	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%second_year%.gdx'
 $	load protectfracL
+
+*---minimize protected fraction to satify constraint
+protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL");
+protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL");
 
 $endif.year
 $endif.biodiv
