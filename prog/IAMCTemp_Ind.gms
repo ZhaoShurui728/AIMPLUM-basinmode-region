@@ -19,18 +19,43 @@ R5LAM
 /
 Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
 L land use type /
-*PRM_SEC	primary and secondary land
-FRSGL	forest + grassland
-FRS	forest
-AFR	afforestation
-PAS	grazing pasture
-CL	cropland
-BIO	bio crops
-CROP_FLW	fallow land
-GL	grassland
-SL	built_up
-OL	ice or water
 LUC	land use change total
+
+PRM_SEC forest + grassland + pasture
+FRSGL   forest + grassland
+*HAV_FRS        production forest
+FRS     forest
+MNGFRS  managed forest
+UMNFRS  unmanage forest
+PLNFRS  planted forest
+NRMFRS  naturally regenerating managed forest
+AFR     afforestation
+PAS     grazing pasture
+PDR     rice
+WHT     wheat
+GRO     other coarse grain
+OSD     oil crops
+C_B     sugar crops
+OTH_A   other crops
+PDRIR   rice irrigated
+WHTIR   wheat irrigated
+GROIR   other coarse grain irrigated
+OSDIR   oil crops irrigated
+C_BIR   sugar crops irrigated
+OTH_AIR other crops irrigated
+PDRRF   rice rainfed
+WHTRF   wheat rainfed
+GRORF   other coarse grain rainfed
+OSDRF   oil crops rainfed
+C_BRF   sugar crops rainfed
+OTH_ARF other crops rainfed
+BIO     bio crops
+CROP_FLW        fallow land
+GL      grassland
+SL      built_up
+OL      ice or water
+CL      cropland
+RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/

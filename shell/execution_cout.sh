@@ -2,7 +2,7 @@
 cd `dirname $0`
 git config --global core.autocrlf input
 export gams_sys_dir=`which gams --skip-alias|xargs dirname`
-
+#to make scenario names mapping for netCDF files, ../${parent_dir}/data/scenariomap.txt should be used.
 # Functions ---------------------------------------------------------------------------------------
 rexe() {
   R --no-save --no-restore --no-site-file --slave $2 < $1
@@ -296,7 +296,7 @@ MergeResCSV4NC() {
   rm ../output/txt/cpu/merge2/*.txt 2> /dev/null
   for S in ${scn[@]} 
   do
-    MergeResCSV4NCRun ${parent_dir} ${S} ${Sub_MergeResCSV4NC_basecsv} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} &
+    MergeResCSV4NCRun ${parent_dir} ${S} ${Sub_MergeResCSV4NC_basecsv} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} > ../output/log/MergeResCSV4NCRun_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "merge2" ${CPUthreads}
   done
   wait
@@ -366,6 +366,21 @@ netcdfgen() {
   for S in ${scn[@]} 
   do
     netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq}
+  done
+#File rename
+#Get scenario mapping
+  awk 'BEGIN {FS="\t"} {OFS="\t"} {print $1}' ../${parent_dir}/data/scenariomap.txt  > ../output/txt/CGEscenario.txt
+  awk 'BEGIN {FS="\t"} {OFS="\t"} {print $2}' ../${parent_dir}/data/scenariomap.txt  > ../output/txt/Outputscenario.txt
+  CGEscenarioList=(`cat ../output/txt/CGEscenario.txt|xargs`)
+  OutputscenarioList=(`cat ../output/txt/Outputscenario.txt|xargs`)
+  CountScenario=$((${#CGEscenarioList[@]}-1))
+  for scenario2 in ${CGEscenarioList[@]}; do
+      for i in `seq 0 $((${CountScenario}))`; do
+        if [ ${CGEscenarioList[$i]} == ${scenario2} ]; then
+          ScenarioOutName2=${OutputscenarioList[$i]}
+        fi
+      done
+      cp -f ../output/nc/AIM-LUmap_${scenario2}.nc ../output/nc/AIM-LUmap_${ScenarioOutName2}.nc
   done
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi

@@ -33,13 +33,16 @@ XAF	Sub-Sahara
 *$include %prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/country.set
 WLD,OECD90,REF,ASIA,MAF,LAM
+World,"R5OECD90+EU",R5REF,R5ASIA,R5MAF,R5LAM
 /
 R(Rall)	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 WLD,OECD90,REF,ASIA,MAF,LAM
+World,"R5OECD90+EU",R5REF,R5ASIA,R5MAF,R5LAM
 /
 Ragg(R)/
 WLD,OECD90,REF,ASIA,MAF,LAM
+World,"R5OECD90+EU",R5REF,R5ASIA,R5MAF,R5LAM
 /
 RBION(Rall)/
 XE25	EU
@@ -117,6 +120,10 @@ OL      ice or water
 CL	cropland
 LUC
 RES
+MNGFRS  managed forest
+UMNFRS  unmanage forest
+PLNFRS  planted forest
+NRMFRS  naturally regenerating managed forest
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
