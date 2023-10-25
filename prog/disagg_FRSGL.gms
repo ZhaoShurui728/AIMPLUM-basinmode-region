@@ -80,17 +80,27 @@ SL      built_up
 OL      ice or water
 CL      cropland
 RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
+LUC
+"LUC+BIO"
 /
 LCROPB(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO/
 LPRMSEC(L)/PRM_SEC/
 LSUM(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL,SL,OL/
 L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
 L_UNUSED(L)/SL,OL/
-
-*LBIO(L)/PRM_SEC,CROP_FLW/
+LFRSGL(L)/FRSGL/
+LFRS(L)/FRS/
+LGL(L)/GL/
+LBIO(L)/BIO/
+LLUC(L)/LUC/
+EmitCat	Emissions categories /
+"Positive"		Gross positive emissions
+"Negative"	Gross negative emissions
+"Net"		Net emissions (= Positive - Negative)
+/
 ;
 Alias(G,G2),(L,L2,LL);
-$include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
+
 *------- Carbon stock ----------*
 set
 Ybase/ %base_year% /
@@ -116,8 +126,11 @@ $load GA
 
 parameter
 VYL(L,G)
-VYL_anapre(L,G)
 Area_load(L)
+VYL_anapre(L,G)	area ratio of land category L in cell G (previous year)
+CSL(L,G)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
+GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
+GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
 ;
 
 $ifthen %Sr%==USA
@@ -264,10 +277,40 @@ Area_load(L)= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 VYL(L,G)$(not G0(G))=0;
 *VYL(L,G)=round(VYL(L,G),6);
 
+*--------GHG emissions (Only Disaggregation of FRSGL into forest and grassland) --------*
+
+parameter
+Ystep   /
+$ifthen %Ystep0%_%Sy%==10_2010
+5
+$else
+%Ystep0%
+$endif
+/
+delta_Y(L,G)	change in area ratio of land category L in cell G
+;
+
+
+delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-VYL_anapre(L,G)))=(VYL(L,G)-VYL_anapre(L,G))/Ystep;
+
+GHGLG("Positive",L,G)$((LFRS(L) OR LGL(L)) AND delta_Y(L,G)<0 AND CS(G)*delta_Y(L,G))= CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG(EmitCat,L,G)$(LFRSGL(L))=0;
+GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
+
+GHGLG(EmitCat,"LUC",G)$(SUM(L$((not LBIO(L)) and (not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G)))= SUM(L$((not LBIO(L)) and (not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G));
+GHGLG(EmitCat,"LUC+BIO",G)$(SUM(L$((not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G)))= SUM(L$((not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G));
+
+GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
+
+
+*------- Data output ----------*
+
 $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/analysis/%Sy%.gdx'
 VYL=VY_load
 Area_load
+GHGLG
+GHGL
 $if %Sy%==%base_year% CSB,Psol_stat,FRSArea2
 VYL_anapre
 CS

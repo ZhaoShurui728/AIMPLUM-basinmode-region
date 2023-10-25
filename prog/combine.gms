@@ -117,6 +117,7 @@ OL      ice or water
 CL	cropland
 LUC
 RES
+"LUC+BIO"
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
@@ -211,6 +212,12 @@ LULC_class/
 $include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
 MAP_GIJ(G,I,J)
+EmitCat	Emissions categories /
+"Positive"		Gross positive emissions
+"Negative"	Gross negative emissions
+"Net"		Net emissions (= Positive - Negative)
+"Prev"		Previous version of emissions
+/
 ;
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load MAP_GIJ
@@ -224,8 +231,8 @@ Area(R,Y,L)	million ha
 AreaLDM(R,Y,LDM)	million ha
 Area_base(R,L,Sacol)
 CSB(R)
-GHGL(R,Y,L)	MtCO2 per year in region R
-GHGLG(Y,L,G)    MtCO2 per grid per year
+GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
+GHGLG(Y,EmitCat,L,G)    MtCO2 per grid per year
 GA(G)		Grid area of cell G kha
 YBIO(R,Y,G)
 PCBIO_load(Y,R)	average price to meet the given bioenergy amount [$ per GJ]
@@ -294,7 +301,7 @@ Area_base(Ragg,L,Sacol)$(SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol)))=SUM(R$MAP
 
 Area_base(R,L,"estimates")=Area(R,"%base_year%",L);
 
-GHGL(Ragg,Y,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,L));
+GHGL(Ragg,Y,EmitCat,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L));
 
 *----- Yield
 $ifthen %bioyieldcalc%==on

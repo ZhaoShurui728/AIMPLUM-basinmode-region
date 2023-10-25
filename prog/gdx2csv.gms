@@ -128,7 +128,7 @@ VY_IJ(Y,L,I,J)
 VY_IJmip(Y,Lmip,I,J)
 VY_IJwwf(Y,Lwwf,I,J)
 YIELD_BIO(R,Y,G)
-YIELD_IJ(Y,L,I,J)
+YIELD_IJ(Y,L,I,J) tCO2 per ha per year
 GHGLG(Y,L,G)	MtCO2 per grid per year
 GHG_IJ(Y,L,I,J)	MtCO2 per grid per year
 GHGLGC(Y,L,G)	cumulative emissions or sequestration from base year to the year Y (MtCO2 per grid)

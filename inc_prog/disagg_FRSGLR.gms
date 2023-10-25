@@ -19,6 +19,8 @@ $load YBIO%1=YBIO
 VYL("BIO",G)$(YBIO%1(G))=YBIO%1(G);
 $endif
 
+VYL_anapre(L,G)=0;
+
 $ifthen.mng2 not %Sy%==%base_year%
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%1/analysis/%pre_year%.gdx'

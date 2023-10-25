@@ -1456,6 +1456,9 @@ $include ../%prog_loc%/inc_prog/pasture.gms
 
 $include ../%prog_loc%/inc_prog/crop_fallow.gms
 
+*------ Digit adjustment -----------*
+
+VYL(L,G)=round(VYL(L,G),6);
 
 $ontext
 *------- Bioenergy potential curve -----*
@@ -1523,13 +1526,20 @@ delta_VYLY(Y,L,G)$(abs(delta_VYLY(Y,L,G))<10**(-5))=0;
 
 *--------GHG emissions --------*
 
+set
+EmitCat	Emissions categories /
+"Positive"		Gross positive emissions
+"Negative"	Gross negative emissions
+"Net"		Net emissions (= Positive - Negative)
+/
+;
+
 parameter
 CSL(L,G)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
 delta_Y(L,G)	change in area ratio of land category L in cell G
-GHGLG(L,G)	GHG emission of land category L cell G in year Y [MtCO2 per grid per year]
-GHGL(L)		GHG emission of land category L in year Y [MtCO2 per year]
+GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
+GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
 checkArea(L)
-
 ;
 
 delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-Y_pre(L,G)))=(VYL(L,G)-Y_pre(L,G))/Ystep;
@@ -1541,15 +1551,22 @@ CSL("FRSGL",G)$(CS(G) AND delta_Y("FRSGL",G))=CS(G);
 
 checkArea(L)$(NOT LCROP(L))=sum(G,delta_Y(L,G) *GA(G));
 
-GHGLG(L,G)$((NOT LFRSGL(L)) AND (NOT LBIO(L)) AND CSL(L,G)*delta_Y(L,G)) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG(L,G)$(LFRSGL(L) AND delta_Y(L,G)<0 AND CSL(L,G)*delta_Y(L,G))= CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG(L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")), CFT(G,"%Sy%",Y2)*delta_VYLY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG(L,G)$(LBIO(L) AND YIELD(L,G) AND VYL(L,G)) = YIELD(L,G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Positive",L,G)$((NOT LFRSGL(L)) AND CSL(L,G) AND delta_Y(L,G)<0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$((NOT LFRSGL(L)) AND (NOT LAFR(L)) AND (NOT LBIO(L)) AND CSL(L,G) AND delta_Y(L,G)>0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+
+GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0 AND CSL(L,G)*delta_Y(L,G))= CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")), CFT(G,"%Sy%",Y2)*delta_VYLY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LBIO(L) AND YIELD(L,G) AND VYL(L,G)) = YIELD(L,G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
 *GHGLG(L,G)$(LAFR(L) AND (NOT %Sy%=%base_year%))= ACF(G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
 
-GHGLG("LUC",G)$(SUM(L,GHGLG(L,G)))= SUM(L$(not LBIO(L)),GHGLG(L,G));
+GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
 
-GHGL(L)= SUM(G$(GHGLG(L,G)),GHGLG(L,G));
+
+GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G));
+
+GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
+
+
 
 
 *----- Change in carbon stock -----*
@@ -1557,7 +1574,7 @@ GHGL(L)= SUM(G$(GHGLG(L,G)),GHGLG(L,G));
 parameter
 CS_post(G)	carbon stock in next year  (MgC ha-1)
 ;
-CS_post(G)$(CS(G) AND GA(G)) = max(0, (CS(G) * GA(G) - GHGLG("LUC",G) * Ystep *10**3 *12/44)/GA(G));
+CS_post(G)$(CS(G) AND GA(G)) = max(0, (CS(G) * GA(G) - GHGLG("Net","LUC",G) * Ystep *10**3 *12/44)/GA(G));
 
 
 *----- Average yield output -----*
