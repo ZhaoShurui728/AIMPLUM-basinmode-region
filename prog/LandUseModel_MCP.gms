@@ -12,6 +12,8 @@ $setglobal iav NoCC
 $setglobal parallel off
 $setglobal supcuv off
 $setglobal ModelInt
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 * if biocurve=off, biocrop is allocated.If biocurve=on, biocrop is output as a supply curve.
 $setglobal biocurve off
 $setglobal Ystep0 10

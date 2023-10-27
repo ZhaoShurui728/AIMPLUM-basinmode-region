@@ -2,6 +2,9 @@ $Setglobal prog_loc
 $setglobal sce SSP3
 $setglobal clp BaU
 $setglobal iav NoCC
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+
 $setglobal lumip off
 $setglobal bioyieldcalc off
 $setglobal gdxout off

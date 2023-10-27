@@ -13,6 +13,8 @@ $setglobal supcuvout off
 $setglobal biopmap on
 $setglobal degradedlandprotect off
 $setglobal WDPAprotect protect_all
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 ;
 
 

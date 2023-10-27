@@ -7,6 +7,8 @@ $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal Ystep0 10
 $setglobal dif off
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 
 *$if %Sy%==2005 $setglobal supcuv on
 *$if %Sy%==2030 $setglobal supcuv on

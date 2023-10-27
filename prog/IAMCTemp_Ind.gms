@@ -6,6 +6,8 @@ $setglobal SCE SSP2
 $setglobal CLP BaU
 $setglobal IAV NoCC
 $setglobal ModelInt
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 
 set
 R	17 regions	/
@@ -177,7 +179,7 @@ AREA(R,Y,L,"CGE")$SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE))=SUM(LCGE$MAP_LCG
 AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
-IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"));
+IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");

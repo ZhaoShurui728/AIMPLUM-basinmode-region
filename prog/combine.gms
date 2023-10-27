@@ -4,6 +4,8 @@ $Setglobal prog_loc
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 
 $setglobal biocurve off
 $setglobal supcuvout off
