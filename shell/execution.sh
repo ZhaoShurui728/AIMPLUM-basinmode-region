@@ -63,11 +63,17 @@ makedirectory() {
   done
 }
 
-## 1. Data Preparation
+## 1-1. Data Preparation
 DataPrep() {
   gams ../${parent_dir}/prog/data_prep.gms --prog_loc=${parent_dir} o=../output/lst/DataPrep.lst
   # scenario file generation
   rexe ../${parent_dir}/prog/shell_generation.R ${parent_dir}
+  if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
+}
+
+## 1-2. Data Preparation split2
+DataPrep2() {
+  gams ../${parent_dir}/prog/data_prep2.gms --prog_loc=${parent_dir} o=../output/lst/DataPrep2.lst
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
@@ -448,6 +454,7 @@ read -p "push any key"
 
 # Model Execution
 if [ ${DataPrep}       = "on" ]; then DataPrep       ; fi
+if [ ${DataPrep2}      = "on" ]; then DataPrep2      ; fi
 if [ ${Basesim}        = "on" ]; then Basesim        ; fi
 if [ ${Futuresim}      = "on" ]; then Futuresim      ; fi
 if [ ${ScnMerge}       = "on" ]; then ScnMerge       ; fi

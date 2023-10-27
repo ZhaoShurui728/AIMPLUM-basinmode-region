@@ -15,10 +15,13 @@ scn=(SSP2_BaU_NoCC)
 # Set CPU Core Threads
 CPUthreads=5
 # Set Pause Mode [on/off]
-pausemode=off
+pausemode=on
 
 # Set Data Preparation Process [on/off]
 DataPrep=off
+
+# Set Data Preparation Process split2 [on/off]
+DataPrep2=off
 
 # Set Base Year Simulation [on/off]
 Basesim=on

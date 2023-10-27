@@ -90,6 +90,7 @@ L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
 L_UNUSED(L)/SL,OL/
 LFRSGL(L)/FRSGL/
 LFRS(L)/FRS/
+LMNGFRS(L)/MNGFRS/
 LGL(L)/GL/
 LBIO(L)/BIO/
 LLUC(L)/LUC/
@@ -277,6 +278,16 @@ Area_load(L)= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 VYL(L,G)$(not G0(G))=0;
 *VYL(L,G)=round(VYL(L,G),6);
 
+Parameter
+LEC(R) Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+LEC0      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+;
+
+$gdxin '../%prog_loc%/data/data_prep2.gdx'
+$load LEC
+
+LEC0=LEC("%Sr%");
+
 *--------GHG emissions (Only Disaggregation of FRSGL into forest and grassland) --------*
 
 parameter
@@ -293,8 +304,10 @@ delta_Y(L,G)	change in area ratio of land category L in cell G
 
 delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-VYL_anapre(L,G)))=(VYL(L,G)-VYL_anapre(L,G))/Ystep;
 
-GHGLG("Positive",L,G)$((LFRS(L) OR LGL(L)) AND delta_Y(L,G)<0 AND CS(G)*delta_Y(L,G))= CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Positive",L,G)$((LFRS(L) OR LGL(L)) AND CS(G) AND delta_Y(L,G)<0)= CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG(EmitCat,L,G)$(LFRSGL(L))=0;
+GHGLG("Negative",L,G)$(LMNGFRS(L) AND VYL(L,G))= LEC0 * VYL(L,G) *GA(G)/10**3 * (-1);
+
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
 
 GHGLG(EmitCat,"LUC",G)$(SUM(L$((not LBIO(L)) and (not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G)))= SUM(L$((not LBIO(L)) and (not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G));

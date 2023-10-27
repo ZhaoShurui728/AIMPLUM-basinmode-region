@@ -1,0 +1,18 @@
+*r17		continent		clim		Zeco		Soil
+USA	.	America	.	boreal	.	ba	.	Lac
+XE25	.	Europe	.	temperate	.	tedc	.	Lac
+XER	.	Europe	.	temperate	.	tedc	.	Lac
+TUR	.	Europe	.	temperate	.	tedc	.	Lac
+XOC	.	Europe	.	temperate	.	tedo	.	Lac
+CHN	.	Asia	.	temperate	.	tedc	.	Lac
+IND	.	Asia	.	temperate	.	tedc	.	Lac
+JPN	.	Asia	.	temperate	.	tedc	.	Lac
+XSE	.	Asia	.	tropical	.	tawa	.	Lac
+XSA	.	Asia	.	temperate	.	tedc	.	Lac
+CAN	.	America	.	boreal	.	bb	.	Lac
+BRA	.	America	.	tropical	.	tar	.	Lac
+XLM	.	America	.	temperate	.	tedc	.	Lac
+CIS	.	Europe	.	boreal	.	bb	.	Lac
+XME	.	Europe	.	temperate	.	tedc	.	Lac
+XNF	.	Africa	.	subtropical	.	scs	.	Lac
+XAF	.	Africa	.	subtropical	.	scs	.	Lac

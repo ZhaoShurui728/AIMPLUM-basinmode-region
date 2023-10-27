@@ -1551,10 +1551,8 @@ CSL("FRSGL",G)$(CS(G) AND delta_Y("FRSGL",G))=CS(G);
 
 checkArea(L)$(NOT LCROP(L))=sum(G,delta_Y(L,G) *GA(G));
 
-GHGLG("Positive",L,G)$((NOT LFRSGL(L)) AND CSL(L,G) AND delta_Y(L,G)<0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Positive",L,G)$(CSL(L,G) AND delta_Y(L,G)<0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$((NOT LFRSGL(L)) AND (NOT LAFR(L)) AND (NOT LBIO(L)) AND CSL(L,G) AND delta_Y(L,G)>0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-
-GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0 AND CSL(L,G)*delta_Y(L,G))= CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")), CFT(G,"%Sy%",Y2)*delta_VYLY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LBIO(L) AND YIELD(L,G) AND VYL(L,G)) = YIELD(L,G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
 *GHGLG(L,G)$(LAFR(L) AND (NOT %Sy%=%base_year%))= ACF(G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
