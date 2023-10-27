@@ -1,4 +1,4 @@
-file output_ghg_%1 / "../output/csv/%SCE%_%CLP%_%IAV%/ghg_%1.csv" /;
+file output_ghg_%1 / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/ghg_%1.csv" /;
 put output_ghg_%1;
 output_ghg_%1.pw=100000;
 
@@ -19,7 +19,7 @@ loop(Y,
 );
 put /;
 
-file output_ghgc_%1 / "../output/csv/%SCE%_%CLP%_%IAV%/ghgc_%1.csv" /;
+file output_ghgc_%1 / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/ghgc_%1.csv" /;
 put output_ghgc_%1;
 output_ghgc_%1.pw=100000;
 

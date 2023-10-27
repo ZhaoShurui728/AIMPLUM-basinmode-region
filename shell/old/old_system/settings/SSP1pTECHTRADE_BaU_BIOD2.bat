@@ -1,3 +1,0 @@
-set SCE=SSP1pTECHTRADE
-set CLP=BaU
-set IAV=BIOD2

@@ -11,6 +11,7 @@ global=on
 CountryC=(USA)
 # Set Scenarios
 scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
+scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC)
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -23,12 +24,12 @@ scn=(SSP2_BaU_NoCC)
 
 
 # Set CPU Core Threads
-CPUthreads=20
+CPUthreads=30
 # Set Pause Mode [on/off]
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=on
+DataPrep=off
 
 # Set Base Year Simulation [on/off]
 Basesim=on
@@ -38,11 +39,11 @@ Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
-    Sub_Futuresim_NormalRun=off
+    Sub_Futuresim_NormalRun=on
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
     Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch
-    Sub_Futuresim_Biocurve=off
+    Sub_Futuresim_Biocurve=on
 
 # Set Scenario Merge [on/off]
 ScnMerge=on
@@ -54,7 +55,7 @@ MergeResCSV4NC=on
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
-    Sub_MergeResCSV4NC_lumip=off
+    Sub_MergeResCSV4NC_lumip=on
     ## if you would like to make BTC basis 5 options, then turn on BTC3option. This switch will be also used in :netcdfgen (around 3GB per scenario memory and 5min are taken in this process)
     Sub_MergeResCSV4NC_BTC3option=on
     ## if you would like to make AIMSSPRCP dataformat nc file, turn on ssprcp. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
@@ -67,7 +68,7 @@ MergeResCSV4NC=on
 # Set Netcdf Creation [on/off]
 netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
-    Sub_Netcdfgen_projectname=Frsmng
+    Sub_Netcdfgen_projectname=sdgmip
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off

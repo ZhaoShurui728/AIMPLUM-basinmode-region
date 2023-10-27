@@ -122,7 +122,7 @@ GA(G)		Grid area of cell G kha
 protectfrac(G)
 ;
 
-$gdxin '%prog_dir%/../data/biomass/output/biomass%Sr%.gdx'
+$gdxin '%prog_dir%/data/biomass/output/biomass%Sr%.gdx'
 $load CDT_load=CDT
 
 CDT("PRM_SEC",G)=CDT_load("PRM_SEC",G,"%base_year%","%base_year%");
@@ -130,10 +130,10 @@ CDT("PRM_SEC",G)=CDT_load("PRM_SEC",G,"%base_year%","%base_year%");
 $gdxin '%prog_dir%/data/data_prep.gdx'
 $load GA MAP_WG
 
-$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%.gdx'
+$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%Sy%.gdx'
 $	load VY_results=VY_load protectfrac
 
-$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%base_year%.gdx'
+$	gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%base_year%.gdx'
 $	load Y_base
 
 set
@@ -152,7 +152,7 @@ PGHG		Carbon price [million $ per tonne C]
 
 orda(asord)=ord(asord);
 
-$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%.gdx'
+$gdxin '%prog_dir%/../data/cbnal0/global_17_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load Planduse_load=Planduse PGHG_load
 
 Planduse_pas=Planduse_load("%Sy%","%Sr%","GRAZING");
@@ -309,7 +309,7 @@ CSB=sum(asord$(FRSArea2<=orddat(asord,"area_acm") AND FRSArea2>orddat(asord-1,"a
 
 $else.baseyear
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%base_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/analysis/%base_year%.gdx'
 $load CSB
 
 $endif.baseyear
@@ -328,7 +328,7 @@ Area_load("CL")=SUM(L$LCROP(L),Area_load(L));
 
 $if %supcuv%==on $include %prog_dir%/inc_prog/biosupplycurve.gms
 
-execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'
+execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/analysis/%Sy%.gdx'
 *$ontext
 VY_load
 Area_load

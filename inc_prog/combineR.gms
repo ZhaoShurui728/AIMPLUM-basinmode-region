@@ -28,7 +28,7 @@ VYLAFR_baubiod%1(Y,LAFR,G)
 protectfracL%1(G,L)	Protected area fraction (0 to 1) of land category L in land area of the category L in each cell G
 ;
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/cbnal/%1.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/%1.gdx'
 $load Psol_stat%1=Psol_stat
 $load GHGL%1=GHGL
 $load GHGLG%1=GHGLG
@@ -41,7 +41,7 @@ $load YIELDL%1=YIELDL_OUT
 $load YIELDLDM%1=YIELDLDM_OUT
 *$load VYL%1=VY_load
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/analysis/%1.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
 $load VYL%1=VY_load
 
 $gdxin '../output/gdx/base/%1/basedata.gdx'
@@ -58,7 +58,7 @@ Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
 GHGL("%1",Y,L)$GHGL%1(Y,L)=GHGL%1(Y,L);
 GHGLG(Y,L,G)$GHGLG%1(Y,L,G)=GHGLG%1(Y,L,G);
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/analysis/%1.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
 $load Area%1=Area_load
 $gdxin '../output/gdx/base/%1/analysis/%base_year%.gdx'
 $load CSB%1=CSB

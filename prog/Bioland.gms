@@ -13,6 +13,8 @@ $setglobal supcuvout off
 $setglobal biopmap on
 $setglobal degradedlandprotect off
 $setglobal WDPAprotect protect_all
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 ;
 
 
@@ -156,19 +158,19 @@ MFC(L)     accessibility factor for bio crops
 MFAi(R)    inverce of management factor for bio crops in base year
 MFArev(R)    inverce of management factor for bio crops in base year
 ;
-$ifthen %CLP%==BaU $setglobal TBIloadSce %SCE%_BaU_%IAV%
-$elseif %CLP%==BaULP $setglobal TBIloadSce %SCE%_BaU_%IAV%
-$elseif %CLP%==C $setglobal TBIloadSce %SCE%_C_%IAV%
-$elseif %CLP%==CLP $setglobal TBIloadSce %SCE%_C_%IAV%
-$elseif %CLP%==CNA $setglobal TBIloadSce %SCE%_CNA_%IAV%
-$elseif %CLP%==CNALP $setglobal TBIloadSce %SCE%_CNA_%IAV%
-$else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%
+$ifthen %CLP%==BaU $setglobal TBIloadSce %SCE%_BaU_%IAV%%ModelInt%
+$elseif %CLP%==BaULP $setglobal TBIloadSce %SCE%_BaU_%IAV%%ModelInt%
+$elseif %CLP%==C $setglobal TBIloadSce %SCE%_C_%IAV%%ModelInt%
+$elseif %CLP%==CLP $setglobal TBIloadSce %SCE%_C_%IAV%%ModelInt%
+$elseif %CLP%==CNA $setglobal TBIloadSce %SCE%_CNA_%IAV%%ModelInt%
+$elseif %CLP%==CNALP $setglobal TBIloadSce %SCE%_CNA_%IAV%%ModelInt%
+$else $setglobal TBIloadSce %SCE%_%CLP%_%IAV%%ModelInt%
 $endif
 
-$gdxin '../data/analysis.gdx'
+$gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
 $load POP GDP TBI_load=TBI
-Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%",YBASE,R);
-GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%",YBASE,R);
+Ppopulation(YBASE,R)=POP("%SCE%_BaU_%IAV%%ModelInt%",YBASE,R);
+GDP_load(YBASE,R)=GDP("%SCE%_BaU_%IAV%%ModelInt%",YBASE,R);
 TBI(Y,R,A_BTR2)=TBI_load("%TBIloadSce%",Y,R,A_BTR2);
 
 GDPCAP_base(R)$Ppopulation("%base_year%",R)=GDP_load("%base_year%",R)/Ppopulation("%base_year%",R);
@@ -192,8 +194,8 @@ YBIO_load(G)
 YBIOO(G)        Potentail area for OLD bioenergy cropland
 ;
 
-$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
-$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%pre_year%.gdx'
+$ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
 $       load YBIO_load=YBIO
 $else.fileex
 YBIO_load(G)=0;
@@ -423,7 +425,7 @@ QCBIO(Sr)= SUM(R$MAP_RAGG(R,Sr),QCBIO(R));
 
 $if %parallel%==off execute_unload '../output/temp3.gdx'
 
-execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/bio/%Sy%.gdx'
+execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%Sy%.gdx'
 pca_bio
 YBIOLB
 YBIO

@@ -35,7 +35,7 @@ CS_BIO(G)	carbon stock in base year in cell G (MgC ha-1)
 
 ;
 
-$gdxin '%prog_dir%/../data/analysis.gdx'
+$gdxin '%prog_dir%/data/cgeoutput/analysis.gdx'
 $load Outputall_nominal Planduse_load=Planduse Pland_load=pland_phs
 
 $gdxin '%prog_dir%/data/visit_data.gdx'
@@ -46,9 +46,9 @@ GJ_toe=41.8;
 CS_BIO(G)=PVISIT("C4",G);
 
 * [mil$]
-pc_input_bio=SUM(A$AGRO(A), OUTPUTALL_Nominal("%SCE%_%CLP%_%IAV%","%Sy%","%Sr%",A));
+pc_input_bio=SUM(A$AGRO(A), OUTPUTALL_Nominal("%SCE%_%CLP%_%IAV%%ModelInt%","%Sy%","%Sr%",A));
 * [10^3ha --> ha]
-pc_area_bio=("%SCE%_%CLP%_%IAV%","%Sy%","%Sr%","GRO") * 10**3;
+pc_area_bio=("%SCE%_%CLP%_%IAV%%ModelInt%","%Sy%","%Sr%","GRO") * 10**3;
 * [mil$/ha/year]
 pc_ctax(G)$SUM(L$LBIO(L),VY_load(L,G))=SUM(L$LBIO(L),VY_load(L,G)*CS_BIO(G)*PGHG("%Sy%"))/SUM(L$LBIO(L),VY_load(L,G));
 * [mil$/ha/year]

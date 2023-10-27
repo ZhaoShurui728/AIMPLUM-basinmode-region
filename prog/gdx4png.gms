@@ -7,6 +7,8 @@ $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal Ystep0 10
 $setglobal dif off
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 
 *$if %Sy%==2005 $setglobal supcuv on
 *$if %Sy%==2030 $setglobal supcuv on
@@ -132,7 +134,7 @@ $ifthen.b not %Sy%==2005
 $endif.b
 $endif.dif
 
-execute_unload '../output/gdxii/%SCE%_%CLP%_%IAV%/%Sr%/%Sy%ij.gdx'
+execute_unload '../output/gdxii/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%Sy%ij.gdx'
 Dif_Y,VY_IJ,Yield_IJ;
 $exit
 
@@ -152,7 +154,7 @@ $offtext
 
 
 $ontext
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/GHG/%Sr%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/GHG/%Sr%.gdx'
 $load GHGLG
 
 GHG_IJ(L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)), GHGLG("%Sy%",L,G))  + eps$(SUM(G,GHGLG("%Sy%",L,G)) AND SUM(G$(MAP_GIJ(G,I,J)), GHGLG("%Sy%",L,G))=0);

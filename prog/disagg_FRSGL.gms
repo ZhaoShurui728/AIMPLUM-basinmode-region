@@ -11,6 +11,8 @@ $setglobal biocurve off
 $setglobal not1stiter off
 $setglobal biodivprice off
 $setglobal Ystep0 10
+$if %ModelInt2%==NoValue $setglobal ModelInt 
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
 
 $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $include ../%prog_loc%/scenario/climate_policy/%clp%.gms
@@ -118,9 +120,9 @@ Planduse(Y,R,LCGE)
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
 $if %not1stiter%==on $setglobal IAVload %preIAV%
-$gdxin '../data/analysis.gdx'
+$gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
 $load Planduse_load=Planduse
-Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%",Y,R,LCGE);
+Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,LCGE);
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA
@@ -223,7 +225,6 @@ parameter
 CS_base(G)	carbon stock in base year
 ;
 
-*$gdxin '%prog_loc%/../data/biomass/output/biomass%Sr%.gdx'
 $gdxin '../output/gdx/base/%Sr%/%base_year%.gdx'
 $load CS_base=CS
 
@@ -318,7 +319,7 @@ GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
 
 *------- Data output ----------*
 
-$if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/analysis/%Sy%.gdx'
+$if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/analysis/%Sy%.gdx'
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/analysis/%Sy%.gdx'
 VYL=VY_load
 Area_load

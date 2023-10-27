@@ -1,1 +1,0 @@
-set COUNTRY=JPN

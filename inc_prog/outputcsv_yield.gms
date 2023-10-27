@@ -1,4 +1,4 @@
-file output_yield_%1 / "../output/csv/%SCE%_%CLP%_%IAV%/yield_%1.csv" /;
+file output_yield_%1 / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/yield_%1.csv" /;
 put output_yield_%1;
 output_yield_%1.pw=100000;
 
