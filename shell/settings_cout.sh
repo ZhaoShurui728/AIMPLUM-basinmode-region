@@ -24,18 +24,20 @@ scn=(SSP2_BaU_NoCC)
 
 
 # Set CPU Core Threads
-CPUthreads=30
+CPUthreads=5
 # Set Pause Mode [on/off]
-pausemode=off
+pausemode=on
 
 # Set Data Preparation Process [on/off]
 DataPrep=off
+# Set Data Preparation 2 Process [on/off]
+DataPrep2=off
 
 # Set Base Year Simulation [on/off]
-Basesim=on
+Basesim=off
 
 # Set Future Simulation [on/off]
-Futuresim=on
+Futuresim=off
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -43,7 +45,7 @@ Futuresim=on
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
     Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch
-    Sub_Futuresim_Biocurve=on
+    Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
 ScnMerge=on
@@ -51,7 +53,7 @@ ScnMerge=on
     Sub_ScnMerge_BiocurveSort=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
-MergeResCSV4NC=on
+MergeResCSV4NC=off
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
@@ -66,7 +68,7 @@ MergeResCSV4NC=on
     Sub_MergeResCSV4NC_carseq=off
 
 # Set Netcdf Creation [on/off]
-netcdfgen=on
+netcdfgen=off
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=sdgmip
 

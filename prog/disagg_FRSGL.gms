@@ -11,8 +11,8 @@ $setglobal biocurve off
 $setglobal not1stiter off
 $setglobal biodivprice off
 $setglobal Ystep0 10
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $include ../%prog_loc%/scenario/climate_policy/%clp%.gms

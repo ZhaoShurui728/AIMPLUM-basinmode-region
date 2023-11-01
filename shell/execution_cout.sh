@@ -4,6 +4,7 @@ git config --global core.autocrlf input
 export gams_sys_dir=`which gams --skip-alias|xargs dirname`
 #to make scenario names mapping for netCDF files, ../${parent_dir}/data/scenariomap.txt should be used.
 # Functions ---------------------------------------------------------------------------------------
+#-----function definition
 function rexe() {
   R --no-save --no-restore --no-site-file --slave $2 < $1
 } 
@@ -86,7 +87,7 @@ function DataPrep() {
 }
 
 ## 1-2. Data Preparation split2
-DataPrep2() {
+function DataPrep2() {
   gams ../${parent_dir}/prog/data_prep2.gms --prog_loc=${parent_dir} o=../output/lst/DataPrep2.lst
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
@@ -94,7 +95,7 @@ DataPrep2() {
 ## 2. Base Simulation
 function BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
-  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_base.lst   lo=4
+  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
   rm ../output/txt/cpu/basesim/$2.txt
@@ -233,16 +234,27 @@ function ScnMergeRun() {
   declare -n COUNTRY=$3
   Biocurvesort=$4
   echo "`date '+%s'`" > ../output/txt/cpu/merge1/$2.txt
-
   for A in ${COUNTRY[@]}
   do
-    gdxmerge ../output/gdx/$2/${A}/*.gdx output=../output/gdx/$2/cbnal/${A}.gdx
-    gdxmerge ../output/gdx/$2/${A}/analysis/*.gdx output=../output/gdx/$2/analysis/${A}.gdx
+	# This change directry used for gdxmerge is to run with windows OS where the path with slash does not work in gdxmerge. 
+	cd ../output/gdx/$2/${A}
+	gdxmerge *.gdx 
+	mv merged.gdx ../cbnal/${A}.gdx
+	cd ./analysis
+	gdxmerge *.gdx
+	mv merged.gdx ../../analysis/${A}.gdx
+	cd ../../../../../exe
+ 
   done
-  gdxmerge ../output/gdx/$2/bio/*.gdx output=../output/gdx/$2/bio.gdx
-
+  cd ../output/gdx/$2/bio
+  gdxmerge *.gdx
+  mv -f merged.gdx ../bio.gdx
+  cd ../../../../exe
+  
   gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine_$2.lst  lo=4
+  read -p "push any key";
   gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
+  read -p "push any key";
 
   echo $(TimeDif `cat ../output/txt/cpu/merge1/$2.txt`) > ../output/txt/cpu/merge1/end_$2.txt
   rm ../output/txt/cpu/merge1/$2.txt
@@ -259,7 +271,10 @@ function ScnMerge() {
   done
   wait
   echo "All scenario merges have been done."
-  gdxmerge ../output/gdx/comparison/*.gdx output=../output/gdx/all/Mergedcomparison.gdx
+  cd ../output/gdx/comparison/
+  gdxmerge *.gdx 
+  mv -f merged.gdx ../all/Mergedcomparison.gdx
+  cd ../../../exe
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
@@ -537,7 +552,7 @@ elif [ "$(expr substr $(uname -s) 1 10)" = 'MINGW32_NT' ] || [ "$(expr substr $(
   baseos=wd
   savedir=..\\output\\save\\
 fi
-echo $savedir
+echo $savedir $baseos
 
 if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 

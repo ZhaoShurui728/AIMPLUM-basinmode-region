@@ -1,7 +1,7 @@
 *-*-*-*- This program is included by ..\prog\combine.gms
 parameter
-GHGL%1(Y,L)
-GHGLG%1(Y,L,G)
+GHGL%1(Y,EmitCat,L)
+GHGLG%1(Y,EmitCat,L,G)
 Psol_stat%1(Y,ST,SP)                  Solution report
 Area%1(Y,L)
 Area_base%1(L,Sacol)
@@ -55,8 +55,8 @@ $load sharepix%1=sharepix
 
 Psol_stat("%1",Y,ST,SP)$Psol_stat%1(Y,ST,SP)=Psol_stat%1(Y,ST,SP);
 Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
-GHGL("%1",Y,L)$GHGL%1(Y,L)=GHGL%1(Y,L);
-GHGLG(Y,L,G)$GHGLG%1(Y,L,G)=GHGLG%1(Y,L,G);
+GHGL("%1",Y,EmitCat,L)$GHGL%1(Y,EmitCat,L)=GHGL%1(Y,EmitCat,L);
+GHGLG(Y,EmitCat,L,G)$GHGLG%1(Y,EmitCat,L,G)=GHGLG%1(Y,EmitCat,L,G);
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
 $load Area%1=Area_load

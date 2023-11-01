@@ -6,8 +6,8 @@ $setglobal SCE SSP2
 $setglobal CLP BaU
 $setglobal IAV NoCC
 $setglobal ModelInt
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 set
 R	17 regions	/
@@ -175,8 +175,8 @@ GHG(R,Y,"Sink","CGE")=SUM(AEZ,LUCHEM_N(Y,R,AEZ));
 $offtext
 
 
-GHG(R,Y,"Emissions","LUM")=GHGL(R,Y,"LUC")-GHGL(R,Y,"AFR");
-GHG(R,Y,"Sink","LUM")=GHGL(R,Y,"AFR");
+GHG(R,Y,"Emissions","LUM")=GHGL(R,Y,"Positive","LUC");
+GHG(R,Y,"Sink","LUM")=GHGL(R,Y,"Negative","LUC");
 GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODEL);
 
 * AREA comparison
