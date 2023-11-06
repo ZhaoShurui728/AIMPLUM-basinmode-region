@@ -112,7 +112,6 @@ function Basesim() {
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
   S=${scn[0]}
   ScenarioSpecName
-  read -p "ModelInt=${ModelInt} ModelInt2=${ModelInt2}"
   for A in ${COUNTRY0[@]} 
   do
     BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basedisagg_${A}.log 2>&1 &
