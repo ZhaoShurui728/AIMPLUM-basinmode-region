@@ -125,8 +125,15 @@ Lan_Cov_Frs_Sec/
 
 MapLIAMPC(L,V)/
 CL	.	Lan_Cov_Cro
+BIO	.	Lan_Cov_Cro
+CROP_FLW	.	Lan_Cov_Cro
+CL	.	Lan_Cov_Cro_Non_Ene_Cro
+CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
 FRS	.	Lan_Cov_Frs
-*CROP_FLW	.	CROP_FLW
+AFR .   Lan_Cov_Frs
+MNGFRS .   Lan_Cov_Frs_Man
+UMNFRS .   Lan_Cov_Frs_Nat_Frs
+AFR .   Lan_Cov_Frs_Aff_and_Ref
 PAS	.	Lan_Cov_Pst
 GL	.	Lan_Cov_Oth_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
