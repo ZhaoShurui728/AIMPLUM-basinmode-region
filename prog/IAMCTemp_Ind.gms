@@ -139,6 +139,28 @@ GL	.	Lan_Cov_Oth_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
 BIO	.	Lan_Cov_Cro_Ene_Cro
 SL	.	Lan_Cov_Bui_Are
+
+GRO .   Lan_Cov_Cro_Cer
+PDR .   Lan_Cov_Cro_Cer
+WHT .   Lan_Cov_Cro_Cer
+GRO .   Lan_Cov_Cro_Coa_gra
+
+OSD .   Lan_Cov_Cro_Oil_See
+PDR .   Lan_Cov_Cro_Ric
+WHT .   Lan_Cov_Cro_Whe
+PDRIR   .   Lan_Cov_Cro_Irr
+WHTIR   .   Lan_Cov_Cro_Irr
+GROIR   .   Lan_Cov_Cro_Irr
+OSDIR   .   Lan_Cov_Cro_Irr
+C_BIR   .   Lan_Cov_Cro_Irr
+OTH_AIR   .   Lan_Cov_Cro_Irr
+PDRRF   .   Lan_Cov_Cro_Rai
+WHTRF   .   Lan_Cov_Cro_Rai
+GRORF   .   Lan_Cov_Cro_Rai
+OSDRF   .   Lan_Cov_Cro_Rai
+C_BRF   .   Lan_Cov_Cro_Rai
+OTH_ARF   .   Lan_Cov_Cro_Rai
+
 /
 U/"million ha","Mt CO2/yr"/
 ;
