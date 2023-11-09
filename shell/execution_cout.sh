@@ -114,17 +114,19 @@ function Basesim() {
   ScenarioSpecName
   for A in ${COUNTRY0[@]} 
   do
-    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basedisagg_${A}.log 2>&1 &
-    LoopmultiCPU 5 COUNTRY0 "basedsaggfrs" ${CPUthreads}
+    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
+    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
   done
   wait
   echo "All base disaggregation have been done."
 
   for A in ${COUNTRY0[@]} 
   do
-    BaseRunDisaggfrs ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
-    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
+    BaseRunDisaggfrs ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basedisagg_${A}.log 2>&1 &
+    LoopmultiCPU 5 COUNTRY0 "basedsaggfrs" ${CPUthreads}
   done
+  wait
+  echo "All base disaggregation have been done."
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }

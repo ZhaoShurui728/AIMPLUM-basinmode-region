@@ -101,6 +101,13 @@ EmitCat	Emissions categories /
 "Negative"	Gross negative emissions
 "Net"		Net emissions (= Positive - Negative)
 /
+L_EMI_Orig(L)/PAS
+CL
+AFR
+BIO
+LUC
+FRSGL
+/
 ;
 Alias(G,G2),(L,L2,LL);
 
@@ -306,12 +313,12 @@ delta_Y(L,G)	change in area ratio of land category L in cell G
 delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-VYL_anapre(L,G)))=(VYL(L,G)-VYL_anapre(L,G))/Ystep;
 
 GHGLG("Positive",L,G)$((LFRS(L) OR LGL(L)) AND CS(G) AND delta_Y(L,G)<0)= CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG(EmitCat,L,G)$(LFRSGL(L))=0;
-GHGLG("Negative",L,G)$(LMNGFRS(L) AND VYL(L,G))= LEC0 * VYL(L,G) *GA(G)/10**3 * (-1);
+*GHGLG(EmitCat,L,G)$(LFRSGL(L))=0;
+GHGLG("Negative",L,G)$(LMNGFRS(L) AND VYL(L,G))= -LEC0 * VYL(L,G) *GA(G)/10**3 * (-1);
 
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
 
-GHGLG(EmitCat,"LUC",G)$(SUM(L$((not LBIO(L)) and (not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G)))= SUM(L$((not LBIO(L)) and (not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G));
+GHGLG(EmitCat,"LUC",G)$(SUM(L$((not LBIO(L)) and (not LFRS(L)) and (not LGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G)))= SUM(L$((not LBIO(L)) and (not LFRS(L)) and (not LGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G));
 GHGLG(EmitCat,"LUC+BIO",G)$(SUM(L$((not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G)))= SUM(L$((not LFRSGL(L)) and (not LLUC(L))),GHGLG(EmitCat,L,G));
 
 GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
