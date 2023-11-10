@@ -1070,7 +1070,7 @@ PB(G)$MACF=PBR*ACF(G)/MACF;
 *-------- Land demand
 PlanduseT=SUM(LCGE,Planduse("%Sy%",LCGE));
 SF_planduse$PlanduseT=GAT/PlanduseT;
-Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
+*Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
 
 parameter
 PLDM0(Y,LDM)

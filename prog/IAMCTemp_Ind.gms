@@ -121,7 +121,10 @@ Lan_Cov_Wat_Eco_Wet
 Lan_Cov_Cro_Non_Ene_Cro
 Lan_Cov_Cro_Ene_Cro_1st_gen
 Lan_Cov_Cro_Ene_Cro_2nd_gen
-Lan_Cov_Frs_Sec/
+Lan_Cov_Frs_Sec
+Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
+Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
+/
 
 MapLIAMPC(L,V)/
 CL	.	Lan_Cov_Cro
@@ -139,6 +142,28 @@ GL	.	Lan_Cov_Oth_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
 BIO	.	Lan_Cov_Cro_Ene_Cro
 SL	.	Lan_Cov_Bui_Are
+
+GRO .   Lan_Cov_Cro_Cer
+PDR .   Lan_Cov_Cro_Cer
+WHT .   Lan_Cov_Cro_Cer
+GRO .   Lan_Cov_Cro_Coa_gra
+
+OSD .   Lan_Cov_Cro_Oil_See
+PDR .   Lan_Cov_Cro_Ric
+WHT .   Lan_Cov_Cro_Whe
+PDRIR   .   Lan_Cov_Cro_Irr
+WHTIR   .   Lan_Cov_Cro_Irr
+GROIR   .   Lan_Cov_Cro_Irr
+OSDIR   .   Lan_Cov_Cro_Irr
+C_BIR   .   Lan_Cov_Cro_Irr
+OTH_AIR   .   Lan_Cov_Cro_Irr
+PDRRF   .   Lan_Cov_Cro_Rai
+WHTRF   .   Lan_Cov_Cro_Rai
+GRORF   .   Lan_Cov_Cro_Rai
+OSDRF   .   Lan_Cov_Cro_Rai
+C_BRF   .   Lan_Cov_Cro_Rai
+OTH_ARF   .   Lan_Cov_Cro_Rai
+
 /
 U/"million ha","Mt CO2/yr"/
 ;
@@ -194,7 +219,11 @@ AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2
 
 IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");
+
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 
 execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'

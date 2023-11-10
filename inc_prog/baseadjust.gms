@@ -68,11 +68,11 @@ Y_pre(L,G)$(SUM(LDM,MAP_LLDM2(L,LDM)) AND SUM(LDM$(PLDM(LDM) AND MAP_LLDM2(L,LDM
 EQLDM.SCALE(LDM)$(PLDM(LDM))=SQRT(ABS(PLDM(LDM)));
 
 parameter aaa;
-aaa(G)$(SUM(L$(Y_pre(L,G) AND (NOT exclflag(L,G))),1) AND SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),1)=0)= 1 ;
+aaa(LDM)$(PLDM(LDM) AND (NOT SUM(L$(MAP_LLDM2(L,LDM) AND LFix(L)),1)))= 1 ;
 Y_pre("OL",G)$(Y_pre("SL",G) +Y_pre("OL",G)=SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),Y_pre(L,G)))=1-Y_pre("SL",G) ;
 PLDM("OL")=SUM(G,Y_pre("OL",G)*ga(G)); 
 PLDM("PRM_SEC")=SUM(G,ga(G))-(SUM(LDM,PLDM(LDM))-PLDM("PRM_SEC"));
-aaa(G)$(Y_pre("SL",G) +Y_pre("OL",G)=SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),Y_pre(L,G)))=Y_pre("OL",G)+Y_pre("SL",G) ; 
+
 $if %parallel%==off execute_unload '../output/temp.gdx';
 SOLVE CEBaseAdjModel using NLP minimizing VOBJ;
 

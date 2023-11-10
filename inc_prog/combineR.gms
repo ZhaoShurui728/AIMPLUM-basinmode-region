@@ -30,8 +30,6 @@ protectfracL%1(G,L)	Protected area fraction (0 to 1) of land category L in land 
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/%1.gdx'
 $load Psol_stat%1=Psol_stat
-$load GHGL%1=GHGL
-$load GHGLG%1=GHGLG
 $load VYPL%1=VYP_load
 $load pa_road%1=pa_road
 $load pa_emit%1=pa_emit
@@ -43,6 +41,8 @@ $load YIELDLDM%1=YIELDLDM_OUT
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
 $load VYL%1=VY_load
+$load GHGL%1=GHGL
+$load GHGLG%1=GHGLG
 
 $gdxin '../output/gdx/base/%1/basedata.gdx'
 $load Area_base%1=Area_base
