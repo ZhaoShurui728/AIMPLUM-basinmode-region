@@ -509,9 +509,8 @@ rm ../${parent_dir}/largefile/biomassdata.tar.gz
 
 # Settings
 ## load settings
-if [ $# = 0 ]; then
-  source ../${parent_dir}/shell/settings_cout.sh  # default
-elif [ $# -ge 1 ]; then
+source ../${parent_dir}/shell/settings_cout.sh  # default
+if [ $# -ge 1 ]; then
   source ../${parent_dir}/shell/$1           # manual settings
 fi
 
