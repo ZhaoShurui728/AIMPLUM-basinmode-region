@@ -135,6 +135,7 @@ CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
 FRS	.	Lan_Cov_Frs
 AFR .   Lan_Cov_Frs
 MNGFRS .   Lan_Cov_Frs_Man
+AFR .   Lan_Cov_Frs_Man
 UMNFRS .   Lan_Cov_Frs_Nat_Frs
 AFR .   Lan_Cov_Frs_Aff_and_Ref
 PAS	.	Lan_Cov_Pst
