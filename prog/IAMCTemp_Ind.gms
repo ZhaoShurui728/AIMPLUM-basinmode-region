@@ -191,6 +191,7 @@ Planduse_load(*,Y,R,LCGE)
 GHG(R,Y,*,SMODEL)
 AREA(R,Y,L,SMODEL)
 IAMCTemp(*,*,*,*)
+IAMCTempwoU(R,V,Y)
 ;
 
 $gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
@@ -227,6 +228,8 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negati
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 
+IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
+
 execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-GHG,GHGL,AREA,IAMCTemp;
+GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU;
 
