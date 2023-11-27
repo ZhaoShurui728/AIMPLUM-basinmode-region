@@ -1464,7 +1464,7 @@ $include ../%prog_loc%/inc_prog/crop_fallow.gms
 
 *------ Digit adjustment -----------*
 
-VYL(L,G)=round(VYL(L,G),6);
+*VYL(L,G)=round(VYL(L,G),6);
 
 $ontext
 *------- Bioenergy potential curve -----*
