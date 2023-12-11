@@ -139,7 +139,7 @@ AFR .   Lan_Cov_Frs_Man
 UMNFRS .   Lan_Cov_Frs_Nat_Frs
 AFR .   Lan_Cov_Frs_Aff_and_Ref
 PAS	.	Lan_Cov_Pst
-GL	.	Lan_Cov_Oth_Lan
+GL	.	Lan_Cov_Oth_Nat_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
 BIO	.	Lan_Cov_Cro_Ene_Cro
 SL	.	Lan_Cov_Bui_Are
