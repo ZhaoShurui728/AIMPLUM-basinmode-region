@@ -3,24 +3,28 @@
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
 # Set Global [on/off]
-global=off
+global=on
 # if global=off, the following country code should be assigned
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
-CountryC=(XNF)
+CountryC=(BRA)
 # Set Scenarios
 scn=(SSP2_Tech_BaU_NoCC_GEO71 SSP2_Life_BaU_NoCC_GEO71 SSP2_Life_500C_CACN_DAC_NoCC_GEO71 SSP2_Tech_500C_CACN_DAC_NoCC_GEO71)
-scn=(SSP2_500C_CACN_DAC_NoCC_No SSP2_BaU_NoCC_No SSP2_500C_CACN_DAC_BIOD_No SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No)
-scn=(SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No)
+scn=(SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No SSP2_500C_CACN_DAC_BIOD_No)
+#scn=(SSP2_SDGLand_500C_CACN_DAC_BIOD_No SSP2_SDGLand_500C_CACN_DAC_NoCC_No SSP2_SDGLand_BaU_BIOD_No)
+scn=(SSP2_500C_CACN_DAC_NoCC_No SSP2_BaU_NoCC_No SSP2_SDGLand_500C_CACN_DAC_NoCC_No)
+scn=(SSP2_BaU_NoCC_No SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No SSP2_500C_CACN_DAC_BIOD_No SSP2_SDGLand_500C_CACN_DAC_BIOD_No SSP2_SDGLand_BaU_BIOD_No)
+
+#scn=(SSP2_BaU_BIOD_No)
 
 # Set CPU Core Threads
-CPUthreads=10
+CPUthreads=40
 # Set Pause Mode [on/off]
-pausemode=on
+pausemode=off
 # Set Data Preparation Process [on/off]
 DataPrep=off
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
 Futuresim=on
@@ -54,19 +58,19 @@ MergeResCSV4NC=off
     Sub_MergeResCSV4NC_carseq=off
 
 # Set Netcdf Creation [on/off]
-netcdfgen=off
+netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=IBS
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
-gdx4png=off
+gdx4png=on
     ## set year for map visualization.
     YearListFig=(2010 2100)
     ## difference from base year is ploted if this switch on
     Sub_gdx4png_dif=off
 
 # Set PNG File Creation [on/off]
-plot=off
+plot=on
 
 # Set Merge Final Results for All Scenarios [on/off] 
 Allmerge=on

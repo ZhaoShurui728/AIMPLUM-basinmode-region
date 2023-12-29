@@ -108,6 +108,7 @@ function BaseRunDisaggfrs() {
 }
 
 function Basesim() {
+  echo base year simulation starts for ${COUNTRY0[@]}
   rm ../output/txt/cpu/basesim/*.txt 2> /dev/null
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
   S=${scn[0]}

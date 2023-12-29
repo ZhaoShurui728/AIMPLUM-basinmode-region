@@ -10,10 +10,10 @@ global=on
 CountryC=(USA)
 # Set Scenarios
 scn=(SSP2_Tech_BaU_NoCC_GEO71 SSP2_Life_BaU_NoCC_GEO71 SSP2_Life_500C_CACN_DAC_NoCC_GEO71 SSP2_Tech_500C_CACN_DAC_NoCC_GEO71)
-scn=(SSP2_500C_CACN_DAC_NoCC_No SSP2_BaU_NoCC_No SSP2_500C_CACN_DAC_BIOD_No SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No)
+scn=(SSP2_SDGLand_500C_CACN_DAC_NoCC_No SSP2_SDGLand_500C_CACN_DAC_BIOD_No SSP2_SDGLand_BaU_BIOD_No)
 
 # Set CPU Core Threads
-CPUthreads=10
+CPUthreads=25
 # Set Pause Mode [on/off]
 pausemode=off
 # Set Data Preparation Process [on/off]
