@@ -420,8 +420,7 @@ EQYNMAX
 ;
 
 *------- Parameter_in ----------*
-
-set
+SET
 CVST	crop categoly in VISIT /PDR,C3,C4,C3natural,C4natural,cstock,co2flux/
 $ontext
 Map_LCVST(L,CVST)/
@@ -440,11 +439,52 @@ CCROP(C) crop commodities
 F(AC)  factors
 FL(AC) Land use AEZ
 Produnit /TON,C/
+LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
+LRCP(L) /HAV_FRS,PAS,OL/
+SCENARIO /%SCE%_%CLP%_%IAV%%ModelInt%/
+SSP	/%SSP%/
+
+i_FRA/"Conservation of biodiversity"/
+biodivconsdata /%biodivdata%/
+L_LC land use type /
+FRS forest
+PAS	grazing pasture
+OL	ice or water
+CL	cropland
+ONV	this is to load Land Conversion data in Bending The Curve project
+/
+map_L_LC(L_LC,L)/
+FRS	.	PRM_SEC
+PAS	.	PAS
+*OL	.	OL
+CL	.	CL
+ONV	.	PRM_SEC
+/
+LVST/
+AFR00	control(actual biome)
+AFRMAX	foresttype with maximum carbon sink in each grid
+AFRDIV	foresttype with maximum carbon sink considering biodiversity in each grid
+AFRCUR
+/
+*LCGAEZ(L) /PDR,WHT,GRO,OSD,C_B,OTH_A/
+LCisimip(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
+LCVST(L)  /HAV_FRS,AFR,PAS,BIO,CROP_FLW/
+LCTON(L)	land category of price calculated by unit tonne /PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,CROP_FLW/
+LCC(L)    land category of price calculated by unit carbon /HAV_FRS,AFR,BIO,PAS/
+LDMCTON(LDM)	land category of price calculated by unit tonne /PDR,WHT,GRO,OSD,C_B,OTH_A,CROP_FLW/
+LDMCC(LDM)    land category of price calculated by unit carbon /HAV_FRS,AFR,BIO,PAS/
+MAP_WG(G,G2)        Neighboring relationship between cell G and cell G2
+EmitCat	Emissions categories /
+"Positive"		Gross positive emissions
+"Negative"	Gross negative emissions
+"Net"		Net emissions (= Positive - Negative)
+/
 ;
 $gdxin '../%prog_loc%/data/set.gdx'
 $load AC A ACROP C CCROP F FL
-Alias(AC,ACP),(A,AP),(C,CP);
-CCROP("COM_ECR")=YES;
+$gdxin '../%prog_loc%/data/data_prep.gdx'
+$load MAP_WG
+;
 SET
 TX(AC)/YTAX,STAX,TAR,ETAX/
 MAP_LA(L,A)/
@@ -516,11 +556,9 @@ PAS	.	COM_OTH_L
 HAV_FRS	.	COM_FRS
 AFR	.	COM_FRS
 /
-LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
-LRCP(L) /HAV_FRS,PAS,OL/
-SCENARIO /%SCE%_%CLP%_%IAV%%ModelInt%/
-SSP	/%SSP%/
 ;
+Alias(AC,ACP),(A,AP),(C,CP);
+CCROP("COM_ECR")=YES;
 
 parameter
 land_basemap(R,G,L)	Percentage share of land type in base year
@@ -563,6 +601,97 @@ OUTPUTAC_load(*,Y,R,A,C)                                 Output of C from A | mi
 Pland(Y,AC)                                     Land area by sectors
 OUTPUTALL_Nominal(Y,AC)                         Output of sector AC nominal value| Million USD per year
 OUTPUTAC(Y,A,C)                                 Output of C from A | mil.$ or ktoe
+popdens_load(Y0,SSP,G)
+popdens(G)	population density (inhabitants per km2)
+  VZ_load(L,G)
+  VY_load(L,G)
+  YBIO_load(G)
+  PLDM_load(LDM)
+  PCDM_load(L)
+
+  FRA_load(R,Y,i_FRA)  protected forest area (kha) in FRA(2010)
+  frsprotect_check
+  protectfracIJL(I,J,biodivconsdata,L_LC)
+  ACF(G)          average carbon flow in grid G
+  MACF            mean value of average carbon flow in each region
+  CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
+  ACF_aez(G)          average carbon flow in year Y in grid G     (MgC ha-1 year-1) (AEZ data)
+  MACF_aez            mean value of average carbon flow in each region        (MgC ha-1 year-1) (AEZ data)
+  CFT_aez(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G     (MgC ha-1 year-1) (AEZ data)
+  ACF_vst(LVST,R,G)          average carbon flow in grid G (VISIT data)
+  MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
+  CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
+  MF      management factor for bio crops
+  MFA     management factor for bio crops in base year
+  MFB     management factor for bio crops (coefficient)
+
+  yield_miscanthus_rainfed_num(I,J)	miscanthus biocrop yield (kg per ha)
+  yield_swichgrass_rainfed_num(I,J)	swichgrass biocrop yield (kg per ha)
+  YIELDBIO_H08(G)	average biocrop yield (tonne per ha)
+  PBIODIV(L,G)	price (penalty) of biodiversity loss [million US$ per ha]
+  PBIODIVY0(Y) penalty of biodiversity loss [US$ per ha]
+  RR(G)	the range-rarity map
+* BIIcoef(L)	the Biodiversity Intactness Index coefficients
+  BIIcoefG(L,G)	the Biodiversity Intactness Index (BII) coefficients
+  PB_WLD	annual benefit from afforestation per ha global average (million $ per ha)	/0.00162/
+  PBR	annual benefit from afforestation per ha in region (million $ per ha)	 (million $ per ha)
+  PB(G)   annual benefit from afforestation per ha in grid g (million $ per ha)	 (million $ per ha)
+  PLDM0(Y,LDM)
+  PCDM0(Y,L)
+
+  pldc_WLD	global average of road construction cost per unit distance (million $ per km)
+  pldc	road construction cost per unit distance (million $ per km)
+  irricost_WLD	global average of irrigation investment cost  (million $ per ha)	/0.01/
+  irricost	irrigation investment cost (million $ per ha)
+  plcc(L)	land conversion cost per ha
+  ruralroadlength(R)	total load length in rural area (km)
+  roaddens	mean load density in rural area (km per ha)
+  GLMINHA(L,G)	minimum distance per unit grid area from the nearest cell G within the same category L (km per ha)
+  psmax(L)
+  psmin(L)
+  GLMAX
+  GLMIN0(L,G)
+  GLMIN(L,G)
+  GL_load(G,G2)		Distance between grid G and G2 (km)(load)
+  labor	labor for land clearance (persons-days per ha) /180/
+  wage	wage (million $ per capita per day)
+
+  YPP_lab         Payback period of investment cost for agriculture /10/
+  YPP_road	Payback period of investment cost for road constraction /50/
+  YPP_irri	Payback period of investment cost for irrigation /15/
+  YPP_emit	Payback period of investment cost for greenhouse gas emission /30/
+  YPP_biodiv	Payback period of investment cost for biodiveristy loss /1/
+
+  pannual_lab     Annualization coefficient of investment cost
+  pannual_road	Annualization coefficient of investment cost
+  pannual_irri	Annualization coefficient of investment cost
+  pannual_emit	Annualization coefficient of investment cost
+  pannual_biodiv	Annualization coefficient of investment cost
+
+* cost breakdown
+  pa_lab         labor costs per unit area (million $ per ha)
+  pa_road(L,G)        road construction costs per unit area (million $ per ha)
+  pa_irri(L)        irrigation costs per unit area (million $ per ha)
+  pa_emit(G)        emission costs per unit area (million $ per ha)
+  pa_bio(G)         land transition costs per unit area for BIO (million $ per ha)
+  pa_biodiv(G,L)	  costs (penalty) for biodiversity loss (million $ per ha)
+  Psol_stat(*,*)                  Solution report
+  VYL(L,G)	output of VY
+  VYPL(L,G)	output of VYP
+  VZL(L,G)	output of VZ
+  protect_wopas(G)
+  VY_baseresults(LFRSGL,G)
+  VYLY(Y,L,G)
+  delta_VYLY(Y,L,G)
+  CSL(L,G)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
+  delta_Y(L,G)	change in area ratio of land category L in cell G
+  GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
+  GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
+  checkArea(L)
+  CS_post(G)	carbon stock in next year  (MgC ha-1)
+  YIELDL_OUT(L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
+  YIELDLDM_OUT(LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
+  data_check(G,L)
 ;
 ordy(Y) = ord(Y) + %base_year% -1;
 
@@ -606,11 +735,6 @@ OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A,C);
 $gdxin '../%prog_loc%/data/mirca.gdx'
 $load Pirri
 
-parameter
-popdens_load(Y0,SSP,G)
-popdens(G)	population density (inhabitants per km2)
-;
-
 $gdxin '../%prog_loc%/data/ssppopmap.gdx'
 $load popdens_load=popdens
 
@@ -618,14 +742,6 @@ popdens(G)=popdens_load("%Sy%","%SSP%",G);
 GDPCAP$Ppopulation("%Sy%","%Sr%")=GDP_load("%Sy%","%Sr%")/Ppopulation("%Sy%","%Sr%");
 
 *-------Pre-year land map load ----------*
-parameter
-  VZ_load(L,G)
-  VY_load(L,G)
-  YBIO_load(G)
-  PLDM_load(LDM)
-  PCDM_load(L)
-;
-
 $ifthen.baseyear %Sy%==%base_year%
 *---Y_base preparation
 Y_base(L,G)$(LRCP(L))=frac_rcp("%Sr%",L,"%base_year%",G);
@@ -696,14 +812,6 @@ $load protectfrac
 $endif.prtec
 
 *-----Protected forest area-----*
-set
-i_FRA/"Conservation of biodiversity"/
-;
-parameter
-FRA_load(R,Y,i_FRA)  protected forest area (kha) in FRA(2010)
-frsprotect_check
-;
-
 $gdxin '../%prog_loc%/data/fra_data.gdx'
 $load FRA_load=FRA
 frsprotectarea=0;
@@ -722,28 +830,6 @@ REVG(G)$ohashi("%Sr%", G)=no;
 $endif
 
 *-----Protected area for Bending The Curve-----*
-set
-biodivconsdata /%biodivdata%/
-L_LC land use type /
-FRS forest
-PAS	grazing pasture
-OL	ice or water
-CL	cropland
-ONV	this is to load Land Conversion data in Bending The Curve project
-/
-map_L_LC(L_LC,L)/
-FRS	.	PRM_SEC
-PAS	.	PAS
-*OL	.	OL
-CL	.	CL
-ONV	.	PRM_SEC
-/
-;
-
-parameter
-  protectfracIJL(I,J,biodivconsdata,L_LC)
-;
-
 $ifthen.biodiv %biodivcons%==off
   protectfracL(G,L)=0;
   protectfrac(G)=0;
@@ -765,26 +851,6 @@ $ endif.year
 $endif.biodiv
 
 *----Carbon flow
-set
-LVST/
-AFR00	control(actual biome)
-AFRMAX	foresttype with maximum carbon sink in each grid
-AFRDIV	foresttype with maximum carbon sink considering biodiversity in each grid
-AFRCUR
-/
-;
-parameter
-ACF(G)          average carbon flow in grid G
-MACF            mean value of average carbon flow in each region
-CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
-ACF_aez(G)          average carbon flow in year Y in grid G     (MgC ha-1 year-1) (AEZ data)
-MACF_aez            mean value of average carbon flow in each region        (MgC ha-1 year-1) (AEZ data)
-CFT_aez(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G     (MgC ha-1 year-1) (AEZ data)
-ACF_vst(LVST,R,G)          average carbon flow in grid G (VISIT data)
-MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
-CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
-;
-
 $gdxin '../%prog_loc%/data/fao_data.gdx'
 $load TON_C Pprod
 
@@ -825,22 +891,7 @@ $load CFT_aez=CFT
   CFT(G,Y,Y2)=CFT_aez(G,Y,Y2);
 $endif.afftype
 
-set
-*LCGAEZ(L) /PDR,WHT,GRO,OSD,C_B,OTH_A/
-LCisimip(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
-LCVST(L)  /HAV_FRS,AFR,PAS,BIO,CROP_FLW/
-LCTON(L)	land category of price calculated by unit tonne /PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,CROP_FLW/
-LCC(L)    land category of price calculated by unit carbon /HAV_FRS,AFR,BIO,PAS/
-LDMCTON(LDM)	land category of price calculated by unit tonne /PDR,WHT,GRO,OSD,C_B,OTH_A,CROP_FLW/
-LDMCC(LDM)    land category of price calculated by unit carbon /HAV_FRS,AFR,BIO,PAS/
-;
-
 *---- Management factor for Biocrop yield ---*
-parameter
-MF      management factor for bio crops
-MFA     management factor for bio crops in base year
-MFB     management factor for bio crops (coefficient)
-;
 $ifthen.baseyear %Sy%==%base_year%
   GDPCAP_base$Ppopulation("%base_year%","%Sr%")=GDP_load("%base_year%","%Sr%")/Ppopulation("%base_year%","%Sr%");
   MFA$(GDPCAP_base>=1)=1;
@@ -868,11 +919,6 @@ $load PVISIT
 $ gdxin '../%prog_loc%/data/analysis_agr.gdx'
 $ load YIELD_cge=YIELD
 
-parameter
-  yield_miscanthus_rainfed_num(I,J)	miscanthus biocrop yield (kg per ha)
-  yield_swichgrass_rainfed_num(I,J)	swichgrass biocrop yield (kg per ha)
-  YIELDBIO_H08(G)	average biocrop yield (tonne per ha)
-;
 $gdxin '../%prog_loc%/data/H08_yield_num_gdx.gdx'
 $load yield_miscanthus_rainfed_num
 $load yield_swichgrass_rainfed_num
@@ -922,16 +968,6 @@ $endif.baseyear
 *----------------------*
 
 *----- Biodiversity price ---*
-parameter
-PBIODIV(L,G)	price (penalty) of biodiversity loss [million US$ per ha]
-;
-
-parameter
-PBIODIVY0(Y) penalty of biodiversity loss [US$ per ha]
-RR(G)	the range-rarity map
-*BIIcoef(L)	the Biodiversity Intactness Index coefficients
-BIIcoefG(L,G)	the Biodiversity Intactness Index (BII) coefficients
-;
 PBIODIV(L,G)=0;
 
 $if %Sy%==%base_year% $include ../%prog_loc%/inc_prog/BiodiversityPrice.gms
@@ -952,11 +988,6 @@ $endif.pbiodiv
 PBIODIV(L,G)=PBIODIV(L,G)*0.3;
 
 *-------Benefit from afforestation
-parameter
-  PB_WLD	annual benefit from afforestation per ha global average (million $ per ha)	/0.00162/
-  PBR	annual benefit from afforestation per ha in region (million $ per ha)	 (million $ per ha)
-  PB(G)   annual benefit from afforestation per ha in grid g (million $ per ha)	 (million $ per ha)
-;
 PBR=PB_WLD*(GDPCAP/GDPCAP_WLD)**0.5;
 PB(G)$MACF=PBR*ACF(G)/MACF;
 
@@ -965,10 +996,6 @@ PlanduseT=SUM(LCGE,Planduse("%Sy%",LCGE));
 SF_planduse$PlanduseT=GAT/PlanduseT;
 *Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
 
-parameter
-  PLDM0(Y,LDM)
-  PCDM0(Y,L)
-;
 PCDM0(Y,L)=0;
 
 * [1000ha]
@@ -1036,24 +1063,6 @@ $if %Sy%==%base_year% $include ../%prog_loc%/inc_prog/baseadjust.gms
 $endif.ba
 *$exit
 *------- Land conversion cost ----------*
-parameter
-pldc_WLD	global average of road construction cost per unit distance (million $ per km)
-pldc	road construction cost per unit distance (million $ per km)
-irricost_WLD	global average of irrigation investment cost  (million $ per ha)	/0.01/
-irricost	irrigation investment cost (million $ per ha)
-plcc(L)	land conversion cost per ha
-ruralroadlength(R)	total load length in rural area (km)
-roaddens	mean load density in rural area (km per ha)
-GLMINHA(L,G)	minimum distance per unit grid area from the nearest cell G within the same category L (km per ha)
-psmax(L)
-psmin(L)
-GLMAX
-GLMIN0(L,G)
-GLMIN(L,G)
-GL_load(G,G2)		Distance between grid G and G2 (km)(load)
-labor	labor for land clearance (persons-days per ha) /180/
-wage	wage (million $ per capita per day)
-;
 wage=GDPCAP/(365-100)/100;
 pldc_WLD=0.866-0.254;
 pldc=pldc_WLD*(GDPCAP/GDPCAP_WLD)**0.5;
@@ -1091,27 +1100,6 @@ GLMIN(L,G)$(LBIO(L) AND (NOT SUM(L2$LCROPA(L2),Y_pre(L2,G))))=smin(G2$(SUM(L2$LC
 *GLMIN(L,G)$(LAFR(L) AND (NOT Y_base("HAV_FRS",G)))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
 GLMINHA(L,G)$(LAFR(L) OR LCROPA(L)) = GLMIN(L,G)/(GA(G)*1000);
 
-parameter
-YPP_lab         Payback period of investment cost for agriculture /10/
-YPP_road	Payback period of investment cost for road constraction /50/
-YPP_irri	Payback period of investment cost for irrigation /15/
-YPP_emit	Payback period of investment cost for greenhouse gas emission /30/
-YPP_biodiv	Payback period of investment cost for biodiveristy loss /1/
-
-pannual_lab     Annualization coefficient of investment cost
-pannual_road	Annualization coefficient of investment cost
-pannual_irri	Annualization coefficient of investment cost
-pannual_emit	Annualization coefficient of investment cost
-pannual_biodiv	Annualization coefficient of investment cost
-
-* cost breakdown
-pa_lab         labor costs per unit area (million $ per ha)
-pa_road(L,G)        road construction costs per unit area (million $ per ha)
-pa_irri(L)        irrigation costs per unit area (million $ per ha)
-pa_emit(G)        emission costs per unit area (million $ per ha)
-pa_bio(G)         land transition costs per unit area for BIO (million $ per ha)
-pa_biodiv(G,L)	  costs (penalty) for biodiversity loss (million $ per ha)
-;
 pannual_lab =(DR*(1+DR)**YPP_lab) /((1+DR)**YPP_lab-1);
 pannual_road=(DR*(1+DR)**YPP_road)/((1+DR)**YPP_road-1);
 pannual_irri=(DR*(1+DR)**YPP_irri)/((1+DR)**YPP_irri-1);
@@ -1216,10 +1204,6 @@ option threads=%CPLEXThreadOp%;
 $if %parallel%==on option SOLPRINT=ON;
 LandUseModel_LP.HOLDFIXED   = 1 ;
 
-PARAMETER
-  Psol_stat(*,*)                  Solution report
-;
-
 SCALAR
 	ite_his  Iteration history /1/
 	maxite  Maximum solution iteration /10/
@@ -1247,12 +1231,6 @@ IF((NOT (Psol_stat("SMODEL","SLP")=1 AND Psol_stat("SSOLVE","SLP")=1)),
         Psol_stat("SSOLVE","SLP")=LandUseModel_LP.SOLVESTAT;Psol_stat("SMODEL","SLP")=LandUseModel_LP.MODELSTAT;Psol_stat("ITE_HIS","SLP")=ite_his;Psol_stat("YPNMAXCL","SLP")=YPNMAXCL;
 ));
 
-parameter
-VYL(L,G)	output of VY
-VYPL(L,G)	output of VYP
-VZL(L,G)	output of VZ
-;
-
 
 VYL(L,G)$(VY.L(L,G))=VY.L(L,G);
 VZL(L,G)$(VZ.L(L,G))=VZ.L(L,G);
@@ -1261,18 +1239,7 @@ VYL(L,G)$SUM(L2$MAP_Lagg(L2,L),VYL(L2,G))=SUM(L2$MAP_Lagg(L2,L),VYL(L2,G));
 frsprotect_check$(frsprotectarea)=SUM(G$(CS(G)>CSB),VY.L("PRM_SEC",G)*GA(G));
 
 *-------- Pasture --------*
-set
-MAP_WG(G,G2)        Neighboring relationship between cell G and cell G2
-;
-$gdxin '../%prog_loc%/data/data_prep.gdx'
-$load MAP_WG
-
 *-----Protected area-----*
-parameter
-protect_wopas(G)
-VY_baseresults(LFRSGL,G)
-;
-
 $ifthen %Sy%==%base_year%
   protect_wopas(G)=0;
 $elseif %Sy%==%second_year%
@@ -1352,10 +1319,6 @@ $offtext
 
 
 *--------Land use change -------*
-parameter
-  VYLY(Y,L,G)
-  delta_VYLY(Y,L,G)
-;
 $ifthen not %Sy%==%base_year%
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $load VYLY
@@ -1365,21 +1328,6 @@ delta_VYLY(Y,L,G)$(ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") 
 delta_VYLY(Y,L,G)$(abs(delta_VYLY(Y,L,G))<10**(-5))=0;
 
 *--------GHG emissions --------*
-set
-EmitCat	Emissions categories /
-"Positive"		Gross positive emissions
-"Negative"	Gross negative emissions
-"Net"		Net emissions (= Positive - Negative)
-/
-;
-
-parameter
-CSL(L,G)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
-delta_Y(L,G)	change in area ratio of land category L in cell G
-GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
-GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
-checkArea(L)
-;
 delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-Y_pre(L,G)))=(VYL(L,G)-Y_pre(L,G))/Ystep;
 
 CSL("CL",G)$(delta_Y("CL",G))=5;
@@ -1399,16 +1347,9 @@ GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBI
 GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
 
 *----- Change in carbon stock -----*
-parameter
-  CS_post(G)	carbon stock in next year  (MgC ha-1)
-;
 CS_post(G)$(CS(G) AND GA(G)) = max(0, (CS(G) * GA(G) - GHGLG("Net","LUC",G) * Ystep *10**3 *12/44)/GA(G));
 
 *----- Average yield output -----*
-parameter
-  YIELDL_OUT(L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
-  YIELDLDM_OUT(LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
-;
 YIELDL_OUT(L)$(LCROPA(L) AND SUM(G$(YIELD(L,G)*VYL(L,G)),VYL(L,G)*GA(G)))=SUM(G$(YIELD(L,G)*VYL(L,G)),YIELD(L,G)*VYL(L,G)*GA(G))/SUM(G$(YIELD(L,G)*VYL(L,G)),VYL(L,G)*GA(G));
 YIELDLDM_OUT(LDM)$(LDMCROPA(LDM) AND SUM(L$MAP_LLDM(L,LDM),SUM(G$(YIELD(L,G)*VYL(L,G)),VYL(L,G)*GA(G))))=SUM(L$MAP_LLDM(L,LDM),SUM(G$(YIELD(L,G)*VYL(L,G)),YIELD(L,G)*VYL(L,G)*GA(G)))/SUM(L$MAP_LLDM(L,LDM),SUM(G$(YIELD(L,G)*VYL(L,G)),VYL(L,G)*GA(G)));
 
@@ -1417,9 +1358,6 @@ $if not %Sy%==%base_year% VYL(L,G)=round(VYL(L,G),6);
 $if not %Sy%==%base_year% VZL(L,G)=round(VZL(L,G),6);
 
 *------- Data check ----------*
-parameter
-  data_check(G,L)
-;
 data_check(G,L)$(VYL(L,G)<0)=1;
 
 *------- Data output ----------*
