@@ -61,9 +61,12 @@ $if not %Sy%==2005 $setglobal mcp off
 $include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 $include ../%prog_loc%/inc_prog/second_%Ystep0%year.gms
 
-$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
-$include ../%prog_loc%/scenario/climate_policy/%clp%.gms
-$include ../%prog_loc%/scenario/IAV/%iav%.gms
+$if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
+$if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
+$if exist ../%prog_loc%/scenario/climate_policy/%clp%.gms $include ../%prog_loc%/scenario/climate_policy/%clp%.gms
+$if not exist ../%prog_loc%/scenario/climate_policy/%clp%.gms $include ../%prog_loc%/scenario/climate_policy/BaU.gms
+$if exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenario/IAV/%iav%.gms
+$if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenario/IAV/NoCC.gms
 
 *ecosystem protection
 $setglobal protectStartYear 2030
