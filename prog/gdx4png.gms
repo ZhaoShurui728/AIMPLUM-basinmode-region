@@ -7,8 +7,8 @@ $setglobal clp BaU
 $setglobal iav NoCC
 $setglobal Ystep0 10
 $setglobal dif off
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 *$if %Sy%==2005 $setglobal supcuv on
 *$if %Sy%==2030 $setglobal supcuv on
@@ -22,13 +22,11 @@ Set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 /
-G	Cell number  /
-$offlisting
-$include ../%prog_loc%/define/set_g/G_%Sr%.set
-$onlisting
-/
+G	Cell number of the target region
 I	Vertical position	/ 1*360 /
 J	Horizontal position	/ 1*720 /
+MAP_RG(R,Gland)	Relationship between region R and cell G
+MAP_RIJ(R,I,J)
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
 Y year	/ %Sy% /
 L land use type /
@@ -71,9 +69,8 @@ $endif.sr
 
 /
 LAFR(L)/AFR/
-
-MAP_RIJ(R,I,J)
 ;
+
 Alias (I,I2),(J,J2);
 
 parameter
@@ -94,16 +91,15 @@ GHGLG(Y,L,G)
 GHG_IJ(L,I,J)
 VYLAFR_nocc(G)
 VYLAFRIJ_nocc(I,J)
-
-
 ;
 
+$gdxin '../%prog_loc%/define/subG.gdx'
+$load G=G_%Sr%
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load Map_GIJ MAP_RIJ
+$load Map_GIJ MAP_RIJ MAP_RG
 
 $if %Sr%==WLD $include ../%prog_loc%/inc_prog/gdx4png_wld.gms
 $if not %Sr%==WLD $include ../%prog_loc%/inc_prog/gdx4png_region.gms
-
 
 VY_IJ(L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J)),VY_load(L,G));
 

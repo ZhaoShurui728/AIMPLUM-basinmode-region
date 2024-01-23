@@ -12,8 +12,8 @@ $setglobal iav NoCC
 $setglobal parallel off
 $setglobal supcuv off
 $setglobal ModelInt
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 * if biocurve=off, biocrop is allocated.If biocurve=on, biocrop is output as a supply curve.
 $setglobal biocurve off
 $setglobal Ystep0 10
@@ -73,15 +73,9 @@ $setglobal protectStartYear 2030
 *$setglobal protectStartYear %second_year%
 
 Set
-R	17 regions	/
-%Sr%
-*$include ../%prog_loc%/define\region/region17.set
-/
-G	Cell number  /
-$offlisting
-$include ../%prog_loc%/define/set_g/G_%Sr%.set
-$onlisting
-/
+R	17 regions	/%Sr%/
+G	Cell number of the target region
+MAP_RG(R,G)	Relationship between region R and cell G
 I /1*360/
 J /1*720/
 MAP_GIJ(G,I,J)
@@ -184,7 +178,7 @@ LPAS(L)/PAS/
 LBIO(L)/BIO/
 LOBJ(L)
 LFIX(L)/SL,OL/
-MAP_RG(R,G)	Relationship between region R and cell G
+
 ;
 Alias (G,G2,G3,G4,G5,G6,G7,G8),(L,L2),(Y,Y2,Y3);
 set
@@ -260,7 +254,6 @@ OTH_ARF	.	CL
 BIO	.	CL
 /
 ohashi(R,G)
-REVG(G) cells allowed for conversion/set.G/
 ;
 
 Parameter
@@ -277,14 +270,19 @@ FLAG_G(G)		Grid flag
 GL(G,G2)		Distance between grid G and G2
 ;
 
+$gdxin '../%prog_loc%/define/subG.gdx'
+$load G=G_%Sr%
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load Map_RG GA
-$load MAP_GIJ
+$load GA
+$load MAP_GIJ Map_RG
 
 FLAG_G(G)$MAP_RG("%Sr%",G)=1;
 GA(G)$(FLAG_G(G)=0)=0;
 GAT=SUM(G$FLAG_G(G),GA(G));
 
+set
+REVG(G) cells allowed for conversion/set.G/
+;
 Parameter
 pa(L,G)		land transition costs per unit area (million $ per ha)
 pd(L,G)             a constant for decreasing returns to scale

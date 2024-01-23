@@ -20,7 +20,7 @@ variables:
 		time:calendar = "standard" ;
 	double lc_class(lc_class) ;
 		lc_class:long_name = "lc_class" ;
-		lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed" ;
+		lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed/13=otherlands/14=grassland_other/15=rice/16=wheat/17=othgrains/18=oilcrops/19=sugarcrops/20=othercrops" ;
 	double LC_area_share(time, lc_class, lat, lon) ;
 		LC_area_share:standard_name = "share of pixel occupied by various land covers";
 		LC_area_share:long_name = "share of pixel occupied by various land covers";

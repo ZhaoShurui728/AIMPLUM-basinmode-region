@@ -11,12 +11,7 @@ $Setglobal prog_dir ../AIMPLUM
 
 set
 R	17 regions	/%Sr%/
-G	Cell number  /
-* 1 * 259200
-$offlisting
-$include %prog_dir%/define/set_g/G_%Sr%.set
-$onlisting
-/
+G	Cell number of the target region
 Y year	/ %base_year%*%end_year% /
 L land use type /
 PRM_SEC	primary and secondary land
@@ -56,10 +51,11 @@ FLAG_G(G)		Grid flag
 ordy(Y)
 ;
 
-;
+$gdxin '../%prog_loc%/define/subG.gdx'
+$load G=G_%Sr%
 
 $gdxin '%prog_dir%/data/data_prep.gdx'
-$load GA Map_RG
+$load GA
 
 FLAG_G(G)$MAP_RG("%Sr%",G)=1;
 

@@ -8,7 +8,7 @@ global=on
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
 #CountryC=(USA XOC XE25)
-CountryC=(USA)
+CountryC=(JPN)
 # Set Scenarios
 scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
 scn=(SSP2_500C_CACN_FullComb_NoCC)
@@ -26,10 +26,10 @@ scn=(SSP2_BaU_NoCC)
 # Set CPU Core Threads
 CPUthreads=5
 # Set Pause Mode [on/off]
-pausemode=on
+pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=off
+DataPrep=on
 # Set Data Preparation 2 Process [on/off]
 DataPrep2=off
 
@@ -48,7 +48,7 @@ Futuresim=off
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=on
+ScnMerge=off
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
 
@@ -57,7 +57,7 @@ MergeResCSV4NC=off
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
-    Sub_MergeResCSV4NC_lumip=on
+    Sub_MergeResCSV4NC_lumip=off
     ## if you would like to make BTC basis 5 options, then turn on BTC3option. This switch will be also used in :netcdfgen (around 3GB per scenario memory and 5min are taken in this process)
     Sub_MergeResCSV4NC_BTC3option=on
     ## if you would like to make AIMSSPRCP dataformat nc file, turn on ssprcp. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
