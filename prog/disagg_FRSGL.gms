@@ -21,24 +21,8 @@ $include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 
 set
 dum/1*1000000/
-G       Cell number  /
-$offlisting
-$ifthen %Sr%==USA
-$include ../%prog_loc%/define/set_g/G_USA.set
-$include ../%prog_loc%/define/set_g/G_CAN.set
-$elseif %Sr%==CAN
-$include ../%prog_loc%/define/set_g/G_USA.set
-$include ../%prog_loc%/define/set_g/G_CAN.set
-$else
-$include ../%prog_loc%/define/set_g/G_%Sr%.set
-$endif
-$onlisting
-/
-G0(G)   Cell number  /
-$offlisting
-$include ../%prog_loc%/define/set_g/G_%Sr%.set
-$onlisting
-/
+G	Cell number of the target region but both USA and CAN for North America
+G0(G)	Cell number of the target region
 Y       / %Sy%
 $if not %Sy%==%base_year% 2005
 /
@@ -46,6 +30,7 @@ R       / %Sr%
 $if %Sr%==USA CAN
 $if %Sr%==CAN USA
 /
+MAP_RG(R,G)	Relationship between region R and cell G
 L land use type /
 PRM_SEC forest + grassland + pasture
 FRSGL   forest + grassland
@@ -111,6 +96,15 @@ FRSGL
 ;
 Alias(G,G2),(L,L2,LL);
 
+$gdxin '../%prog_loc%/define/subG.gdx'
+$ifthen %Sr%==USA
+$load G=G_USACAN G0=G_USA
+$elseif %Sr%==CAN
+$load G=G_USACAN G0=G_CAN
+$else
+$load G=G_%Sr% G0=G_%Sr%
+$endif
+
 *------- Carbon stock ----------*
 set
 Ybase/ %base_year% /
@@ -132,7 +126,7 @@ $load Planduse_load=Planduse
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,LCGE);
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load GA
+$load GA MAP_RG
 
 parameter
 VYL(L,G)

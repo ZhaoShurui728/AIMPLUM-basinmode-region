@@ -4,8 +4,8 @@ $Setglobal prog_loc
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 $setglobal biocurve off
 $setglobal supcuvout off
@@ -16,75 +16,42 @@ $setglobal rlimapcalc off
 *$setglobal restoration off
 $if %supcuvout%==on $setglobal biocurve on
 
-
-
-
-
 $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $include ../%prog_loc%/scenario/climate_policy/%clp%.gms
 $include ../%prog_loc%/scenario/IAV/%iav%.gms
 
 Set
 N /1*40000/
-Rall	17 regions + 106 countries	/
-XE25	EU
-XLM	Rest of Brazil
-CIS	Former USSR
-XNF	North Africa
-XAF	Sub-Sahara
-*$include %prog_loc%/define/region/region17.set
-$include ../%prog_loc%/define/country.set
-WLD,OECD90,REF,ASIA,MAF,LAM
-World,"R5OECD90+EU",R5REF,R5ASIA,R5MAF,R5LAM
+Rall	17 regions + ISO countries	/
+$include ../%prog_loc%/define/region/region17exclNations.set
+$include ../%prog_loc%/define/region/region_iso.set
+$include ../%prog_loc%/define/region/region5.set
+World
 /
 R(Rall)	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
-WLD,OECD90,REF,ASIA,MAF,LAM
-World,"R5OECD90+EU",R5REF,R5ASIA,R5MAF,R5LAM
+$include ../%prog_loc%/define/region/region5.set
+World
 /
 Ragg(R)/
-WLD,OECD90,REF,ASIA,MAF,LAM
-World,"R5OECD90+EU",R5REF,R5ASIA,R5MAF,R5LAM
+$include ../%prog_loc%/define/region/region5.set
+World
 /
 RBION(Rall)/
-XE25	EU
-XLM	Rest of Brazil
-CIS	Former USSR
-XNF	North Africa
-XAF	Sub-Sahara
-*$include %prog_loc%/define/region/region17.set
-$include ../%prog_loc%/define/country.set
-WLD,OECD90,REF,ASIA,MAF,LAM
+$include ../%prog_loc%/define/region/region17exclNations.set
+$include ../%prog_loc%/define/region/region_iso.set
+$include ../%prog_loc%/define/region/region5.set
+World
 /
-Sr(Rall)	106 countries /
-$include ../%prog_loc%/define/country.set
+RISO(Rall)	ISO countries /
+$include ../%prog_loc%/define/region/region_iso.set
 /
-Map_R(Sr,R) /
-$include ../%prog_loc%/define/region/region17.map
-/
-G	Cell number  /
-$offlisting
-*$include %prog_loc%/define/set_g/G_WLD.set
-$include ../%prog_loc%/define/set_g/G_USA.set
-$include ../%prog_loc%/define/set_g/G_XE25.set
-$include ../%prog_loc%/define/set_g/G_XER.set
-$include ../%prog_loc%/define/set_g/G_TUR.set
-$include ../%prog_loc%/define/set_g/G_XOC.set
-$include ../%prog_loc%/define/set_g/G_CHN.set
-$include ../%prog_loc%/define/set_g/G_IND.set
-$include ../%prog_loc%/define/set_g/G_JPN.set
-$include ../%prog_loc%/define/set_g/G_XSE.set
-$include ../%prog_loc%/define/set_g/G_XSA.set
-$include ../%prog_loc%/define/set_g/G_CAN.set
-$include ../%prog_loc%/define/set_g/G_BRA.set
-$include ../%prog_loc%/define/set_g/G_XLM.set
-$include ../%prog_loc%/define/set_g/G_CIS.set
-$include ../%prog_loc%/define/set_g/G_XME.set
-$include ../%prog_loc%/define/set_g/G_XNF.set
-$include ../%prog_loc%/define/set_g/G_XAF.set
-$onlisting
-/
+MAP_RISO(RISO,R)	Relationship between ISO countries and 17 regions
 
+G	Cell number excluding ocean (Gland)
+I /1*360/
+J /1*720/
+MAP_GIJ(G,I,J)
 Y year	/  %base_year%*%end_year%  /
 Ysupcuv(Y) year	/
 *2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100
@@ -215,12 +182,9 @@ set
 MAP_RAGG(R,R2)	/
 $include ../%prog_loc%/define/region/region17_agg.map
 /
-I /1*360/
-J /1*720/
 LULC_class/
 $include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
-MAP_GIJ(G,I,J)
 EmitCat	Emissions categories /
 "Positive"		Gross positive emissions
 "Negative"	Gross negative emissions
@@ -228,9 +192,9 @@ EmitCat	Emissions categories /
 "Prev"		Previous version of emissions
 /
 ;
-$gdxin '../%prog_loc%/data/data_prep.gdx'
-$load MAP_GIJ
 
+$gdxin '../%prog_loc%/data/data_prep.gdx'
+$load G=Gland MAP_GIJ MAP_RISO
 
 parameter
 Psol_stat(R,Y,ST,SP)                  Solution report
@@ -387,15 +351,15 @@ $ifthen %supcuvout%==on
 
 set
 MAP_RG(R,G)     Relationship between country R and cell G
-MAP_SrG(Sr,G)	Relationship between country Sr and cell G
+MAP_RISOG(RISO,G)	Relationship between country RISO and cell G
 ;
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load MAP_RG
-$load MAP_SrG
+$load MAP_RISOG
 
 PBIOSUP(R,Y,G,LB,Scol)$MAP_RG(R,G)=PBIOSUP_load(Y,G,LB,Scol);
 PBIOSUP(Ragg,Y,G,LB,Scol)$(Ysupcuv(Y) AND SUM(R$MAP_RAGG(R,Ragg),PBIOSUP(R,Y,G,LB,Scol)))=SUM(R$MAP_RAGG(R,Ragg),PBIOSUP(R,Y,G,LB,Scol));
-PBIOSUP(Sr,Y,G,LB,Scol)$MAP_SrG(Sr,G)=PBIOSUP_load(Y,G,LB,Scol);
+PBIOSUP(RISO,Y,G,LB,Scol)$MAP_RISOG(RISO,G)=PBIOSUP_load(Y,G,LB,Scol);
 
 set
 Scolsum(Scol) /quantity,area/

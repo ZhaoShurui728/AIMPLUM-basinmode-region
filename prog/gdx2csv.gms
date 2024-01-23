@@ -2,8 +2,8 @@ $Setglobal prog_loc
 $setglobal sce SSP3
 $setglobal clp BaU
 $setglobal iav NoCC
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 $setglobal lumip off
 $setglobal bioyieldcalc off
@@ -104,9 +104,7 @@ Lmip/
 $include ../%prog_loc%/define/lumip.set
 /
 MAP_LUMIP(Lmip,L)/
-*SL	.	urban
 $include ../%prog_loc%/define/lumip.map
-
 /
 Lwwf/
 $include ../%prog_loc%/individual/BendingTheCurve/luwwf.set
@@ -118,6 +116,20 @@ LULC_class/
 $include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
 MAP_RIJ(R,I,J)
+MAP_CL(L,L) cropland aggregation map/
+PDRIR	.	PDR
+WHTIR	.	WHT
+GROIR	.	GRO
+OSDIR	.	OSD
+C_BIR	.	C_B
+OTH_AIR	.	OTH_A
+PDRRF	.	PDR
+WHTRF	.	WHT
+GRORF	.	GRO
+OSDRF	.	OSD
+C_BRF	.	C_B
+OTH_ARF	.	OTH_A
+/
 ;
 Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3);
 
@@ -157,9 +169,7 @@ $gdxin '../output/gdx/results/results_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_load
 
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,VY_load(R,Y,L,G)));
-
-
-
+VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 * Forest is devided into primary and secoundary.
 
@@ -171,6 +181,7 @@ VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J)
 VY_IJ(Y,"SECFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J);
 VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J) AND sharepix("Primary vegetation",I,J)+sharepix("Mature and Intermediate secondary vegetation",I,J)=0)=VY_IJ(Y,"FRS",I,J);
 VY_IJ(Y,"FRS",I,J)=0;
+
 
 * [BTC] Restored land
 set
@@ -353,11 +364,11 @@ $elseif.p %lumip%_%wwfclass%==off_opt
 
 set
 Lwwfnum/
-$if %wwfopt%==1 1*10
-$if %wwfopt%==2 1*10
-$if %wwfopt%==3 1*10
-$if %wwfopt%==4 1*14
-$if %wwfopt%==5 1*14
+$if %wwfopt%==1 1*10,11*16
+$if %wwfopt%==2 1*10,11*16
+$if %wwfopt%==3 1*10,11*16
+$if %wwfopt%==4 1*14,15*20
+$if %wwfopt%==5 1*14,15*20
 /
 MAP_WWFnum(Lwwfnum,L)/
 $if %wwfopt%==1 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
@@ -409,10 +420,10 @@ VY_IJwwfnum
 $endif.gdxout
 
 parameter
-plwwfnum/10/
+plwwfnum/16/
 ;
-$if %wwfopt%==4 plwwfnum=14;
-$if %wwfopt%==5 plwwfnum=14;
+$if %wwfopt%==4 plwwfnum=20;
+$if %wwfopt%==5 plwwfnum=20;
 
 file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.csv" /;
 put output;
