@@ -42,7 +42,7 @@ function LoopmultiCPU() {
   done
  
   if [ ${X} -ge $4 ]; then EceCPU="ON"; fi
-  echo "Waiting due to the core number limitation"
+#  echo "Waiting due to the core number limitation"
   sleep ${TM}
   if [ ${EceCPU} = "ON" ]; then 
     LoopmultiCPU $1 $2 $3 $4
@@ -108,6 +108,7 @@ function BaseRunDisaggfrs() {
 }
 
 function Basesim() {
+  echo base year simulation starts for ${COUNTRY0[@]}
   rm ../output/txt/cpu/basesim/*.txt 2> /dev/null
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
   S=${scn[0]}
@@ -284,7 +285,6 @@ function ScnMerge() {
 function MergeResCSV4NCRun() {
   #Load scenario specification
   ScenarioSpecName
-
   OPT=(1 3 5)
   basecsv=$3
   BTC3option=$4
@@ -332,6 +332,7 @@ if [ ${carseq} = "on" ]; then
 }
 
 function MergeResCSV4NC() {
+  echo "make ASCII files for NetCDF"
   rm ../output/txt/cpu/merge2/*.txt 2> /dev/null
   for S in ${scn[@]} 
   do
@@ -368,7 +369,7 @@ function netcdfgenRun() {
     ncgen -o ../output/nc/$1_$2.nc ../output/cdl/$1_$2.cdl
 #    rm $3 ../output/cdl/$1_$2.cdl
   }
-
+  echo "netCDF gen"
   #For LUMIP 
   if [ ${lumip} == on ]; then
     filelist="../output/csv/${SceName}/c3ann.csv ../output/csv/${SceName}/c3nfx.csv ../output/csv/${SceName}/c4ann.csv ../output/csv/${SceName}/crpbf_c4ann.csv ../output/csv/${SceName}/irrig_c3ann.csv ../output/csv/${SceName}/irrig_c3nfx.csv ../output/csv/${SceName}/irrig_c4ann.csv ../output/csv/${SceName}/pastr.csv ../output/csv/${SceName}/primf.csv ../output/csv/${SceName}/range.csv ../output/csv/${SceName}/secdf.csv ../output/csv/${SceName}/urban.csv ../output/csv/${SceName}/flood.csv ../output/csv/${SceName}/fallow.csv"
@@ -397,6 +398,7 @@ function netcdfgenRun() {
 }
 
 function netcdfgen() {
+  echo "NetCDF generation starts"
   FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_wwf2 ncheader_all_wwf_landcategory ncheader_all_wwf_landcategory2 ncheader_all_wwf_landcategoryall ncheader_all_ghg)
   for F in ${FileCopyList[@]} 
   do 
@@ -405,9 +407,12 @@ function netcdfgen() {
 
   for S in ${scn[@]} 
   do
-    netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq}
+    netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} &
+    LoopmultiCPU 5 scn "netcdfgenRun" ${CPUthreads}
   done
+  wait
 #File rename
+  echo "NetCDF files renaming"
 #Get scenario mapping
   awk 'BEGIN {FS="\t"} {OFS="\t"} {print $1}' ../${parent_dir}/data/scenariomap.txt  > ../output/txt/CGEscenario.txt
   awk 'BEGIN {FS="\t"} {OFS="\t"} {print $2}' ../${parent_dir}/data/scenariomap.txt  > ../output/txt/Outputscenario.txt
@@ -459,7 +464,7 @@ function gdx4png() {
   
   for S in ${scn[@]} 
   do
-    gdx4pngRun ${parent_dir} ${S} YearListFig ${global} COUNTRY0 ${Sub_gdx4png_dif} &
+    gdx4pngRun ${parent_dir} ${S} YearListFig ${global} COUNTRY0 ${Sub_gdx4png_dif} > ../output/log/gdx4png_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "gdx4png" ${CPUthreads}
   done
   wait
@@ -509,9 +514,8 @@ rm ../${parent_dir}/largefile/biomassdata.tar.gz
 
 # Settings
 ## load settings
-if [ $# = 0 ]; then
-  source ../${parent_dir}/shell/settings_cout.sh  # default
-elif [ $# -ge 1 ]; then
+source ../${parent_dir}/shell/settings_cout.sh  # default
+if [ $# -ge 1 ]; then
   source ../${parent_dir}/shell/$1           # manual settings
 fi
 

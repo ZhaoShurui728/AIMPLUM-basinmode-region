@@ -4,4 +4,4 @@ $setglobal biodivprice on
 $setglobal only3rdgenbio off
 $setglobal noAFRtarget off
 $setglobal not1stiter on
-$setglobal preiav NoCC
+$setglobal preiav BIOD

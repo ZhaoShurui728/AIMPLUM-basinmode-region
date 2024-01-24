@@ -16,9 +16,12 @@ $setglobal rlimapcalc off
 *$setglobal restoration off
 $if %supcuvout%==on $setglobal biocurve on
 
-$include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
-$include ../%prog_loc%/scenario/climate_policy/%clp%.gms
-$include ../%prog_loc%/scenario/IAV/%iav%.gms
+$if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
+$if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
+$if exist ../%prog_loc%/scenario/climate_policy/%clp%.gms $include ../%prog_loc%/scenario/climate_policy/%clp%.gms
+$if not exist ../%prog_loc%/scenario/climate_policy/%clp%.gms $include ../%prog_loc%/scenario/climate_policy/BaU.gms
+$if exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenario/IAV/%iav%.gms
+$if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenario/IAV/NoCC.gms
 
 Set
 N /1*40000/
