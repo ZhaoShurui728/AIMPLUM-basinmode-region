@@ -3,37 +3,31 @@
 $setglobal prog_loc
 Set
 G	Cell number (1 to 360*720) / 1 * 259200 /
+Gland(G) Cell number excluding ocean
 I	Vertical position	/ 1*360 /
 J	Horizontal position	/ 1*720 /
-N	Country number	/ 1*357 /
+IJland(I,J)	Cell number excluding ocean
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 /
-Sr	106 countries /
-$include ../%prog_loc%/define/country.set
-/
-Map_R(Sr,R) /
-$include ../%prog_loc%/define/region/region17.map
-/
-Map_NSr(N,Sr)/
-$include ../%prog_loc%/define/country.map
+RISO	ISO countries	/
+$include ../%prog_loc%/define/region/region_iso.set
 /
 ;
-Alias (I,I2), (J,J2), (Sr,Sr2), (G,G2);
+Alias (I,I2), (J,J2), (G,G2),(RISO,RISO2);
 Set
-MAP_NIJ(N,I,J)
+MAP_RISO(RISO,R)	Relationship between ISO countries and 17 regions
+MAP_RIJ(R,I,J)	Relationship between 17 regions R and cell position I J
+MAP_RG(R,G)	Relationship between 17 regions R and cell G
+MAP_RISOIJ(RISO,I,J)	Relationship between country RISO and cell position I J
+MAP_RISOG(RISO,G)	Relationship between country RISO and cell G
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
-MAP_SrIJ(Sr,I,J)	Relationship between country Sr and cell position I J
-MAP_RIJ(R,I,J)	Relationship between region R and cell position I J
-MAP_SrG(Sr,G)	Relationship between country Sr and cell G
-MAP_RG(R,G)	Relationship between region R and cell G
 MAP_IJ(I,J,I2,J2)	Neighboring relationship between cell I J and cell I2 J2
 MAP_WG(G,G2)        Neighboring relationship between cell G and cell G2
 ;
 Parameter
-MAP_NIJ0(I,J)
 GS		Grid size		/ 0.5 /
-GAIJ(I,J)           Grid area of cell I J kha
+GAIJ(I,J)       Grid area of cell I J kha
 GA(G)		Grid area of cell G kha
 GLIJ(R,I,J,I2,J2)	Distance between cell I J and I2 J2 km
 GL(R,G,G2)		Distance between cell G and G2 km
@@ -45,29 +39,28 @@ rad_degree	/0.0174532925/
 
 ordi(I)
 ordj(J)
-ordn(N)
 ordg(G)
 ;
 
 ordi(I)=ord(I);
 ordj(J)=ord(J);
-ordn(N)=ord(N);
 ordg(G)=ord(G);
 
 LAT(I)=90-GS*ordi(i);
 LOG(J)=ordj(J)*GS;
 
+$gdxin '../%prog_loc%/define/countrymap.gdx'
+$load MAP_RISO MAP_RIJ=MAP_R17IJ MAP_RISOIJ
 
-table MAP_NIJ0(I,J)
-$offlisting
-$ondelim
-$include ../%prog_loc%/define/h_axis_title.txt
-$include ../%prog_loc%/define/countrymap.txt
-$offdelim
-$onlisting
-;
+IJland(I,J)$(sum(R,MAP_RIJ(R,I,J)))=Yes;
 
-MAP_NIJ0(I,J)$(MAP_NIJ0(I,J)=-9999)=0;
+MAP_GIJ(G,I,J)$(IJland(I,J) AND ordg(G)=360/GS*(ordi(I)-1)+ordj(J))=YES;
+
+MAP_RG(R,G)$SUM((I,J)$MAP_GIJ(G,I,J),Map_RIJ(R,I,J))=YES;
+
+Gland(G)$(SUM(R,MAP_RG(R,G)))=Yes;
+
+MAP_RISOG(RISO,G)$SUM((I,J)$MAP_GIJ(G,I,J),Map_RISOIJ(RISO,I,J))=YES;
 
 table GAIJ(I,J)
 $offlisting
@@ -77,29 +70,13 @@ $include ../%prog_loc%/define/areamap.txt
 $offdelim
 $onlisting
 ;
-
-
 * [km2] --> [kha]
 GAIJ(I,J)=GAIJ(I,J)/10;
+GA(G)$(Gland(G))=SUM((I,J)$MAP_GIJ(G,I,J),GAIJ(I,J));
 
-MAP_NIJ(N,I,J)$(MAP_NIJ0(I,J) AND MAP_NIJ0(I,J)=ordn(N))=YES;
-
-MAP_SrIJ(Sr,I,J)$SUM(N$Map_NSr(N,Sr),MAP_NIJ(N,I,J))=YES;
-
-MAP_RIJ(R,I,J)$SUM(Sr$Map_R(Sr,R),MAP_SrIJ(Sr,I,J))=YES;
-
-MAP_GIJ(G,I,J)$(MAP_NIJ0(I,J) AND ordg(G)=360/GS*(ordi(I)-1)+ordj(J))=YES;
-
-MAP_SrG(Sr,G)$SUM((I,J)$MAP_GIJ(G,I,J),Map_SrIJ(Sr,I,J))=YES;
-
-MAP_RG(R,G)$SUM(Sr$MAP_R(Sr,R),Map_SrG(Sr,G))=YES;
-
-GA(G)$(SUM(Sr,MAP_SrG(Sr,G)))=SUM((I,J)$MAP_GIJ(G,I,J),GAIJ(I,J));
-
-MAP_IJ(I,J,I2,J2)$(MAP_NIJ0(I,J) AND MAP_NIJ0(I2,J2) AND (abs(ordi(I2)-ordi(I))<=1) AND (abs(ordj(J2)-ordj(J))<=1) AND (NOT (ordi(I2)=ordi(I) AND ordj(J2)=ordj(J)))  )=YES;
+MAP_IJ(I,J,I2,J2)$(IJland(I,J) AND IJland(I2,J2) AND (abs(ordi(I2)-ordi(I))<=1) AND (abs(ordj(J2)-ordj(J))<=1) AND (NOT (ordi(I2)=ordi(I) AND ordj(J2)=ordj(J)))  )=YES;
 
 MAP_WG(G,G2)$SUM((I,J)$MAP_GIJ(G,I,J),SUM((I2,J2)$MAP_GIJ(G2,I2,J2),MAP_IJ(I,J,I2,J2)))=YES;
-
 
 GLIJ(R,I,J,I2,J2)$(MAP_RIJ(R,I,J) AND MAP_RIJ(R,I2,J2) AND (NOT (LAT(I)-LAT(I2)=0 AND LOG(J)-LOG(J2)=0)) AND ((abs(ordi(I2)-ordi(I))<=5) AND (abs(ordj(J2)-ordj(J))<=5) ))
 =((2*pai*re*abs(LAT(I)-LAT(I2))/360) * (2*pai*re*abs(LAT(I)-LAT(I2))/360) +
@@ -126,10 +103,69 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XME
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XNF
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XAF
 
+set
+G_USACAN(G)
+G_USA(G)
+G_XE25(G)
+G_XER(G)
+G_TUR(G)
+G_XOC(G)
+G_CHN(G)
+G_IND(G)
+G_JPN(G)
+G_XSE(G)
+G_XSA(G)
+G_CAN(G)
+G_BRA(G)
+G_XLM(G)
+G_CIS(G)
+G_XME(G)
+G_XNF(G)
+G_XAF(G)
+;
 
+G_USACAN(G)$(MAP_RG("USA",G) or MAP_RG("CAN",G))=Yes;
+G_USA(G)$(MAP_RG("USA",G))=Yes;
+G_XE25(G)$(MAP_RG("XE25",G))=Yes;
+G_XER(G)$(MAP_RG("XER",G))=Yes;
+G_TUR(G)$(MAP_RG("TUR",G))=Yes;
+G_XOC(G)$(MAP_RG("XOC",G))=Yes;
+G_CHN(G)$(MAP_RG("CHN",G))=Yes;
+G_IND(G)$(MAP_RG("IND",G))=Yes;
+G_JPN(G)$(MAP_RG("JPN",G))=Yes;
+G_XSE(G)$(MAP_RG("XSE",G))=Yes;
+G_XSA(G)$(MAP_RG("XSA",G))=Yes;
+G_CAN(G)$(MAP_RG("CAN",G))=Yes;
+G_BRA(G)$(MAP_RG("BRA",G))=Yes;
+G_XLM(G)$(MAP_RG("XLM",G))=Yes;
+G_CIS(G)$(MAP_RG("CIS",G))=Yes;
+G_XME(G)$(MAP_RG("XME",G))=Yes;
+G_XNF(G)$(MAP_RG("XNF",G))=Yes;
+G_XAF(G)$(MAP_RG("XAF",G))=Yes;
+
+execute_unload '../%prog_loc%/define/subG.gdx'
+G_USACAN
+G_USA
+G_XE25
+G_XER
+G_TUR
+G_XOC
+G_CHN
+G_IND
+G_JPN
+G_XSE
+G_XSA
+G_CAN
+G_BRA
+G_XLM
+G_CIS
+G_XME
+G_XNF
+G_XAF
+;
 
 execute_unload '../%prog_loc%/data/data_prep.gdx'
-Map_GIJ MAP_RG GAIJ MAP_SrIJ GA MAP_RIJ
+Map_GIJ MAP_RG GAIJ GA MAP_RIJ
 GLUSA
 GLXE25
 GLXER
@@ -147,14 +183,11 @@ GLCIS
 GLXME
 GLXNF
 GLXAF
-*Map_GIJ MAP_RG GAIJ MAP_SrIJ GA
 MAP_WG
-MAP_SrG
-;
+MAP_RISOG
+Gland
+MAP_RISO
 
-execute_unload '../%prog_loc%/data/data_prep_check.gdx'
-MAP_IJ GLIJ
-;
 
 
 $exit

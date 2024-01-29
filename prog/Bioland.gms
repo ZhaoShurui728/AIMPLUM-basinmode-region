@@ -13,8 +13,8 @@ $setglobal supcuvout off
 $setglobal biopmap on
 $setglobal degradedlandprotect off
 $setglobal WDPAprotect protect_all
-$if %ModelInt2%==NoValue $setglobal ModelInt 
-$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2% 
+$if %ModelInt2%==NoValue $setglobal ModelInt
+$if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 ;
 
 
@@ -35,28 +35,7 @@ WLD,OECD90,REF,ASIA,MAF,LAM
 Sr(R)/
 WLD,OECD90,REF,ASIA,MAF,LAM
 /
-G       Cell number  /
-$offlisting
-*$include %prog_loc%/define/set_g/G_WLD.set
-$include ../%prog_loc%/define/set_g/G_USA.set
-$include ../%prog_loc%/define/set_g/G_XE25.set
-$include ../%prog_loc%/define/set_g/G_XER.set
-$include ../%prog_loc%/define/set_g/G_TUR.set
-$include ../%prog_loc%/define/set_g/G_XOC.set
-$include ../%prog_loc%/define/set_g/G_CHN.set
-$include ../%prog_loc%/define/set_g/G_IND.set
-$include ../%prog_loc%/define/set_g/G_JPN.set
-$include ../%prog_loc%/define/set_g/G_XSE.set
-$include ../%prog_loc%/define/set_g/G_XSA.set
-$include ../%prog_loc%/define/set_g/G_CAN.set
-$include ../%prog_loc%/define/set_g/G_BRA.set
-$include ../%prog_loc%/define/set_g/G_XLM.set
-$include ../%prog_loc%/define/set_g/G_CIS.set
-$include ../%prog_loc%/define/set_g/G_XME.set
-$include ../%prog_loc%/define/set_g/G_XNF.set
-$include ../%prog_loc%/define/set_g/G_XAF.set
-$onlisting
-/
+G       Cell number excluding ocean (Gland)
 Y year  /  %Sy%  /
 L land use type /
 *PRM_SEC        forest + grassland + pasture
@@ -82,7 +61,6 @@ LBIO(L)/BIO/
 LCLBIO(L)/CL,BIO/
 LNBIOP(L) land category NOT for bioenergy potential /CL,PAS,CROP_FLW,SL,OL,AFR/
 MAP_RG(R,G)     Relationship between country R and cell G
-
 ;
 Alias(R,R2),(G,G2);
 set
@@ -105,7 +83,7 @@ YIELDBIO(G)
 ;
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load GA MAP_RG
+$load G=Gland GA MAP_RG
 
 $batinclude ../%prog_loc%/inc_prog/BiolandR.gms USA
 $batinclude ../%prog_loc%/inc_prog/BiolandR.gms XE25
