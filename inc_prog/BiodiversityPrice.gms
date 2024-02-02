@@ -35,15 +35,9 @@ is_pasture1ORrRangeland0G(G)
 is_PrimVeg1ORSecoVeg0G(G)
 ;
 
-PBIODIVY0(Y)$(Y.val=2020)=1;
-PBIODIVY0(Y)$(Y.val=2030)=10;
-PBIODIVY0(Y)$(Y.val=2040)=100;
-PBIODIVY0(Y)$(Y.val=2050)=300;
-PBIODIVY0(Y)$(Y.val=2060)=600;
-PBIODIVY0(Y)$(Y.val=2070)=750;
-PBIODIVY0(Y)$(Y.val=2080)=850;
-PBIODIVY0(Y)$(Y.val=2090)=950;
-PBIODIVY0(Y)$(Y.val=2100)=1000;
+PBIODIVY0(Y)$(%protectStartYear%<=2020 AND Y.val=2020)=1;
+PBIODIVY0(Y)$(%protectStartYear%<=2030 AND Y.val=2030)=10;
+PBIODIVY0(Y)$(%protectStartYear%<=2040 AND Y.val>=2040)=(100*(2100-Y.val)+1000*(Y.val-2040))/(2100-2040);
 
 $gdxin '../%prog_loc%/individual/BendingTheCurve/table_weights_30Nov2017.gdx'
 $load weightIJ=weight

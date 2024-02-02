@@ -135,10 +135,11 @@ CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
 FRS	.	Lan_Cov_Frs
 AFR .   Lan_Cov_Frs
 MNGFRS .   Lan_Cov_Frs_Man
+AFR .   Lan_Cov_Frs_Man
 UMNFRS .   Lan_Cov_Frs_Nat_Frs
 AFR .   Lan_Cov_Frs_Aff_and_Ref
 PAS	.	Lan_Cov_Pst
-GL	.	Lan_Cov_Oth_Lan
+GL	.	Lan_Cov_Oth_Nat_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
 BIO	.	Lan_Cov_Cro_Ene_Cro
 SL	.	Lan_Cov_Bui_Are
@@ -190,6 +191,7 @@ Planduse_load(*,Y,R,LCGE)
 GHG(R,Y,*,SMODEL)
 AREA(R,Y,L,SMODEL)
 IAMCTemp(*,*,*,*)
+IAMCTempwoU(R,V,Y)
 ;
 
 $gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
@@ -226,6 +228,8 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negati
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 
+IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
+
 execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-GHG,GHGL,AREA,IAMCTemp;
+GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU;
 
