@@ -82,6 +82,7 @@
 	GTM	.	XLM
 	GIN	.	XAF
 	GNB	.	XAF
+	GUF	.	XLM
 	GUY	.	XLM
 	HTI	.	XLM
 	HND	.	XLM
@@ -116,7 +117,7 @@
 	LIE	.	XER
 	LTU	.	XE25
 	LUX	.	XE25
-*	MAC	.	CHN
+	MAC	.	CHN
 	MDG	.	XAF
 	MWI	.	XAF
 	MYS	.	XSE
