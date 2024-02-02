@@ -227,6 +227,7 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative",
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
+IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 

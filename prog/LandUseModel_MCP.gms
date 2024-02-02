@@ -802,15 +802,14 @@ $ if %WDPAprotect%==off protectland(G)=0;
 $ if not %degradedlandprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $ if not %degradedlandprotect%==off $load degradedland=%degradedlandprotect%
 $ if %degradedlandprotect%==off degradedland(G)=0;
-protectfrac(G)=protectland(G)+degradedland(G);
-protectfrac(G)$(protectfrac(G)>Y_pre("PRM_SEC",G) or (popdens(G)<0.1))=Y_pre("PRM_SEC",G);
+  protectfrac(G)=protectland(G)+degradedland(G);
+  protectfrac(G)$(protectfrac(G)>Y_pre("PRM_SEC",G) or (popdens(G)<0.1))=Y_pre("PRM_SEC",G);
 $else.prtec
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'
 $load protectfrac
-
+$endif.prtec
 *---minimize protected fraction to satify constraint
   protectfrac(G)$(protectfrac(G))=min(protectfrac(G),1-Y_pre("SL",G)-Y_pre("OL",G));
-$endif.prtec
 
 *-----Protected forest area-----*
 $gdxin '../%prog_loc%/data/fra_data.gdx'
@@ -846,9 +845,9 @@ $ else.year
 *---minimize protected fraction to satify constraint
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%second_year%.gdx'
 $load protectfracL
-    protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL");
-    protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL");
 $ endif.year
+    protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
+    protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
 $endif.biodiv
 
 *----Carbon flow
