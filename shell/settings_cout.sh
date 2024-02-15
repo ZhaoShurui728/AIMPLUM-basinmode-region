@@ -2,6 +2,7 @@
 
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
+#YEAR0=(2030)
 # Set Global [on/off]
 global=on
 # if global=off, the following country code should be assigned
@@ -29,15 +30,15 @@ CPUthreads=5
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=on
+DataPrep=off
 # Set Data Preparation 2 Process [on/off]
 DataPrep2=off
 
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=off
+Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -48,12 +49,12 @@ Futuresim=off
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=off
+ScnMerge=on
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
-MergeResCSV4NC=off
+MergeResCSV4NC=on
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
@@ -68,7 +69,7 @@ MergeResCSV4NC=off
     Sub_MergeResCSV4NC_carseq=off
 
 # Set Netcdf Creation [on/off]
-netcdfgen=off
+netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=sdgmip
 
