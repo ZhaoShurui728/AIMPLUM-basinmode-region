@@ -16,6 +16,7 @@ CROP_FLWarea_NPROT	fallow area in the grid which has potential area for fallow
 FLAG_YIELD(G)	flag of grid where potential crop yields exist.
 
 ;
+scalar iter;
 
 * STEP1
 
@@ -24,7 +25,7 @@ FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 
 Planduse_cropflw=Planduse("%Sy%","CROP_FLW");
 Y_NPROT_NOPAS(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("FRSGL",G)-protect_wopas(G)>0)=VYL("FRSGL",G)-protect_wopas(G);
-*Šî€”N‚ÅCROP_FLW‚©‘O”N”_’n‚¾‚Á‚½‚Æ‚±‚ë‚Å¡”NŽg‚í‚ê‚È‚¢“y’n‚Ì‚ ‚éƒZƒ‹‚Å‚¢‚¯‚é‚Æ‚±‚ë‚Ü‚Å‚¢‚ê‚é
+*ï¿½î€ï¿½Nï¿½ï¿½CROP_FLWï¿½ï¿½ï¿½Oï¿½Nï¿½_ï¿½nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½Åï¿½ï¿½Nï¿½gï¿½ï¿½ï¿½È‚ï¿½ï¿½yï¿½nï¿½Ì‚ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½Ü‚Å‚ï¿½ï¿½ï¿½ï¿½
 VYL("CROP_FLW",G)$(Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G)) AND Y_NPROT_NOPAS(G) AND Y_NPROT_NOPAS(G)>=Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G)) ) = Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G));
 VYL("CROP_FLW",G)$(Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G)) AND Y_NPROT_NOPAS(G) AND Y_NPROT_NOPAS(G)<Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G)))=Y_NPROT_NOPAS(G);
 
@@ -39,8 +40,6 @@ ADD_CROP_FLW=Planduse_cropflw-CROP_FLWarea;
 IF(ADD_CROP_FLW<0,
 VYL("CROP_FLW",G)$(Y_pre("CROP_FLW",G) AND CROP_FLWarea)=VYL("CROP_FLW",G)*Planduse_cropflw/CROP_FLWarea;
 )
-
-scalar iter;
 
 While(ADD_CROP_FLW>0 AND SF_CROP_FLW>0,
 Y_NPROTCROP_FLWG(G)=0;
@@ -72,12 +71,12 @@ ADD_CROP_FLW=Planduse_cropflw-CROP_FLWarea;
 *execute_unload '../output/temp3_step1.gdx'
 
 
-
 BacktoStep1=0;
+IteCounter=0;
 
 * STEP2 neighborhood cell
 *For(iter=1 to 10,
-While ((ADD_CROP_FLW>0 AND BacktoStep1=0),
+While (((ADD_CROP_FLW>0 AND BacktoStep1=0)  AND IteCounter<=1000),
 PNBCROP_FLW(G)=0;
 AREA_NCROP_FLW=0;
 SF_CROP_FLW2=0;
@@ -119,17 +118,17 @@ Y_NPROT_NOPAS(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)>0)=VYL("PRM_SEC"
 );
 $offtext
 );
+IteCounter=IteCounter+1;
 
 *display PNBCROP_FLW,AREA_NCROP_FLW,SF_CROP_FLW2,CROP_FLWarea,ADD_CROP_FLW,Y_NPROTCROP_FLW;
 
 );
 
-*$exit
 
-
+IteCounter=0;
 SF_CROP_FLW=1;
 *###STEP1
-While(ADD_CROP_FLW>0 AND SF_CROP_FLW>0,
+While((ADD_CROP_FLW>0 AND SF_CROP_FLW>0) AND IteCounter<=1000,
 Y_NPROTCROP_FLWG(G)=0;
 SF_CROP_FLWG(G)=0;
 SF_CROP_FLW=0;
@@ -153,7 +152,7 @@ CROP_FLWarea_NPROT=SUM(G$(VYL("CROP_FLW",G) AND Y_NPROTCROP_FLWG(G)),VYL("CROP_F
 CROP_FLWarea=SUM(G$(VYL("CROP_FLW",G)),VYL("CROP_FLW",G)*GA(G));
 
 ADD_CROP_FLW=Planduse_cropflw-CROP_FLWarea;
-
+IteCounter=IteCounter+1;
 *display ADD_CROP_FLW, SF_CROP_FLW;
 );
 

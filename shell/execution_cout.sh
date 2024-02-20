@@ -42,7 +42,7 @@ function LoopmultiCPU() {
   done
  
   if [ ${X} -ge $4 ]; then EceCPU="ON"; fi
-#  echo "Waiting due to the core number limitation"
+  echo "Waiting due to the core number limitation" ${X}
   sleep ${TM}
   if [ ${EceCPU} = "ON" ]; then 
     LoopmultiCPU $1 $2 $3 $4

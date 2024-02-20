@@ -25,7 +25,7 @@ FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 
 Planduse_pas=Planduse("%Sy%","GRAZING");
 Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-protect_wopas(G)>0)=VYL("PRM_SEC",G)-protect_wopas(G);
-*Šî€”N‚ÅPAS‚Ì‚ ‚éƒZƒ‹‚Å‚¢‚¯‚é‚Æ‚±‚ë‚Ü‚Å‚¢‚ê‚é
+*ï¿½î€ï¿½Nï¿½ï¿½PASï¿½Ì‚ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½Ü‚Å‚ï¿½ï¿½ï¿½ï¿½
 VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)>=Y_pre("PAS",G))=Y_pre("PAS",G);
 VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)<Y_pre("PAS",G))=Y_NPROT(G);
 Y_NPROTPASG(G)$(Y_NPROT(G) and Y_NPROT(G) - VYL("PAS",G)>SMALL)=Y_NPROT(G) - VYL("PAS",G);
@@ -41,7 +41,9 @@ VYL("PAS",G)$(Y_pre("PAS",G) AND PASarea)=VYL("PAS",G)*Planduse_pas/PASarea;
 
 scalar iter;
 
-While(ADD_PAS>0 AND SF_PAS>0,
+IteCounter=0;
+*###STEP1
+While(((ADD_PAS>0 AND SF_PAS>0)  AND IteCounter<=1000),
 Y_NPROTPASG(G)=0;
 SF_PASG(G)=0;
 SF_PAS=0;
@@ -66,6 +68,7 @@ PASarea=SUM(G$(VYL("PAS",G)),VYL("PAS",G)*GA(G));
 
 ADD_PAS=Planduse_pas-PASarea;
 
+IteCounter=IteCounter+1;
 *display ADD_PAS, SF_PAS;
 );
 *execute_unload '../output/temp3_step1.gdx'
@@ -73,10 +76,12 @@ ADD_PAS=Planduse_pas-PASarea;
 scalar
 BacktoStep1	/0/
 ;
-
 * STEP2 neighborhood cell
 *For(iter=1 to 10,
-While ((ADD_PAS>0 AND BacktoStep1=0),
+
+IteCounter=0;
+*###STEP1
+While(((ADD_PAS>0 AND BacktoStep1=0)  AND IteCounter<=1000),
 PNBPAS(G)=0;
 AREA_NPAS=0;
 SF_PAS2=0;
@@ -120,14 +125,15 @@ $offtext
 );
 
 *display PNBPAS,AREA_NPAS,SF_PAS2,PASarea,ADD_PAS,Y_NPROTPAS;
-
+IteCounter=IteCounter+1;
 );
 
 
 
 SF_PAS=1;
+IteCounter=0;
 *###STEP1
-While(ADD_PAS>0 AND SF_PAS>0,
+While(((ADD_PAS>0 AND SF_PAS>0)  AND IteCounter<=1000),
 Y_NPROTPASG(G)=0;
 SF_PASG(G)=0;
 SF_PAS=0;
@@ -151,7 +157,7 @@ PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
 PASarea=SUM(G$(VYL("PAS",G)),VYL("PAS",G)*GA(G));
 
 ADD_PAS=Planduse_pas-PASarea;
-
+IteCounter=IteCounter+1;
 *display ADD_PAS, SF_PAS;
 );
 
