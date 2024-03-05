@@ -163,6 +163,7 @@ function FuturesimRun() {
     done
   done
   
+
   echo $(TimeDif `cat ../output/txt/cpu/futuresim/${PARALLEL}.txt`) > ../output/txt/cpu/futuresim/end_${PARALLEL}.txt
   rm ../output/txt/cpu/futuresim/${PARALLEL}.txt
 }
@@ -187,6 +188,7 @@ function Futuresim() {
       FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
       LoopmultiCPU 5 scn "futuresim" ${CPUthreads}
     done
+	
   fi
   fi
   wait
@@ -256,6 +258,8 @@ function ScnMergeRun() {
   gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine_$2.lst  lo=4
   read -p "push any key";
   gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
+  read -p "push any key";
+  gams ../$1/prog/protect_area_agg.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 o=../output/lst/protect_area_agg_$2.lst  lo=4
   read -p "push any key";
 
   echo $(TimeDif `cat ../output/txt/cpu/merge1/$2.txt`) > ../output/txt/cpu/merge1/end_$2.txt
@@ -558,6 +562,7 @@ elif [ "$(expr substr $(uname -s) 1 10)" = 'MINGW32_NT' ] || [ "$(expr substr $(
   savedir=..\\output\\save\\
 fi
 echo $savedir $baseos
+
 
 if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 

@@ -111,6 +111,7 @@ $if %base_year%==%Sy% GL
 $if %base_year%==%Sy% FRS
 LUC
 RES
+TOT	Total
 /
 
 LRCPnonNat(L)/
@@ -306,6 +307,7 @@ plandrent(L)	land rent (million $ per ha)
 protectfrac(G)	Protected area fraction (0 to 1) in each cell G
 protectfracL(G,L)	Protected area fraction (0 to 1) of land category L in each cell G
 protectland(G)	Protected area fraction (0 to 1) of cell G (WDPA and IUCN)
+protect_area(*,L)	Regional aggregated protection area (kha)
 degradedland(G)	Degraded land fraction (0 to 1)
 FPRM
 FAFR
@@ -804,6 +806,10 @@ $ if not %degradedlandprotect%==off $load degradedland=%degradedlandprotect%
 $ if %degradedlandprotect%==off degradedland(G)=0;
   protectfrac(G)=protectland(G)+degradedland(G);
   protectfrac(G)$(protectfrac(G)>Y_pre("PRM_SEC",G) or (popdens(G)<0.1))=Y_pre("PRM_SEC",G);
+
+* protect data aggregation in NoCC
+  protect_area("WDPA_KBA_Wu2019","TOT")=SUM(G,GA(G)*protectfrac(G));
+
 $else.prtec
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'
 $load protectfrac
@@ -841,14 +847,24 @@ $gdxin '../%prog_loc%/individual/BendingTheCurve/LC_cons_AIM_omit0_v3.gdx'
 $load protectfracIJL=LC_cons_AIM_v3
   protectfracL(G,L)$(SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC))))= SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC)));
   protectfracL(G,L2)$(protectfracL(G,L2) and protectfracL(G,L2)>sum(L$MAP_Lagg(L,L2),Y_pre(L,G)))=sum(L$MAP_Lagg(L,L2),Y_pre(L,G));
+
+* protect data aggregation in NoCC
+  protect_area("WildArea_KBA_WDPA_BTC",L)=SUM(G,GA(G)*protectfracL(G,L));
+
 $ else.year
 *---minimize protected fraction to satify constraint
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%second_year%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'
 $load protectfracL
 $ endif.year
     protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
     protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
+
+$ if %IAV%==NoCC protectfracL(G,L)=0;
+$ if %IAV%==NoCC protectfrac(G)=0;
+
 $endif.biodiv
+
+
 
 *----Carbon flow
 $gdxin '../%prog_loc%/data/fao_data.gdx'
@@ -1357,6 +1373,9 @@ YIELDLDM_OUT(LDM)$(LDMCROPA(LDM) AND SUM(L$MAP_LLDM(L,LDM),SUM(G$(YIELD(L,G)*VYL
 $if not %Sy%==%base_year% VYL(L,G)=round(VYL(L,G),6);
 $if not %Sy%==%base_year% VZL(L,G)=round(VZL(L,G),6);
 
+*----- Protect area aggregation ----*
+protect_area("WildArea_KBA_WDPA_BTC","TOT")=sum(L,protect_area("WildArea_KBA_WDPA_BTC",L));
+
 *------- Data check ----------*
 data_check(G,L)$(VYL(L,G)<0)=1;
 
@@ -1385,8 +1404,8 @@ delta_VYLY
 protectfrac
 protectfracL
 protect_wopas
-$if %Sy%==%second_year% protectland
-$if %Sy%==%second_year% degradedland
+$if %Sy%==%protectStartYear% protectland
+$if %Sy%==%protectStartYear% degradedland
 *$if %supcuv%==on PBIO,RAREA_BIOP
 frsprotect_check,frsprotectarea
 pa_bio pa_road pa_emit pa_lab pa_irri pc MF
@@ -1395,11 +1414,12 @@ YIELDL_OUT
 YIELDLDM_OUT
 data_check
 PBIODIV
+protect_area
 ;
 
 $ifthen %Sy%==%base_year%
 PARAMETER
-  AREA_base(LDM,*)
+  AREA_base(LDM,*)	Reginoal aggregated land-use area (kha)
 ;
   YIELD("PRM_SEC",G)$CS(G)=CS(G);
   Y_base("CL",G)=SUM(L$LCROP(L),Y_base(L,G));
@@ -1416,6 +1436,7 @@ $if %UrbanLandData%==SSP AREA_base("SL","base")=SUM(G,GA(G)*SSP_frac("SL","%Sy%"
   AREA_base("GL","cge")=Planduse("%Sy%","GRASS");
   AREA_base("FRS","cge")=Planduse("%Sy%","PRM_FRS")+Planduse("%Sy%","MNG_FRS");
   AREA_base("CROP_FLW","cge")=Planduse("%Sy%","CROP_FLW");
+
 
 execute_unload '../output/gdx/base/%Sr%/basedata.gdx'
 plcc roaddens GL GLMIN0
