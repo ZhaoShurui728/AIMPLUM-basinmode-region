@@ -859,12 +859,8 @@ $ endif.year
     protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
     protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
 
-$ if %IAV%==NoCC protectfracL(G,L)=0;
-$ if %IAV%==NoCC protectfrac(G)=0;
-
 $endif.biodiv
-
-
+$if %IAV%==NoCC protectfracL(G,L)=0;
 
 *----Carbon flow
 $gdxin '../%prog_loc%/data/fao_data.gdx'

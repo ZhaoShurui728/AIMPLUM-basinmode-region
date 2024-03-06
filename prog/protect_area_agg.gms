@@ -8,6 +8,7 @@ $Setglobal prog_loc
 *ecosystem protection
 $setglobal protectStartYear 2030
 
+
 set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
@@ -76,6 +77,6 @@ $batinclude ../%prog_loc%/inc_prog/protect_area_aggR.gms XME
 $batinclude ../%prog_loc%/inc_prog/protect_area_aggR.gms XNF
 $batinclude ../%prog_loc%/inc_prog/protect_area_aggR.gms XAF
 
-execute_unload '../output/gdx/protect_area_agg_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+execute_unload '../output/gdx/protect_area_agg.gdx'
 protect_area
 ;
