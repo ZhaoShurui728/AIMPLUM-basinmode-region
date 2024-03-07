@@ -283,6 +283,10 @@ GAT=SUM(G$FLAG_G(G),GA(G));
 
 set
 REVG(G) cells allowed for conversion/set.G/
+protect_cat	protection area categories/
+WDPA_KBA_Wu2019
+WildArea_KBA_WDPA_BTC
+/
 ;
 Parameter
 pa(L,G)		land transition costs per unit area (million $ per ha)
@@ -307,7 +311,7 @@ plandrent(L)	land rent (million $ per ha)
 protectfrac(G)	Protected area fraction (0 to 1) in each cell G
 protectfracL(G,L)	Protected area fraction (0 to 1) of land category L in each cell G
 protectland(G)	Protected area fraction (0 to 1) of cell G (WDPA and IUCN)
-protect_area(*,L)	Regional aggregated protection area (kha)
+protect_area(protect_cat,L)	Regional aggregated protection area (kha)
 degradedland(G)	Degraded land fraction (0 to 1)
 FPRM
 FAFR
@@ -796,6 +800,7 @@ $endif.baseyear
 *-----Protected area-----*
 $ifthene.prtec %Sy%<%protectStartYear%
   protectfrac(G)=0;
+  protect_area(protect_cat,L)=0;
 $elseife.prtec %Sy%==%protectStartYear%
 $ if not %WDPAprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $ if not %WDPAprotect%==off $load protectland=%WDPAprotect%
