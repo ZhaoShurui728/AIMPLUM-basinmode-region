@@ -1224,6 +1224,7 @@ LandUseModel_LP.HOLDFIXED   = 1 ;
 SCALAR
 	ite_his  Iteration history /1/
 	maxite  Maximum solution iteration /10/
+	IteCounter/0/
 ;
 
 $ifthen.mcp %mcp%==on
@@ -1247,7 +1248,6 @@ IF((NOT (Psol_stat("SMODEL","SLP")=1 AND Psol_stat("SSOLVE","SLP")=1)),
 	Solve LandUseModel_LP USING LP maximizing VOBJ;
         Psol_stat("SSOLVE","SLP")=LandUseModel_LP.SOLVESTAT;Psol_stat("SMODEL","SLP")=LandUseModel_LP.MODELSTAT;Psol_stat("ITE_HIS","SLP")=ite_his;Psol_stat("YPNMAXCL","SLP")=YPNMAXCL;
 ));
-
 
 VYL(L,G)$(VY.L(L,G))=VY.L(L,G);
 VZL(L,G)$(VZ.L(L,G))=VZ.L(L,G);
@@ -1278,9 +1278,9 @@ $load VY_baseresults=VY_load
   protect_wopas(G)$(max(protectfracL(G,"PRM_SEC"),protectfrac(G))>VY_baseresults("FRSGL",G) AND VY_baseresults("FRSGL",G)>0)=VY_baseresults("FRSGL",G);
 $endif
 
+
 *------ Pasture -----------*
 $include ../%prog_loc%/inc_prog/pasture.gms
-
 *------ Crop fallow -----------*
 $include ../%prog_loc%/inc_prog/crop_fallow.gms
 
