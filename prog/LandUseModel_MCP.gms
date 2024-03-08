@@ -798,9 +798,9 @@ $endif.bio
 $endif.baseyear
 
 *-----Protected area-----*
+protect_area(protect_cat,L)=0;
 $ifthene.prtec %Sy%<%protectStartYear%
   protectfrac(G)=0;
-  protect_area(protect_cat,L)=0;
 $elseife.prtec %Sy%==%protectStartYear%
 $ if not %WDPAprotect%==off $gdxin '../%prog_loc%/data/policydata.gdx'
 $ if not %WDPAprotect%==off $load protectland=%WDPAprotect%
@@ -855,7 +855,7 @@ $load protectfracIJL=LC_cons_AIM_v3
 
 * protect data aggregation in NoCC
   protect_area("WildArea_KBA_WDPA_BTC",L)=SUM(G,GA(G)*protectfracL(G,L));
-
+  protect_area("WildArea_KBA_WDPA_BTC","TOT")=sum(L,protect_area("WildArea_KBA_WDPA_BTC",L));
 $ else.year
 *---minimize protected fraction to satify constraint
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'
@@ -1374,8 +1374,6 @@ YIELDLDM_OUT(LDM)$(LDMCROPA(LDM) AND SUM(L$MAP_LLDM(L,LDM),SUM(G$(YIELD(L,G)*VYL
 $if not %Sy%==%base_year% VYL(L,G)=round(VYL(L,G),6);
 $if not %Sy%==%base_year% VZL(L,G)=round(VZL(L,G),6);
 
-*----- Protect area aggregation ----*
-protect_area("WildArea_KBA_WDPA_BTC","TOT")=sum(L,protect_area("WildArea_KBA_WDPA_BTC",L));
 
 *------- Data check ----------*
 data_check(G,L)$(VYL(L,G)<0)=1;
