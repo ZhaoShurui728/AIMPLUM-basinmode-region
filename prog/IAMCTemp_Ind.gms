@@ -8,6 +8,7 @@ $setglobal IAV NoCC
 $setglobal ModelInt
 $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
+$setglobal PREDICTS_exe off
 
 set
 R	17 regions	/
@@ -172,6 +173,7 @@ U/"million ha","Mt CO2/yr"/
 parameter
 GHGL(R,Y,EmitCat,L)
 Area_load(R,Y,L)
+Ter_Bio_BII(R,Y)
 ;
 
 $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
@@ -228,6 +230,21 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negati
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
+
+$ifthen.PREDICTS_exe %PREDICTS_exe%==on
+
+table
+Ter_Bio_BII(R,Y)
+$ondelim
+$offlisting
+$include ../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/BII_regionagg_prod_%SCE%_%CLP%_%IAV%%ModelInt%_IAMCTemp.csv
+$onlisting
+$offdelim
+;
+
+IAMCTemp(R,"Terrestrial Biodiversity|BII","%",Y)=Ter_Bio_BII(R,Y)*100;
+
+$endif.PREDICTS_exe 
 
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 
