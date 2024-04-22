@@ -11,6 +11,7 @@ output/gdx/landmap
 output/gdx/results
 output/gdx/comparison
 output/nc
+output/nc/PREDICTS
 output/csv
 output/txt
 output/txt/cpu

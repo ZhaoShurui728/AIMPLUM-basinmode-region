@@ -435,7 +435,42 @@ function netcdfgen() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 7. Generation of GDX Files for Plotting
+## 7. PREDICTS execution -------------------------------------------------------------------------------
+function PREDICTScalcRun() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - Executing R script: Rscript "$2" "${@:3}" " 
+  #Execute Rscript and capture each line of output
+  Rscript "$2" "${@:3}" > "$1" 2> >( while IFS= read -r line; do
+      echo "$line"
+  done)
+
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - R script execution finished" 
+}
+
+function PREDICTScalc() {
+  for S in ${scn[@]} 
+  do
+    #load scenario specification 
+    echo "${S}"
+    ScenarioSpecName
+    #Caclulate BII coefficients  
+    if [ ${Sub_Calc_PREDICTScoef} = "on" ]; then 
+        PREDICTScalcRun "../output/lst/PREDICTS_pre.lst" "../${parent_dir}/tools/PREDICTS/prog/Estimate_coefficients.R" ${parent_dir} > "../output/log/PREDICTS_pre.log" 2>&1 ; fi
+    #Calculate BII both regional and grid scale
+    if [ ${Sub_Calc_Scale} = "Both" ]; then 
+        PREDICTScalcRun "../output/lst/PREDICTS_grid.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_grid.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1
+        PREDICTScalcRun "../output/lst/PREDICTS_regional.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_regional.R" ${S} ${parent_dir} >> "../output/log/PREDICTS_exe.log" 2>&1
+        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 >> "../output/log/PREDICTS_exe.log" 2>&1 ; fi
+    #Calculate BII regional scale    
+    if [ ${Sub_Calc_Scale} = "Regional" ]; then 
+        PREDICTScalcRun "../output/lst/PREDICTS_regional.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_regional.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1
+        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1 ; fi
+    #Calculate BII grid scale    
+    if [ ${Sub_Calc_Scale} = "Grid" ]; then 
+        PREDICTScalcRun "../output/lst/PREDICTS_grid.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_grid.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1 ; fi
+  done
+}
+
+## 8. Generation of GDX Files for Plotting
 function gdx4pngRun() {
   #Load scenario specification
   ScenarioSpecName
@@ -477,7 +512,7 @@ function gdx4png() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 8. Graphics
+## 9. Graphics
 function plot() {
   for S in ${scn[@]} 
   do
@@ -492,7 +527,7 @@ function plot() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 9. Merge All Results
+## 10. Merge All Results
 function Allmerge() {
   cd ../output/gdx/analysis
   gdxmerge *.gdx output=../final_results.gdx
@@ -500,6 +535,7 @@ function Allmerge() {
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
+
 # Functions end -----------------------------------------------------------------------------------
 
 cd ../
@@ -574,6 +610,7 @@ if [ ${Futuresim}      = "on" ]; then Futuresim      ; fi
 if [ ${ScnMerge}       = "on" ]; then ScnMerge       ; fi
 if [ ${MergeResCSV4NC} = "on" ]; then MergeResCSV4NC ; fi
 if [ ${netcdfgen}      = "on" ]; then netcdfgen      ; fi
+if [ ${PREDICTS}       = "on" ]; then PREDICTScalc   ; fi
 if [ ${gdx4png}        = "on" ]; then gdx4png        ; fi
 if [ ${plot}           = "on" ]; then plot           ; fi
 if [ ${Allmerge}       = "on" ]; then Allmerge       ; fi
