@@ -33,9 +33,9 @@ CPUthreads=17
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=off
+DataPrep=on
 # Set Data Preparation 2 Process [on/off]
-DataPrep2=off
+DataPrep2=on
 
 # Set Base Year Simulation [on/off]
 Basesim=off
@@ -43,7 +43,7 @@ Basesim=off
 # Set Future Simulation [on/off]
 Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
-    Sub_Futuresim_Loop=SCN
+    Sub_Futuresim_Loop=CTY
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
     Sub_Futuresim_NormalRun=on
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
@@ -74,7 +74,14 @@ MergeResCSV4NC=on
 # Set Netcdf Creation [on/off]
 netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
-    Sub_Netcdfgen_projectname=sdgmip
+    Sub_Netcdfgen_projectname=BTC
+
+# Set PREDICTS output [on/off]  (If on, calculate BII by PREDICTS. You need AIMPLUM netcdf output with Sub_MergeResCSV4NC_BTC3option=on)  
+PREDICTS=on
+    ## If you want to calculate PREDICTS coefficients, turn on the switch below.(default off)
+    Sub_Calc_PREDICTScoef=off
+    ## whether you want BII by grid scale or aggregated BII (Regional scale) [Both/Grid/Regional]
+    Sub_Calc_Scale=Regional
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off
