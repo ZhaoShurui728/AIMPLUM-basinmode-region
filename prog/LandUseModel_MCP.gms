@@ -676,7 +676,7 @@ popdens(G)	population density (inhabitants per km2)
   pannual_biodiv	Annualization coefficient of investment cost
 
 * cost breakdown
-  pa_lab         labor costs per unit area (million $ per ha)
+  pa_lab(G)         labor costs per unit area (million $ per ha)
   pa_road(L,G)        road construction costs per unit area (million $ per ha)
   pa_irri(L)        irrigation costs per unit area (million $ per ha)
   pa_emit(G)        emission costs per unit area (million $ per ha)
@@ -984,6 +984,8 @@ $ load CSB
 $endif.baseyear
 *----------------------*
 
+
+
 *----- Biodiversity price ---*
 PBIODIV(L,G)=0;
 
@@ -1048,7 +1050,7 @@ pr_price("BIO")$(OUTPUTALL_Nominal("%Sy%","ECR") AND OUTPUTAC("%Sy%","ECR","COM_
 
 * mil.$/ha/year = mil.$/ton * ton/(ha*year)
 pr(L,G)$(FLAGDM(L))= pr_price(L) * YIELD(L,G);
-pr("AFR",G)$(PB(G))=PB(G) + PGHG("%Sy%") * SUM(Y$(ordy("%Sy%")<=ordy(Y) and ordy(Y)<=ordy(Y)+YPP),CFT(G,Y,"%Sy%")/((1+DR)**(ordy(Y)-ordy("%Sy%")))) / YPP;
+pr("AFR",G)$(PB(G))= PB(G) + PGHG("%Sy%") * SUM(Y$(ordy("%Sy%")<=ordy(Y) and ordy(Y)<=ordy(Y)+YPP),CFT(G,Y,"%Sy%")/((1+DR)**(ordy(Y)-ordy("%Sy%")))) / YPP;
 
 * [mil. $]
 pc_input(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A),OUTPUTALL_Nominal("%Sy%",A));
@@ -1061,6 +1063,7 @@ pc_area(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A),Pland("%Sy%",A)) * 10**3;
 pc_area("CROP_FLW")=SUM(A$(ACROP(A)),Pland("%Sy%",A)) * 10**3;
 * use 2020 value for after 2020 not to reflect yield improve to bioenergy potential
 pc_area("BIO")=SUM(A$(sameas(A,"GRO")),Pland("2020",A)) * 10**3;
+
 
 * [mil.$/ha/year]
 pc(L)$(pc_area(L))=pc_input(L)/pc_area(L);
@@ -1123,7 +1126,7 @@ pannual_irri=(DR*(1+DR)**YPP_irri)/((1+DR)**YPP_irri-1);
 pannual_emit=(DR*(1+DR)**YPP_emit)/((1+DR)**YPP_emit-1);
 pannual_biodiv=(DR*(1+DR)**YPP_biodiv)/((1+DR)**YPP_biodiv-1);
 
-pa_lab = wage * labor * pannual_lab;
+pa_lab(G) = wage * labor * pannual_lab * (1+popdens(G))**(-0.005);
 pa_road(L,G)$(NOT LPRMSEC(L)) =  (plcc(L)*100 + pldc*(roaddens + GLMINHA(L,G))) * pannual_road;
 pa_irri(L)$(LCROPIR(L)) = irricost * pannual_irri;
 pa_emit(G)$(CS(G)) =  PGHG("%Sy%") * CS(G) * pannual_emit;
@@ -1131,7 +1134,7 @@ pa_biodiv(G,L)$(PBIODIV(L,G)) =  PBIODIV(L,G) * pannual_biodiv;
 
 $if %parallel%==off execute_unload '../output/temp1.gdx';
 
-pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
+pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab(G) + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
 pa_bio(G)$pa("BIO",G)=pa("BIO",G);
 YPNMAXCL=0.01;
 

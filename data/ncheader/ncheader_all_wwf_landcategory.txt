@@ -1,7 +1,7 @@
 netcdf LUH2v1.0h_AIM {
 dimensions:
 	time = 11 ;
-	lc_class = 16 ;
+	lc_class = 18 ;
 	lon = 720 ;
 	lat = 360 ;
 
@@ -20,7 +20,7 @@ variables:
 		time:calendar = "standard" ;
 	double lc_class(lc_class) ;
 		lc_class:long_name = "lc_class" ;
-		lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=otherlands/10=grassland_other/11=rice/12=wheat/13=othgrains/14=oilcrops/15=sugarcrops/16=othercrops" ;
+		lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=otherlands/10=grassland_other/11=rice/12=wheat/13=othgrains/14=oilcrops/15=sugarcrops/16=othercrops/17=forest_mng_planted/18=forest_mng_nat" ;
 	double LC_area_share(time, lc_class, lat, lon) ;
 		LC_area_share:standard_name = "share of pixel occupied by various land covers";
 		LC_area_share:long_name = "share of pixel occupied by various land covers";
@@ -156,5 +156,5 @@ data:
 
  time = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
 
- lc_class = 1, 2, 3, 4, 5, 6, 7, 8;
+ lc_class = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18;
 

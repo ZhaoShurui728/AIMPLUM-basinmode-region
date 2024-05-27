@@ -1,5 +1,5 @@
 * For options 3
-*	lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=otherlands/10=grassland_other/11=rice/12=wheat/13=othgrains/14=oilcrops/15=sugarcrops/16=othercrops" ;
+*	lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=otherlands/10=grassland_other/11=rice/12=wheat/13=othgrains/14=oilcrops/15=sugarcrops/16=othercrops/17=forest_mng_planted/18=forest_mng_nat" ;
 
 *	WWFcode		AIMcode
 	1	.	CL
@@ -28,3 +28,7 @@
 	14	.	OSD
 	15	.	C_B
 	16	.	OTH_A
+	17	.	PLNFRS
+	18	.	NRMFRS
+	19	.	FRS
+	

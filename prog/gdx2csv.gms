@@ -7,7 +7,7 @@ $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 $setglobal lumip off
 $setglobal bioyieldcalc off
-$setglobal gdxout off
+$setglobal gdxout on
 $setglobal wwfclass opt
 $setglobal wwfopt 1
 $setglobal carseq off
@@ -85,6 +85,8 @@ PRMFRS	primary forest
 SECFRS	secoundary forest
 MNGFRS	managed forest
 UMNFRS	unmanged forest
+PLNFRS	planned forest
+NRMFRS	naturally regenerated forest
 PROTECT protected area
 RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
 *restoration land with original land category
@@ -183,7 +185,7 @@ $load sharepix
 VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Primary vegetation",I,J);
 VY_IJ(Y,"SECFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J);
 VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J) AND sharepix("Primary vegetation",I,J)+sharepix("Mature and Intermediate secondary vegetation",I,J)=0)=VY_IJ(Y,"FRS",I,J);
-VY_IJ(Y,"FRS",I,J)=0;
+*VY_IJ(Y,"FRS",I,J)=0;
 
 
 * [BTC] Restored land
@@ -367,11 +369,11 @@ $elseif.p %lumip%_%wwfclass%==off_opt
 
 set
 Lwwfnum/
-$if %wwfopt%==1 1*10,11*16
-$if %wwfopt%==2 1*10,11*16
-$if %wwfopt%==3 1*10,11*16
-$if %wwfopt%==4 1*14,15*20
-$if %wwfopt%==5 1*14,15*20
+$if %wwfopt%==1 1*19
+$if %wwfopt%==2 1*19
+$if %wwfopt%==3 1*19
+$if %wwfopt%==4 1*23
+$if %wwfopt%==5 1*23
 /
 MAP_WWFnum(Lwwfnum,L)/
 $if %wwfopt%==1 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
@@ -382,6 +384,13 @@ $if %wwfopt%==4 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.m
 $if %wwfopt%==5 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
 /
 ;
+parameter
+plwwfnum/19/
+;
+
+$if %wwfopt%==4 plwwfnum=23;
+$if %wwfopt%==5 plwwfnum=23;
+
 Alias (Lwwfnum,Lwwfnum2);
 parameter
 VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abundance
@@ -422,11 +431,6 @@ VY_IJwwfnum
 ;
 $endif.gdxout
 
-parameter
-plwwfnum/16/
-;
-$if %wwfopt%==4 plwwfnum=20;
-$if %wwfopt%==5 plwwfnum=20;
 
 file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.csv" /;
 put output;
