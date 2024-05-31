@@ -44,6 +44,7 @@ MNGFRS  managed forest
 UMNFRS  unmanage forest
 PLNFRS  planted forest
 NRMFRS  naturally regenerating managed forest
+AGOFRS	agroforestry
 AFR     afforestation
 PAS     grazing pasture
 PDR     rice
@@ -265,6 +266,7 @@ VYL("MNGFRS",G)$(VYL("FRS",G))=VYL("FRS",G)-VYL("UMNFRS",G);
 
 VYL("NRMFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*forest_class_shareG("20",G)/forest_class_shareG("3",G);
 VYL("PLNFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+VYL("AGOFRS",G)$(VYL("CL",G) and forest_class_shareG("53",G))=min(VYL("CL",G) and forest_class_shareG("53",G));
 
 $else.mng
 
@@ -273,6 +275,7 @@ VYL("MNGFRS",G)$(VYL("FRS",G))=VYL("FRS",G)-VYL("UMNFRS",G);
 
 VYL("NRMFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*forest_class_shareG("20",G)/forest_class_shareG("3",G);
 VYL("PLNFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+VYL("AGOFRS",G)$(VYL("CL",G) and forest_class_shareG("53",G))=min(VYL_anapre("AGOFRS",G) and VYL("CL",G) and forest_class_shareG("53",G));
 
 $endif.mng
 

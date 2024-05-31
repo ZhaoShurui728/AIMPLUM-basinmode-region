@@ -369,11 +369,11 @@ $elseif.p %lumip%_%wwfclass%==off_opt
 
 set
 Lwwfnum/
-$if %wwfopt%==1 1*19
-$if %wwfopt%==2 1*19
-$if %wwfopt%==3 1*19
-$if %wwfopt%==4 1*23
-$if %wwfopt%==5 1*23
+$if %wwfopt%==1 1*20
+$if %wwfopt%==2 1*20
+$if %wwfopt%==3 1*20
+$if %wwfopt%==4 1*24
+$if %wwfopt%==5 1*24
 /
 MAP_WWFnum(Lwwfnum,L)/
 $if %wwfopt%==1 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
@@ -385,11 +385,11 @@ $if %wwfopt%==5 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.m
 /
 ;
 parameter
-plwwfnum/19/
+plwwfnum/20/
 ;
 
-$if %wwfopt%==4 plwwfnum=23;
-$if %wwfopt%==5 plwwfnum=23;
+$if %wwfopt%==4 plwwfnum=24;
+$if %wwfopt%==5 plwwfnum=24;
 
 Alias (Lwwfnum,Lwwfnum2);
 parameter
