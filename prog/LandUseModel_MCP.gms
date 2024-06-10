@@ -9,7 +9,7 @@ $setglobal mcp off
 $setglobal sce SSP2
 $setglobal clp BaU
 $setglobal iav NoCC
-$setglobal parallel off
+$setglobal parallel on
 $setglobal supcuv off
 $setglobal ModelInt
 $if %ModelInt2%==NoValue $setglobal ModelInt
@@ -50,7 +50,7 @@ $setglobal degradedlandprotect off
 
 *Urban area data. If this option is SSP, SSP based urban area is used. Otherwise, fixed to RCP current land. [SSP, RCP]
 $setglobal UrbanLandData SSP
-$if %Sr%==XNF $setglobal UrbanLandData RCP
+*$if %Sr%==XNF $setglobal UrbanLandData RCP
 
 *Base year cross entropy adjustment can be implemented by turning on. default is on. options are [on/off]
 $setglobal baseadjust on
@@ -84,11 +84,27 @@ YBASE(Y)/ %base_year% /
 YEND(Y) / %end_year% /
 Y0(Y)   / %Sy% /
 L land use type /
-PRM_SEC	forest + grassland + pasture
+PRM_SEC	forest + grassland + pasture + fallow land
 FRSGL	forest + grassland
+$if %base_year%==%Sy% FRS
+$if %base_year%==%Sy% GL
+$if %base_year%==%Sy% PRM_FRS
 HAV_FRS	production forest
 AFR	afforestation
+
+CROP_FLW	fallow land
+CL	cropland
 PAS	grazing pasture
+BIO	bio crops
+SL	built_up
+OL	ice or water
+RES	restoration land that was used for cropland or pasture and set aside for restoration
+
+* total
+TOT	Total
+LUC
+
+* crop types with irrigation/rainfed
 PDRIR	rice irrigated
 WHTIR	wheat irrigated
 GROIR	other coarse grain irrigated
@@ -101,43 +117,34 @@ GRORF	other coarse grain rainfed
 OSDRF	oil crops rainfed
 C_BRF	sugar crops rainfed
 OTH_ARF	other crops rainfed
-BIO	bio crops
-CROP_FLW	fallow land
-SL	built_up
-OL	ice or water
-CL	cropland
-$if %base_year%==%Sy% PRM_FRS
-$if %base_year%==%Sy% GL
-$if %base_year%==%Sy% FRS
-LUC
-RES
-TOT	Total
 /
 
 LRCPnonNat(L)/
-SL	built_up
-OL	ice or water
 CL	cropland
 PAS	grazing pasture
+SL	built_up
+OL	ice or water
 /
 LDM land use type /
 PRM_SEC	other forest and grassland
+$if %base_year%==%Sy% FRS
+$if %base_year%==%Sy% GL
 HAV_FRS	production forest
 AFR	afforestation
+CL	cropland
 PAS	grazing pasture
+CROP_FLW	fallow land
+BIO	bio crops
+SL	built_up
+OL	ice or water
+
+* crop types
 PDR	rice
 WHT	wheat
 GRO	other coarse grain
 OSD	oil crops
 C_B	sugar crops
 OTH_A	other crops
-BIO	bio crops
-CROP_FLW	fallow land
-SL	built_up
-OL	ice or water
-CL	cropland
-$if %base_year%==%Sy% GL
-$if %base_year%==%Sy% FRS
 /
 MAP_LLDM(L,LDM)/
 PRM_SEC	.	PRM_SEC
@@ -625,6 +632,9 @@ popdens(G)	population density (inhabitants per km2)
   ACF_aez(G)          average carbon flow in year Y in grid G     (MgC ha-1 year-1) (AEZ data)
   MACF_aez            mean value of average carbon flow in each region        (MgC ha-1 year-1) (AEZ data)
   CFT_aez(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G     (MgC ha-1 year-1) (AEZ data)
+  ACF_vst0(G)          average carbon flow in year Y in grid G     (MgC ha-1 year-1) (VISIT previous data)
+  MACF_vst0            mean value of average carbon flow in each region        (MgC ha-1 year-1) (VISIT previous data)
+  CFT_vst0(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G     (MgC ha-1 year-1) (VISIT previous data)
   ACF_vst(LVST,R,G)          average carbon flow in grid G (VISIT data)
   MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
   CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
@@ -688,13 +698,12 @@ popdens(G)	population density (inhabitants per km2)
   VZL(L,G)	output of VZ
   protect_wopas(G)
   VY_baseresults(LFRSGL,G)
-  VYLY(Y,L,G)
-  delta_VYLY(Y,L,G)
+  VYLY(Y,L,G)	land use in all the earlier years
+  delta_VY(Y,L,G)	Changes in land use in all the earlier years
   CSL(L,G)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
-  delta_Y(L,G)	change in area ratio of land category L in cell G
+  delta_Y(L,G)	annual change in area ratio of land category L in cell G
   GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
   GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
-  checkArea(L)
   CS_post(G)	carbon stock in next year  (MgC ha-1)
   YIELDL_OUT(L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
   YIELDLDM_OUT(LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
@@ -771,8 +780,9 @@ Y_base("OL",G)$(Y_base("OL",G)>1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G) A
 $else.baseyear
 $ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
-$	load VY_load VZ_load
-$	load PLDM_load PCDM_load
+$	load VY_load=VYL VZ_load=VZL
+$	load PLDM_load=PLDM PCDM_load=PCDM
+
 $else.fileex
   VY_load(L,G)=0;
 $endif.fileex
@@ -893,12 +903,12 @@ $elseif.afftype %afftype%==ccur_vst
   CFT(G,Y,Y2)=CFT_vst("AFRCUR","%Sr%",G,Y,Y2);
 $elseif.afftype %afftype%==cprevisit
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
-$load ACF_aez=ACF MACF_aez=MACF
-$load CFT_aez=CFT
+$load ACF_vst0=ACF MACF_vst0=MACF
+$load CFT_vst0=CFT
 
-  ACF(G)=ACF_aez(G);
-  MACF=MACF_aez;
-  CFT(G,Y,Y2)=CFT_aez(G,Y,Y2);
+  ACF(G)=ACF_vst0(G);
+  MACF=MACF_vst0;
+  CFT(G,Y,Y2)=CFT_vst0(G,Y,Y2);
 $else.afftype
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%_aez.gdx'
 $load ACF_aez=ACF MACF_aez=MACF
@@ -1119,7 +1129,7 @@ $endif
 GLMIN(L,G)$(LAFR(L) OR (LCROPA(L) AND (NOT LBIO(L))))=GLMIN0(L,G);
 GLMIN(L,G)$(LBIO(L) AND (NOT SUM(L2$LCROPA(L2),Y_pre(L2,G))))=smin(G2$(SUM(L2$LCROPA(L2),Y_pre(L2,G2)) and GL(G,G2)),GL(G,G2));
 *GLMIN(L,G)$(LAFR(L) AND (NOT Y_base("HAV_FRS",G)))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
-GLMINHA(L,G)$(LAFR(L) OR LCROPA(L)) = GLMIN(L,G)/(GA(G)*1000);
+GLMINHA(L,G)$((LAFR(L) OR LCROPA(L)) AND GA(G)) = GLMIN(L,G)/(GA(G)*1000);
 
 pannual_lab =(DR*(1+DR)**YPP_lab) /((1+DR)**YPP_lab-1);
 pannual_road=(DR*(1+DR)**YPP_road)/((1+DR)**YPP_road-1);
@@ -1127,17 +1137,17 @@ pannual_irri=(DR*(1+DR)**YPP_irri)/((1+DR)**YPP_irri-1);
 pannual_emit=(DR*(1+DR)**YPP_emit)/((1+DR)**YPP_emit-1);
 pannual_biodiv=(DR*(1+DR)**YPP_biodiv)/((1+DR)**YPP_biodiv-1);
 
-pa_lab(G) = wage * labor * pannual_lab * (1+popdens(G))**(-0.005);
+pa_lab(G)$(popdens(G)) = wage * labor * pannual_lab * (1+popdens(G))**(-0.005);
 pa_road(L,G)$(NOT LPRMSEC(L)) =  (plcc(L)*100 + pldc*(roaddens + GLMINHA(L,G))) * pannual_road;
 pa_irri(L)$(LCROPIR(L)) = irricost * pannual_irri;
 pa_emit(G)$(CS(G)) =  PGHG("%Sy%") * CS(G) * pannual_emit;
 pa_biodiv(G,L)$(PBIODIV(L,G)) =  PBIODIV(L,G) * pannual_biodiv;
 
-$if %parallel%==off execute_unload '../output/temp1.gdx';
-
 pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab(G) + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
 pa_bio(G)$pa("BIO",G)=pa("BIO",G);
 YPNMAXCL=0.01;
+
+$if %parallel%==off execute_unload '../output/temp1.gdx';
 
 *------- Initial data ----------*
 FPRM$(%Sy%>%base_year%)=1;
@@ -1265,7 +1275,7 @@ $ifthen %Sy%==%base_year%
   protect_wopas(G)=0;
 $elseif %Sy%==%second_year%
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%base_year%.gdx'
-$load VY_baseresults=VY_load
+$load VY_baseresults=VYL
   protect_wopas(G)=0;
 * protect_wopas(G)$protectfrac(G)=protectfrac(G);
 * protect_wopas(G)$(protectfrac(G)>VY_baseresults("FRSGL",G) AND VY_baseresults("FRSGL",G)>0)=VY_baseresults("FRSGL",G);
@@ -1275,7 +1285,7 @@ $else
 *$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%/%Sr%/%second_year%.gdx'
 *$load protect_wopas
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%base_year%.gdx'
-$load VY_baseresults=VY_load
+$load VY_baseresults=VYL
 
   protect_wopas(G)=0;
   protect_wopas(G)$max(protectfracL(G,"PRM_SEC"),protectfrac(G))=max(protectfracL(G,"PRM_SEC"),protectfrac(G));
@@ -1345,24 +1355,35 @@ $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $load VYLY
 $endif
 VYLY("%Sy%",L,G)$(VYL(L,G))=VYL(L,G);
-delta_VYLY(Y,L,G)$(ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
-delta_VYLY(Y,L,G)$(abs(delta_VYLY(Y,L,G))<10**(-5))=0;
+delta_VY(Y,L,G)$(ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
+delta_VY(Y,L,G)$(abs(delta_VY(Y,L,G))<10**(-5))=0;
 
 *--------GHG emissions --------*
-delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-Y_pre(L,G)))=(VYL(L,G)-Y_pre(L,G))/Ystep;
+set
+Stc       Year category         / G20, LE20 /
+;
+parameter
+LEC(R,Stc) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
+LEC0(Stc)      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+;
+$gdxin '../%prog_loc%/data/data_prep2.gdx'
+$load LEC
+
+LEC0(Stc)=LEC("%Sr%",Stc);
+
+delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-Y_pre(L,G)))=(VYL(L,G)-Y_pre(L,G));
 
 CSL("CL",G)$(delta_Y("CL",G))=5;
 CSL("BIO",G)$(delta_Y("BIO",G))=YIELD("BIO",G);
 CSL("PAS",G)$(delta_Y("PAS",G))=2.5;
-CSL("FRSGL",G)$(CS(G) AND delta_Y("FRSGL",G))=CS(G);
-
-checkArea(L)$(NOT LCROP(L))=sum(G,delta_Y(L,G) *GA(G));
 
 GHGLG("Positive",L,G)$(CSL(L,G) AND delta_Y(L,G)<0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$((NOT LFRSGL(L)) AND (NOT LAFR(L)) AND (NOT LBIO(L)) AND CSL(L,G) AND delta_Y(L,G)>0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")), CFT(G,"%Sy%",Y2)*delta_VYLY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$(LBIO(L) AND YIELD(L,G) AND VYL(L,G)) = YIELD(L,G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
-*GHGLG(L,G)$(LAFR(L) AND (NOT %Sy%=%base_year%))= ACF(G)*VYL(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0) = CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+
+GHGLG("Negative",L,G)$(CSL(L,G) AND delta_Y(L,G)>0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20") *delta_Y(L,G) *GA(G)/10**3 * (-1);
+GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
+
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
 GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G));
 GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
@@ -1387,10 +1408,10 @@ $if %parallel%==off execute_unload '../output/temp2.gdx'
 $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%Sy%.gdx'
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/%Sy%.gdx'
 ohashi
-VYL=VY_load
-VZL=VZ_load
-PLDM=PLDM_load
-PCDM=PCDM_load
+VYL
+VZL
+PLDM
+PCDM
 *ps,PLDM,pr,pr_price_base,pr_price_indx,pc,pc_input,pc_area
 SSP_frac
 Psol_stat
@@ -1401,9 +1422,8 @@ CSL
 delta_Y
 GHGLG
 GHGL
-*checkArea
 VYLY
-delta_VYLY
+delta_VY
 protectfrac
 protectfracL
 protect_wopas

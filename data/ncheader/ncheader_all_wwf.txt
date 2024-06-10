@@ -1,76 +1,47 @@
 netcdf LUH2v1.0h_AIM {
 dimensions:
+	time = 11 ;
+	lc_class = 8 ;
+	lc_class2 = 16 ;
 	lon = 720 ;
 	lat = 360 ;
-	time = 20 ;
+
 variables:
-	float lon(lon) ;
+	double lon(lon) ;
 		lon:long_name = "Longitude" ;
 		lon:units = "degrees_east" ;
 		lon:comment = "center of cell" ;
-	float lat(lat) ;
+	double lat(lat) ;
 		lat:long_name = "Latitude" ;
 		lat:units = "degrees_north" ;
 		lat:comment = "center of cell" ;
 	double time(time) ;
-		time:long_name = "Time" ;
-		time:units = "days since 1900-01-01 00:00" ;
-		time:calendar = "gregorian" ;
-	int year(time) ;
-		year:long_name = "Year" ;
-		year:units = "year" ;
-		year:format = "YYYY" ;
-	float AFR(time, lat, lon) ;
-		AFR:standard_name = "fraction of grid cell area";
-		AFR:long_name = "afforestation  fraction of grid cell area";
-		AFR:units = "1";
-		AFR:missing_value = -999.f ;
-	float BIO(time, lat, lon) ;
-		BIO:standard_name = "fraction of grid cell area";
-		BIO:long_name = "bioenergy crops fraction of grid cell area";
-		BIO:units = "1";
-		BIO:missing_value = -999.f ;
-	float CL(time, lat, lon) ;
-		CL:standard_name = "fraction of grid cell area";
-		CL:long_name = "cropland fraction of grid cell area";
-		CL:units = "1";
-		CL:missing_value = -999.f ;
-	float PRMFRS(time, lat, lon) ;
-		PRMFRS:standard_name = "fraction of grid cell area";
-		PRMFRS:long_name = "unmanaged forest fraction of grid cell area";
-		PRMFRS:units = "1";
-		PRMFRS:missing_value = -999.f ;
-	float MNGFRS(time, lat, lon) ;
-		MNGFRS:standard_name = "fraction of grid cell area";
-		MNGFRS:long_name = "managed forest fraction of grid cell area";
-		MNGFRS:units = "1";
-		MNGFRS:missing_value = -999.f ;
-	float OL(time, lat, lon) ;
-		OL:standard_name = "fraction of grid cell area";
-		OL:long_name = "otherland area fraction of grid cell area";
-		OL:units = "1";
-		OL:missing_value = -999.f ;
-	float GL(time, lat, lon) ;
-		GL:standard_name = "fraction of grid cell area";
-		GL:long_name = "grassland area fraction of grid cell area";
-		GL:units = "1";
-		GL:missing_value = -999.f ;
-	float PAS(time, lat, lon) ;
-		PAS:standard_name = "fraction of grid cell area";
-		PAS:long_name = "pasture area fraction of grid cell area";
-		PAS:units = "1";
-		PAS:missing_value = -999.f ;
-	float RES(time, lat, lon) ;
-		RES:standard_name = "fraction of grid cell area";
-		RES:long_name = "restoration fraction of grid cell area";
-		RES:units = "1";
-		RES:missing_value = -999.f ;
-	float SL(time, lat, lon) ;
-		SL:standard_name = "fraction of grid cell area";
-		SL:long_name = "urban area fraction of grid cell area";
-		SL:units = "1";
-		SL:missing_value = -999.f ;
-
+		time:long_name = "time" ;
+		time:units = "years" ;
+		time:calendar = "standard" ;
+	double lc_class(lc_class) ;
+		lc_class:long_name = "lc_class" ;
+		lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up" ;
+	double lc_class2(lc_class2) ;
+		lc_class2:long_name = "lc_class" ;
+		lc_class2:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed/13=forest_mng_nat/14=forest_mng_planted/15=agroforestry/16=forest_all" ;
+	double LC_area_share1(time, lc_class, lat, lon) ;
+		LC_area_share1:standard_name = "share of pixel occupied by various land covers";
+		LC_area_share1:long_name = "share of pixel occupied by various land covers";
+		LC_area_share1:units = "share of pixel area";
+		LC_area_share1:_FillValue = NaN ;
+		LC_area_share1:missing_value = -99.0f;
+	double LC_area_share2(time, lc_class2, lat, lon) ;
+		LC_area_share2:standard_name = "share of pixel occupied by various land covers";
+		LC_area_share2:long_name = "share of pixel occupied by various land covers";
+		LC_area_share2:units = "share of pixel area";
+		LC_area_share2:_FillValue = NaN ;
+	    LC_area_share2:missing_value = -99.0f;
+	double pixel_area(lat, lon) ;
+		pixel_area:units = "million ha" ;
+		pixel_area:_FillValue = NaN ;
+		pixel_area:missing_value = -99.0f;
+		pixel_area:long_name = "total area of the pixel" ;
 data:
 
  lon = -179.75, -179.25, -178.75, -178.25, -177.75, -177.25, -176.75, 
@@ -193,7 +164,7 @@ data:
     -82.25, -82.75, -83.25, -83.75, -84.25, -84.75, -85.25, -85.75, -86.25, -86.75, 
     -87.25, -87.75, -88.25, -88.75, -89.25, -89.75 ;
 
- year = 2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100;
+ time = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
 
- time = 38351, 40177, 42003, 43829, 45656, 47482, 49308, 51134, 52961, 54787, 56613, 58439, 60266, 62092, 63918, 65744, 67571, 69397, 71223, 73049 ;
-
+ lc_class = 1, 2, 3, 4, 5, 6, 7, 8;
+ lc_class2 = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16;

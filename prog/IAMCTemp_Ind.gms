@@ -22,24 +22,45 @@ R5LAM
 /
 Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
 L land use type /
-LUC	land use change total
-
 PRM_SEC forest + grassland + pasture
 FRSGL   forest + grassland
-*HAV_FRS        production forest
+HAV_FRS        production forest
 FRS     forest
-MNGFRS  managed forest
-UMNFRS  unmanage forest
-PLNFRS  planted forest
-NRMFRS  naturally regenerating managed forest
+GL      grassland
 AFR     afforestation
+CL      cropland
+CROP_FLW        fallow land
 PAS     grazing pasture
+BIO     bio crops
+SL      built_up
+OL      ice or water
+RES	restoration land that was used for cropland or pasture and set aside for restoration
+
+* forest subcategory
+PRMFRS	primary forest
+SECFRS	secoundary forest excl AFR
+MNGFRS  managed forest excl AFR
+UMNFRS  unmanage forest
+NRMFRS  naturally regenerating managed forest
+PLNFRS  planted forest excl AFR
+AGOFRS	agroforestry
+
+* grassland subcategory
+PRMGL	primary grassland
+SECGL	secoundary grassland
+
+* total
+LUC	land use change total
+
+* crop types
 PDR     rice
 WHT     wheat
 GRO     other coarse grain
 OSD     oil crops
 C_B     sugar crops
 OTH_A   other crops
+
+* crop types with irrigation/rainfed
 PDRIR   rice irrigated
 WHTIR   wheat irrigated
 GROIR   other coarse grain irrigated
@@ -52,13 +73,12 @@ GRORF   other coarse grain rainfed
 OSDRF   oil crops rainfed
 C_BRF   sugar crops rainfed
 OTH_ARF other crops rainfed
-BIO     bio crops
-CROP_FLW        fallow land
-GL      grassland
-SL      built_up
-OL      ice or water
-CL      cropland
-RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
+
+* Changes in land use
+NRFABD	naturally regenerating managed forest on abondoned land
+NRGABD	naturally regenerating managed grassland on abondoned land
+DEF	deforestion (decrease in forest area FRS from previou year)
+DEG	decrease in grassland area GL from previou year
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/
@@ -127,18 +147,31 @@ Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
 Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
 /
 
+* forest subcategory
+PRMFRS	primary forest
+SECFRS	secoundary forest excl AFR
+MNGFRS  managed forest excl AFR
+UMNFRS  unmanage forest
+NRMFRS  naturally regenerating managed forest
+PLNFRS  planted forest excl AFR
+AGOFRS	agroforestry
+
+
 MapLIAMPC(L,V)/
+FRS .   Lan_Cov_Frs
+AFR .   Lan_Cov_Frs
+MNGFRS .   Lan_Cov_Frs_Man
+AFR .   Lan_Cov_Frs_Man
+UMNFRS .   Lan_Cov_Frs_Nat_Frs
+AFR .   Lan_Cov_Frs_Aff_and_Ref
+NRFABD .   Lan_Cov_Frs_Aff_and_Ref
+
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro
 CROP_FLW	.	Lan_Cov_Cro
 CL	.	Lan_Cov_Cro_Non_Ene_Cro
 CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
 FRS	.	Lan_Cov_Frs
-AFR .   Lan_Cov_Frs
-MNGFRS .   Lan_Cov_Frs_Man
-AFR .   Lan_Cov_Frs_Man
-UMNFRS .   Lan_Cov_Frs_Nat_Frs
-AFR .   Lan_Cov_Frs_Aff_and_Ref
 PAS	.	Lan_Cov_Pst
 GL	.	Lan_Cov_Oth_Nat_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
@@ -226,7 +259,7 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
@@ -244,7 +277,7 @@ $offdelim
 
 IAMCTemp(R,"Terrestrial Biodiversity|BII","%",Y)=Ter_Bio_BII(R,Y)*100;
 
-$endif.PREDICTS_exe 
+$endif.PREDICTS_exe
 
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 

@@ -119,7 +119,7 @@ function Basesim() {
     LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
   done
   wait
-  echo "All base disaggregation have been done."
+  echo "All base year simulations have been done."
 
   for A in ${COUNTRY0[@]} 
   do
@@ -289,7 +289,7 @@ function ScnMerge() {
 function MergeResCSV4NCRun() {
   #Load scenario specification
   ScenarioSpecName
-  OPT=(1 3 5)
+  OPT=(1 2)
   basecsv=$3
   BTC3option=$4
   lumip=$5
@@ -386,8 +386,8 @@ function netcdfgenRun() {
   fi
   #Bending the curve 
   if [ ${BTC3option} == on ]; then
-    filelist="../output/csv/${SceName}/${SceName}_opt1.csv ../output/csv/${SceName}/${SceName}_opt3.csv  ../output/csv/${SceName}/${SceName}_opt5.csv"
-    ncgenfunc AIM-LUmap ${SceName} "${filelist}" ncheader_all_wwf_landcategoryall 2
+    filelist="../output/csv/${SceName}/${SceName}_opt1.csv ../output/csv/${SceName}/${SceName}_opt2.csv"
+    ncgenfunc AIM-LUmap ${SceName} "${filelist}" ncheader_all_wwf 2
   fi
   #Default SSP-RCP-land use date creation 
   if [ ${ssprcp} == on ]; then
@@ -403,7 +403,7 @@ function netcdfgenRun() {
 
 function netcdfgen() {
   echo "NetCDF generation starts"
-  FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_wwf2 ncheader_all_wwf_landcategory ncheader_all_wwf_landcategory2 ncheader_all_wwf_landcategoryall ncheader_all_ghg)
+  FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_ghg)
   for F in ${FileCopyList[@]} 
   do 
     cp ../${parent_dir}/data/ncheader/${F}.txt ../output/csv/${F}.txt 

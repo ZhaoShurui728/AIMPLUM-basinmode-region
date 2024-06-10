@@ -46,60 +46,76 @@ MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
 Y	Year	/2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100/
 
 L land use type /
-FRSGL
-FRS	forest land
-PAS	grazing pasture land
-GL	grassland
-CL	cropland
-BIO	bio crops
+FRSGL   forest + grassland
+HAV_FRS  production forest
+FRS     forest
+GL      grassland
+AFR     afforestation
+CL      cropland
+CROP_FLW        fallow land
+PAS     grazing pasture
+BIO     bio crops
+SL      built_up
+OL      ice or water
 BIOP	potentail biocrop land
-AFR	afforestation
-HAV_FRS
-*$ifthen.sr not %Sr%==WLD
-PRM_SEC
-PDR	rice
-WHT	wheat
-GRO	other coarse grain
-OSD	oil crops
-C_B	sugar crops
-OTH_A	other crops
-CROP_FLW	fallow land
-SL	built_up
-OL	ice or water
-TOT	total
-PDRIR	rice irrigated
-WHTIR	wheat irrigated
-GROIR	other coarse grain irrigated
-OSDIR	oil crops irrigated
-C_BIR	sugar crops irrigated
-OTH_AIR	other crops irrigated
-PDRRF	rice rainfed
-WHTRF	wheat rainfed
-GRORF	other coarse grain rainfed
-OSDRF	oil crops rainfed
-C_BRF	sugar crops rainfed
-OTH_ARF	other crops rainfed
 ONV	other natural vegetation
-*AFRRES	afforestation or restoration
-PRMFRS	primary forest
-SECFRS	secoundary forest
-MNGFRS	managed forest
-UMNFRS	unmanged forest
-PLNFRS	planned forest
-NRMFRS	naturally regenerated forest
 PROTECT protected area
 RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
-*restoration land with original land category
+
+* total
+LUC
+TOT	total
+
+* forest subcategory
+PRMFRS	primary forest
+SECFRS	secoundary forest excl AFR
+MNGFRS  managed forest excl AFR
+UMNFRS  unmanage forest
+NRMFRS  naturally regenerating managed forest
+PLNFRS  planted forest excl AFR
+AGOFRS	agroforestry
+
+* grassland subcategory
+PRMGL	primary grassland
+SECGL	secoundary grassland
+
+* crop types
+PDR     rice
+WHT     wheat
+GRO     other coarse grain
+OSD     oil crops
+C_B     sugar crops
+OTH_A   other crops
+PDRIR   rice irrigated
+WHTIR   wheat irrigated
+GROIR   other coarse grain irrigated
+OSDIR   oil crops irrigated
+C_BIR   sugar crops irrigated
+OTH_AIR other crops irrigated
+PDRRF   rice rainfed
+WHTRF   wheat rainfed
+GRORF   other coarse grain rainfed
+OSDRF   oil crops rainfed
+C_BRF   sugar crops rainfed
+OTH_ARF other crops rainfed
+
+* Changes in land use
+NRFABD	naturally regenerating managed forest on abondoned land
+NRGABD	naturally regenerating managed grassland on abondoned land
+DEF	deforestion (decrease in forest area FRS from previou year)
+DEG
+
+* BtC
+*abondoned land with original land category
 ABD_CL
 ABD_CROP_FLW
 ABD_BIO
 ABD_PAS
 ABD_MNGFRS
 ABD_AFR
-LUC
 /
 LAFR(L)/AFR/
-Lused(L)/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR/
+Lused(L)/MNGFRS,AFR,CL,CROP_FLW,BIO,PAS/
 Lnat(L)/GL,UMNFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
 LRES(L)/RES/
@@ -107,9 +123,21 @@ LABL(L)/AFR,BIO,LUC/
 *NLFRSGL/CL,CROP_FLW,BIO,PAS,MNGFRS,AFR,ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR,SL,OL/
 Lmip/
 $include ../%prog_loc%/define/lumip.set
+rice
+wheat
+maize
+sugarcrops
+oilcrops
+othercrops
 /
 MAP_LUMIP(Lmip,L)/
 $include ../%prog_loc%/define/lumip.map
+rice	.	PDR
+wheat	.	WHT
+maize	.	GRO
+sugarcrops	.	C_B
+oilcrops	.	OSD
+othercrops	.	OTH_A
 /
 Lwwf/
 $include ../%prog_loc%/individual/BendingTheCurve/luwwf.set
@@ -117,10 +145,8 @@ $include ../%prog_loc%/individual/BendingTheCurve/luwwf.set
 MAP_WWF(Lwwf,L)/
 $include ../%prog_loc%/individual/BendingTheCurve/luwwf.map
 /
-LULC_class/
-$include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
-/
 MAP_RIJ(R,I,J)
+MAP_RG(R,G)
 MAP_CL(L,L) cropland aggregation map/
 PDRIR	.	PDR
 WHTIR	.	WHT
@@ -157,7 +183,6 @@ VY_loadAFRbaunocc(R,Y,LAFR,G)
 VY_IJAFRbaunocc(Y,I,J)
 VY_loadAFRbaubiod(R,Y,LAFR,G)
 VY_IJAFRbaubiod(Y,I,J)
-sharepix(LULC_class,I,J)
 VY_IJ_res(Y,L,I,J)
 VY_IJ_delay(Y,L,I,J)
 GAIJ(I,J)           Grid area of cell I J kha
@@ -166,26 +191,16 @@ Y_step /10/
 ;
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load Map_GIJ MAP_RIJ GAIJ
+$load Map_GIJ MAP_RIJ GAIJ MAP_RG
 
 FLAG_IJ(I,J)$SUM(R,MAP_RIJ(R,I,J))=1;
 
 $gdxin '../output/gdx/results/results_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-$load VY_load
+$load VY_load=VYL
 
-VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,VY_load(R,Y,L,G)));
+* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
+VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
-
-* Forest is devided into primary and secoundary.
-
-$gdxin '../%prog_loc%/data/sharepix.gdx'
-$load sharepix
-
-
-VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Primary vegetation",I,J);
-VY_IJ(Y,"SECFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J)) = VY_IJ(Y,"FRS",I,J) * sharepix("Mature and Intermediate secondary vegetation",I,J);
-VY_IJ(Y,"PRMFRS",I,J)$(FLAG_IJ(I,J) AND VY_IJ(Y,"FRS",I,J) AND sharepix("Primary vegetation",I,J)+sharepix("Mature and Intermediate secondary vegetation",I,J)=0)=VY_IJ(Y,"FRS",I,J);
-*VY_IJ(Y,"FRS",I,J)=0;
 
 
 * [BTC] Restored land
@@ -230,7 +245,6 @@ RSF(Y,L,I,J)=0;
 ABD(Y,L,I,J)=0;
 XF(Y,L,I,J)=0;
 
-*$ifthen.rsfabd not %wwfopt%==1
 
 ordy(Y) = 2010 + (ord(Y)-1)*10;
 
@@ -269,7 +283,6 @@ Loop(Y2$(Y2.val>=2020),
 RSF(Y,L,I,J)$(SUM(Y2,RS(Y,L,Y2,I,J)))=SUM(Y2,RS(Y,L,Y2,I,J));
 ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J));
 
-*$endif.rsfabd
 
 
 $endif.split
@@ -351,54 +364,49 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3nfx
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms crpbf_c4ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms flood
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms fallow
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms rice
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms wheat
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms maize
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms sugarcrops
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms oilcrops
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms othercrops
 
-$elseif.p %lumip%_%wwfclass%==off_on
+$ifthen.gdxout %gdxout%==on
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_lumip.gdx'
+VY_IJmip
+;
+$endif.gdxout
 
-VY_IJwwf(Y,Lwwf,I,J)=SUM(L$MAP_WWF(Lwwf,L),VY_IJ(Y,L,I,J));
-
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms cropland_other
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms cropland_bioenergySRP
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms grassland
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms forest_unmanaged
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms forest_managed
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms restored
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms other
-$batinclude ../%prog_loc%/inc_prog/outputcsv_wwf.gms built_up_areas
 
 $elseif.p %lumip%_%wwfclass%==off_opt
 
 set
 Lwwfnum/
-$if %wwfopt%==1 1*20
-$if %wwfopt%==2 1*20
-$if %wwfopt%==3 1*20
-$if %wwfopt%==4 1*24
-$if %wwfopt%==5 1*24
+$if %wwfopt%==1 1*8
+$if %wwfopt%==2 1*16
+$if %wwfopt%==3 1*16
+
 /
 MAP_WWFnum(Lwwfnum,L)/
 $if %wwfopt%==1 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
-$if %wwfopt%==2 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
-$if %wwfopt%==3 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum2.map
-*--- luwwfnum_org.map is map for restoration land with original land category
-$if %wwfopt%==4 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
-$if %wwfopt%==5 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
+$if %wwfopt%==2 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
+$if %wwfopt%==3 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
 /
 ;
 parameter
-plwwfnum/20/
+plwwfnum/
+$if %wwfopt%==1 8
+$if %wwfopt%==2 16
+$if %wwfopt%==3 16
+/
 ;
-
-$if %wwfopt%==4 plwwfnum=24;
-$if %wwfopt%==5 plwwfnum=24;
 
 Alias (Lwwfnum,Lwwfnum2);
 parameter
-VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abundance
-VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abundance
+VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance
+VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abandance
 VY_IJwwfnum(Y,Lwwfnum,I,J)
 ;
-
-* land category has number 1-10 for opt 1-3 and 1-14 for opt4,5).
 
 VW(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VW(Y,L,I,J)$(LRES(L) and RSF(Y,L,I,J))=RSF(Y,L,I,J);
@@ -414,16 +422,13 @@ VU(Y,L,I,J)$(LRES(L) and SUM(L2,XF(Y,L2,I,J)))=SUM(L2,XF(Y,L2,I,J));
 VW(Y,L,I,J)$(VW(Y,L,I,J)<10**(-7) AND VW(Y,L,I,J)>(-1)*10**(-7))=0;
 VU(Y,L,I,J)$(VU(Y,L,I,J)<10**(-7) AND VU(Y,L,I,J)>(-1)*10**(-7))=0;
 
-
 $if %wwfopt%==1 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J));
-$if %wwfopt%==2 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
-$if %wwfopt%==3 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
-$if %wwfopt%==4 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
-$if %wwfopt%==5 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
+$if %wwfopt%==2 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
+$if %wwfopt%==3 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
 
 VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
-* put -999 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
+* put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'

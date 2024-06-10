@@ -7,17 +7,18 @@
 	c4ann	.	GROIR
 	c4ann	.	C_BRF
 	c4ann	.	C_BIR
-	c3ann	.	OTH_ARF
-	c3ann	.	OTH_AIR
-*	c3per	.	na
+	c3per	.	OTH_ARF
+	c3per	.	OTH_AIR
 *	c4per	.	na
 	c3nfx	.	OSDRF
 	c3nfx	.	OSDIR
-	range	.	GL
+*	range	.	GL
 	pastr	.	PAS
 	primf	.	PRMFRS
 	secdf	.	SECFRS
 	secdf	.	AFR
+	primn	.	PRMGL
+	secdn	.	SECGL
 	urban	.	SL
 	irrig_c3ann	.	PDRIR
 	irrig_c3ann	.	WHTIR
@@ -31,3 +32,4 @@
 	flood	.	PDRRF
 	flood	.	PDRIR
 	fallow	.	CROP_FLW
+	icwtr	.	OL

@@ -2,7 +2,7 @@ netcdf LUH2v1.0h_AIM {
 dimensions:
 	lon = 720 ;
 	lat = 360 ;
-	time = 20 ;
+	time = 11 ;
 variables:
 	float lon(lon) ;
 		lon:long_name = "Longitude" ;
@@ -24,72 +24,72 @@ variables:
 		c3ann:standard_name = "fraction of grid cell area";
 		c3ann:long_name = "C3 annual crops fraction of grid cell area";
 		c3ann:units = "1";
-		c3ann:missing_value = -999.f ;
+		c3ann:missing_value = -99.0f ;
 	float c3nfx(time, lat, lon) ;
 		c3nfx:standard_name = "fraction of grid cell area";
 		c3nfx:long_name = "C3 nitrogen-fixing crops fraction of grid cell area";
 		c3nfx:units = "1";
-		c3nfx:missing_value = -999.f ;
+		c3nfx:missing_value = -99.0f ;
 	float c4ann(time, lat, lon) ;
 		c4ann:standard_name = "fraction of grid cell area";
 		c4ann:long_name = "C4 annual crops fraction of grid cell area";
 		c4ann:units = "1";
-		c4ann:missing_value = -999.f ;
+		c4ann:missing_value = -99.0f ;
 	float crpbf_c4ann(time, lat, lon) ;
 		crpbf_c4ann:standard_name = "fraction of grid cell area";
 		crpbf_c4ann:long_name = "C4 annual crops grown as biofuels fraction of grid cell area";
 		crpbf_c4ann:units = "1";
-		crpbf_c4ann:missing_value = -999.f ;
+		crpbf_c4ann:missing_value = -99.0f ;
 	float irrig_c3ann(time, lat, lon) ;
 		irrig_c3ann:standard_name = "fraction of grid cell area";
 		irrig_c3ann:long_name = "irrigated fraction of C3 annual area fraction of grid cell area";
 		irrig_c3ann:units = "1";
-		irrig_c3ann:missing_value = -999.f ;
+		irrig_c3ann:missing_value = -99.0f ;
 	float irrig_c3nfx(time, lat, lon) ;
 		irrig_c3nfx:standard_name = "fraction of grid cell area";
 		irrig_c3nfx:long_name = "irrigated fraction of C3 N-fixing area fraction of grid cell area";
 		irrig_c3nfx:units = "1";
-		irrig_c3nfx:missing_value = -999.f ;
+		irrig_c3nfx:missing_value = -99.0f ;
 	float irrig_c4ann(time, lat, lon) ;
 		irrig_c4ann:standard_name = "fraction of grid cell area";
 		irrig_c4ann:long_name = "irrigated fraction of C4 annual area fraction of grid cell area";
 		irrig_c4ann:units = "1";
-		irrig_c4ann:missing_value = -999.f ;
+		irrig_c4ann:missing_value = -99.0f ;
 	float pastr(time, lat, lon) ;
 		pastr:standard_name = "fraction of grid cell area";
 		pastr:long_name = "managed pasture fraction of grid cell area";
 		pastr:units = "1";
-		pastr:missing_value = -999.f ;
+		pastr:missing_value = -99.0f ;
 	float primf(time, lat, lon) ;
 		primf:standard_name = "fraction of grid cell area";
 		primf:long_name = "forested primary land fraction of grid cell area";
 		primf:units = "1";
-		primf:missing_value = -999.f ;
+		primf:missing_value = -99.0f ;
 	float range(time, lat, lon) ;
 		range:standard_name = "fraction of grid cell area";
 		range:long_name = "rangeland fraction of grid cell area";
 		range:units = "1";
-		range:missing_value = -999.f ;
+		range:missing_value = -99.0f ;
 	float secdf(time, lat, lon) ;
 		secdf:standard_name = "fraction of grid cell area";
 		secdf:long_name = "potentially forested secondary land fraction of grid cell area";
 		secdf:units = "1";
-		secdf:missing_value = -999.f ;
+		secdf:missing_value = -99.0f ;
 	float urban(time, lat, lon) ;
 		urban:standard_name = "fraction of grid cell area";
 		urban:long_name = "urban land fraction of grid cell area";
 		urban:units = "1";
-		urban:missing_value = -999.f ;
+		urban:missing_value = -99.0f ;
 	float flood(time, lat, lon) ;
 		flood:standard_name = "fraction of grid cell area";
 		flood:long_name = "flooded fractin of C3 annual crop area";
 		flood:units = "1";
-		flood:missing_value = -999.f ;
+		flood:missing_value = -99.0f ;
 	float fallow(time, lat, lon) ;
 		fallow:standard_name = "fraction of grid cell area";
 		fallow:long_name = "fallow land";
 		fallow:units = "1";
-		fallow:missing_value = -999.f ;
+		fallow:missing_value = -99.0f ;
 
 data:
 
@@ -213,7 +213,7 @@ data:
     -82.25, -82.75, -83.25, -83.75, -84.25, -84.75, -85.25, -85.75, -86.25, -86.75, 
     -87.25, -87.75, -88.25, -88.75, -89.25, -89.75 ;
 
- year = 2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040, 2045, 2050, 2055, 2060, 2065, 2070, 2075, 2080, 2085, 2090, 2095, 2100;
+ year = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
 
- time = 38351, 40177, 42003, 43829, 45656, 47482, 49308, 51134, 52961, 54787, 56613, 58439, 60266, 62092, 63918, 65744, 67571, 69397, 71223, 73049 ;
+ time = 38351, 40177, 43829, 47482, 51134, 54787, 58439, 62092, 65744, 69397, 73049 ;
 

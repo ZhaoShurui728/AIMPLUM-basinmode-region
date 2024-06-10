@@ -13,7 +13,7 @@
 	c4per
 	c3nfx
 	secma
-	secmb
+	secmb	
 *	2.2.2 Transitions
 *	Transitions between land use states (units fraction of grid cell per y)
 *	All in format <state1_to_state2>

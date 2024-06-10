@@ -66,13 +66,44 @@ SP	/SMCP,SNLP,SLP/
 Scol	/quantity,price,yield,area/
 Sacol	/cge,base,estimates/
 L land use type /
-*PRM_SEC	forest + grassland + pasture
-FRSGL	forest + grassland
-FRS	forest
-GL
-HAV_FRS production forest
-AFR	afforestation
-PAS	grazing pasture
+PRM_SEC forest + grassland + pasture + fallow land
+FRSGL   forest + grassland
+HAV_FRS  production forest
+FRS     forest excl AFR
+GL      grassland
+AFR     afforestation
+CL      cropland
+CROP_FLW        fallow land
+PAS     grazing pasture
+BIO     bio crops
+SL      built_up
+OL      ice or water
+RES	restoration land that was used for cropland or pasture and set aside for restoration
+
+* total
+LUC
+"LUC+BIO"
+
+* forest subcategory (composition of FRS excl AFR)
+PRMFRS	primary forest
+SECFRS	secoundary forest excl AFR
+MNGFRS  managed forest excl AFR
+UMNFRS  unmanage forest
+NRMFRS  naturally regenerating managed forest
+PLNFRS  planted forest excl AFR
+AGOFRS	agroforestry
+
+* grassland subcategory
+PRMGL	primary grassland
+SECGL	secoundary grassland
+
+* crop types
+PDR     rice
+WHT     wheat
+GRO     other coarse grain
+OSD     oil crops
+C_B     sugar crops
+OTH_A   other crops
 PDRIR   rice irrigated
 WHTIR   wheat irrigated
 GROIR   other coarse grain irrigated
@@ -85,18 +116,12 @@ GRORF   other coarse grain rainfed
 OSDRF   oil crops rainfed
 C_BRF   sugar crops rainfed
 OTH_ARF other crops rainfed
-BIO     bio crops
-CROP_FLW        fallow land
-SL      built_up
-OL      ice or water
-CL	cropland
-LUC
-RES
-"LUC+BIO"
-MNGFRS  managed forest
-UMNFRS  unmanage forest
-PLNFRS  planted forest
-NRMFRS  naturally regenerating managed forest
+
+* Changes in land use
+NRFABD	naturally regenerating managed forest on abondoned land
+NRGABD	naturally regenerating managed grassland on abondoned land
+DEF	deforestion (decrease in forest area FRS from previou year)
+DEG	decrease in grassland area GL from previou year
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
@@ -123,13 +148,13 @@ SL	built_up
 OL	ice or water
 CL      cropland
 CEREAL	cereal
-RES
+RES	restoration land that was used for cropland or pasture and set aside for restoration
 /
 LFRSGLDM(LDM)/FRSGL,FRS,GL/
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
 MAP_LLDM(L,LDM)/
 *PRM_SEC .       PRM_SEC
-HAV_FRS .       HAV_FRS
+HAV_FRS  .       HAV_FRS
 AFR     .       AFR
 PAS     .       PAS
 PDRIR   .       PDR
@@ -222,7 +247,7 @@ VYL(R,Y,L,G)	a fraction of land-use L region R in year Y grid G
 VYPL(R,Y,L,G)
 pa_road(R,Y,L,G)
 pa_emit(R,Y,G)
-pa_lab(R,Y)
+pa_lab(R,Y,G)
 pa_irri(R,Y,L)
 ordy(Y)
 MFA(R)     management factor for bio crops in base year
@@ -312,7 +337,7 @@ PATLDM(R,Y,LDM,costitem)    total land transition cost per unit area (million $)
 pa(R,Y,L,G)
 ;
 
-pa(R,Y,L,G) = pa_lab(R,Y) + pa_road(R,Y,L,G)  + pa_irri(R,Y,L) + pa_emit(R,Y,G)$(NOT LFRSGL(L));
+pa(R,Y,L,G) = pa_lab(R,Y,G) + pa_road(R,Y,L,G)  + pa_irri(R,Y,L) + pa_emit(R,Y,G)$(NOT LFRSGL(L));
 
 *PAL(R,Y,L,"total")$SUM(G$(pa(R,Y,L,G) * YIELD(L,G) * VYPL(L,G)), YIELD(L,G) * GA(G) *VYPL(L,G))
 *=SUM(G$(pa(R,Y,L,G) * YIELD(L,G) * VYPL(L,G)),pa(R,Y,L,G) * YIELD(L,G) * GA(G) *VYPL(L,G)) /SUM(G$(pa(R,Y,L,G) * YIELD(L,G) * VYPL(L,G)), YIELD(L,G) * GA(G) *VYPL(L,G))*(10**6);
@@ -320,7 +345,8 @@ PAL(R,Y,L,"road")$SUM(G$(pa_road(R,Y,L,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIE
 =SUM(G$(pa_road(R,Y,L,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), pa_road(R,Y,L,G) * YIELD(R,Y,L,G) * GA(G) *VYPL(R,Y,L,G)) /SUM(G$(pa_road(R,Y,L,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * GA(G) *VYPL(R,Y,L,G))*(10**6);
 PAL(R,Y,L,"emit")$((NOT LFRSGL(L)) AND SUM(G$(pa_emit(R,Y,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * GA(G) *VYPL(R,Y,L,G)))
 =SUM(G$(pa_emit(R,Y,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), pa_emit(R,Y,G) * YIELD(R,Y,L,G) * GA(G) *VYPL(R,Y,L,G)) /SUM(G$(pa_emit(R,Y,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * GA(G) *VYPL(R,Y,L,G))*(10**6);
-PAL(R,Y,L,"lab")$SUM(G$(pa(R,Y,L,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * VYPL(R,Y,L,G))=pa_lab(R,Y)*(10**6);
+PAL(R,Y,L,"lab")$(SUM(G$(pa_lab(R,Y,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * GA(G) * VYPL(R,Y,L,G)))=SUM(G$(pa_lab(R,Y,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), pa_lab(R,Y,G) * YIELD(R,Y,L,G) * GA(G) * VYPL(R,Y,L,G))*(10**6)/
+ SUM(G$(pa_lab(R,Y,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * GA(G) * VYPL(R,Y,L,G));
 PAL(R,Y,L,"irri")$SUM(G$(pa(R,Y,L,G) * YIELD(R,Y,L,G) * VYPL(R,Y,L,G)), YIELD(R,Y,L,G) * VYPL(R,Y,L,G))=pa_irri(R,Y,L)*(10**6);
 PAL(R,Y,L,"total")=sum(costitem,PAL(R,Y,L,costitem));
 

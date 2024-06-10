@@ -14,7 +14,7 @@ YIELD%1(L,G)
 VYPL%1(Y,L,G)
 pa_road%1(Y,L,G)
 pa_emit%1(Y,G)
-pa_lab%1(Y)
+pa_lab%1(Y,G)
 pa_irri%1(Y,L)
 MFA%1     management factor for bio crops in base year
 MFB%1     management factor for bio crops (coefficient)
@@ -37,12 +37,14 @@ $load pa_lab%1=pa_lab
 $load pa_irri%1=pa_irri
 $load YIELDL%1=YIELDL_OUT
 $load YIELDLDM%1=YIELDLDM_OUT
-*$load VYL%1=VY_load
+
+
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
-$load VYL%1=VY_load
+$load VYL%1=VYL
 $load GHGL%1=GHGL
 $load GHGLG%1=GHGLG
+$load Area%1=Area
 
 $gdxin '../output/gdx/base/%1/basedata.gdx'
 $load Area_base%1=Area_base
@@ -58,11 +60,10 @@ Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
 GHGL("%1",Y,EmitCat,L)$GHGL%1(Y,EmitCat,L)=GHGL%1(Y,EmitCat,L);
 GHGLG(Y,EmitCat,L,G)$GHGLG%1(Y,EmitCat,L,G)=GHGLG%1(Y,EmitCat,L,G);
 
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
-$load Area%1=Area_load
+
 $gdxin '../output/gdx/base/%1/analysis/%base_year%.gdx'
 $load CSB%1=CSB
-*$load VY_load%1=VY_load
+
 
 Area("%1",Y,L)$Area%1(Y,L)=Area%1(Y,L);
 CSB("%1")$(CSB%1)=CSB%1;
@@ -71,7 +72,7 @@ YIELD_load("%1",L,G)$YIELD%1(L,G)=YIELD%1(L,G);
 VYPL("%1",Y,L,G)$VYPL%1(Y,L,G)=VYPL%1(Y,L,G);
 pa_road("%1",Y,L,G)$pa_road%1(Y,L,G)=pa_road%1(Y,L,G);
 pa_emit("%1",Y,G)$pa_emit%1(Y,G)=pa_emit%1(Y,G);
-pa_lab("%1",Y)$pa_lab%1(Y)=pa_lab%1(Y);
+pa_lab("%1",Y,G)$pa_lab%1(Y,G)=pa_lab%1(Y,G);
 pa_irri("%1",Y,L)$pa_irri%1(Y,L)=pa_irri%1(Y,L);
 
 YIELDL_OUT("%1",Y,L)=YIELDL%1(Y,L);

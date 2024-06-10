@@ -1,11 +1,10 @@
 * For options 4 and 5
-*	lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed/13=otherlands/14=grassland_other/15=rice/16=wheat/17=othgrains/18=oilcrops/19=sugarcrops/20=othercrops/21=forest_mng_planted/22=forest_mng_nat/" ;
+*	lc_class:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed/13=forest_mng_nat/14=forest_mng_planted/15=agroforestry/16=forest_all" ;
 *	WWFcode		AIMcode
 	1	.	CL
 	1	.	CROP_FLW
 	2	.	BIO
 	3	.	PAS
-*	4 	.	FRS
 	4 	.	UMNFRS
 	5	.	MNGFRS
 	5	.	AFR
@@ -18,16 +17,10 @@
 	10	.	ABD_BIO
 	11	.	ABD_PAS
 	12	.	ABD_MNGFRS
-	12	.	ABD_AFR
-	13	.	OL
-	14	.	GL
-	15	.	PDR
-	16	.	WHT
-	17	.	GRO
-	18	.	OSD
-	19	.	C_B
-	20	.	OTH_A
-	21	.	PLNFRS
-	22	.	NRMFRS
-	23	.	FRS
+	12	.	ABD_AFR	
+	13	.	NRMFRS
+	14	.	PLNFRS
+	14	.	AFR
+	15	.	AGOFRS
+	16	.	FRS
 	
