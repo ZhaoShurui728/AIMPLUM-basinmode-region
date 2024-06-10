@@ -1381,7 +1381,7 @@ GHGLG("Positive",L,G)$(CSL(L,G) AND delta_Y(L,G)<0) = CSL(L,G)*delta_Y(L,G) *GA(
 GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0) = CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Negative",L,G)$(CSL(L,G) AND delta_Y(L,G)>0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20") *delta_Y(L,G) *GA(G)/10**3 * (-1);
+GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20") *delta_Y(L,G) *GA(G)/10**3;
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
