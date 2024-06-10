@@ -78,6 +78,8 @@ AGOFRS	agroforestry
 * grassland subcategory
 PRMGL	primary grassland
 SECGL	secoundary grassland
+MNGPAS	managed pasture
+RAN	rangeland
 
 * crop types
 PDR     rice

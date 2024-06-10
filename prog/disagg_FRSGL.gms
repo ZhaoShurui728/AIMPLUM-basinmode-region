@@ -70,6 +70,8 @@ AGOFRS	agroforestry
 * grassland subcategory
 PRMGL	primary grassland
 SECGL	secoundary grassland
+MNGPAS	managed pasture
+RAN	rangeland
 
 * crop types
 PDR     rice
@@ -170,7 +172,7 @@ $load GA MAP_RG MAP_GIJ
 
 parameter
 VYL(L,G)	area ratio of land category L in cell G
-Area(L)
+Area(L)	Regional area of land category L
 VYL_pre(L,G)	area ratio of land category L in cell G in the previous year
 delta_Y(L,G)	Change in area ratio of land category L in cell G
 delta_VY(Y,L,G)	Changes in area ratio of land category L in cell G for all the earlier years
@@ -327,6 +329,10 @@ VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) - VYL("SECFRS",G);
 VYL("SECGL",G)$(VYL("GL",G)) = VYL("GL",G) * sharepix("Mature and Intermediate secondary vegetation",G);
 VYL("PRMGL",G)$(VYL("GL",G)) = VYL("GL",G) - VYL("SECGL",G);
 
+VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
+VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
+
+
 delta_VY("%Sy%",L,G)=0;
 
 VYLY("%Sy%",L,G)$(VYL(L,G))=VYL(L,G);
@@ -356,6 +362,9 @@ VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)
 
 VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL("SECGL",G));
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL("SECGL",G));
+
+VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
+VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 delta_VY("%Sy%",L,G)$((not LCHNG(L)) and (VYL(L,G)-VYL_pre(L,G)))=(VYL(L,G)-VYL_pre(L,G));
 VYLY("%Sy%",L,G)$(VYL(L,G))=VYL(L,G);

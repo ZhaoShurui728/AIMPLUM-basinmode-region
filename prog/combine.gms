@@ -96,6 +96,8 @@ AGOFRS	agroforestry
 * grassland subcategory
 PRMGL	primary grassland
 SECGL	secoundary grassland
+MNGPAS	managed pasture
+RAN	rangeland
 
 * crop types
 PDR     rice
@@ -228,7 +230,7 @@ parameter
 Psol_stat(R,Y,ST,SP)                  Solution report
 PBIOSUP_load(Y,G,LB,Scol)
 PBIOSUP(Rall,Y,G,LB,Scol)
-Area(R,Y,L)	million ha
+Area(R,Y,L)	Regional area of land category L (million ha)
 AreaLDM(R,Y,LDM)	million ha
 Area_base(R,L,Sacol)
 CSB(R)

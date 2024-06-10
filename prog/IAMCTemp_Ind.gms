@@ -48,6 +48,8 @@ AGOFRS	agroforestry
 * grassland subcategory
 PRMGL	primary grassland
 SECGL	secoundary grassland
+MNGPAS	managed pasture
+RAN	rangeland
 
 * total
 LUC	land use change total
@@ -79,6 +81,7 @@ NRFABD	naturally regenerating managed forest on abondoned land
 NRGABD	naturally regenerating managed grassland on abondoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
+DEFCUM	Cumulative deforestation area
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/
@@ -92,7 +95,7 @@ EmitCat	Emissions categories /
 "Prev"		Previous version of emissions
 /
 ;
-Alias(R,R2);
+Alias(R,R2),(Y,Y2);
 
 set
 MAP_RAGG(R,R2)	/
@@ -145,6 +148,16 @@ Lan_Cov_Cro_Ene_Cro_2nd_gen
 Lan_Cov_Frs_Sec
 Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
 Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
+
+*Variables added in MOEJ-IIASA
+Lan_Cov_Frs_Frs_Old
+Lan_Cov_Frs_Def_Rat
+Lan_Cov_Frs_Def_Cum
+Lan_Cov_Oth_Nat_Lan_Res_Lan
+Emi_CO2_AFO_Aff
+Emi_CO2_AFO_Def
+Emi_CO2_AFO_For_Man
+Emi_CO2_AFO_Oth_Luc
 /
 
 * forest subcategory
@@ -158,13 +171,14 @@ AGOFRS	agroforestry
 
 
 MapLIAMPC(L,V)/
-FRS .   Lan_Cov_Frs
-AFR .   Lan_Cov_Frs
-MNGFRS .   Lan_Cov_Frs_Man
-AFR .   Lan_Cov_Frs_Man
-UMNFRS .   Lan_Cov_Frs_Nat_Frs
-AFR .   Lan_Cov_Frs_Aff_and_Ref
-NRFABD .   Lan_Cov_Frs_Aff_and_Ref
+FRS	.	Lan_Cov_Frs
+AFR	.	Lan_Cov_Frs
+MNGFRS	.	Lan_Cov_Frs_Man
+AFR	.	Lan_Cov_Frs_Man
+UMNFRS	.	Lan_Cov_Frs_Nat_Frs
+AFR	.	Lan_Cov_Frs_Aff_and_Ref
+NRFABD	.	Lan_Cov_Frs_Aff_and_Ref
+DEF	.	Lan_Cov_Frs_Def_Rat
 
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro
@@ -251,17 +265,32 @@ GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODE
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
 AREA(R,Y,L,"CGE")$SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE))=SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE));
 AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
+AREA(R,Y,"DEFCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"DEF"));
+
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
 IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
+IAMCTemp(R,"Lan_Cov_Frs_Def_Cum","million ha",Y)=AREA(R,Y,"DEFCUM","LUM")/1000;
+IAMCTemp(R,"Lan_Cov_Frs_Frs_Old","million ha",Y)$(AREA(R,"%base_year%","FRS","LUM"))=(AREA(R,"%base_year%","FRS","LUM")-AREA(R,Y,"DEFCUM","LUM"))/1000;
+IAMCTemp(R,"Lan_Cov_Oth_Nat_Lan_Res_Lan","million ha",Y)=AREA(R,Y,"NRGABD","LUM")/1000;
+
+
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
 
+IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
+*IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
+IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
+IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL");
+
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
-IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
+IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");
+
+
+
 
 $ifthen.PREDICTS_exe %PREDICTS_exe%==on
 

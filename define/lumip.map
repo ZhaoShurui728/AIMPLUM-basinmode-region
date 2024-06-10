@@ -12,8 +12,8 @@
 *	c4per	.	na
 	c3nfx	.	OSDRF
 	c3nfx	.	OSDIR
-*	range	.	GL
-	pastr	.	PAS
+	range	.	RAN
+	pastr	.	MNGPAS
 	primf	.	PRMFRS
 	secdf	.	SECFRS
 	secdf	.	AFR
