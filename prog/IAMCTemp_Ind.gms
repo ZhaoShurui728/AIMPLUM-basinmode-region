@@ -171,7 +171,6 @@ BIO	.	Lan_Cov_Cro
 CROP_FLW	.	Lan_Cov_Cro
 CL	.	Lan_Cov_Cro_Non_Ene_Cro
 CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
-FRS	.	Lan_Cov_Frs
 PAS	.	Lan_Cov_Pst
 GL	.	Lan_Cov_Oth_Nat_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
