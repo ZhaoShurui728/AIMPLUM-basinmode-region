@@ -113,11 +113,11 @@ function Basesim() {
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
   S=${scn[0]}
   ScenarioSpecName
-  for A in ${COUNTRY0[@]} 
-  do
-    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
-    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
-  done
+#  for A in ${COUNTRY0[@]} 
+#  do
+#    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
+#    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
+#  done
   wait
   echo "All base year simulations have been done."
 

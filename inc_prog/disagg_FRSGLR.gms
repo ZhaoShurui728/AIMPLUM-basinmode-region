@@ -4,7 +4,7 @@ YBIO%1(G)
 CS%1(G) carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
 VYL_pre%1(L,G)
 GHGLG%1(EmitCat,L,G)
-delta_VY%1(Y,L,G)	Changes in land use in all the earlier years
+*delta_VY%1(Y,L,G)	Changes in land use in all the earlier years
 
 ;
 
@@ -37,10 +37,10 @@ $ifthen.mng2 not %Sy%==%base_year%
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/analysis/%pre_year%.gdx'
 $load VYL_pre%1=VYL
-$load delta_VY%1=delta_VY
+*$load delta_VY%1=delta_VY
 
 VYL_pre(L,G)$(VYL_pre%1(L,G))=VYL_pre%1(L,G);
-delta_VY(Y,L,G)$(delta_VY%1(Y,L,G))=delta_VY%1(Y,L,G);
+*delta_VY(Y,L,G)$(delta_VY%1(Y,L,G))=delta_VY%1(Y,L,G);
 
 $endif.mng2
 

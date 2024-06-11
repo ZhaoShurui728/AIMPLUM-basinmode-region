@@ -47,6 +47,7 @@ soiltype  Soil type (table2 and 3)   / hac, lac, sandy, spodic, volcanic, wetlan
 map_r_clim(R,continent,clim,Zeco,soiltype) /
 $include ../%prog_loc%/individual/ForestCsink/region_continent_clim_Zeco17.map
          /
+value/val/
 ;
 
 Parameter
@@ -59,9 +60,12 @@ g_w0(clim, Zeco, continent,Stc,Sfrst)    Average annual above-ground biomass gro
 g_w(R,Stc,Sfrst)
 G_TOTAL(R,Stc,Sfrst)        Average annual biomass growth above and below-ground(tonne dm per ha per yr)
 LEC(R,Stc) Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+f_mg0(clim,value)     Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
+f_mg(R)               Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
 ;
 
 $libinclude xlimport g_w0 ../%prog_loc%/individual/ForestCsink/Table4_7-10.xlsx Table4_9-10g_w0!
+$libinclude xlimport f_mg0 ../%prog_loc%/individual/ForestCsink/Table5_5.xlsx Table5_5!
 
 rr(R,L) = sum((continent,clim,Zeco,soiltype)$map_r_clim(R,continent,clim,Zeco,soiltype),rr0(L,Zeco));
 
@@ -71,6 +75,9 @@ G_TOTAL(R,Stc,Sfrst) = g_w(R,Stc,Sfrst) * (1+rr(R,"FRS"));
 *Eq 2.9 deltac_g of "b"
 LEC(R,Stc) = G_TOTAL(R,"G20","N") * cf * (-44/12);
 
+f_mg(R) = sum((continent,clim,Zeco,soiltype)$map_r_clim(R,continent,clim,Zeco,soiltype),f_mg0(clim,"val"));
+
 execute_unload '../%prog_loc%/data/data_prep2.gdx'
 LEC
+f_mg
 ;

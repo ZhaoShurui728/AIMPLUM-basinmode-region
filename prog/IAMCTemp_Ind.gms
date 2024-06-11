@@ -278,13 +278,13 @@ IAMCTemp(R,"Lan_Cov_Oth_Nat_Lan_Res_Lan","million ha",Y)=AREA(R,Y,"NRGABD","LUM"
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
+*IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRFABD");
 
-IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
+IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
 *IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
 IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
-IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL");
+IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Negative","NRFABD")+GHGL(R,Y,"Negative","NRGABD");
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");

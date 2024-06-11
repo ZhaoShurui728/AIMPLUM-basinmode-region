@@ -629,15 +629,6 @@ popdens(G)	population density (inhabitants per km2)
   ACF(G)          average carbon flow in grid G
   MACF            mean value of average carbon flow in each region
   CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
-  ACF_aez(G)          average carbon flow in year Y in grid G     (MgC ha-1 year-1) (AEZ data)
-  MACF_aez            mean value of average carbon flow in each region        (MgC ha-1 year-1) (AEZ data)
-  CFT_aez(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G     (MgC ha-1 year-1) (AEZ data)
-  ACF_vst0(G)          average carbon flow in year Y in grid G     (MgC ha-1 year-1) (VISIT previous data)
-  MACF_vst0            mean value of average carbon flow in each region        (MgC ha-1 year-1) (VISIT previous data)
-  CFT_vst0(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G     (MgC ha-1 year-1) (VISIT previous data)
-  ACF_vst(LVST,R,G)          average carbon flow in grid G (VISIT data)
-  MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
-  CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
   MF      management factor for bio crops
   MFA     management factor for bio crops in base year
   MFB     management factor for bio crops (coefficient)
@@ -879,6 +870,12 @@ $endif.biodiv
 $if %IAV%==NoCC protectfracL(G,L)=0;
 
 *----Carbon flow
+parameter
+  ACF_vst(LVST,R,G)          average carbon flow in grid G (VISIT data)
+  MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
+  CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
+;
+
 $gdxin '../%prog_loc%/data/fao_data.gdx'
 $load TON_C Pprod
 
@@ -903,20 +900,10 @@ $elseif.afftype %afftype%==ccur_vst
   CFT(G,Y,Y2)=CFT_vst("AFRCUR","%Sr%",G,Y,Y2);
 $elseif.afftype %afftype%==cprevisit
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
-$load ACF_vst0=ACF MACF_vst0=MACF
-$load CFT_vst0=CFT
-
-  ACF(G)=ACF_vst0(G);
-  MACF=MACF_vst0;
-  CFT(G,Y,Y2)=CFT_vst0(G,Y,Y2);
+$load ACF MACF CFT
 $else.afftype
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%_aez.gdx'
-$load ACF_aez=ACF MACF_aez=MACF
-$load CFT_aez=CFT
-
-  ACF(G)=ACF_aez(G);
-  MACF=MACF_aez;
-  CFT(G,Y,Y2)=CFT_aez(G,Y,Y2);
+$load ACF MACF CFT
 $endif.afftype
 
 *---- Management factor for Biocrop yield ---*
