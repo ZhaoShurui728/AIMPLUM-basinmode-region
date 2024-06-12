@@ -90,6 +90,41 @@ variables:
 		fallow:long_name = "fallow land";
 		fallow:units = "1";
 		fallow:missing_value = -99.0f ;
+	float rice(time, lat, lon) ;
+		rice:standard_name = "fraction of grid cell area";
+		rice:long_name = "cropland for rice";
+		rice:units = "1";
+		rice:missing_value = -99.0f ;
+	float wheat(time, lat, lon) ;
+		wheat:standard_name = "fraction of grid cell area";
+		wheat:long_name = "cropland for wheat";
+		wheat:units = "1";
+		wheat:missing_value = -99.0f ;
+	float maize(time, lat, lon) ;
+		maize:standard_name = "fraction of grid cell area";
+		maize:long_name = "cropland for maize";
+		maize:units = "1";
+		maize:missing_value = -99.0f ;
+	float sugarcrops(time, lat, lon) ;
+		sugarcrops:standard_name = "fraction of grid cell area";
+		sugarcrops:long_name = "cropland for sugarcrops";
+		sugarcrops:units = "1";
+		sugarcrops:missing_value = -99.0f ;
+	float oilcrops(time, lat, lon) ;
+		oilcrops:standard_name = "cropland for oilcrops";
+		oilcrops:long_name = "oilcrops land";
+		oilcrops:units = "1";
+		oilcrops:missing_value = -99.0f ;
+	float othercrops(time, lat, lon) ;
+		othercrops:standard_name = "cropland for othercrops";
+		othercrops:long_name = "othercrops land";
+		othercrops:units = "1";
+		othercrops:missing_value = -99.0f ;
+	float icwtr(time, lat, lon) ;
+		icwtr:standard_name = "fraction of grid cell area";
+		icwtr:long_name = "ice and water";
+		icwtr:units = "1";
+		icwtr:missing_value = -99.0f ;
 
 data:
 

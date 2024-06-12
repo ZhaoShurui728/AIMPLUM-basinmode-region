@@ -461,7 +461,7 @@ VYLY("%Sy%",L,G)$(VYL(L,G))=VYL(L,G);
 
 *$ifthen.afr %iav%==BIOD
 VYLY("%Sy%","AFR",G)=VYL("AFR",G)+VYL("NRFABD",G);
-VYLY("%Sy%","NFRABD",G)=0;
+VYLY("%Sy%","NRFABD",G)=0;
 *$endif.afr
 
 Area(L)= SUM(G$(G0(G)),VYLY("%Sy%",L,G)*GA(G));

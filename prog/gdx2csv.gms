@@ -372,6 +372,8 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms maize
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms sugarcrops
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms oilcrops
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms othercrops
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms icwtr
+
 
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_lumip.gdx'

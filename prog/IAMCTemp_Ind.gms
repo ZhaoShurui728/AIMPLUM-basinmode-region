@@ -148,6 +148,7 @@ Lan_Cov_Cro_Ene_Cro_2nd_gen
 Lan_Cov_Frs_Sec
 Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
 Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
+Car_Seq_Lan_Use_Soi_Car_Man	Carbon Sequestration|Land Use|Soil Carbon Management
 
 *Variables added in MOEJ-IIASA
 Lan_Cov_Frs_Frs_Old
@@ -158,6 +159,10 @@ Emi_CO2_AFO_Aff
 Emi_CO2_AFO_Def
 Emi_CO2_AFO_For_Man
 Emi_CO2_AFO_Oth_Luc
+
+* Original
+Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
+Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
 /
 
 * forest subcategory
@@ -289,6 +294,9 @@ IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"N
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");
 
+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","CROP_FLW");
+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRGABD");
+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man","Mt CO2/yr",Y)=IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y);
 
 
 

@@ -118,13 +118,6 @@ OSDRF	oil crops rainfed
 C_BRF	sugar crops rainfed
 OTH_ARF	other crops rainfed
 /
-
-LRCPnonNat(L)/
-CL	cropland
-PAS	grazing pasture
-SL	built_up
-OL	ice or water
-/
 LDM land use type /
 PRM_SEC	other forest and grassland
 $if %base_year%==%Sy% FRS
@@ -274,6 +267,7 @@ $endif
 /
 GA(G)		Grid area of cell G kha
 GAT		Total grid area
+GATwoOL		Total grid area without ice and water
 FLAG_G(G)		Grid flag
 GL(G,G2)		Distance between grid G and G2
 ;
@@ -455,6 +449,12 @@ FL(AC) Land use AEZ
 Produnit /TON,C/
 LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
 LRCP(L) /HAV_FRS,PAS,OL/
+LRCPnonNat(L)/
+CL	cropland
+PAS	grazing pasture
+SL	built_up
+OL	ice or water
+/
 SCENARIO /%SCE%_%CLP%_%IAV%%ModelInt%/
 SSP	/%SSP%/
 
@@ -677,7 +677,7 @@ popdens(G)	population density (inhabitants per km2)
   pannual_biodiv	Annualization coefficient of investment cost
 
 * cost breakdown
-  pa_lab(G)         labor costs per unit area (million $ per ha)
+  pa_lab         labor costs per unit area (million $ per ha)
   pa_road(L,G)        road construction costs per unit area (million $ per ha)
   pa_irri(L)        irrigation costs per unit area (million $ per ha)
   pa_emit(G)        emission costs per unit area (million $ per ha)
@@ -757,22 +757,26 @@ $if not %UrbanLandData%==SSP Y_base("SL",G)=frac_rcp("%Sr%","SL","%base_year%",G
 Y_base(L,G)$(LPRMSEC(L))=frac_rcp("%Sr%","PRM_SEC","%base_year%",G) + frac_rcp("%Sr%","PAS","%base_year%",G);
 Y_base(L,G)$(LCROPIR(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*Pirri(LDM,G));
 Y_base(L,G)$(LCROPRF(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*(1-Pirri(LDM,G)));
-Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G))>0)=frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G));
+Y_base("CL",G)=sum(L$LCROP(L),Y_base(L,G));
+Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G))>0)=frac_rcp("%Sr%","CL","%base_year%",G)-Y_base("CL",G);
 *Y_base("CROP_FLW",G)$(Y_base("CROP_FLW",G)<0)=0;
-Y_base("OL",G)$(Y_base("OL",G)>1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G) AND 1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)>=0)=1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G);
-Y_base("OL",G)$(Y_base("OL",G)>1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G) AND 1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)<0)=0;
-
+Y_base("OL",G)$(Y_base("OL",G)>max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G)))=max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G));
+GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
 *--- Y_pre
   Y_pre(L,G)$(Y_base(L,G))=Y_base(L,G);
   Y_pre(L,G)$SUM(L2$MAP_Lagg(L2,L),Y_pre(L2,G))=SUM(L2$MAP_Lagg(L2,L),Y_pre(L2,G));
   VZ_load(L,G)=0;
   PLDM_load(LDM)=0;
   PCDM_load(L)=0;
+
 $else.baseyear
 $ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $	load VY_load=VYL VZ_load=VZL
 $	load PLDM_load=PLDM PCDM_load=PCDM
+
+$gdxin '../output/gdx/base/%Sr%/basedata.gdx'
+$load GATwoOL
 
 $else.fileex
   VY_load(L,G)=0;
@@ -786,6 +790,9 @@ Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr%",G))= SSP_frac("SL","%Sy%","%Sr%",G);
 
 *---adjust exogenous variables to satisfy constraint
 Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
+*Y_pre("OL",G)$(Y_pre("OL",G)>max(0,1-Y_pre("CL",G)-Y_pre("PAS",G)-Y_pre("SL",G)-Y_pre("CROP_FLW",G)))=max(0,1-Y_pre("CL",G)-Y_pre("PAS",G)-Y_pre("SL",G)-Y_pre("CROP_FLW",G));
+
+
 
 $ifthen.bio %biocurve%==on
 $ifthen.fileex exist '%../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
@@ -1010,8 +1017,8 @@ PB(G)$MACF=PBR*ACF(G)/MACF;
 
 *-------- Land demand
 PlanduseT=SUM(LCGE,Planduse("%Sy%",LCGE));
-SF_planduse$PlanduseT=GAT/PlanduseT;
-*Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
+SF_planduse$PlanduseT=GATwoOL/PlanduseT;
+Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
 
 PCDM0(Y,L)=0;
 
@@ -1124,13 +1131,13 @@ pannual_irri=(DR*(1+DR)**YPP_irri)/((1+DR)**YPP_irri-1);
 pannual_emit=(DR*(1+DR)**YPP_emit)/((1+DR)**YPP_emit-1);
 pannual_biodiv=(DR*(1+DR)**YPP_biodiv)/((1+DR)**YPP_biodiv-1);
 
-pa_lab(G)$(popdens(G)) = wage * labor * pannual_lab * (1+popdens(G))**(-0.005);
+pa_lab = wage * labor * pannual_lab;
 pa_road(L,G)$(NOT LPRMSEC(L)) =  (plcc(L)*100 + pldc*(roaddens + GLMINHA(L,G))) * pannual_road;
 pa_irri(L)$(LCROPIR(L)) = irricost * pannual_irri;
 pa_emit(G)$(CS(G)) =  PGHG("%Sy%") * CS(G) * pannual_emit;
 pa_biodiv(G,L)$(PBIODIV(L,G)) =  PBIODIV(L,G) * pannual_biodiv;
 
-pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab(G) + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
+pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
 pa_bio(G)$pa("BIO",G)=pa("BIO",G);
 YPNMAXCL=0.01;
 
@@ -1432,7 +1439,6 @@ PARAMETER
   AREA_base(LDM,*)	Reginoal aggregated land-use area (kha)
 ;
   YIELD("PRM_SEC",G)$CS(G)=CS(G);
-  Y_base("CL",G)=SUM(L$LCROP(L),Y_base(L,G));
   AREA_base(LDM,"estimates")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*VYL(L,G)));
   AREA_base(LDM,"base")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
   AREA_base("GL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
@@ -1456,6 +1462,7 @@ AREA_base
 MFA MFB
 RR BIIcoefG PBIODIVY0
 sharepix
+GATwoOL
 ;
 
 $endif
