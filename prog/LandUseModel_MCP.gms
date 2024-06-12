@@ -35,7 +35,7 @@ $setglobal CPLEXThreadOp 3
 $setglobal afftype off
 
 * FAO FRA protection
-$setglobal frsprotectexpand on
+$setglobal frsprotectexpand off
 
 * ohashiprotect should be 'ohashi' and 'percentage of species importance level' e.g. ohashi75 or 'off'
 $setglobal ohashiprotect off
@@ -677,7 +677,7 @@ popdens(G)	population density (inhabitants per km2)
   pannual_biodiv	Annualization coefficient of investment cost
 
 * cost breakdown
-  pa_lab         labor costs per unit area (million $ per ha)
+  pa_lab(G)         labor costs per unit area (million $ per ha)
   pa_road(L,G)        road construction costs per unit area (million $ per ha)
   pa_irri(L)        irrigation costs per unit area (million $ per ha)
   pa_emit(G)        emission costs per unit area (million $ per ha)
@@ -875,6 +875,8 @@ $ endif.year
 
 $endif.biodiv
 $if %IAV%==NoCC protectfracL(G,L)=0;
+$if %IAV%==NoCC frsprotectarea=0;
+
 
 *----Carbon flow
 parameter
@@ -1123,6 +1125,7 @@ $endif
 GLMIN(L,G)$(LAFR(L) OR (LCROPA(L) AND (NOT LBIO(L))))=GLMIN0(L,G);
 GLMIN(L,G)$(LBIO(L) AND (NOT SUM(L2$LCROPA(L2),Y_pre(L2,G))))=smin(G2$(SUM(L2$LCROPA(L2),Y_pre(L2,G2)) and GL(G,G2)),GL(G,G2));
 *GLMIN(L,G)$(LAFR(L) AND (NOT Y_base("HAV_FRS",G)))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
+*GLMINHA(L,G)$((LAFR(L) OR LCROPA(L)) AND GA(G)) = GLMIN(L,G)/(GA(G)*1000);
 GLMINHA(L,G)$((LAFR(L) OR LCROPA(L)) AND GA(G)) = GLMIN(L,G)/(GA(G)*1000);
 
 pannual_lab =(DR*(1+DR)**YPP_lab) /((1+DR)**YPP_lab-1);
@@ -1131,13 +1134,14 @@ pannual_irri=(DR*(1+DR)**YPP_irri)/((1+DR)**YPP_irri-1);
 pannual_emit=(DR*(1+DR)**YPP_emit)/((1+DR)**YPP_emit-1);
 pannual_biodiv=(DR*(1+DR)**YPP_biodiv)/((1+DR)**YPP_biodiv-1);
 
-pa_lab = wage * labor * pannual_lab;
+*pa_lab = wage * labor * pannual_lab;
+pa_lab(G)$(popdens(G)) = wage * labor * pannual_lab * (1+popdens(G))**(-0.005);
 pa_road(L,G)$(NOT LPRMSEC(L)) =  (plcc(L)*100 + pldc*(roaddens + GLMINHA(L,G))) * pannual_road;
 pa_irri(L)$(LCROPIR(L)) = irricost * pannual_irri;
 pa_emit(G)$(CS(G)) =  PGHG("%Sy%") * CS(G) * pannual_emit;
 pa_biodiv(G,L)$(PBIODIV(L,G)) =  PBIODIV(L,G) * pannual_biodiv;
 
-pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
+pa(L,G)$(LOBJ(L) OR LBIO(L))= pa_lab(G) + pa_road(L,G)  + pa_irri(L) + pa_emit(G)$(NOT LPRMSEC(L)) + pa_biodiv(G,L);
 pa_bio(G)$pa("BIO",G)=pa("BIO",G);
 YPNMAXCL=0.01;
 
