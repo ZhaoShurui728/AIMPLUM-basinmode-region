@@ -184,6 +184,9 @@ UMNFRS	.	Lan_Cov_Frs_Nat_Frs
 AFR	.	Lan_Cov_Frs_Aff_and_Ref
 NRFABD	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
+DEFCUM	.	Lan_Cov_Frs_Def_Cum
+NRGABD	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
+GL	.	Lan_Cov_Oth_Nat_Lan
 
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro
@@ -191,7 +194,6 @@ CROP_FLW	.	Lan_Cov_Cro
 CL	.	Lan_Cov_Cro_Non_Ene_Cro
 CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
 PAS	.	Lan_Cov_Pst
-GL	.	Lan_Cov_Oth_Nat_Lan
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
 BIO	.	Lan_Cov_Cro_Ene_Cro
 SL	.	Lan_Cov_Bui_Are
@@ -275,9 +277,7 @@ AREA(R,Y,"DEFCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_loa
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
 IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
-IAMCTemp(R,"Lan_Cov_Frs_Def_Cum","million ha",Y)=AREA(R,Y,"DEFCUM","LUM")/1000;
 IAMCTemp(R,"Lan_Cov_Frs_Frs_Old","million ha",Y)$(AREA(R,"%base_year%","FRS","LUM"))=(AREA(R,"%base_year%","FRS","LUM")-AREA(R,Y,"DEFCUM","LUM"))/1000;
-IAMCTemp(R,"Lan_Cov_Oth_Nat_Lan_Res_Lan","million ha",Y)=AREA(R,Y,"NRGABD","LUM")/1000;
 
 
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
