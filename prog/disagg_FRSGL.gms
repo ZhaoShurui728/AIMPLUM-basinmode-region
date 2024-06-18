@@ -179,7 +179,7 @@ $load GA MAP_RG MAP_GIJ
 
 parameter
 VYL(L,G)	area ratio of land category L in cell G
-Area(L)	Regional area of land category L
+Area(L)	Regional area of land category L [kha]
 VYL_pre(L,G)	area ratio of land category L in cell G in the previous year
 delta_Y(L,G)	Change in area ratio of land category L in cell G
 delta_VY(Y,L,G)	Changes in area ratio of land category L in cell G for all the earlier years
@@ -470,7 +470,7 @@ Area(L)= SUM(G$(G0(G)),VYLY("%Sy%",L,G)*GA(G));
 delta_VY(Y,L,G)$((not LCHNG(L)) and ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
 
 
-GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L,G) *GA(G) * 44/12 /10**3;
+GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L,G) *GA(G) * 44/12 /10**3/Ystep;
 *GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20") * VYL(L,G) *GA(G)/10**3 * (-1);
 
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);

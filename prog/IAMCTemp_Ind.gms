@@ -82,6 +82,9 @@ NRGABD	naturally regenerating managed grassland on abondoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
 DEFCUM	Cumulative deforestation area
+DEGCUM	Cumulative decrease in grassland area GL from previou year
+NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
+NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/
@@ -182,10 +185,10 @@ MNGFRS	.	Lan_Cov_Frs_Man
 AFR	.	Lan_Cov_Frs_Man
 UMNFRS	.	Lan_Cov_Frs_Nat_Frs
 AFR	.	Lan_Cov_Frs_Aff_and_Ref
-NRFABD	.	Lan_Cov_Frs_Aff_and_Ref
+NRFABDCUM	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
-NRGABD	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
+NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
 GL	.	Lan_Cov_Oth_Nat_Lan
 
 CL	.	Lan_Cov_Cro
@@ -243,8 +246,8 @@ LUCHEM_P_load(*,Y,R,AEZ)
 LUCHEM_N_load(*,Y,R,AEZ)
 Planduse(Y,R,LCGE)
 Planduse_load(*,Y,R,LCGE)
-GHG(R,Y,*,SMODEL)
-AREA(R,Y,L,SMODEL)
+GHG(R,Y,*,SMODEL)	GHG emission of land category L in year Y [MtCO2 per year]
+AREA(R,Y,L,SMODEL)	Regional area of land category L [kha]
 IAMCTemp(*,*,*,*)
 IAMCTempwoU(R,V,Y)
 ;
@@ -272,7 +275,10 @@ GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODE
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
 AREA(R,Y,L,"CGE")$SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE))=SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE));
 AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
+AREA(R,Y,"NRFABDCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"NRFABD"));
 AREA(R,Y,"DEFCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"DEF"));
+AREA(R,Y,"NRGABDCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"NRGABD"));
+AREA(R,Y,"DEGCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"DEG"));
 
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
@@ -284,7 +290,8 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
-*IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRFABD");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");   !!all managed forest is accounted which is not consistent with IAM convention but this account is based on the inventory guideline wherer managed land should be accounted
+IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS")+GHGL(R,Y,"Negative","NRFABD");   !!Account abandoned area
 
 IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
 *IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
