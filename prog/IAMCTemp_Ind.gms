@@ -1,3 +1,4 @@
+$eolcom !!
 $Setglobal base_year 2005
 $Setglobal end_year 2100
 $Setglobal prog_loc ../AIMPLUM
@@ -20,7 +21,8 @@ R5REF
 R5MAF
 R5LAM
 /
-Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
+*Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
+Y year	/2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100/
 L land use type /
 PRM_SEC forest + grassland + pasture
 FRSGL   forest + grassland
@@ -52,7 +54,9 @@ MNGPAS	managed pasture
 RAN	rangeland
 
 * total
+AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD)
 LUC	land use change total
+
 
 * crop types
 PDR     rice
@@ -166,6 +170,7 @@ Emi_CO2_AFO_Oth_Luc
 * Original
 Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
 Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
+Lan_Cov_Frs_Agr	Land Cover| Agroforestry
 /
 
 * forest subcategory
@@ -184,12 +189,12 @@ AFR	.	Lan_Cov_Frs
 MNGFRS	.	Lan_Cov_Frs_Man
 AFR	.	Lan_Cov_Frs_Man
 UMNFRS	.	Lan_Cov_Frs_Nat_Frs
-AFR	.	Lan_Cov_Frs_Aff_and_Ref
-NRFABDCUM	.	Lan_Cov_Frs_Aff_and_Ref
+AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
-NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
+$if %iav%==BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
 GL	.	Lan_Cov_Oth_Nat_Lan
+AGOFRS	.	Lan_Cov_Frs_Agr
 
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro
@@ -275,9 +280,7 @@ GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODE
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
 AREA(R,Y,L,"CGE")$SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE))=SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE));
 AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
-AREA(R,Y,"NRFABDCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"NRFABD"));
 AREA(R,Y,"DEFCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"DEF"));
-AREA(R,Y,"NRGABDCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"NRGABD"));
 AREA(R,Y,"DEGCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"DEG"));
 
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));

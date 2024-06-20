@@ -46,7 +46,6 @@ $load GHGL%1=GHGL
 $load GHGLG%1=GHGLG
 $load Area%1=Area
 
-
 $gdxin '../output/gdx/base/%1/basedata.gdx'
 $load Area_base%1=Area_base
 $load YIELD%1=YIELD
@@ -67,7 +66,6 @@ $load CSB%1=CSB
 
 
 Area("%1",Y,L)$Area%1(Y,L)=Area%1(Y,L);
-
 CSB("%1")$(CSB%1)=CSB%1;
 
 YIELD_load("%1",L,G)$YIELD%1(L,G)=YIELD%1(L,G);

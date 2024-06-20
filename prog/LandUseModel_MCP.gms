@@ -1,5 +1,6 @@
 * Land Use Allocation model
 
+$eolcom !!
 $Setglobal Sr JPN
 $Setglobal Sy 2006
 $Setglobal base_year 2005
@@ -18,6 +19,7 @@ $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 $setglobal biocurve off
 $setglobal Ystep0 10
 $setglobal carbonprice on
+$setglobal LandData luh2    !!luh2 or luh
 
 * BTC protection
 $setglobal biodivcons off
@@ -708,7 +710,8 @@ $gdxin '../%prog_loc%/data/land_map_gtap.gdx'
 $load land_basemap=base_map
 
 * Base-year land type data
-$gdxin '../%prog_loc%/data/land_map_luh2.gdx'
+$if %LandData%==luh $gdxin '../%prog_loc%/data/land_map_rcp.gdx'
+$if %LandData%==luh2 $gdxin '../%prog_loc%/data/land_map_luh2.gdx'
 $load frac_rcp=frac
 
 * Settled land type data
@@ -876,7 +879,7 @@ $ endif.year
 $endif.biodiv
 $if %IAV%==NoCC protectfracL(G,L)=0;
 $if %IAV%==NoCC frsprotectarea=0;
-
+frsprotectarea=0;
 
 *----Carbon flow
 parameter
@@ -1125,7 +1128,6 @@ $endif
 GLMIN(L,G)$(LAFR(L) OR (LCROPA(L) AND (NOT LBIO(L))))=GLMIN0(L,G);
 GLMIN(L,G)$(LBIO(L) AND (NOT SUM(L2$LCROPA(L2),Y_pre(L2,G))))=smin(G2$(SUM(L2$LCROPA(L2),Y_pre(L2,G2)) and GL(G,G2)),GL(G,G2));
 *GLMIN(L,G)$(LAFR(L) AND (NOT Y_base("HAV_FRS",G)))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
-*GLMINHA(L,G)$((LAFR(L) OR LCROPA(L)) AND GA(G)) = GLMIN(L,G)/(GA(G)*1000);
 GLMINHA(L,G)$((LAFR(L) OR LCROPA(L)) AND GA(G)) = GLMIN(L,G)/(GA(G)*1000);
 
 pannual_lab =(DR*(1+DR)**YPP_lab) /((1+DR)**YPP_lab-1);
@@ -1230,7 +1232,8 @@ option limcol=0;
 option profile=0;
 option threads=%CPLEXThreadOp%;
 
-$if %parallel%==on option SOLPRINT=ON;
+$if not %parallel%==on option SOLPRINT=On;
+$if not %parallel%==on option sysout=on;
 LandUseModel_LP.HOLDFIXED   = 1 ;
 
 SCALAR

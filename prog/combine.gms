@@ -81,6 +81,7 @@ OL      ice or water
 RES	restoration land that was used for cropland or pasture and set aside for restoration
 
 * total
+AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD) for GHG calc
 LUC
 "LUC+BIO"
 
@@ -124,6 +125,8 @@ NRFABD	naturally regenerating managed forest on abondoned land
 NRGABD	naturally regenerating managed grassland on abondoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
+NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
+NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
