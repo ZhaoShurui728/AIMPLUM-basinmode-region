@@ -173,15 +173,6 @@ Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Manage
 Lan_Cov_Frs_Agr	Land Cover| Agroforestry
 /
 
-* forest subcategory
-PRMFRS	primary forest
-SECFRS	secoundary forest excl AFR
-MNGFRS  managed forest excl AFR
-UMNFRS  unmanage forest
-NRMFRS  naturally regenerating managed forest
-PLNFRS  planted forest excl AFR
-AGOFRS	agroforestry
-
 
 MapLIAMPC(L,V)/
 FRS	.	Lan_Cov_Frs
@@ -292,14 +283,14 @@ IAMCTemp(R,"Lan_Cov_Frs_Frs_Old","million ha",Y)$(AREA(R,"%base_year%","FRS","LU
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
+IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");   !!all managed forest is accounted which is not consistent with IAM convention but this account is based on the inventory guideline wherer managed land should be accounted
-IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS")+GHGL(R,Y,"Negative","NRFABD");   !!Account abandoned area
+IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS")+GHGL(R,Y,"Negative","NRFABDCUM");   !!Account abandoned area
 
-IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR");
-*IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFR")+GHGL(R,Y,"Negative","NRFABD");
+IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
+*IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT")+GHGL(R,Y,"Negative","NRFABDCUM");
 IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
-IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Negative","NRFABD")+GHGL(R,Y,"Negative","NRGABD");
+IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Negative","NRFABDCUM")+GHGL(R,Y,"Negative","NRGABDCUM");
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");

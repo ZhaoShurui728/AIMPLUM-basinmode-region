@@ -862,7 +862,7 @@ $ elseife.year %Sy%==%protectStartYear%
 $gdxin '../%prog_loc%/individual/BendingTheCurve/LC_cons_AIM_omit0_v3.gdx'
 $load protectfracIJL=LC_cons_AIM_v3
   protectfracL(G,L)$(SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC))))= SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC)));
-  protectfracL(G,L2)$(protectfracL(G,L2) and protectfracL(G,L2)>sum(L$MAP_Lagg(L,L2),Y_pre(L,G)))=sum(L$MAP_Lagg(L,L2),Y_pre(L,G));
+  protectfracL(G,L)$(protectfracL(G,L) and protectfracL(G,L)>sum(L2$MAP_Lagg(L2,L),Y_pre(L2,G)))=sum(L2$MAP_Lagg(L2,L),Y_pre(L2,G));
 
 * protect data aggregation in NoCC
   protect_area("WildArea_KBA_WDPA_BTC",L)=SUM(G,GA(G)*protectfracL(G,L));
@@ -872,9 +872,10 @@ $ else.year
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'
 $load protectfracL
 $ endif.year
-    protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
-    protectfracL(G,"CL")$(protectfracL(G,"CL") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"PRM_SEC"));
-    protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL"));
+  protectfracL(G,"PRM_SEC")$(protectfracL(G,"PRM_SEC") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+protectfracL(G,"PAS")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL")-protectfracL(G,"PAS"));
+  protectfracL(G,"CL")$(protectfracL(G,"CL") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+protectfracL(G,"PAS")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"PRM_SEC")-protectfracL(G,"PAS"));
+  protectfracL(G,"PAS")$(protectfracL(G,"PAS") and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+protectfracL(G,"PAS")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"PRM_SEC")-protectfracL(G,"CL"));
+  protectfrac(G)$(protectfrac(G) and max(protectfrac(G),protectfracL(G,"PRM_SEC"))+protectfracL(G,"CL")+protectfracL(G,"PAS")+Y_pre("SL",G)+Y_pre("OL",G)>1)=max(0,1-Y_pre("SL",G)-Y_pre("OL",G)-protectfracL(G,"CL")-protectfracL(G,"PAS"));
 
 $endif.biodiv
 $if %IAV%==NoCC protectfracL(G,L)=0;

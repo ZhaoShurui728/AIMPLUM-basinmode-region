@@ -421,7 +421,7 @@ LCROPFLW(L)/CROP_FLW/
 LDEF(L)/DEF/
 LDEG(L)/DEG/
 MAP_EMIAGG(L,L)/
-(AFR,NRFABD,DEF,AGOFRS)	.	FRS
+(AFRTOT,NRFABDCUM,DEF,AGOFRS)	.	FRS
 (NRGABD,DEG)	.	GL
 (FRS,GL,CL,CROP_FLW,PAS,SL,OL)	.	LUC
 (FRS,GL,CL,CROP_FLW,PAS,SL,OL,BIO)	.	"LUC+BIO"
@@ -495,7 +495,7 @@ delta_VY(Y,L,G)$(Ldelta(L) and ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=o
 
 
 GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L,G) *GA(G) * 44/12 /10**3/Ystep;
-*GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20") * VYL(L,G) *GA(G)/10**3 * (-1);
+GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20") * VYL(L,G) *GA(G)/10**3 * (-1);
 
 GHGLG("Negative",L,G)$(LAFRTOT(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 $if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and VYLY(Y2,L,G)), VYLY(Y2,L,G)) *GA(G)/10**3;
@@ -508,7 +508,12 @@ $endif.notbau
 
 GHGL(EmitCat,"FRSGL") = 0;
 
+
+
+
+*GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G));
 GHGL(EmitCat,L) = SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
+GHGL(EmitCat,"LUC")$(SUM(L$(not LBIO(L)),GHGL(EmitCat,L)))= SUM(L$(not LBIO(L)),GHGL(EmitCat,L));
 GHGL("Net",L)$(GHGL("Positive",L)+GHGL("Negative",L)) = GHGL("Positive",L)+GHGL("Negative",L);
 
 
