@@ -503,7 +503,7 @@ GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20") * SUM(Y2$(ordy("%base_year%")<=
 
 $ifthen.notbau not %clp%==BaU
 GHGLG("Negative",L,G)$(LCROPFLW(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G) * 44/12/10**3 * (-1);
-GHGLG("Negative",L,G)$(LNRGABD(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G)* 44/12/10**3 * (-1);
+GHGLG("Negative",L,G)$(LNRGABDCUM(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G)* 44/12/10**3 * (-1);
 $endif.notbau
 
 GHGL(EmitCat,"FRSGL") = 0;
