@@ -19,7 +19,7 @@ $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 *'cact_vst' assuming actual current forest type calcuated by VISIT.
 *'cmax_vst' assuming forest type with maximum forest carbon flow (sink)calcuated by VISIT.
 *'off' assuming afforestation's carbon sink estimated by AEZ.
-$setglobal afftype off
+$setglobal afftype ccur_vst
 
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
