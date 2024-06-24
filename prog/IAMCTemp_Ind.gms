@@ -285,18 +285,18 @@ IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emi
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");   !!all managed forest is accounted which is not consistent with IAM convention but this account is based on the inventory guideline wherer managed land should be accounted
-IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS")+GHGL(R,Y,"Negative","NRFABDCUM");   !!Account abandoned area
+IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRFABDCUM");   !!Account abandoned area
 
 IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
 *IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT")+GHGL(R,Y,"Negative","NRFABDCUM");
 IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
-IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Negative","NRFABDCUM")+GHGL(R,Y,"Negative","NRGABDCUM");
+IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Negative","CROP_FLW")+GHGL(R,Y,"Negative","NRFABDCUM")+GHGL(R,Y,"Negative","NRGABDCUM");
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");
 
 IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","CROP_FLW");
-IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRGABD");
+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRGABDCUM");
 IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man","Mt CO2/yr",Y)=IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y);
 
 

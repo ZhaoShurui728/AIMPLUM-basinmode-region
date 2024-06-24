@@ -693,10 +693,10 @@ popdens(G)	population density (inhabitants per km2)
   VY_baseresults(LFRSGL,G)
   VYLY(Y,L,G)	land use in all the earlier years
   delta_VY(Y,L,G)	Changes in land use in all the earlier years
-  CSL(L,G)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
+  CSL(L)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
   delta_Y(L,G)	annual change in area ratio of land category L in cell G
-  GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
-  GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
+  GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per time step]
+  GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per time step]
   CS_post(G)	carbon stock in next year  (MgC ha-1)
   YIELDL_OUT(L)	Agerage yield of land category L region R in year Y [tonne per ha per year]
   YIELDLDM_OUT(LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
@@ -1375,14 +1375,14 @@ LEC0(Stc)=LEC("%Sr%",Stc);
 
 delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-Y_pre(L,G)))=(VYL(L,G)-Y_pre(L,G));
 
-CSL("CL",G)$(delta_Y("CL",G))=5;
-CSL("BIO",G)$(delta_Y("BIO",G))=YIELD("BIO",G);
-CSL("PAS",G)$(delta_Y("PAS",G))=2.5;
+CSL("CL")=5;
+CSL("BIO")=5;
+CSL("PAS")=2.5;
 
-GHGLG("Positive",L,G)$(CSL(L,G) AND delta_Y(L,G)<0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Positive",L,G)$(CSL(L) AND delta_Y(L,G)<0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0) = CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 
-GHGLG("Negative",L,G)$(CSL(L,G) AND delta_Y(L,G)>0) = CSL(L,G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(CSL(L) AND delta_Y(L,G)>0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20") *delta_Y(L,G) *GA(G)/10**3;
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 
@@ -1422,7 +1422,7 @@ VOBJ
 CS_post=CS
 CSL
 delta_Y
-GHGLG
+*GHGLG
 GHGL
 VYLY
 delta_VY

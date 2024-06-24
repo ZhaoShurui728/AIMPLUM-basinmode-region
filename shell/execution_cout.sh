@@ -95,6 +95,7 @@ function DataPrep2() {
 ## 2. Base Simulation
 function BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
+  echo "SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2}, ${S}"
   gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
@@ -112,12 +113,13 @@ function Basesim() {
   rm ../output/txt/cpu/basesim/*.txt 2> /dev/null
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
   S=${scn[0]}
+  echo ${S}
   ScenarioSpecName
-#  for A in ${COUNTRY0[@]} 
-#  do
-#    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
-#    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
-#  done
+  for A in ${COUNTRY0[@]} 
+  do
+    BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
+    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
+  done
   wait
   echo "All base year simulations have been done."
 
@@ -156,10 +158,11 @@ function FuturesimRun() {
 
     cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
     cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
-
+    parallelSW=on
+    if [ ${pausemode} = "on" ]; then parallelSW=off; fi 
     for Y in ${YEAR[@]} 
     do
-      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst   lo=4
+      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst   lo=4
     done
   done
   
@@ -376,7 +379,7 @@ function netcdfgenRun() {
   echo "netCDF gen"
   #For LUMIP 
   if [ ${lumip} == on ]; then
-    filelist="../output/csv/${SceName}/c3ann.csv ../output/csv/${SceName}/c3nfx.csv ../output/csv/${SceName}/c4ann.csv ../output/csv/${SceName}/crpbf_c4ann.csv ../output/csv/${SceName}/irrig_c3ann.csv ../output/csv/${SceName}/irrig_c3nfx.csv ../output/csv/${SceName}/irrig_c4ann.csv ../output/csv/${SceName}/pastr.csv ../output/csv/${SceName}/primf.csv ../output/csv/${SceName}/range.csv ../output/csv/${SceName}/secdf.csv ../output/csv/${SceName}/urban.csv ../output/csv/${SceName}/flood.csv ../output/csv/${SceName}/fallow.csv"
+    filelist="../output/csv/${SceName}/c3ann.csv ../output/csv/${SceName}/c3nfx.csv ../output/csv/${SceName}/c4ann.csv ../output/csv/${SceName}/crpbf_c4ann.csv ../output/csv/${SceName}/irrig_c3ann.csv ../output/csv/${SceName}/irrig_c3nfx.csv ../output/csv/${SceName}/irrig_c4ann.csv ../output/csv/${SceName}/pastr.csv ../output/csv/${SceName}/primf.csv ../output/csv/${SceName}/range.csv ../output/csv/${SceName}/secdf.csv ../output/csv/${SceName}/urban.csv ../output/csv/${SceName}/flood.csv ../output/csv/${SceName}/fallow.csv ../output/csv/${SceName}/icwtr.csv ../output/csv/${SceName}/rice.csv ../output/csv/${SceName}/wheat.csv ../output/csv/${SceName}/maize.csv ../output/csv/${SceName}/sugarcrops.csv ../output/csv/${SceName}/oilcrops.csv ../output/csv/${SceName}/othercrops.csv"
     ncgenfunc lumip ${SceName} "${filelist}" ncheader_all_lumip 1
   fi
   #Bioenergy yield
