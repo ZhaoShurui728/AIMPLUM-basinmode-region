@@ -299,7 +299,8 @@ function MergeResCSV4NCRun() {
   bioyielcal=$6
   ssprcp=$7
   carseq=$8
-
+  livdiscal=$9
+  
 	echo "`date '+%s'`" > ../output/txt/cpu/merge2/$2.txt
   GAMSRunArg="--prog_loc=$1 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4 "
   echo "--sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2}"
@@ -330,8 +331,12 @@ function MergeResCSV4NCRun() {
     gams ../$1/prog/gdx2csv.gms --split=2 --lumip=off --wwfclass=off R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_ssprcp_$2.lst lf=../output/log/gdx2csv2_ssprcp_$2.log ${GAMSRunArg}
   fi
 
-if [ ${carseq} = "on" ]; then
+  if [ ${carseq} = "on" ]; then
     gams ../$1/prog/gdx2csv.gms --split=2 --carseq=on R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_carseq_$2.lst lf=../output/log/gdx2csv2_carseq_$2.log  ${GAMSRunArg}
+  fi
+
+  if [ ${livdiscal} = "on" ]; then
+    gams ../$1/prog/gdx2csv.gms --split=2 --livdiscalc=on R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_livdiscal_$2.lst lf=../output/log/gdx2csv2_livdiscal_$2.log ${GAMSRunArg}
   fi
 
   echo $(TimeDif `cat ../output/txt/cpu/merge2/$2.txt`) > ../output/txt/cpu/merge2/end_$2.txt
@@ -343,7 +348,7 @@ function MergeResCSV4NC() {
   rm ../output/txt/cpu/merge2/*.txt 2> /dev/null
   for S in ${scn[@]} 
   do
-    MergeResCSV4NCRun ${parent_dir} ${S} ${Sub_MergeResCSV4NC_basecsv} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} > ../output/log/MergeResCSV4NCRun_${S}.log 2>&1 &
+    MergeResCSV4NCRun ${parent_dir} ${S} ${Sub_MergeResCSV4NC_basecsv} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} ${Sub_MergeResCSV4NC_livdiscal} > ../output/log/MergeResCSV4NCRun_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "merge2" ${CPUthreads}
   done
   wait
@@ -364,6 +369,7 @@ function netcdfgenRun() {
   BTC3option=$6
   ssprcp=$7
   carseq=$8
+  livdiscal=$9
 
   SceName=${SCE}_${CLP}_${IAV}${ModelInt}
 
@@ -402,11 +408,16 @@ function netcdfgenRun() {
     filelist="../output/csv/${SceName}/ghg_AFR.csv ../output/csv/${SceName}/ghg_BIO.csv ../output/csv/${SceName}/ghg_LUC.csv ../output/csv/${SceName}/ghgc_AFR.csv ../output/csv/${SceName}/ghgc_BIO.csv ../output/csv/${SceName}/ghgc_LUC.csv"
     ncgenfunc ghg ${SceName} "${filelist}" ncheader_all_ghg 1
   fi
+  #Livestock distribution
+  if [ ${livdiscal} == on ]; then
+    filelist="../output/csv/${SceName}/livestock_distribution.csv"
+    ncgenfunc livdis ${SceName} "${filelist}" ncheader_livdis 1
+  fi
 }
 
 function netcdfgen() {
   echo "NetCDF generation starts"
-  FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_ghg)
+  FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_ghg ncheader_livdis)
   for F in ${FileCopyList[@]} 
   do 
     cp ../${parent_dir}/data/ncheader/${F}.txt ../output/csv/${F}.txt 
@@ -414,7 +425,7 @@ function netcdfgen() {
 
   for S in ${scn[@]} 
   do
-    netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} &
+    netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} ${Sub_MergeResCSV4NC_livdiscal}&
     LoopmultiCPU 5 scn "netcdfgenRun" ${CPUthreads}
   done
   wait

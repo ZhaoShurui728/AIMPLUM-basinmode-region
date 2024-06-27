@@ -369,7 +369,12 @@ VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)
 VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL("SECGL",G));
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL("SECGL",G));
 
-VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
+*VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
+*VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
+
+
+VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("PAS",G) + delta_Y("PAS",G);
+VYL("MNGPAS",G)$(VYL_pre("PAS",G) and delta_Y("PAS",G)<0 and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL_pre("PAS",G) + delta_Y("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
 VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 
@@ -455,7 +460,6 @@ $load	CSoil_load=CSoil
 
 LEC0(Stc)=LEC("%Sr%",Stc);
 *f_mg=f_mg_load("%Sr%");
-* Average of IPCC inventory Table 5.5
 f_mg=1.01;
 CSoil_load("%Sr%",G,"2100")=CSoil_load("%Sr%",G,"2090");
 CSoil(G)=CSoil_load("%Sr%",G,"%Sy%")/12*Depth_ratio;

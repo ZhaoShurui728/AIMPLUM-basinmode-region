@@ -5,8 +5,10 @@ $setglobal iav NoCC
 $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
+$Setglobal base_year 2005
 $setglobal lumip off
 $setglobal bioyieldcalc off
+$setglobal livdiscalc off
 $setglobal gdxout on
 $setglobal wwfclass opt
 $setglobal wwfopt 1
@@ -38,6 +40,11 @@ $ifthen.split %split%==1
 Set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
+$include ../%prog_loc%/define/region/region5.set
+World
+/
+MAP_Ragg(R,R)/
+$include ../%prog_loc%/define/region/region17_agg.map
 /
 G	Cell number  /1 * 259200/
 I	Vertical position (LAT)	/ 1*360 /
@@ -63,6 +70,7 @@ PROTECT protected area
 RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
 
 * total
+AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD) consistent with GHG calc
 LUC
 TOT	total
 
@@ -117,6 +125,7 @@ ABD_MNGFRS
 ABD_AFR
 /
 LAFR(L)/AFR/
+LAFRTOT(L)/AFRTOT/
 Lused(L)/MNGFRS,AFR,CL,CROP_FLW,BIO,PAS/
 Lnat(L)/GL,UMNFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
@@ -140,12 +149,6 @@ maize	.	GRO
 sugarcrops	.	C_B
 oilcrops	.	OSD
 othercrops	.	OTH_A
-/
-Lwwf/
-$include ../%prog_loc%/individual/BendingTheCurve/luwwf.set
-/
-MAP_WWF(Lwwf,L)/
-$include ../%prog_loc%/individual/BendingTheCurve/luwwf.map
 /
 MAP_RIJ(R,I,J)
 MAP_RG(R,G)
@@ -172,9 +175,9 @@ FLAG_IJ(I,J)		Grid flag
 Rarea_bio(G)
 
 VY_load(R,Y,L,G)
+VYLY_load(R,Y,Y,L,G)
 VY_IJ(Y,L,I,J)
 VY_IJmip(Y,Lmip,I,J)
-VY_IJwwf(Y,Lwwf,I,J)
 YIELD_BIO(R,Y,G)
 YIELD_IJ(Y,L,I,J) tCO2 per ha per year
 GHGLG(Y,L,G)	MtCO2 per grid per year
@@ -199,9 +202,11 @@ FLAG_IJ(I,J)$SUM(R,MAP_RIJ(R,I,J))=1;
 
 $gdxin '../output/gdx/results/results_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_load=VYL
+$load VYLY_load=VYLY
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
+VY_IJ(Y,L,I,J)$(FLAG_IJ(I,J) and LAFRTOT(L))=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYLY_load(R,Y,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 
@@ -290,6 +295,154 @@ ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(
 $endif.split
 $if %split%==1 $exit
 
+*------------------------------
+* Livestock distribution calc
+*-----------------------------
+$Setglobal base_year 2005
+$ifthen.livdis %livdiscalc%==on
+set
+Sl Set for types of livestock
+Slnum/1*8/
+ALIV
+CLIV
+;
+Alias (Sl,Sl2),(Slnum,Slnum2),(R,R2);
+parameter
+liv_dist_base(Sl,I,J)	number of animals in a grid cell I J in base year (head)
+liv_dist_baseave(Sl,R)	average number of animals in a grid cell in region R in base year (head)
+liv_dist_base0(Sl,Y,I,J)	benckmark number of animals in a grid cell I J by allocating regional average base-year number to the cell no pasture in base year but generated in future year Y (head)
+liv_dist(Sl,Y,I,J)	number of animals in a grid cell I J (head)
+liv_dist2(Sl,Y,I,J)	adjusted number of animals in a grid cell I J (head)
+liv_distnum(Slnum,Y,I,J)	number of animals in a grid cell I J (head)
+liv_reg(Sl,Y,R)	number of animals in each regions
+
+liv_regbase(Sl,R)	number in region R in base year (head)
+liv_regtar(Sl,Y,R)	targeted total number in region R in year t
+liv_regwopas(Sl,Y,R)	total number of animals in the cell without pasture in region R in base and year t
+liv_regonpas(Sl,Y,R)	targeted total number in the cell with pasture in region R in year t
+prod_regsf(Sl,Y,R)	scale factor of production in region R and year t
+area_regsf(Sl,Y,R)	scale factor of area in region R and year t
+head_regsf(Sl,Y,R)	scale factor of head  in the cell with pasture in region R and year t
+BW_map(Sl,I,J) body weight of animals (kg body weight per head)
+LUnit livestock unit (250kg per head) /250/
+
+OUTPUTAC_load(*,Y,R,ALIV,CLIV)	Output (Production) of commodity C from sector A  (mil.$ or ktoe) (cge output)
+OUTPUTSL(Y,R,Sl)	Output (Production) of commodity C from sector A (mil.$ or ktoe) (cge output)
+;
+
+$setglobal IAVload %IAV%
+
+$gdxin '../%prog_loc%/individual/Livestock/livestock_base.gdx'
+$load Sl liv_dist_base=livestock_headbasemap BW_map
+
+$gdxin '../%prog_loc%/data/set.gdx'
+$load ALIV=AGRZ CLIV
+
+$gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
+$load OUTPUTAC_load=OUTPUTAC
+
+set
+MAP_SALIV(Sl,ALIV)/
+cattle_d	.	RMK
+cattle_o	.	CTL
+buffaloes	.	CTL
+sheep	.	CTL
+goats	.	CTL
+swines	.	OTH_L
+chickens	.	OTH_L
+ducks	.	OTH_L
+/
+MAP_SCLIV(Sl,CLIV)/
+cattle_d	.	COM_RMK
+cattle_o	.	COM_CTL
+buffaloes	.	COM_CTL
+sheep	.	COM_CTL
+goats	.	COM_CTL
+swines	.	COM_OTH_L
+chickens	.	COM_OTH_L
+ducks	.	COM_OTH_L
+/
+;
+
+OUTPUTSL(Y,R,Sl)=SUM(ALIV$MAP_SALIV(Sl,ALIV),SUM(CLIV$MAP_SCLIV(Sl,CLIV),OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,ALIV,CLIV)));
+
+liv_regbase(Sl,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist_base(Sl,I,J));
+
+liv_dist_baseave(Sl,R)$sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),1)=sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),liv_dist_base(Sl,I,J))/sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),1);
+
+liv_dist_base0(Sl,Y,I,J)=liv_dist_base(Sl,I,J);
+liv_dist_base0(Sl,Y,I,J)$(liv_dist_base(Sl,I,J)=0 and VY_IJ("%base_year%","PAS",I,J)=0 and VY_IJ(Y,"PAS",I,J))=sum(R$(MAP_RIJ(R,I,J)),liv_dist_baseave(Sl,R));
+
+
+liv_regtar(Sl,Y,R)$OUTPUTSL("%base_year%",R,Sl)=liv_regbase(Sl,R) * OUTPUTSL(Y,R,Sl)/OUTPUTSL("%base_year%",R,Sl);
+
+liv_regwopas(Sl,Y,R)=sum((I,J)$(MAP_RIJ(R,I,J) and VY_IJ("%base_year%","PAS",I,J)=0 and VY_IJ(Y,"PAS",I,J)=0),liv_dist_base(Sl,I,J));
+liv_regonpas(Sl,Y,R)=liv_regtar(Sl,Y,R)-liv_regwopas(Sl,Y,R);
+
+prod_regsf(Sl,Y,R)$liv_regbase(Sl,R)=liv_regtar(Sl,Y,R)/liv_regbase(Sl,R);
+area_regsf(Sl,Y,R)$(sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ("%base_year%","PAS",I,J)*GAIJ(I,J)))=sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ(Y,"PAS",I,J)*GAIJ(I,J))/sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ("%base_year%","PAS",I,J)*GAIJ(I,J));
+head_regsf(Sl,Y,R)$area_regsf(Sl,Y,R)=prod_regsf(Sl,Y,R)/area_regsf(Sl,Y,R);
+
+
+liv_dist(Sl,"%base_year%",I,J)=liv_dist_base(Sl,I,J);
+liv_dist(Sl,Y,I,J)$(liv_dist_base0(Sl,Y,I,J) and Y.val>%base_year%)=liv_dist_base0(Sl,Y,I,J)*sum(R$(MAP_RIJ(R,I,J)),prod_regsf(Sl,Y,R));
+
+* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
+liv_dist2(Sl,Y,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),liv_dist(Sl,Y,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
+liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist2(Sl,Y,I,J));
+liv_reg(Sl,Y,R)=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
+
+set
+MAP_Slnum(Slnum,Sl)/
+1	.	cattle_d
+2	.	cattle_o
+3	.	buffaloes
+4	.	sheep
+5	.	goats
+6	.	swines
+7	.	chickens
+8	.	ducks
+/
+;
+liv_distnum(Slnum,Y,I,J)=sum(Sl$(MAP_Slnum(Slnum,Sl)),liv_dist(Sl,Y,I,J));
+
+* put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
+liv_distnum(Slnum,Y,I,J)$(sum(Slnum2,liv_distnum(Slnum2,Y,I,J))=0 and liv_distnum(Slnum,Y,I,J)=0)=-99;
+
+
+$ifthen.gdxout %gdxout%==on
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.gdx'
+liv_dist,liv_distnum,liv_reg
+;
+$endif.gdxout
+
+
+file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.csv" /;
+put output;
+output.pw=32767;
+put "Livestock_distribution", "= "/;
+
+loop(Y,
+ loop(Slnum,
+  loop(I,
+   loop(J,
+    output.nd=10; output.nz=0; output.nr=0; output.nw=15;
+    put liv_distnum(Slnum,Y,I,J);
+    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Slnum)=8 AND ORD(Y)=11),put ",";
+    ELSE put ";";
+    );
+   );
+ put /;
+ );
+ );
+);
+put /;
+$exit
+$endif.livdis
+
+*------------------------------
+* Carbon sink land intensity calc
+*-----------------------------
 set
 LVST/
 AFR00	control(actual biome)
@@ -329,6 +482,9 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_yield.gms AFR
 $exit
 $endif.bioyield
 
+*------------------------------
+* Carbon sink calc
+*-----------------------------
 $ifthen.carseq %carseq%==on
 $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGLG
@@ -336,7 +492,7 @@ $load GHGLG
 GHG_IJ(Y,L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J) and GHGLG(Y,L,G)),GHGLG(Y,L,G));
 GHGC_IJ(Y,L,I,J)$(LABL(L) and FLAG_IJ(I,J))=GHG_IJ("2010",L,I,J)*5 + sum(Y2$(ordy("2020")<=ordy(Y2) and ordy(Y2)<=ordy(Y) and GHG_IJ(Y2,L,I,J)),GHG_IJ(Y2,L,I,J)*Y_step);
 
-$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms AFR
+$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms AFRTOT
 $batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms BIO
 $batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms LUC
 
@@ -387,8 +543,8 @@ $elseif.p %lumip%_%wwfclass%==off_opt
 set
 Lwwfnum/
 $if %wwfopt%==1 1*8
-$if %wwfopt%==2 1*16
-$if %wwfopt%==3 1*16
+$if %wwfopt%==2 1*17
+$if %wwfopt%==3 1*17
 
 /
 MAP_WWFnum(Lwwfnum,L)/
@@ -400,8 +556,8 @@ $if %wwfopt%==3 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.m
 parameter
 plwwfnum/
 $if %wwfopt%==1 8
-$if %wwfopt%==2 16
-$if %wwfopt%==3 16
+$if %wwfopt%==2 17
+$if %wwfopt%==3 17
 /
 ;
 
