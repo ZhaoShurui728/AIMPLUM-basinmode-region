@@ -303,8 +303,8 @@ $ifthen.livdis %livdiscalc%==on
 set
 Sl Set for types of livestock
 Slnum/1*8/
-ALIV
-CLIV
+ALIV  Set for types of livestock sector in CGE
+CLIV  Set for types of livestock commopdity in CGE
 ;
 Alias (Sl,Sl2),(Slnum,Slnum2),(R,R2);
 parameter
@@ -390,7 +390,7 @@ liv_dist(Sl,Y,I,J)$(liv_dist_base0(Sl,Y,I,J) and Y.val>%base_year%)=liv_dist_bas
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 liv_dist2(Sl,Y,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),liv_dist(Sl,Y,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
 liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist2(Sl,Y,I,J));
-liv_reg(Sl,Y,R)=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
+*liv_reg(Sl,Y,R)=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
 
 set
 MAP_Slnum(Slnum,Sl)/
@@ -412,7 +412,7 @@ liv_distnum(Slnum,Y,I,J)$(sum(Slnum2,liv_distnum(Slnum2,Y,I,J))=0 and liv_distnu
 
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.gdx'
-liv_dist,liv_distnum,liv_reg
+liv_dist,liv_reg,Sl,ALIV,MAP_SALIV
 ;
 $endif.gdxout
 

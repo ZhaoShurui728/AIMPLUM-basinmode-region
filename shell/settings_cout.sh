@@ -57,7 +57,7 @@ ScnMerge=off
     Sub_ScnMerge_BiocurveSort=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
-MergeResCSV4NC=on
+MergeResCSV4NC=off
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=off
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
@@ -74,7 +74,7 @@ MergeResCSV4NC=on
     Sub_MergeResCSV4NC_livdiscal=on
 
 # Set Netcdf Creation [on/off]
-netcdfgen=on
+netcdfgen=off
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=BTC
 
@@ -84,6 +84,9 @@ PREDICTS=off
     Sub_Calc_PREDICTScoef=off
     ## whether you want BII by grid scale or aggregated BII (Regional scale) [Both/Grid/Regional]
     Sub_Calc_Scale=Regional
+
+# Set Livestock number output in IAMC temp  [on/off]  (If on, calculate regional livestock number. You need Livestock netcdf output with Sub_MergeResCSV4NC_livdiscal=on)  
+Livestock=on
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off

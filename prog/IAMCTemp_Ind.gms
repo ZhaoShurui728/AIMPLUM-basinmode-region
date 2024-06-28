@@ -10,6 +10,7 @@ $setglobal ModelInt
 $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 $setglobal PREDICTS_exe off
+$setglobal Livestockout_exe off
 
 set
 R	17 regions	/
@@ -171,6 +172,10 @@ Emi_CO2_AFO_Oth_Luc
 Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
 Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
 Lan_Cov_Frs_Agr	Land Cover| Agroforestry
+
+Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
+Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
+Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
 /
 
 
@@ -316,8 +321,48 @@ IAMCTemp(R,"Terrestrial Biodiversity|BII","%",Y)=Ter_Bio_BII(R,Y)*100;
 
 $endif.PREDICTS_exe
 
+
+$ifthen.Livestockout_exe %Livestockout_exe%==on
+set
+Sl Set for types of livestock
+CAgMIPLIV  Set for types of livestock sector in AgMIP /RUM,NRM,DRY/
+;
+parameter
+liv_reg(Sl,Y,R)	number of animals in each regions
+liv_reg_a(CAgMIPLIV,Y,R)	number of animals in each regions
+;
+
+$gdxin '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.gdx'
+$load Sl,liv_reg
+
+set
+MAP_CAgMIPLIV(Sl,CAgMIPLIV)/
+cattle_d	.	DRY
+cattle_o	.	RUM
+buffaloes	.	RUM
+sheep	.	RUM
+goats	.	RUM
+swines	.	NRM
+chickens	.	NRM
+ducks	.	NRM
+/
+;
+
+liv_reg_a(CAgMIPLIV,Y,R)=sum(Sl$(MAP_CAgMIPLIV(Sl,CAgMIPLIV)),liv_reg(Sl,Y,R));
+
+IAMCTemp(R,"Liv_Ani_Sto_Num_Rum","head",Y)=liv_reg_a("RUM",Y,R);
+IAMCTemp(R,"Liv_Ani_Sto_Num_Nrm","head",Y)=liv_reg_a("NRM",Y,R);
+IAMCTemp(R,"Liv_Ani_Sto_Num_Dry","head",Y)=liv_reg_a("DRY",Y,R);
+
+$endif.Livestockout_exe
+
+
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 
 execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU;
+
+
+
+
 
