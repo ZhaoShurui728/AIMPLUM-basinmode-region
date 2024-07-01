@@ -324,6 +324,7 @@ prod_regsf(Sl,Y,R)	scale factor of production in region R and year t
 area_regsf(Sl,Y,R)	scale factor of area in region R and year t
 head_regsf(Sl,Y,R)	scale factor of head  in the cell with pasture in region R and year t
 BW_map(Sl,I,J) body weight of animals (kg body weight per head)
+BW_mapnum(Slnum,I,J) body weight of animals (kg body weight per head)
 LUnit livestock unit (250kg per head) /250/
 
 OUTPUTAC_load(*,Y,R,ALIV,CLIV)	Output (Production) of commodity C from sector A  (mil.$ or ktoe) (cge output)
@@ -390,7 +391,7 @@ liv_dist(Sl,Y,I,J)$(liv_dist_base0(Sl,Y,I,J) and Y.val>%base_year%)=liv_dist_bas
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 liv_dist2(Sl,Y,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),liv_dist(Sl,Y,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
 liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist2(Sl,Y,I,J));
-*liv_reg(Sl,Y,R)=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
+liv_reg(Sl,Y,R)=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
 
 set
 MAP_Slnum(Slnum,Sl)/
@@ -409,10 +410,13 @@ liv_distnum(Slnum,Y,I,J)=sum(Sl$(MAP_Slnum(Slnum,Sl)),liv_dist(Sl,Y,I,J));
 * put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 liv_distnum(Slnum,Y,I,J)$(sum(Slnum2,liv_distnum(Slnum2,Y,I,J))=0 and liv_distnum(Slnum,Y,I,J)=0)=-99;
 
+BW_mapnum(Slnum,I,J)=sum(Sl$(MAP_Slnum(Slnum,Sl)),BW_map(Sl,I,J));
+BW_mapnum(Slnum,I,J)$(sum(Slnum2,BW_mapnum(Slnum2,I,J))=0 and BW_mapnum(Slnum,I,J)=0)=-99;
+
 
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.gdx'
-liv_dist,liv_reg,Sl,ALIV,MAP_SALIV
+liv_dist,liv_reg,Sl,ALIV,MAP_SALIV,BW_map,liv_distnum,BW_mapnum
 ;
 $endif.gdxout
 
@@ -437,6 +441,28 @@ loop(Y,
  );
 );
 put /;
+
+
+
+file output_bw_map / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/BW_map.csv" /;
+put output_bw_map;
+output_bw_map.pw=32767;
+put "BodyWeight", "= "/;
+loop(Slnum,
+ loop(I,
+  loop(J,
+   output_bw_map.nd=10; output_bw_map.nz=0; output_bw_map.nr=0; output_bw_map.nw=15;
+   put BW_mapnum(Slnum,I,J);
+   IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Slnum)=8),put ",";
+   ELSE put ";";
+   );
+  );
+put /;
+);
+);
+put /;
+
+
 $exit
 $endif.livdis
 

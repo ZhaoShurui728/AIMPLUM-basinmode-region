@@ -325,30 +325,37 @@ $endif.PREDICTS_exe
 $ifthen.Livestockout_exe %Livestockout_exe%==on
 set
 Sl Set for types of livestock
-CAgMIPLIV  Set for types of livestock sector in AgMIP /RUM,NRM,DRY/
+C_AGMIP Commodity for agriculture in AgMIP/
+$include ../%prog_loc%/individual/Livestock/cagmip.set
+/
 ;
 parameter
 liv_reg(Sl,Y,R)	number of animals in each regions
-liv_reg_a(CAgMIPLIV,Y,R)	number of animals in each regions
+liv_reg_a(C_AGMIP,Y,R)	number of animals in each regions
 ;
 
 $gdxin '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.gdx'
 $load Sl,liv_reg
 
 set
-MAP_CAgMIPLIV(Sl,CAgMIPLIV)/
+map_Sl_C_AgMIP(Sl,C_AGMIP)/
 cattle_d	.	DRY
 cattle_o	.	RUM
 buffaloes	.	RUM
 sheep	.	RUM
 goats	.	RUM
+*camels	.	NRM
+*horses	.	RUM
+*mules	.	RUM
+*asses	.	RUM
 swines	.	NRM
 chickens	.	NRM
 ducks	.	NRM
+*turkeys	.	NRM
 /
 ;
 
-liv_reg_a(CAgMIPLIV,Y,R)=sum(Sl$(MAP_CAgMIPLIV(Sl,CAgMIPLIV)),liv_reg(Sl,Y,R));
+liv_reg_a(C_AGMIP,Y,R)=sum(Sl$(map_Sl_C_AgMIP(Sl,C_AGMIP)),liv_reg(Sl,Y,R));
 
 IAMCTemp(R,"Liv_Ani_Sto_Num_Rum","head",Y)=liv_reg_a("RUM",Y,R);
 IAMCTemp(R,"Liv_Ani_Sto_Num_Nrm","head",Y)=liv_reg_a("NRM",Y,R);

@@ -15,7 +15,7 @@ scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
 scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_BIOD_No SSP2_BaU_NoCC_No)
-scn=(SSP2_BaU_NoCC)
+scn=(SSP2_BaU_BIOD_No)
 #scn=(SSP2_BaU_PROTECT)
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -57,7 +57,7 @@ ScnMerge=off
     Sub_ScnMerge_BiocurveSort=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
-MergeResCSV4NC=off
+MergeResCSV4NC=on
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=off
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
@@ -74,7 +74,7 @@ MergeResCSV4NC=off
     Sub_MergeResCSV4NC_livdiscal=on
 
 # Set Netcdf Creation [on/off]
-netcdfgen=off
+netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=BTC
 
@@ -86,7 +86,7 @@ PREDICTS=off
     Sub_Calc_Scale=Regional
 
 # Set Livestock number output in IAMC temp  [on/off]  (If on, calculate regional livestock number. You need Livestock netcdf output with Sub_MergeResCSV4NC_livdiscal=on)  
-Livestock=on
+Livestock=off
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off

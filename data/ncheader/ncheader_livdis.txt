@@ -5,31 +5,33 @@ dimensions:
 	time = 11 ;
 	slnum = 8;
 variables:
-	float lon(lon) ;
+	double lon(lon) ;
 		lon:long_name = "Longitude" ;
 		lon:units = "degrees_east" ;
 		lon:comment = "center of cell" ;
-	float lat(lat) ;
+	double lat(lat) ;
 		lat:long_name = "Latitude" ;
 		lat:units = "degrees_north" ;
 		lat:comment = "center of cell" ;
 	double time(time) ;
-		time:long_name = "Time" ;
-		time:units = "days since 1900-01-01 00:00" ;
-		time:calendar = "gregorian" ;
+		time:long_name = "time" ;
+		time:units = "years" ;
+		time:calendar = "standard" ;
 	double slnum(slnum) ;
 		slnum:long_name = "Livestock type" ;
 		slnum:units = "Livestock type/1cattle_da/2cattle_o/3buffaloes/4sheep/5goats/6swines/7chickens/8ducks" ;
-	int year(time) ;
-		year:long_name = "Year" ;
-		year:units = "year" ;
-		year:format = "YYYY" ;
-	float Livestock_distribution(time, slnum, lat, lon) ;
+	double Livestock_distribution(time, slnum, lat, lon) ;
 		Livestock_distribution:standard_name = "livestock unit number per grid";
 		Livestock_distribution:long_name = "livestock unit number per grid";
 		Livestock_distribution:units = "livestock unit number per grid";
+		Livestock_distribution:_FillValue = NaN ;
 		Livestock_distribution:missing_value = -99.f ;
-
+	double BodyWeight(slnum, lat, lon) ;
+		BodyWeight:standard_name = "body weight of animals";
+		BodyWeight:long_name = "body weight of animals";
+		BodyWeight:units = "kg body weight per head;
+		BodyWeight:_FillValue = NaN ;
+		BodyWeight:missing_value = -99.f ;
 data:
 
  lon = -179.75, -179.25, -178.75, -178.25, -177.75, -177.25, -176.75, 
@@ -153,6 +155,5 @@ data:
     -87.25, -87.75, -88.25, -88.75, -89.25, -89.75 ;
 
  slnum = 1,2,3,4,5,6,7,8;
- year = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
- time = 38351, 40177, 43829, 47482, 51134, 54787, 58439, 62092, 65744, 69397, 73049 ;
+ time = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
 

@@ -411,7 +411,7 @@ function netcdfgenRun() {
   fi
   #Livestock distribution
   if [ ${livdiscal} == on ]; then
-    filelist="../output/csv/${SceName}/livestock_distribution.csv"
+    filelist="../output/csv/${SceName}/livestock_distribution.csv ../output/csv/${SceName}/BW_map.csv"
     ncgenfunc livdis ${SceName} "${filelist}" ncheader_livdis 1
   fi
 }
