@@ -127,6 +127,9 @@ DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
 NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
 NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
+
+* degreaded soil
+CLDEGS	cropland with degraded soil
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/

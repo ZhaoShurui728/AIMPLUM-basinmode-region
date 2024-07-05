@@ -59,7 +59,7 @@ rr(R,L)
 g_w0(clim, Zeco, continent,Stc,Sfrst)    Average annual above-ground biomass growth (Table 4.9&4.10&4.12: Table4.12 is used in AFOLU model )
 g_w(R,Stc,Sfrst)
 G_TOTAL(R,Stc,Sfrst)        Average annual biomass growth above and below-ground(tonne dm per ha per yr)
-LEC(R,Stc) Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+LEC(R,Stc,Sfrst) Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
 f_mg0(clim,value)     Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
 f_mg(R)               Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
 ;
@@ -73,7 +73,7 @@ g_w(R,Stc,Sfrst) = sum((continent,clim,Zeco,soiltype)$map_r_clim(R,continent,cli
 
 G_TOTAL(R,Stc,Sfrst) = g_w(R,Stc,Sfrst) * (1+rr(R,"FRS"));
 *Eq 2.9 deltac_g of "b"
-LEC(R,Stc) = G_TOTAL(R,"G20","N") * cf * (-44/12);
+LEC(R,Stc,Sfrst) = G_TOTAL(R,Stc,Sfrst) * cf * (-44/12);
 
 f_mg(R) = sum((continent,clim,Zeco,soiltype)$map_r_clim(R,continent,clim,Zeco,soiltype),f_mg0(clim,"val"));
 

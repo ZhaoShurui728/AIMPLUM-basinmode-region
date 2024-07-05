@@ -107,6 +107,9 @@ DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
 NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
 NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
+
+* degreaded soil
+CLDEGS	cropland with degraded soil
 /
 LCROPB(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO/
 LPRMSEC(L)/PRM_SEC/
@@ -311,7 +314,7 @@ forest_management_shareG(G) A ratio of managed forest area to total forest area 
 forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
 sharepix_load(LULC_class,I,J)
 sharepix(LULC_class,G)
-
+Soil_deg(G)	A share of area with soil degradation to grid area in grid G (0-1) Wu et al 2019 GCBB developed using GLADIS (Freddy & Monica 2011).
 ;
 $gdxin '../%prog_loc%/data/forest_class_export.gdx'
 $load forest_management_shareG,forest_class_shareG
@@ -321,6 +324,8 @@ $load sharepix_load=sharepix
 
 sharepix(LULC_class,G)=sum((I,J)$MAP_GIJ(G,I,J),sharepix_load(LULC_class,I,J));
 
+$gdxin '../%prog_loc%/individual/GCBB_biopotential/policydata.gdx'
+$load	Soil_deg=serious_land
 
 $ifthen.mng %Sy%==%base_year%
 VYL("MNGFRS",G)$(VYL("FRS",G) and forest_management_shareG(G))=VYL("FRS",G)*forest_management_shareG(G);
@@ -341,6 +346,9 @@ VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangel
 VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 delta_VY("%Sy%",L,G)=0;
+
+VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
+
 
 
 $else.mng
@@ -377,6 +385,7 @@ VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("PAS",G) + delta_Y("PAS",G);
 VYL("MNGPAS",G)$(VYL_pre("PAS",G) and delta_Y("PAS",G)<0 and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL_pre("PAS",G) + delta_Y("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
 VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
+VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 
 $endif.mng
 
@@ -425,6 +434,7 @@ LAGOFRS(L)/AGOFRS/
 LCROPFLW(L)/CROP_FLW/
 LDEF(L)/DEF/
 LDEG(L)/DEG/
+LCLDEGS(L)/CLDEGS/
 MAP_EMIAGG(L,L)/
 (AFRTOT,NRFABDCUM,DEF,AGOFRS)	.	FRS
 (NRGABDCUM,DEG)	.	GL
@@ -432,12 +442,13 @@ MAP_EMIAGG(L,L)/
 (FRS,GL,CL,CROP_FLW,PAS,SL,OL,BIO)	.	"LUC+BIO"
 /
 Stc       Year category         / G20, LE20 /
+Sfrst     Forest type (Natural forest or Plantation) / N, P/
 ;
 
 Parameter
 ordy(Y)
-LEC(R,Stc) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
-LEC0(Stc)      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+LEC(R,Stc,Sfrst) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
+LEC0(Stc,Sfrst)      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
 f_mg_load(R)       Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
 f_mg               Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
 CSoil_load(R,G,Y)	12 times of Soil Carbon stock (MgC) in grid G and year Y in the baseline scenario (SSP2 land use and RCP4.5 climate) estimated by VISIT
@@ -458,7 +469,8 @@ $load LEC  f_mg_load=f_mg
 $gdxin '../%prog_loc%/individual/ForestCsink/AFR00_CSoil_stock_visit.gdx'
 $load	CSoil_load=CSoil
 
-LEC0(Stc)=LEC("%Sr%",Stc);
+
+LEC0(Stc,Sfrst)=LEC("%Sr%",Stc,Sfrst);
 *f_mg=f_mg_load("%Sr%");
 f_mg=1.01;
 CSoil_load("%Sr%",G,"2100")=CSoil_load("%Sr%",G,"2090");
@@ -508,16 +520,17 @@ $if not %Sy%==%base_year%	GHGLG("Positive",L,G)$(CSL(L) AND delta_Y(L,G)<0) = CS
 $if not %Sy%==%base_year%	GHGLG("Negative",L,G)$(CSL(L) AND delta_Y(L,G)>0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1)/Ystep;
 
 GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L,G) *GA(G) * 44/12 /10**3/Ystep;
-GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20") * VYL(L,G) *GA(G)/10**3 * (-1);
+GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20","N") * VYL(L,G) *GA(G)/10**3 * (-1);
 
 GHGLG("Negative",L,G)$(LAFRTOT(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
-$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and VYLY(Y2,L,G)), VYLY(Y2,L,G)) *GA(G)/10**3;
-GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20") * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
+$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20","N") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and VYLY(Y2,L,G)), VYLY(Y2,L,G)) *GA(G)/10**3;
+GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
 
-$ifthen.scs not %clp%==BaU
+*$ifthen.scs not %clp%==BaU
 GHGLG("Negative",L,G)$(LCROPFLW(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G) * 44/12/10**3 * (-1);
 GHGLG("Negative",L,G)$(LNRGABDCUM(L))= CSoil(G) * (f_mg-1) * VYLY("%Sy%",L,G) * Application_ratio(L) * GA(G)* 44/12/10**3 * (-1);
-$endif.scs
+GHGLG("Negative",L,G)$(LCLDEGS(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * GA(G)* 44/12/10**3 * (-1);
+*$endif.scs
 
 GHGL(EmitCat,"FRSGL") = 0;
 
@@ -553,8 +566,6 @@ GHGL
 $if %Sy%==%base_year% CSB,Psol_stat,FRSArea2
 VYLY
 CS
-
-f_mg
 
 ;
 
