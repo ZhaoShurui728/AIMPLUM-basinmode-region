@@ -1363,15 +1363,16 @@ delta_VY(Y,L,G)$(abs(delta_VY(Y,L,G))<10**(-5))=0;
 *--------GHG emissions --------*
 set
 Stc       Year category         / G20, LE20 /
+Sfrst     Forest type (Natural forest or Plantation) / N, P/
 ;
 parameter
-LEC(R,Stc) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
-LEC0(Stc)      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
+LEC(R,Stc,Sfrst) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
+LEC0(Stc,Sfrst)      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
 ;
 $gdxin '../%prog_loc%/data/data_prep2.gdx'
 $load LEC
 
-LEC0(Stc)=LEC("%Sr%",Stc);
+LEC0(Stc,Sfrst)=LEC("%Sr%",Stc,Sfrst);
 
 delta_Y(L,G)$(NOT %Sy%=%base_year% AND (VYL(L,G)-Y_pre(L,G)))=(VYL(L,G)-Y_pre(L,G));
 
@@ -1383,7 +1384,7 @@ GHGLG("Positive",L,G)$(CSL(L) AND delta_Y(L,G)<0) = CSL(L)*delta_Y(L,G) *GA(G) *
 GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0) = CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Negative",L,G)$(CSL(L) AND delta_Y(L,G)>0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20") *delta_Y(L,G) *GA(G)/10**3;
+GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20","N") *delta_Y(L,G) *GA(G)/10**3;
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
