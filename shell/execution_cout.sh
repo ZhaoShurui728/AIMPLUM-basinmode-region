@@ -494,6 +494,14 @@ function Livestockcalc() {
     ScenarioSpecName
         gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --Livestockout_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst
   done
+  wait
+  echo "All scenario merges have been done."
+  cd ../output/gdx/comparison/
+  gdxmerge *.gdx 
+  mv -f merged.gdx ../all/Mergedcomparison.gdx
+  cd ../../../exe
+
+  if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
 ## 9. Generation of GDX Files for Plotting
