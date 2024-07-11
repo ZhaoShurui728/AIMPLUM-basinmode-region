@@ -472,7 +472,7 @@ $load	CSoil_load=CSoil
 
 LEC0(Stc,Sfrst)=LEC("%Sr%",Stc,Sfrst);
 *f_mg=f_mg_load("%Sr%");
-f_mg=1.01;
+f_mg=1.004;
 CSoil_load("%Sr%",G,"2100")=CSoil_load("%Sr%",G,"2090");
 CSoil(G)=CSoil_load("%Sr%",G,"%Sy%")/12*Depth_ratio;
 
