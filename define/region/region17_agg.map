@@ -15,9 +15,75 @@ CIS	.	World
 XME	.	World
 XNF	.	World
 XAF	.	World
+$ifthen.agmip %agmip%==on
+XE25	.	WLD
+XER	.	WLD
+TUR	.	WLD
+XOC	.	WLD
+CHN	.	WLD
+IND	.	WLD
+JPN	.	WLD
+XSE	.	WLD
+XSA	.	WLD
+CAN	.	WLD
+USA	.	WLD
+BRA	.	WLD
+XLM	.	WLD
+CIS	.	WLD
+XME	.	WLD
+XNF	.	WLD
+XAF	.	WLD
+CAN	.	CAN
+USA	.	USA
+BRA	.	BRA
+XLM	.	OSA
+CIS	.	FSU
+XE25	.	EUR
+XME	.	MEN
+XAF	.	SSA
+CHN	.	CHN
+IND	.	IND
+XSE	.	SEA
+XSA	.	OAS
+XOC	.	ANZ
+XER	.	EUR
+JPN	.	SEA
+TUR	.	MEN
+XNF	.	MEN
+
+XSA	.	SAS
+IND	.	SAS
+TUR	.	AME
+XNF	.	AME
+XME	.	AME
+XAF	.	AME
+BRA	.	OAM
+XLM	.	OAM
+USA	.	NAM
+CAN	.	NAM
+$endif.agmip
+
+XE25	.	Industrial
+XER	.	Transition
+TUR	.	Transition
+XOC	.	Industrial
+CHN	.	Transition
+IND	.	Transition
+JPN	.	Industrial
+XSE	.	Developing
+XSA	.	Developing
+CAN	.	Industrial
+USA	.	Industrial
+BRA	.	Transition
+XLM	.	Developing
+CIS	.	Transition
+XME	.	Developing
+XNF	.	Developing
+XAF	.	Developing
+
 
 XE25	.	"R5OECD90+EU"
-XER	.	"R5REF"
+XER	.	"R5OECD90+EU"
 TUR	.	"R5OECD90+EU"
 XOC	.	"R5OECD90+EU"
 CHN	.	"R5ASIA"
@@ -34,3 +100,19 @@ XME	.	"R5MAF"
 XNF	.	"R5MAF"
 XAF	.	"R5MAF"
 
+CHN	.	Non-OECD
+IND	.	Non-OECD
+XSE	.	Non-OECD
+XSA	.	Non-OECD
+BRA	.	Non-OECD
+XLM	.	Non-OECD
+CIS	.	Non-OECD
+XME	.	Non-OECD
+XNF	.	Non-OECD
+XAF	.	Non-OECD
+
+CHN	.	ASIA2
+IND	.	ASIA2
+JPN	.	ASIA2
+XSE	.	ASIA2
+XSA	.	ASIA2

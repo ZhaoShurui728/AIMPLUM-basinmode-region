@@ -17,6 +17,7 @@ scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_BIOD_No SSP2_BaU_NoCC_No)
 scn=(SSP2_BaU_NoCC)
 scn=(SSP2_500C_CACN_NoCC)
+scn=(SSP2_500C_CACN_DAC_NoCC_No)
 #scn=(SSP2_BaU_PROTECT)
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -42,11 +43,11 @@ DataPrep2=off
 Basesim=off
 
 # Set Future Simulation [on/off]
-Futuresim=on
+Futuresim=off
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
-    Sub_Futuresim_NormalRun=on
+    Sub_Futuresim_NormalRun=off
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
     Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch

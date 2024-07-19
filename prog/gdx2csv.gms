@@ -14,6 +14,7 @@ $setglobal wwfclass opt
 $setglobal wwfopt 1
 $setglobal carseq off
 $setglobal afftype off
+$setglobal agmip off
 * wwf should be selected from  off, on, opt.
 *off)  native classifications.
 *on)   wwf classification
@@ -41,7 +42,24 @@ Set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
-World
+World,Non-OECD,ASIA2
+Industrial,Transition,Developing
+$    ifthen.agmip %agmip%==on
+      OSA
+      FSU
+      EUR
+      MEN
+      SSA
+      SEA
+      OAS
+      ANZ
+      NAM
+      OAM
+      AME
+      SAS
+      EUU
+      WLD
+$  endif.agmip
 /
 MAP_Ragg(R,R)/
 $include ../%prog_loc%/define/region/region17_agg.map
@@ -391,7 +409,7 @@ liv_dist(Sl,Y,I,J)$(liv_dist_base0(Sl,Y,I,J) and Y.val>%base_year%)=liv_dist_bas
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 liv_dist2(Sl,Y,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),liv_dist(Sl,Y,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
 liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist2(Sl,Y,I,J));
-liv_reg(Sl,Y,R)=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
+liv_reg(Sl,Y,R)$(sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2)))=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
 
 set
 MAP_Slnum(Slnum,Sl)/

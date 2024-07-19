@@ -11,19 +11,37 @@ $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 $setglobal PREDICTS_exe off
 $setglobal Livestockout_exe off
+$setglobal agmip on
 
 set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
-World
-R5ASIA
-"R5OECD90+EU"
-R5REF
-R5MAF
-R5LAM
+$include ../%prog_loc%/define/region/region5.set
+World,Non-OECD,ASIA2
+Industrial,Transition,Developing
+$    ifthen.agmip %agmip%==on
+      OSA
+      FSU
+      EUR
+      MEN
+      SSA
+      SEA
+      OAS
+      ANZ
+      NAM
+      OAM
+      AME
+      SAS
+      EUU
+      WLD
+$  endif.agmip
+
 /
 *Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
-Y year	/2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100/
+Y year	/
+$if %end_year%==2100 2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100
+$if %end_year%==2050 2005,2010,2020,2030,2040,2050
+/
 L land use type /
 PRM_SEC forest + grassland + pasture
 FRSGL   forest + grassland
@@ -93,6 +111,10 @@ NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
 
 * degreaded soil
 CLDEGS	cropland with degraded soil
+
+* original
+CLIR    cropland rainged
+CLRF	cropland irrigated
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/
@@ -105,6 +127,8 @@ EmitCat	Emissions categories /
 "Net"		Net emissions (= Positive - Negative)
 "Prev"		Previous version of emissions
 /
+LCROPIR(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR/
+LCROPRF(L)/PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
 ;
 Alias(R,R2),(Y,Y2);
 
@@ -157,9 +181,15 @@ Lan_Cov_Cro_Non_Ene_Cro
 Lan_Cov_Cro_Ene_Cro_1st_gen
 Lan_Cov_Cro_Ene_Cro_2nd_gen
 Lan_Cov_Frs_Sec
-Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
+Emi_CO2_Lan_Use_Flo_Pos_Emi
 Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
+Emi_CO2_Lan_Use_Flo_Neg_Seq
+Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
+Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For
 Car_Seq_Lan_Use_Soi_Car_Man	Carbon Sequestration|Land Use|Soil Carbon Management
+Emi_CO2_AFO_Lan_Aba_Man_Lan
+Emi_CO2_AFO_Lan
+Emi_CO2_AFO_Lan_Frs
 
 *Variables added in MOEJ-IIASA
 Lan_Cov_Frs_Frs_Old
@@ -179,6 +209,9 @@ Lan_Cov_Frs_Agr	Land Cover| Agroforestry
 Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
 Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
 Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
+ANNR_herd	Total livestock animal numbers including follower herd　Absolute number
+ANNR_prod	Livestock numbers for producer animals (for slaughter)　Absolute number
+
 /
 
 
@@ -227,7 +260,7 @@ C_BRF   .   Lan_Cov_Cro_Rai
 OTH_ARF   .   Lan_Cov_Cro_Rai
 
 /
-U/"million ha","Mt CO2/yr"/
+U/"million ha","Mt CO2/yr","million head"/
 ;
 
 parameter
@@ -252,7 +285,7 @@ Planduse(Y,R,LCGE)
 Planduse_load(*,Y,R,LCGE)
 GHG(R,Y,*,SMODEL)	GHG emission of land category L in year Y [MtCO2 per year]
 AREA(R,Y,L,SMODEL)	Regional area of land category L [kha]
-IAMCTemp(*,*,*,*)
+IAMCTemp(R,V,U,Y)
 IAMCTempwoU(R,V,Y)
 ;
 
@@ -356,13 +389,24 @@ chickens	.	NRM
 ducks	.	NRM
 *turkeys	.	NRM
 /
+V_LIV(V)/
+Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
+Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
+Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
+ANNR_herd	Total livestock animal numbers including follower herd　Absolute number
+ANNR_prod	Livestock numbers for producer animals (for slaughter)　Absolute number
+/
 ;
 
 liv_reg_a(C_AGMIP,Y,R)=sum(Sl$(map_Sl_C_AgMIP(Sl,C_AGMIP)),liv_reg(Sl,Y,R));
 
-IAMCTemp(R,"Liv_Ani_Sto_Num_Rum","head",Y)=liv_reg_a("RUM",Y,R);
-IAMCTemp(R,"Liv_Ani_Sto_Num_Nrm","head",Y)=liv_reg_a("NRM",Y,R);
-IAMCTemp(R,"Liv_Ani_Sto_Num_Dry","head",Y)=liv_reg_a("DRY",Y,R);
+IAMCTemp(R,"Liv_Ani_Sto_Num_Rum","million head",Y)=liv_reg_a("RUM",Y,R)/10**6;
+IAMCTemp(R,"Liv_Ani_Sto_Num_Nrm","million head",Y)=liv_reg_a("NRM",Y,R)/10**6;
+IAMCTemp(R,"Liv_Ani_Sto_Num_Dry","million head",Y)=liv_reg_a("DRY",Y,R)/10**6;
+
+IAMCTemp(R,"ANNR_herd","million head",Y)=IAMCTemp(R,"Liv_Ani_Sto_Num_Rum","million head",Y)+IAMCTemp(R,"Liv_Ani_Sto_Num_Nrm","million head",Y)+IAMCTemp(R,"Liv_Ani_Sto_Num_Dry","million head",Y);
+
+IAMCTemp(R,V,U,Y)$(V_LIV(V))=SUM(R2$MAP_RAGG(R2,R),IAMCTemp(R2,V,U,Y));
 
 $endif.Livestockout_exe
 
