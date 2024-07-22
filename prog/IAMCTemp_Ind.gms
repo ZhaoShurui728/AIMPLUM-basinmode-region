@@ -11,6 +11,8 @@ $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 $setglobal PREDICTS_exe off
 $setglobal Livestockout_exe off
+$setglobal WWFlandout_exe off
+$setglobal wwfopt 1
 $setglobal agmip on
 
 set
@@ -224,7 +226,7 @@ UMNFRS	.	Lan_Cov_Frs_Nat_Frs
 AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
-$if %iav%==BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
+$if %WWFlandout_exe%==off	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
 GL	.	Lan_Cov_Oth_Nat_Lan
 AGOFRS	.	Lan_Cov_Frs_Agr
 
@@ -358,6 +360,7 @@ IAMCTemp(R,"Terrestrial Biodiversity|BII","%",Y)=Ter_Bio_BII(R,Y)*100;
 $endif.PREDICTS_exe
 
 
+
 $ifthen.Livestockout_exe %Livestockout_exe%==on
 set
 Sl Set for types of livestock
@@ -410,6 +413,20 @@ IAMCTemp(R,V,U,Y)$(V_LIV(V))=SUM(R2$MAP_RAGG(R2,R),IAMCTemp(R2,V,U,Y));
 
 $endif.Livestockout_exe
 
+$ifthen.wwflandout %WWFlandout_exe%==on
+
+parameter
+VW_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
+;
+
+$gdxin '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
+$load VW_reg
+
+
+IAMCTemp(R,"Lan_Cov_Oth_Nat_Lan_Res_Lan","million ha",Y)=VW_reg(Y,"RES",R)/1000;
+
+
+$endif.wwflandout
 
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 

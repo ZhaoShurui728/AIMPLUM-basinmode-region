@@ -90,6 +90,9 @@ PREDICTS=off
 # Set Livestock number output in IAMC temp  [on/off]  (If on, calculate regional livestock number. You need Livestock netcdf output with Sub_MergeResCSV4NC_livdiscal=on)  
 Livestock=off
 
+# Set WWF land area output in IAMC temp  [on/off]  (If on, calculate wwf regional restored area. You need calculate land in BTC format with Sub_MergeResCSV4NC_BTC3option=on)  
+WWFland_iamc=off
+
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off
     ## set year for map visualization.

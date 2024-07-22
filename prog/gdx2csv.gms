@@ -23,10 +23,8 @@ $setglobal agmip off
 * wwfopt should be selected from  1 to 5.
 *OPTIONS
 *opt1) wwf classification in numbers as it is
-*opt2) all abandonned land that is not restored is re-classified as restored; no change in number of classes in LU netcdfs
-*opt3) all abandonned land that is not restored is re-classified as restored but only after 30 years - within these 30 years it remains classified as its original pre-abandonnment land use); no change in number of classes in LU netcdfs
-*opt4) same as 2, but with 4 additional LU classes(*) in the netcdfs (with a zero value, because it is restored straight away)
-*opt5) same as 3, but with 4 additional LU classes(*) in the netcdfs (with potentially non-zero values)
+*opt2) all abandonned land that is not restored is re-classified as restored but only after 30 years - within these 30 years it remains classified as its original pre-abandonnment land use); no change in number of classes in LU netcdfs
+*opt3) same as 2, but with 4 additional LU classes(*) in the netcdfs (with potentially non-zero values)
 
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
@@ -185,7 +183,7 @@ C_BRF	.	C_B
 OTH_ARF	.	OTH_A
 /
 ;
-Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3);
+Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2);
 
 parameter
 FLAG_G(G)		Grid flag
@@ -607,7 +605,9 @@ $if %wwfopt%==3 17
 
 Alias (Lwwfnum,Lwwfnum2);
 parameter
-VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance
+VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance (fraction)
+VW2(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance (averaged for the cell occupided by more than one countries) (fraction)
+VW_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
 VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abandance
 VY_IJwwfnum(Y,Lwwfnum,I,J)
 ;
@@ -630,13 +630,19 @@ $if %wwfopt%==1 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,
 $if %wwfopt%==2 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
 $if %wwfopt%==3 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
 
+
+* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
+VW2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VW(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
+VW_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VW2(Y,L,I,J)*GAIJ(I,J));
+VW_reg(Y,L,R)$(sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2));
+
 VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
 * put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
-VY_IJwwfnum
+VY_IJwwfnum,VW_reg
 ;
 $endif.gdxout
 

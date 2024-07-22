@@ -504,7 +504,30 @@ function Livestockcalc() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 9. Generation of GDX Files for Plotting
+## 9. WWF land area output in IAMC temp -------------------------------------------------------------------------------
+function WWFland_out() {
+  OPT=(2)
+  for S in ${scn[@]} 
+  do
+    #load scenario specification 
+    echo "${S}"
+    ScenarioSpecName
+    for O in ${OPT[@]} 
+    do
+        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=on --wwfopt=${O} MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst
+	done
+  done
+  wait
+  echo "All scenario merges have been done."
+  cd ../output/gdx/comparison/
+  gdxmerge *.gdx 
+  mv -f merged.gdx ../all/Mergedcomparison.gdx
+  cd ../../../exe
+
+  if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
+}
+
+## 10. Generation of GDX Files for Plotting
 function gdx4pngRun() {
   #Load scenario specification
   ScenarioSpecName
@@ -546,7 +569,7 @@ function gdx4png() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 10. Graphics
+## 11. Graphics
 function plot() {
   for S in ${scn[@]} 
   do
@@ -561,7 +584,7 @@ function plot() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 11. Merge All Results
+## 12. Merge All Results
 function Allmerge() {
   cd ../output/gdx/analysis
   gdxmerge *.gdx output=../final_results.gdx
@@ -646,6 +669,7 @@ if [ ${MergeResCSV4NC} = "on" ]; then MergeResCSV4NC ; fi
 if [ ${netcdfgen}      = "on" ]; then netcdfgen      ; fi
 if [ ${PREDICTS}       = "on" ]; then PREDICTScalc   ; fi
 if [ ${Livestock}      = "on" ]; then Livestockcalc  ; fi
+if [ ${WWFland_iamc}   = "on" ]; then WWFland_out    ; fi
 if [ ${gdx4png}        = "on" ]; then gdx4png        ; fi
 if [ ${plot}           = "on" ]; then plot           ; fi
 if [ ${Allmerge}       = "on" ]; then Allmerge       ; fi
