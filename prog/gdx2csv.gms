@@ -6,6 +6,7 @@ $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 $Setglobal base_year 2005
+$Setglobal end_year 2050
 $setglobal lumip off
 $setglobal bioyieldcalc off
 $setglobal livdiscalc off
@@ -66,8 +67,10 @@ G	Cell number  /1 * 259200/
 I	Vertical position (LAT)	/ 1*360 /
 J	Horizontal position (LON)	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
-Y	Year	/2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100/
-
+Y	Year	/
+$if %end_year%==2100 2005,2010,2020,2030,2040,2050,2060,2070,2080,2090,2100
+$if %end_year%==2050 2005,2010,2020,2030,2040,2050
+/
 L land use type /
 FRSGL   forest + grassland
 HAV_FRS  production forest
@@ -311,10 +314,16 @@ ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(
 $endif.split
 $if %split%==1 $exit
 
+
+parameter
+Ynum/
+$if %end_year%==2100 11
+$if %end_year%==2050 6
+/
 *------------------------------
 * Livestock distribution calc
 *-----------------------------
-$Setglobal base_year 2005
+
 $ifthen.livdis %livdiscalc%==on
 set
 Sl Set for types of livestock
@@ -423,11 +432,11 @@ MAP_Slnum(Slnum,Sl)/
 ;
 liv_distnum(Slnum,Y,I,J)=sum(Sl$(MAP_Slnum(Slnum,Sl)),liv_dist(Sl,Y,I,J));
 
-* put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
-liv_distnum(Slnum,Y,I,J)$(sum(Slnum2,liv_distnum(Slnum2,Y,I,J))=0 and liv_distnum(Slnum,Y,I,J)=0)=-99;
+* put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.
+liv_distnum(Slnum,Y,I,J)$(sum(R$MAP_RIJ(R,I,J),1)=0 and liv_distnum(Slnum,Y,I,J)=0)=-99;
 
 BW_mapnum(Slnum,I,J)=sum(Sl$(MAP_Slnum(Slnum,Sl)),BW_map(Sl,I,J));
-BW_mapnum(Slnum,I,J)$(sum(Slnum2,BW_mapnum(Slnum2,I,J))=0 and BW_mapnum(Slnum,I,J)=0)=-99;
+BW_mapnum(Slnum,I,J)$(sum(R$MAP_RIJ(R,I,J),1)=0 and BW_mapnum(Slnum,I,J)=0)=-99;
 
 
 $ifthen.gdxout %gdxout%==on
@@ -440,7 +449,7 @@ $endif.gdxout
 file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.csv" /;
 put output;
 output.pw=32767;
-put "Livestock_distribution", "= "/;
+put "Livestock_number", "= "/;
 
 loop(Y,
  loop(Slnum,
@@ -448,7 +457,7 @@ loop(Y,
    loop(J,
     output.nd=10; output.nz=0; output.nr=0; output.nw=15;
     put liv_distnum(Slnum,Y,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Slnum)=8 AND ORD(Y)=11),put ",";
+    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Slnum)=8 AND ORD(Y)=Ynum),put ",";
     ELSE put ";";
     );
    );
@@ -642,8 +651,7 @@ VW_reg(Y,L,R)$(sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VW_r
 VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
 * put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
-VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
-
+VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum((Lwwfnum2,Y2),VY_IJwwfnum(Y2,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
 VY_IJwwfnum,VW_reg
@@ -663,7 +671,7 @@ loop(Y,
    loop(J,
     output.nd=10; output.nz=0; output.nr=0; output.nw=15;
     put VY_IJwwfnum(Y,Lwwfnum,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=plwwfnum AND ORD(Y)=11),put ",";
+    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Lwwfnum)=plwwfnum AND ORD(Y)=Ynum),put ",";
     ELSE put ";";
     );
    );

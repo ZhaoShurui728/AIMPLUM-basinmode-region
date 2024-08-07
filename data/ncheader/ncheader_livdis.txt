@@ -20,16 +20,16 @@ variables:
 	double slnum(slnum) ;
 		slnum:long_name = "Livestock type" ;
 		slnum:units = "Livestock type/1cattle_da/2cattle_o/3buffaloes/4sheep/5goats/6swines/7chickens/8ducks" ;
-	double Livestock_distribution(time, slnum, lat, lon) ;
-		Livestock_distribution:standard_name = "livestock unit number per grid";
-		Livestock_distribution:long_name = "livestock unit number per grid";
-		Livestock_distribution:units = "livestock unit number per grid";
-		Livestock_distribution:_FillValue = NaN ;
-		Livestock_distribution:missing_value = -99.f ;
+	double Livestock_number(time, slnum, lat, lon) ;
+		Livestock_number:standard_name = "livestock animal number per grid";
+		Livestock_number:long_name = "livestock animal number per grid";
+		Livestock_number:units = "head per grid";
+		Livestock_number:_FillValue = NaN ;
+		Livestock_number:missing_value = -99.f ;
 	double BodyWeight(slnum, lat, lon) ;
 		BodyWeight:standard_name = "body weight of animals";
 		BodyWeight:long_name = "body weight of animals";
-		BodyWeight:units = "kg body weight per head;
+		BodyWeight:units = "kg body weight per head";
 		BodyWeight:_FillValue = NaN ;
 		BodyWeight:missing_value = -99.f ;
 data:
