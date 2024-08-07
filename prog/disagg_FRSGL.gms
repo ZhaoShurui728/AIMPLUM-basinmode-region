@@ -377,8 +377,9 @@ VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VY
 
 
 
-VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("PAS",G) + delta_Y("PAS",G);
-VYL("MNGPAS",G)$(VYL_pre("PAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL_pre("PAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
+VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+
 VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));

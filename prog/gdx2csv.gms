@@ -545,7 +545,7 @@ $endif.carseq
 $ifthen.p %lumip%==on
 alias (Lmip,Lmip2);
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
-VY_IJmip(Y,Lmip,I,J)$(sum(Lmip2,VY_IJmip(Y,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0)=-99;
+VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0)=-99;
 
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c4ann
