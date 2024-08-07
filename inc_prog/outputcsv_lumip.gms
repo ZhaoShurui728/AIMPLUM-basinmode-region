@@ -2,8 +2,8 @@ file output_%1 / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%1.csv" /;
 put output_%1;
 output_%1.pw=100000;
 put " %1", "= "/;
-* ���ʂ̏o��
-VY_IJmip(Y,"%1",I,J)$(VY_IJmip(Y,"%1",I,J)=0)=-99;
+
+
 
 loop(Y,
  loop(I,

@@ -543,18 +543,21 @@ $endif.carseq
 
 
 $ifthen.p %lumip%==on
-
+alias (Lmip,Lmip2);
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
+VY_IJmip(Y,Lmip,I,J)$(sum(Lmip2,VY_IJmip(Y,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0)=-99;
 
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c4ann
-*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms c3per
-*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms c4per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c4per
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3nfx
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms range
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms pastr
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms primf
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms secdf
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms primn
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms secdn
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms urban
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4ann
@@ -640,6 +643,7 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 
 * put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum(Lwwfnum2,VY_IJwwfnum(Y,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
+
 $ifthen.gdxout %gdxout%==on
 execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
 VY_IJwwfnum,VW_reg

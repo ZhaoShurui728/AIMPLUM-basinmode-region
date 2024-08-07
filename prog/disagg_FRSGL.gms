@@ -35,6 +35,7 @@ dum/1*1000000/
 G	Cell number of the target region but both USA and CAN for North America
 G0(G)	Cell number of the target region
 Y year	/ %base_year%*%end_year% /
+YBASE(Y)/ %base_year% /
 *Y       / %Sy%
 *$if not %Sy%==%base_year% 2005
 */
@@ -162,7 +163,6 @@ $endif
 
 *------- Load data ----------*
 set
-Ybase/ %base_year% /
 LCGE    land use category in AIMCGE /PRM_FRS, MNG_FRS, GRAZING/
 ;
 
@@ -312,20 +312,17 @@ $include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 parameter
 forest_management_shareG(G) A ratio of managed forest area to total forest area  in a grid cell G (0-1)
 forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
-sharepix_load(LULC_class,I,J)
-sharepix(LULC_class,G)
 Soil_deg(G)	A share of area with soil degradation to grid area in grid G (0-1) Wu et al 2019 GCBB developed using GLADIS (Freddy & Monica 2011).
+frac_rcp(R,L,YBASE,G)	fraction of each gridcell G in land category L
 ;
 $gdxin '../%prog_loc%/data/forest_class_export.gdx'
 $load forest_management_shareG,forest_class_shareG
 
-$gdxin '../%prog_loc%/data/sharepix.gdx'
-$load sharepix_load=sharepix
-
-sharepix(LULC_class,G)=sum((I,J)$MAP_GIJ(G,I,J),sharepix_load(LULC_class,I,J));
-
 $gdxin '../%prog_loc%/individual/GCBB_biopotential/policydata.gdx'
 $load	Soil_deg=serious_land
+
+$gdxin '../%prog_loc%/data/land_map_luh2.gdx'
+$load frac_rcp=frac
 
 $ifthen.mng %Sy%==%base_year%
 VYL("MNGFRS",G)$(VYL("FRS",G) and forest_management_shareG(G))=VYL("FRS",G)*forest_management_shareG(G);
@@ -335,14 +332,15 @@ VYL("NRMFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)
 VYL("PLNFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
 VYL("AGOFRS",G)$(VYL("CL",G) and forest_class_shareG("53",G))=min(VYL("CL",G), forest_class_shareG("53",G));
 
-VYL("SECFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * min(sharepix("Mature and Intermediate secondary vegetation",G), forest_management_shareG(G));
+
+VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G) * forest_management_shareG(G));
 VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) - VYL("SECFRS",G);
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
-VYL("SECGL",G)$(VYL("GL",G)) = VYL("GL",G) * sharepix("Mature and Intermediate secondary vegetation",G);
+VYL("SECGL",G)$(VYL("GL",G)) = min(frac_rcp("%Sr%","SECGL","%base_year%",G),VYL("GL",G));
 VYL("PRMGL",G)$(VYL("GL",G)) = VYL("GL",G) - VYL("SECGL",G);
 
-VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
+VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
 VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 delta_VY("%Sy%",L,G)=0;
@@ -377,12 +375,10 @@ VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)
 VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL("SECGL",G));
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL("SECGL",G));
 
-*VYL("MNGPAS",G)$(VYL("PAS",G) and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
-*VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 
 VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("PAS",G) + delta_Y("PAS",G);
-VYL("MNGPAS",G)$(VYL_pre("PAS",G) and delta_Y("PAS",G)<0 and sharepix("Managed pasture",G)+sharepix("Rangeland",G)) = VYL_pre("PAS",G) + delta_Y("PAS",G) * sharepix("Managed pasture",G)/(sharepix("Managed pasture",G)+sharepix("Rangeland",G));
+VYL("MNGPAS",G)$(VYL_pre("PAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL_pre("PAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
 VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
@@ -492,6 +488,12 @@ Ldelta(L)/
 AFRTOT
 AGOFRS
 /
+LNLUC(L) land category excluded from LUC to avoid double accounting/
+BIO
+FRS
+MNGFRS
+LUC
+/
 ;
 
 CSL("CL")=5;
@@ -526,11 +528,11 @@ GHGLG("Negative",L,G)$(LAFRTOT(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND or
 $if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20","N") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and VYLY(Y2,L,G)), VYLY(Y2,L,G)) *GA(G)/10**3;
 GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
 
-*$ifthen.scs not %clp%==BaU
+$ifthen.scs not %clp%==BaU
 GHGLG("Negative",L,G)$(LCROPFLW(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G) * 44/12/10**3 * (-1);
 GHGLG("Negative",L,G)$(LNRGABDCUM(L))= CSoil(G) * (f_mg-1) * VYLY("%Sy%",L,G) * Application_ratio(L) * GA(G)* 44/12/10**3 * (-1);
 GHGLG("Negative",L,G)$(LCLDEGS(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * GA(G)* 44/12/10**3 * (-1);
-*$endif.scs
+$endif.scs
 
 GHGL(EmitCat,"FRSGL") = 0;
 
@@ -539,7 +541,7 @@ GHGL(EmitCat,"FRSGL") = 0;
 
 *GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G));
 GHGL(EmitCat,L) = SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
-GHGL(EmitCat,"LUC")$(SUM(L$(not LBIO(L)),GHGL(EmitCat,L)))= SUM(L$(not LBIO(L)),GHGL(EmitCat,L));
+GHGL(EmitCat,"LUC")$(SUM(L$(not LNLUC(L)),GHGL(EmitCat,L)))= SUM(L$(not LNLUC(L)),GHGL(EmitCat,L));
 GHGL("Net",L)$(GHGL("Positive",L)+GHGL("Negative",L)) = GHGL("Positive",L)+GHGL("Negative",L);
 
 

@@ -90,7 +90,7 @@ PRM_SEC	forest + grassland + pasture + fallow land
 FRSGL	forest + grassland
 $if %base_year%==%Sy% FRS
 $if %base_year%==%Sy% GL
-$if %base_year%==%Sy% PRM_FRS
+$if %base_year%==%Sy% PRMFRS
 HAV_FRS	production forest
 AFR	afforestation
 
@@ -1451,7 +1451,7 @@ PARAMETER
   AREA_base(LDM,"estimates")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*VYL(L,G)));
   AREA_base(LDM,"base")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
   AREA_base("GL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
-  AREA_base("FRS","base")=SUM(G,GA(G)*frac_rcp("%Sr%","PRM_FRS","%base_year%",G));
+  AREA_base("FRS","base")=SUM(G,GA(G)*frac_rcp("%Sr%","PRMFRS","%base_year%",G));
 $if not %UrbanLandData%==SSP AREA_base("SL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","SL","%base_year%",G));
 $if %UrbanLandData%==SSP AREA_base("SL","base")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
 

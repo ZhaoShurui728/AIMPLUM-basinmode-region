@@ -13,6 +13,7 @@ $setglobal costcalc off
 $setglobal bioyieldcalc on
 $setglobal biodivcalc off
 $setglobal rlimapcalc off
+$setglobal agmip on
 *$setglobal restoration off
 $if %supcuvout%==on $setglobal biocurve on
 
@@ -29,12 +30,46 @@ Rall	17 regions + ISO countries	/
 $include ../%prog_loc%/define/region/region17exclNations.set
 $include ../%prog_loc%/define/region/region_iso.set
 $include ../%prog_loc%/define/region/region5.set
-World
+World,Non-OECD,ASIA2
+Industrial,Transition,Developing
+$    ifthen.agmip %agmip%==on
+      OSA
+      FSU
+      EUR
+      MEN
+      SSA
+      SEA
+      OAS
+      ANZ
+      NAM
+      OAM
+      AME
+      SAS
+      EUU
+      WLD
+$  endif.agmip
 /
 R(Rall)	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
-World
+World,Non-OECD,ASIA2
+Industrial,Transition,Developing
+$    ifthen.agmip %agmip%==on
+      OSA
+      FSU
+      EUR
+      MEN
+      SSA
+      SEA
+      OAS
+      ANZ
+      NAM
+      OAM
+      AME
+      SAS
+      EUU
+      WLD
+$  endif.agmip
 /
 Ragg(R)/
 $include ../%prog_loc%/define/region/region5.set

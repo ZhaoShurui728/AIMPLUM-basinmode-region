@@ -24,8 +24,7 @@
 	irrig_c3ann	.	WHTIR
 	irrig_c4ann	.	GROIR
 	irrig_c4ann	.	C_BIR
-	irrig_c4ann	.	OTH_AIR
-*	irrig_c3per	.	na
+	irrig_c3per	.	OTH_AIR
 *	irrig_c4per	.	na
 	irrig_c3nfx	.	OSDIR
 	crpbf_c4ann	.	BIO

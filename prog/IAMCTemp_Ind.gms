@@ -194,14 +194,14 @@ Emi_CO2_AFO_Lan
 Emi_CO2_AFO_Lan_Frs
 
 *Variables added in MOEJ-IIASA
-Lan_Cov_Frs_Frs_Old
-Lan_Cov_Frs_Def_Rat
-Lan_Cov_Frs_Def_Cum
-Lan_Cov_Oth_Nat_Lan_Res_Lan
-Emi_CO2_AFO_Aff
-Emi_CO2_AFO_Def
-Emi_CO2_AFO_For_Man
-Emi_CO2_AFO_Oth_Luc
+Lan_Cov_Frs_Frs_Old	Land Cover|Forest|Forest old
+Lan_Cov_Frs_Def_Rat	Land Cover|Forest|Deforestation rate
+Lan_Cov_Frs_Def_Cum	Land Cover|Forest|Deforestation|Cumulative
+Lan_Cov_Oth_Nat_Lan_Res_Lan	Land Cover|Other Natual Land|Restoration Land
+Emi_CO2_AFO_Aff		Emissions|CO2|AFOLU|Afforestation
+Emi_CO2_AFO_Def		Emissions|CO2|AFOLU|Deforestation
+Emi_CO2_AFO_For_Man		Emissions|CO2|AFOLU|Forest Management
+Emi_CO2_AFO_Oth_Luc		Emissions|CO2|AFOLU|Other LUC
 
 * Original
 Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
@@ -223,6 +223,7 @@ AFR	.	Lan_Cov_Frs
 MNGFRS	.	Lan_Cov_Frs_Man
 AFR	.	Lan_Cov_Frs_Man
 UMNFRS	.	Lan_Cov_Frs_Nat_Frs
+$if not %iav%==BIOD	NRFABDCUM	.	Lan_Cov_Frs_Nat_Frs
 AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
@@ -333,7 +334,7 @@ IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRF
 IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
 *IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT")+GHGL(R,Y,"Negative","NRFABDCUM");
 IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
-IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","BIO")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Negative","CROP_FLW")+GHGL(R,Y,"Negative","NRFABDCUM")+GHGL(R,Y,"Negative","NRGABDCUM");
+IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","CROP_FLW")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Net","NRFABDCUM")+GHGL(R,Y,"Net","NRGABDCUM")+GHGL(R,Y,"Net","DEG");
 
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");
