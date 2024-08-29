@@ -2,22 +2,26 @@
 
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
-#YEAR0=(2010)
+YEAR0=(2010)
 # Set Global [on/off]
-global=on
+global=off
 # if global=off, the following country code should be assigned
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
 #CountryC=(USA XOC XE25)
-CountryC=(XAF)
+CountryC=(USA)
 # Set Scenarios
 scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
 scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_BIOD_No SSP2_BaU_NoCC_No)
 scn=(SSP2_BaU_NoCC_No)
+
+scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
+#scn=(SSP2_BaU_NoCC)
 #scn=(SSP2_500C_CACN_NoCC)
-#scn=(SSP2_500C_CACN_DAC_NoCC_No)
+scn=(SSP2_500C_CACN_DAC_NoCC_No)
+#scn=(SSP2_BaU_NoCC)
 #scn=(SSP2_BaU_PROTECT)
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -59,11 +63,11 @@ ScnMerge=on
     Sub_ScnMerge_BiocurveSort=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
-MergeResCSV4NC=on
+MergeResCSV4NC=off
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
-    Sub_MergeResCSV4NC_lumip=on
+    Sub_MergeResCSV4NC_lumip=off
     ## if you would like to make BTC basis 5 options, then turn on BTC3option. This switch will be also used in :netcdfgen (around 3GB per scenario memory and 5min are taken in this process)
     Sub_MergeResCSV4NC_BTC3option=off
     ## if you would like to make AIMSSPRCP dataformat nc file, turn on ssprcp. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
@@ -76,7 +80,7 @@ MergeResCSV4NC=on
     Sub_MergeResCSV4NC_livdiscal=off
 
 # Set Netcdf Creation [on/off]
-netcdfgen=on
+netcdfgen=off
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=BTC
 
@@ -104,4 +108,4 @@ gdx4png=off
 plot=off
 
 # Set Merge Final Results for All Scenarios [on/off] 
-Allmerge=off
+Allmerge=on

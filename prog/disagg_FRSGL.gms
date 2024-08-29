@@ -43,10 +43,15 @@ R       / %Sr%
 $if %Sr%==USA CAN
 $if %Sr%==CAN USA
 /
+RISO	ISO countries	/
+$include ../%prog_loc%/define/region/region_iso.set
+/
 I	Vertical position (LAT)	/ 1*360 /
 J	Horizontal position (LON)	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
 MAP_RG(R,G)	Relationship between region R and cell G
+MAP_RISOG(RISO,G)
+MAP_RISO(RISO,R)	Relationship between ISO countries and 17 regions
 L land use type /
 PRM_SEC forest + grassland + pasture + fallow land
 FRSGL   forest + grassland
@@ -183,7 +188,7 @@ $load Planduse_load=Planduse
 Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,LCGE);
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load GA MAP_RG MAP_GIJ
+$load GA MAP_RG MAP_GIJ MAP_RISOG MAP_RISO
 
 parameter
 VYL(L,G)	area ratio of land category L in cell G
@@ -195,6 +200,7 @@ VYLY(Y,L,G)	land use in all the earlier years
 CSL(L)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
 GHGLG(EmitCat,L,G)	GHG emissions of land category L cell G in year Y [MtCO2 per grid per year]
 GHGL(EmitCat,L)		GHG emission of land category L in year Y [MtCO2 per year]
+GHGLR(EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 ;
 
 
@@ -540,16 +546,20 @@ GHGL(EmitCat,"FRSGL") = 0;
 
 
 
-*GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G));
 GHGL(EmitCat,L) = SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
 GHGL(EmitCat,"LUC")$(SUM(L$(not LNLUC(L)),GHGL(EmitCat,L)))= SUM(L$(not LNLUC(L)),GHGL(EmitCat,L));
 GHGL("Net",L)$(GHGL("Positive",L)+GHGL("Negative",L)) = GHGL("Positive",L)+GHGL("Negative",L);
+
+GHGLR(EmitCat,L,RISO)$(MAP_RISO(RISO,"%Sr%")) = SUM(G$(MAP_RISOG(RISO,G) AND GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
+GHGLR(EmitCat,"LUC",RISO)$(SUM(L$(not LNLUC(L)),GHGLR(EmitCat,L,RISO)))= SUM(L$(not LNLUC(L)),GHGLR(EmitCat,L,RISO));
+GHGLR("Net",L,RISO)$(GHGLR("Positive",L,RISO)+GHGLR("Negative",L,RISO)) = GHGLR("Positive",L,RISO)+GHGLR("Negative",L,RISO);
 
 
 *Aggregation
 SCALAR ite
 FOR(ite=1 to 3,
 GHGL(EmitCat,L)$(SUM(L2$(MAP_EMIAGG(L2,L)),GHGL(EmitCat,L2))) = SUM(L2$(MAP_EMIAGG(L2,L)),GHGL(EmitCat,L2));
+GHGLR(EmitCat,L,RISO)$(SUM(L2$(MAP_EMIAGG(L2,L)),GHGLR(EmitCat,L2,RISO))) = SUM(L2$(MAP_EMIAGG(L2,L)),GHGLR(EmitCat,L2,RISO));
 );
 
 
@@ -566,6 +576,7 @@ VYL
 Area
 GHGLG
 GHGL
+GHGLR
 $if %Sy%==%base_year% CSB,Psol_stat,FRSArea2
 VYLY
 CS

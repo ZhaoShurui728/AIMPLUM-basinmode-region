@@ -17,7 +17,8 @@ $setglobal agmip on
 
 set
 R	17 regions	/
-$include ../%prog_loc%/define/region/region17.set
+$include ../%prog_loc%/define/region/region17exclNations.set
+$include ../%prog_loc%/define/region/region_iso.set
 $include ../%prog_loc%/define/region/region5.set
 World,Non-OECD,ASIA2
 Industrial,Transition,Developing
@@ -26,18 +27,21 @@ $    ifthen.agmip %agmip%==on
       FSU
       EUR
       MEN
-      SSA
+*      SSA
       SEA
       OAS
       ANZ
-      NAM
+*      NAM
       OAM
       AME
-      SAS
-      EUU
-      WLD
+*      SAS
+*      EUU
+*      WLD
 $  endif.agmip
 
+/
+RISO(R)	ISO countries /
+$include ../%prog_loc%/define/region/region_iso.set
 /
 *Y year	/2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100/
 Y year	/
@@ -267,15 +271,18 @@ U/"million ha","Mt CO2/yr","million head"/
 ;
 
 parameter
-GHGL(R,Y,EmitCat,L)
+GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
+GHGLR(Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 Area_load(R,Y,L)
 Ter_Bio_BII(R,Y)
 ;
 
 $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-$load GHGL
+$load GHGL GHGLR
 $load Area_load=Area
 
+
+GHGL(RISO,Y,EmitCat,L)$GHGLR(Y,EmitCat,L,RISO)=GHGLR(Y,EmitCat,L,RISO);
 
 *---GHG emissions
 

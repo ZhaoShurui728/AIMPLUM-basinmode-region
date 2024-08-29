@@ -13,7 +13,7 @@ $setglobal costcalc off
 $setglobal bioyieldcalc on
 $setglobal biodivcalc off
 $setglobal rlimapcalc off
-$setglobal agmip on
+$setglobal agmip off
 *$setglobal restoration off
 $if %supcuvout%==on $setglobal biocurve on
 
@@ -37,16 +37,16 @@ $    ifthen.agmip %agmip%==on
       FSU
       EUR
       MEN
-      SSA
+*      SSA
       SEA
       OAS
       ANZ
-      NAM
+*      NAM
       OAM
       AME
-      SAS
-      EUU
-      WLD
+*      SAS
+*      EUU
+*      WLD
 $  endif.agmip
 /
 R(Rall)	17 regions	/
@@ -277,6 +277,7 @@ Area_base(R,L,Sacol)
 CSB(R)
 GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
 GHGLG(Y,EmitCat,L,G)    MtCO2 per grid per year
+GHGLR(Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 GA(G)		Grid area of cell G kha
 YBIO(R,Y,G)
 PCBIO_load(Y,R)	average price to meet the given bioenergy amount [$ per GJ]
@@ -639,6 +640,7 @@ Area_base
 CSB
 GHGL
 GHGLG
+GHGLR
 $if %biocurve%==on PCBIO
 $if %biocurve%==on QCBIO
 $if %costcalc%==on PAL,PALDM,PATL,PATLDM

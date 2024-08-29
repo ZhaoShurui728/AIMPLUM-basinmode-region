@@ -2,6 +2,7 @@
 parameter
 GHGL%1(Y,EmitCat,L)
 GHGLG%1(Y,EmitCat,L,G)
+GHGLR%1(Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 Psol_stat%1(Y,ST,SP)                  Solution report
 Area%1(Y,L)
 Area_base%1(L,Sacol)
@@ -44,6 +45,7 @@ $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/analysis/%1.gdx'
 $load VYL%1=VYL
 $load GHGL%1=GHGL
 $load GHGLG%1=GHGLG
+$load GHGLR%1=GHGLR
 $load Area%1=Area
 
 $gdxin '../output/gdx/base/%1/basedata.gdx'
@@ -59,6 +61,7 @@ Psol_stat("%1",Y,ST,SP)$Psol_stat%1(Y,ST,SP)=Psol_stat%1(Y,ST,SP);
 Area_base("%1",L,Sacol)$(Area_base%1(L,Sacol))=Area_base%1(L,Sacol);
 GHGL("%1",Y,EmitCat,L)$GHGL%1(Y,EmitCat,L)=GHGL%1(Y,EmitCat,L);
 GHGLG(Y,EmitCat,L,G)$GHGLG%1(Y,EmitCat,L,G)=GHGLG%1(Y,EmitCat,L,G);
+GHGLR(Y,EmitCat,L,RISO)$GHGLR%1(Y,EmitCat,L,RISO)=GHGLR%1(Y,EmitCat,L,RISO);
 
 
 $gdxin '../output/gdx/base/%1/analysis/%base_year%.gdx'
