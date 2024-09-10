@@ -106,14 +106,14 @@ C_BRF   sugar crops rainfed
 OTH_ARF other crops rainfed
 
 * Changes in land use
-NRFABD	naturally regenerating managed forest on abondoned land
-NRGABD	naturally regenerating managed grassland on abondoned land
+NRFABD	naturally regenerating managed forest on abandoned land
+NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
 DEFCUM	Cumulative deforestation area
 DEGCUM	Cumulative decrease in grassland area GL from previou year
-NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
-NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
+NRFABDCUM	Cumulative naturally regenerating managed forest area on abandoned land
+NRGABDCUM	Cumulative naturally regenerating managed grassland on abandoned land
 
 * degreaded soil
 CLDEGS	cropland with degraded soil
@@ -201,7 +201,11 @@ Emi_CO2_AFO_Lan_Frs
 Lan_Cov_Frs_Frs_Old	Land Cover|Forest|Forest old
 Lan_Cov_Frs_Def_Rat	Land Cover|Forest|Deforestation rate
 Lan_Cov_Frs_Def_Cum	Land Cover|Forest|Deforestation|Cumulative
-Lan_Cov_Oth_Nat_Lan_Res_Lan	Land Cover|Other Natual Land|Restoration Land
+Lan_Cov_Oth_Nat_Lan_Res	Land Cover|Other Natual Land|Restoration Land
+Lan_Cov_Frs_Res	Land Cover|Forest|Restoration Land
+Lan_Cov_Res	Land Cover|Restoration Land
+Lan_Cov_Abd	Land Cover|Abandoned Land
+
 Emi_CO2_AFO_Aff		Emissions|CO2|AFOLU|Afforestation
 Emi_CO2_AFO_Def		Emissions|CO2|AFOLU|Deforestation
 Emi_CO2_AFO_For_Man		Emissions|CO2|AFOLU|Forest Management
@@ -210,7 +214,7 @@ Emi_CO2_AFO_Oth_Luc		Emissions|CO2|AFOLU|Other LUC
 * Original
 Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
 Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
-Lan_Cov_Frs_Agr	Land Cover| Agroforestry
+Lan_Cov_Frs_Agr	Land Cover|Agroforestry
 
 Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
 Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
@@ -231,9 +235,14 @@ $if not %iav%==BIOD	NRFABDCUM	.	Lan_Cov_Frs_Nat_Frs
 AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
-$if %WWFlandout_exe%==off	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
 GL	.	Lan_Cov_Oth_Nat_Lan
 AGOFRS	.	Lan_Cov_Frs_Agr
+NRFABDCUM	.	Lan_Cov_Abd
+NRGABDCUM	.	Lan_Cov_Abd
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Frs_Res
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res
 
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro

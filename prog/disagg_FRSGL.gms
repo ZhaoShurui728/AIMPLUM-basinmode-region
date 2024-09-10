@@ -67,7 +67,7 @@ SL      built_up
 OL      ice or water
 
 * total
-AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD) for GHG calc
+AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD)
 LUC
 "LUC+BIO"
 
