@@ -193,6 +193,7 @@ $load GA MAP_RG MAP_GIJ MAP_RISOG MAP_RISO
 parameter
 VYL(L,G)	area ratio of land category L in cell G
 Area(L)	Regional area of land category L [kha]
+AreaR(L,RISO)	Regional area of land category L in RISO category [kha]
 VYL_pre(L,G)	area ratio of land category L in cell G in the previous year
 delta_Y(L,G)	Change in area ratio of land category L in cell G
 delta_VY(Y,L,G)	Changes in area ratio of land category L in cell G for all the earlier years
@@ -522,6 +523,9 @@ $endif.afrt
 Area(L)$(not LCUM(L))= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 Area(L)$(LCUM(L))= SUM(G$(G0(G)),VYLY("%Sy%",L,G)*GA(G));
 
+AreaR(L,RISO)$(not LCUM(L) and MAP_RISO(RISO,"%Sr%"))= SUM(G$(G0(G) AND MAP_RISOG(RISO,G)),VYL(L,G)*GA(G));
+AreaR(L,RISO)$(LCUM(L) and MAP_RISO(RISO,"%Sr%"))= SUM(G$(G0(G) AND MAP_RISOG(RISO,G)),VYLY("%Sy%",L,G)*GA(G));
+
 delta_VY(Y,L,G)$(Ldelta(L) and ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
 
 
@@ -574,6 +578,7 @@ $if not %Sy%==%base_year% execute_unload '../output/gdx/%SCE%_%CLP%_%IAV%%ModelI
 $if %Sy%==%base_year% execute_unload '../output/gdx/base/%Sr%/analysis/%Sy%.gdx'
 VYL
 Area
+AreaR
 GHGLG
 GHGL
 GHGLR

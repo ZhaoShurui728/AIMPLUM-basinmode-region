@@ -274,15 +274,18 @@ parameter
 GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
 GHGLR(Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 Area_load(R,Y,L)
+AreaR(Y,L,RISO)	Regional area of land category L in RISO category [kha]
 Ter_Bio_BII(R,Y)
 ;
 
 $gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGL GHGLR
-$load Area_load=Area
+$load Area_load=Area AreaR
 
 
 GHGL(RISO,Y,EmitCat,L)$GHGLR(Y,EmitCat,L,RISO)=GHGLR(Y,EmitCat,L,RISO);
+
+Area_load(RISO,Y,L)$AreaR(Y,L,RISO)=AreaR(Y,L,RISO);
 
 *---GHG emissions
 

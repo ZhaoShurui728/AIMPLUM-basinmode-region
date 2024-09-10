@@ -5,6 +5,7 @@ GHGLG%1(Y,EmitCat,L,G)
 GHGLR%1(Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 Psol_stat%1(Y,ST,SP)                  Solution report
 Area%1(Y,L)
+AreaR%1(Y,L,RISO)	Regional area of land category L in RISO category [kha]
 Area_base%1(L,Sacol)
 CSB%1
 PBIO%1(Y,G,Scol)
@@ -47,6 +48,7 @@ $load GHGL%1=GHGL
 $load GHGLG%1=GHGLG
 $load GHGLR%1=GHGLR
 $load Area%1=Area
+$load AreaR%1=AreaR
 
 $gdxin '../output/gdx/base/%1/basedata.gdx'
 $load Area_base%1=Area_base
@@ -69,6 +71,7 @@ $load CSB%1=CSB
 
 
 Area("%1",Y,L)$Area%1(Y,L)=Area%1(Y,L);
+AreaR(Y,L,RISO)$AreaR%1(Y,L,RISO)=AreaR%1(Y,L,RISO);
 CSB("%1")$(CSB%1)=CSB%1;
 
 YIELD_load("%1",L,G)$YIELD%1(L,G)=YIELD%1(L,G);

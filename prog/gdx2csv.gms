@@ -6,7 +6,7 @@ $if %ModelInt2%==NoValue $setglobal ModelInt
 $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 
 $Setglobal base_year 2005
-$Setglobal end_year 2050
+$Setglobal end_year 2100
 $setglobal lumip off
 $setglobal bioyieldcalc off
 $setglobal livdiscalc off

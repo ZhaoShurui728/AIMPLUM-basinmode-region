@@ -272,6 +272,7 @@ Psol_stat(R,Y,ST,SP)                  Solution report
 PBIOSUP_load(Y,G,LB,Scol)
 PBIOSUP(Rall,Y,G,LB,Scol)
 Area(R,Y,L)	Regional area of land category L (million ha)
+AreaR(Y,L,RISO)	Regional area of land category L in RISO category [kha]
 AreaLDM(R,Y,LDM)	million ha
 Area_base(R,L,Sacol)
 CSB(R)
@@ -635,6 +636,7 @@ $endif.rlimap
 execute_unload '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 Psol_stat
 Area
+AreaR
 AreaLDM
 Area_base
 CSB
