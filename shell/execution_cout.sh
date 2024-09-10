@@ -292,7 +292,6 @@ function ScnMerge() {
 function MergeResCSV4NCRun() {
   #Load scenario specification
   ScenarioSpecName
-  OPT=(1 2)
   basecsv=$3
   BTC3option=$4
   lumip=$5
@@ -313,14 +312,11 @@ function MergeResCSV4NCRun() {
   fi
 
   if [ ${BTC3option} = "on" ]; then
-    for O in ${OPT[@]} 
-    do
-      gams ../$1/prog/gdx2csv.gms --wwfopt=${O} --split=2 --wwfclass=opt R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_$2.lst lf=../output/log/gdx2csv2_$2.log ${GAMSRunArg}
-    done
+    gams ../$1/prog/gdx2csv.gms --split=2 --wwfclass=on R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_$2.lst lf=../output/log/gdx2csv2_$2.log ${GAMSRunArg}
   fi
 
   if [ ${lumip} = "on" ]; then
-    gams ../$1/prog/gdx2csv.gms --wwfopt=1 --split=2 --lumip=on R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip_$2.lst lf=../output/log/gdx2csv2_lumip_$2.log  ${GAMSRunArg}
+    gams ../$1/prog/gdx2csv.gms --split=2 --lumip=on R=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv2_lumip_$2.lst lf=../output/log/gdx2csv2_lumip_$2.log  ${GAMSRunArg}
   fi
 
   if [ ${bioyielcal} = "on" ]; then
@@ -396,7 +392,7 @@ function netcdfgenRun() {
   fi
   #Bending the curve 
   if [ ${BTC3option} == on ]; then
-    filelist="../output/csv/${SceName}/${SceName}_opt1.csv ../output/csv/${SceName}/${SceName}_opt2.csv"
+    filelist="../output/csv/${SceName}/${SceName}.csv"
     ncgenfunc AIM-LUmap ${SceName} "${filelist}" ncheader_all_wwf 2
   fi
   #Default SSP-RCP-land use date creation 
@@ -512,10 +508,7 @@ function WWFland_out() {
     #load scenario specification 
     echo "${S}"
     ScenarioSpecName
-    for O in ${OPT[@]} 
-    do
-        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=on --wwfopt=${O} MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst
-	done
+    gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst
   done
   wait
   echo "All scenario merges have been done."

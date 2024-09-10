@@ -11,21 +11,19 @@ $setglobal lumip off
 $setglobal bioyieldcalc off
 $setglobal livdiscalc off
 $setglobal gdxout on
-$setglobal wwfclass opt
-$setglobal wwfopt 1
+$setglobal wwfclass on
 $setglobal carseq off
 $setglobal afftype off
 $setglobal agmip off
-* wwf should be selected from  off, on, opt.
+
+* wwf should be selected from  off, on
 *off)  native classifications.
 *on)   wwf classification
-*opt)  wwf classification with the following options.
 
-* wwfopt should be selected from  1 to 5.
+* wwf classification
 *OPTIONS
-*opt1) wwf classification in numbers as it is
-*opt2) all abandonned land that is not restored is re-classified as restored but only after 30 years - within these 30 years it remains classified as its original pre-abandonnment land use); no change in number of classes in LU netcdfs
-*opt3) same as 2, but with 4 additional LU classes(*) in the netcdfs (with potentially non-zero values)
+*NoBIOD: all abandonned land that is not restored is re-classified as restored straight away
+*BIOD; all abandonned land that is not restored is re-classified as restored but only after 30 years - within these 30 years it remains classified as its original pre-abandonnment land use)
 
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
@@ -592,27 +590,16 @@ VY_IJmip
 $endif.gdxout
 
 
-$elseif.p %lumip%_%wwfclass%==off_opt
+$elseif.p %lumip%_%wwfclass%==off_on
 
 set
-Lwwfnum/
-$if %wwfopt%==1 1*8
-$if %wwfopt%==2 1*17
-$if %wwfopt%==3 1*17
-
-/
+Lwwfnum/1*17/
 MAP_WWFnum(Lwwfnum,L)/
-$if %wwfopt%==1 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum.map
-$if %wwfopt%==2 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
-$if %wwfopt%==3 $include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
+$include ../%prog_loc%/individual/BendingTheCurve/luwwfnum_org.map
 /
 ;
 parameter
-plwwfnum/
-$if %wwfopt%==1 8
-$if %wwfopt%==2 17
-$if %wwfopt%==3 17
-/
+plwwfnum/17/
 ;
 
 Alias (Lwwfnum,Lwwfnum2);
@@ -638,10 +625,8 @@ VU(Y,L,I,J)$(LRES(L) and SUM(L2,XF(Y,L2,I,J)))=SUM(L2,XF(Y,L2,I,J));
 VW(Y,L,I,J)$(VW(Y,L,I,J)<10**(-7) AND VW(Y,L,I,J)>(-1)*10**(-7))=0;
 VU(Y,L,I,J)$(VU(Y,L,I,J)<10**(-7) AND VU(Y,L,I,J)>(-1)*10**(-7))=0;
 
-$if %wwfopt%==1 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VY_IJ(Y,L,I,J));
-$if %wwfopt%==2 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
-$if %wwfopt%==3 VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
-
+$if not %iav%==BIOD VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VW(Y,L,I,J));
+$if %iav%==BIOD VY_IJwwfnum(Y,Lwwfnum,I,J)$(SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J)))=SUM(L$MAP_WWFnum(Lwwfnum,L),VU(Y,L,I,J));
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 VW2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VW(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
@@ -653,17 +638,17 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 * put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum((Lwwfnum2,Y2),VY_IJwwfnum(Y2,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 $ifthen.gdxout %gdxout%==on
-execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
+execute_unload '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 VY_IJwwfnum,VW_reg
 ;
 $endif.gdxout
 
 
-file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.csv" /;
+file output / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%.csv" /;
 put output;
 *output.pw=100000;
 output.pw=32767;
-put "LC_area_share%wwfopt%", "= "/;
+put "LC_area_share", "= "/;
 
 loop(Y,
  loop(Lwwfnum,
@@ -682,7 +667,6 @@ loop(Y,
 put /;
 
 * Pixel area
-$ifthen.wwfopt not %wwfopt%==1
 
 GAIJ0(I,J)$GAIJ(I,J)=GAIJ(I,J)/1000;
 GAIJ0(I,J)$(GAIJ(I,J)=0)=-99;
@@ -753,7 +737,6 @@ put /;
 $offtext
 
 
-$endif.wwfopt
 
 $else.p
 
