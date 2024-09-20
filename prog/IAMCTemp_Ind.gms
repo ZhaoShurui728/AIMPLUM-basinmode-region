@@ -201,10 +201,10 @@ Emi_CO2_AFO_Lan_Frs
 Lan_Cov_Frs_Frs_Old	Land Cover|Forest|Forest old
 Lan_Cov_Frs_Def_Rat	Land Cover|Forest|Deforestation rate
 Lan_Cov_Frs_Def_Cum	Land Cover|Forest|Deforestation|Cumulative
-Lan_Cov_Oth_Nat_Lan_Res	Land Cover|Other Natual Land|Restoration Land
-Lan_Cov_Frs_Res	Land Cover|Forest|Restoration Land
-Lan_Cov_Res	Land Cover|Restoration Land
-Lan_Cov_Abd	Land Cover|Abandoned Land
+Lan_Cov_Oth_Nat_Lan_Res_Lan	Land Cover|Other Natual Land|Restoration Land
+Lan_Cov_Frs_Res_Lan	Land Cover|Forest|Restoration Land
+Lan_Cov_Res_Lan	Land Cover|Restoration Land
+Lan_Cov_Abd_Lan	Land Cover|Abandoned Land
 
 Emi_CO2_AFO_Aff		Emissions|CO2|AFOLU|Afforestation
 Emi_CO2_AFO_Def		Emissions|CO2|AFOLU|Deforestation
@@ -219,8 +219,8 @@ Lan_Cov_Frs_Agr	Land Cover|Agroforestry
 Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
 Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
 Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
-ANNR_herd	Total livestock animal numbers including follower herdÅ@Absolute number
-ANNR_prod	Livestock numbers for producer animals (for slaughter)Å@Absolute number
+ANNR_herd	Total livestock animal numbers including follower herdÔøΩ@Absolute number
+ANNR_prod	Livestock numbers for producer animals (for slaughter)ÔøΩ@Absolute number
 
 /
 
@@ -237,12 +237,12 @@ DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
 GL	.	Lan_Cov_Oth_Nat_Lan
 AGOFRS	.	Lan_Cov_Frs_Agr
-NRFABDCUM	.	Lan_Cov_Abd
-NRGABDCUM	.	Lan_Cov_Abd
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Frs_Res
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res
+NRFABDCUM	.	Lan_Cov_Abd_Lan
+NRGABDCUM	.	Lan_Cov_Abd_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Frs_Res_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res_Lan
 
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro
@@ -416,8 +416,8 @@ V_LIV(V)/
 Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
 Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
 Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
-ANNR_herd	Total livestock animal numbers including follower herdÅ@Absolute number
-ANNR_prod	Livestock numbers for producer animals (for slaughter)Å@Absolute number
+ANNR_herd	Total livestock animal numbers including follower herd Absolute number
+ANNR_prod	Livestock numbers for producer animals (for slaughter) Absolute number
 /
 ;
 

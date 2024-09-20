@@ -422,7 +422,7 @@ function netcdfgen() {
 
   for S in ${scn[@]} 
   do
-    netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} ${Sub_MergeResCSV4NC_livdiscal}&
+    netcdfgenRun ${parent_dir} ${S} ${Sub_Netcdfgen_projectname} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} ${Sub_MergeResCSV4NC_livdiscal} &
     LoopmultiCPU 5 scn "netcdfgenRun" ${CPUthreads}
   done
   wait

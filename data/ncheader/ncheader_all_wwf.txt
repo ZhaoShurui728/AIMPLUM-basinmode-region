@@ -37,6 +37,12 @@ variables:
 		LC_area_share2:units = "share of pixel area";
 		LC_area_share2:_FillValue = NaN ;
 	    LC_area_share2:missing_value = -99.0f;
+	double LC_area_share(time, lc_class2, lat, lon) ;
+		LC_area_share:standard_name = "share of pixel occupied by various land covers";
+		LC_area_share:long_name = "share of pixel occupied by various land covers";
+		LC_area_share:units = "share of pixel area";
+		LC_area_share:_FillValue = NaN ;
+	    LC_area_share2:missing_value = -99.0f;
 	double pixel_area(lat, lon) ;
 		pixel_area:units = "million ha" ;
 		pixel_area:_FillValue = NaN ;
