@@ -25,12 +25,31 @@ variables:
 	double lc_class2(lc_class2) ;
 		lc_class2:long_name = "lc_class" ;
 		lc_class2:units = "1=cropland_other/2=cropland_2Gbioen/3=grassland/4=forest_unmanaged/5=forest_managed/6=restored/7=other/8=built-up/9=abn_cropland_other/10=abn_cropland_2Gbioen/11=abn_grassland/12=abn_forest_managed/13=forest_mng_nat/14=forest_mng_planted/15=AR/16=agroforestry/17=forest_all" ;
+<<<<<<< HEAD
+=======
+	double LC_area_share1(time, lc_class, lat, lon) ;
+		LC_area_share1:standard_name = "share of pixel occupied by various land covers";
+		LC_area_share1:long_name = "share of pixel occupied by various land covers";
+		LC_area_share1:units = "share of pixel area";
+		LC_area_share1:_FillValue = NaN ;
+		LC_area_share1:missing_value = -99.0f;
+	double LC_area_share2(time, lc_class2, lat, lon) ;
+		LC_area_share2:standard_name = "share of pixel occupied by various land covers";
+		LC_area_share2:long_name = "share of pixel occupied by various land covers";
+		LC_area_share2:units = "share of pixel area";
+		LC_area_share2:_FillValue = NaN ;
+	    LC_area_share2:missing_value = -99.0f;
+>>>>>>> 2be160f04f835478a10251c1d0f88809ee45e753
 	double LC_area_share(time, lc_class2, lat, lon) ;
 		LC_area_share:standard_name = "share of pixel occupied by various land covers";
 		LC_area_share:long_name = "share of pixel occupied by various land covers";
 		LC_area_share:units = "share of pixel area";
 		LC_area_share:_FillValue = NaN ;
+<<<<<<< HEAD
 	    LC_area_share:missing_value = -99.0f;
+=======
+	    LC_area_share2:missing_value = -99.0f;
+>>>>>>> 2be160f04f835478a10251c1d0f88809ee45e753
 	double pixel_area(lat, lon) ;
 		pixel_area:units = "million ha" ;
 		pixel_area:_FillValue = NaN ;
