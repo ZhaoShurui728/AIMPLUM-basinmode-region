@@ -121,6 +121,8 @@ CLDEGS	cropland with degraded soil
 * original
 CLIR    cropland rainged
 CLRF	cropland irrigated
+
+ABD	Abandoned land
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/
@@ -281,20 +283,20 @@ U/"million ha","Mt CO2/yr","million head"/
 
 parameter
 GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
-GHGLR(Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
+GHGLR(R,Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
 Area_load(R,Y,L)
-AreaR(Y,L,RISO)	Regional area of land category L in RISO category [kha]
+AreaR(R,Y,L,RISO)	Regional area of land category L in RISO category [kha]
 Ter_Bio_BII(R,Y)
 ;
 
-$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$gdxin '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGL GHGLR
 $load Area_load=Area AreaR
 
 
-GHGL(RISO,Y,EmitCat,L)$GHGLR(Y,EmitCat,L,RISO)=GHGLR(Y,EmitCat,L,RISO);
+GHGL(RISO,Y,EmitCat,L)$sum(R,GHGLR(R,Y,EmitCat,L,RISO))=sum(R,GHGLR(R,Y,EmitCat,L,RISO));
 
-Area_load(RISO,Y,L)$AreaR(Y,L,RISO)=AreaR(Y,L,RISO);
+Area_load(RISO,Y,L)$sum(R,AreaR(R,Y,L,RISO))=sum(R,AreaR(R,Y,L,RISO));
 
 *---GHG emissions
 
@@ -393,7 +395,7 @@ liv_reg(Sl,Y,R)	number of animals in each regions
 liv_reg_a(C_AGMIP,Y,R)	number of animals in each regions
 ;
 
-$gdxin '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/livestock_distribution.gdx'
+$gdxin '../output/gdx/analysis/livdis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load Sl,liv_reg
 
 set
@@ -439,11 +441,12 @@ parameter
 VW_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
 ;
 
-$gdxin '../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%SCE%_%CLP%_%IAV%%ModelInt%_opt%wwfopt%.gdx'
+$gdxin '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VW_reg
 
 
-IAMCTemp(R,"Lan_Cov_Oth_Nat_Lan_Res_Lan","million ha",Y)=VW_reg(Y,"RES",R)/1000;
+IAMCTemp(R,"Lan_Cov_Res","million ha",Y)=VW_reg(Y,"RES",R)/1000;
+IAMCTemp(R,"Lan_Cov_Abd","million ha",Y)=VW_reg(Y,"ABD",R)/1000;
 
 
 $endif.wwflandout

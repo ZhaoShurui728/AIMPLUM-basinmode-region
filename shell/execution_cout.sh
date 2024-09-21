@@ -239,7 +239,11 @@ function ScnMergeRun() {
   #Load scenario specification
   ScenarioSpecName
   declare -n COUNTRY=$3
-  Biocurvesort=$4
+  Baserun=$4
+  Restorecal=$5
+  Livdiscal=$6
+  Biocurvesort=$7
+  	
   echo "`date '+%s'`" > ../output/txt/cpu/merge1/$2.txt
   for A in ${COUNTRY[@]}
   do
@@ -253,14 +257,34 @@ function ScnMergeRun() {
 	cd ../../../../../exe
  
   done
+  cd ../output/gdx/$2/cbnal
+  gdxmerge *.gdx output=../../results/cbnal_$2.gdx
+  cd ../../../../exe
+  
+  cd ../output/gdx/$2/analysis
+  gdxmerge *.gdx output=../../results/analysis_$2.gdx
+  cd ../../../../exe
+
   cd ../output/gdx/$2/bio
   gdxmerge *.gdx
   mv -f merged.gdx ../bio.gdx
   cd ../../../../exe
   
-  gams ../$1/prog/combine.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --supcuvout=${Biocurvesort} MaxProcDir=100 o=../output/lst/combine_$2.lst  lo=4
+  if [ ${Baserun} = "on" ]; then
+	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4  
+  fi
+  if [ ${Restorecal} = "on" ]; then
+    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	
+  fi
+  if [ ${Livdiscal} = "on" ]; then
+    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	
+  fi
+  if [ ${Biocurvesort} = "on" ]; then
+    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	
+  fi
+
   read -p "push any key";
-  gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
+  gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
   read -p "push any key";
   if [ ${IAV} = "NoCC" ]; then gams ../$1/prog/protect_area_agg.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 o=../output/lst/protect_area_agg_$2.lst  lo=4; fi
   read -p "push any key";
@@ -274,8 +298,8 @@ function ScnMerge() {
   echo scenario results merge
   
   for S in ${scn[@]}
-  do
-    ScnMergeRun ${parent_dir} ${S} COUNTRY0 ${Sub_ScnMerge_BiocurveSort} > ../output/log/ScnmergeRun_${S}.log 2>&1 &
+  do	
+    ScnMergeRun ${parent_dir} ${S} COUNTRY0 ${Sub_ScnMerge_Baserun} ${Sub_ScnMerge_Restorecal} ${Sub_ScnMerge_Livdiscal} ${Sub_ScnMerge_BiocurveSort} ${WWFrestore_iamc} ${Livestock_iamc}  > ../output/log/ScnmergeRun_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "merge1" ${CPUthreads}
   done
   wait
@@ -300,7 +324,7 @@ function MergeResCSV4NCRun() {
   carseq=$8
   livdiscal=$9
   
-	echo "`date '+%s'`" > ../output/txt/cpu/merge2/$2.txt
+  echo "`date '+%s'`" > ../output/txt/cpu/merge2/$2.txt
   GAMSRunArg="--prog_loc=$1 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4 "
   echo "--sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2}"
   # csv file creation
@@ -480,47 +504,8 @@ function PREDICTScalc() {
         PREDICTScalcRun "../output/lst/PREDICTS_grid.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_grid.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1 ; fi
   done
 }
-
-## 8. Livestock number output in IAMC temp -------------------------------------------------------------------------------
-function Livestockcalc() {
-  for S in ${scn[@]} 
-  do
-    #load scenario specification 
-    echo "${S}"
-    ScenarioSpecName
-        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --Livestockout_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst
-  done
-  wait
-  echo "All scenario merges have been done."
-  cd ../output/gdx/comparison/
-  gdxmerge *.gdx 
-  mv -f merged.gdx ../all/Mergedcomparison.gdx
-  cd ../../../exe
-
-  if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
-}
-
-## 9. WWF land area output in IAMC temp -------------------------------------------------------------------------------
-function WWFland_out() {
-  OPT=(2)
-  for S in ${scn[@]} 
-  do
-    #load scenario specification 
-    echo "${S}"
-    ScenarioSpecName
-    gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst
-  done
-  wait
-  echo "All scenario merges have been done."
-  cd ../output/gdx/comparison/
-  gdxmerge *.gdx 
-  mv -f merged.gdx ../all/Mergedcomparison.gdx
-  cd ../../../exe
-
-  if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
-}
-
-## 10. Generation of GDX Files for Plotting
+ 
+## 8. Generation of GDX Files for Plotting
 function gdx4pngRun() {
   #Load scenario specification
   ScenarioSpecName
@@ -562,7 +547,7 @@ function gdx4png() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 11. Graphics
+## 9. Graphics
 function plot() {
   for S in ${scn[@]} 
   do
@@ -577,7 +562,7 @@ function plot() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 12. Merge All Results
+## 10. Merge All Results
 function Allmerge() {
   cd ../output/gdx/analysis
   gdxmerge *.gdx output=../final_results.gdx
@@ -661,8 +646,6 @@ if [ ${ScnMerge}       = "on" ]; then ScnMerge       ; fi
 if [ ${MergeResCSV4NC} = "on" ]; then MergeResCSV4NC ; fi
 if [ ${netcdfgen}      = "on" ]; then netcdfgen      ; fi
 if [ ${PREDICTS}       = "on" ]; then PREDICTScalc   ; fi
-if [ ${Livestock}      = "on" ]; then Livestockcalc  ; fi
-if [ ${WWFland_iamc}   = "on" ]; then WWFland_out    ; fi
 if [ ${gdx4png}        = "on" ]; then gdx4png        ; fi
 if [ ${plot}           = "on" ]; then plot           ; fi
 if [ ${Allmerge}       = "on" ]; then Allmerge       ; fi

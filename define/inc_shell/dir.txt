@@ -7,6 +7,7 @@ output/gdx/all
 output/gdx/base
 output/gdx/base/bio
 output/gdx/analysis
+output/gdx/combine
 output/gdx/landmap
 output/gdx/results
 output/gdx/comparison
