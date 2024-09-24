@@ -445,8 +445,8 @@ $gdxin '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VW_reg
 
 
-IAMCTemp(R,"Lan_Cov_Res","million ha",Y)=VW_reg(Y,"RES",R)/1000;
-IAMCTemp(R,"Lan_Cov_Abd","million ha",Y)=VW_reg(Y,"ABD",R)/1000;
+IAMCTemp(R,"Lan_Cov_Res_Lan","million ha",Y)=VW_reg(Y,"RES",R)/1000;
+IAMCTemp(R,"Lan_Cov_Abd_Lan","million ha",Y)=VW_reg(Y,"ABD",R)/1000;
 
 
 $endif.wwflandout
