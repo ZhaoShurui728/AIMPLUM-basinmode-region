@@ -180,6 +180,7 @@ ABD_BIO
 ABD_PAS
 ABD_MNGFRS
 ABD_AFR
+ABD_CUM	Cumulative gross abandoned land including restored area
 /
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
@@ -190,6 +191,7 @@ LFRSGL(L)/FRSGL,FRS,GL/
 Lused(L)/MNGFRS,AFR,CL,CROP_FLW,BIO,PAS/
 Lnat(L)/GL,UMNFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
+LABDCUM(L)/ABD_CUM/
 LRES(L)/RES/
 LDM land use type /
 *PRM_SEC other forest and grassland
@@ -466,8 +468,8 @@ ordy(Y)
 deltaY(Y,L,I,J)	Land area difference of land use category L and year Y from year Y-1
 deltaZ(Y,I,J)	Total abundant area increments from year Y-1 to year Y (always positive)
 deltaX(Y,L,I,J)	Abandoned area in categories with original land categories
-X(Y,L,I,J) 	Abandoned area of land use category i and year t only considering increase of abandoned area
-XF(Y,L,I,J) 	Abandoned area of land use category i and year t (final outcome)
+X(Y,L,I,J) 	Cumulative abandoned area of land use category i and year t only considering increase of abandoned area
+XF(Y,L,I,J) 	Cumulative abandoned area of land use category i and year t (final outcome)
 Remain(Y,L,I,J)		Land area of land use category i and year t that can be abandoned or restored
 RPA(Y,L,Y2,I,J)	Restore potential land area of land use category L and year Y that has been categorized as abandoned (abandoned-crop abandoned-pasture and abandoned-biocrop) from the year Y2
 RSP(Y,L,Y2,I,J)	Restored potential land area of land use category i and year Y from the year Y2 but it includes the land that is reused by human activity
@@ -476,7 +478,7 @@ RS(Y,L,Y2,I,J)	Restore land area of land use category L and year Y from the year
 RSF(Y,L,I,J)	Restore land area of land use category L and year Y
 ABD(Y,L,I,J)	Abandoned land area of land use category L and year Y
 *YND(Y,L,I,J)
-ZT(Y,I,J)
+ZT(Y,I,J)	Cumulative incrased area of natural land (UMNFRS and GL)
 ;
 
 RSF(Y,L,I,J)=0;
@@ -524,17 +526,19 @@ ABD(Y,L,I,J)$(XF(Y,L,I,J)-SUM(Y2,RSFrom(Y,L,Y2,I,J)))=XF(Y,L,I,J)-SUM(Y2,RSFrom(
 
 
 parameter
-VW(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance (fraction)
-VW2(Y,L,I,J)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance (averaged for the cell occupided by more than one countries) (fraction)
-VW_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
+VW(Y,L,I,J)	Land area of land use category L and year Y where land is restored considering the 30 years delay from the time of abandance (fraction)
+VW2(Y,L,I,J)	Land area of land use category L and year Y where land is restored considering the 30 years delay from the time of abandance (averaged for the cell occupided by more than one countries) (fraction)
+VW_reg(Y,L,R)	Land area of land use category L and year Y where land is restored considering the 30 years delay from the time of abandance in region R (kha)
 VU(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abandance
+VU2(Y,L,I,J)	Land area of land use category L and year Y where land is restored at the same time as abandance (averaged for the cell occupided by more than one countries) (fraction)
+VU_reg(Y,L,R)	Land area of land use category L and year Y where land is restored at the same time as abandance
 ;
 
 VW(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VW(Y,L,I,J)$(LRES(L) and RSF(Y,L,I,J))=RSF(Y,L,I,J);
 VW(Y,L,I,J)$(LABD(L) and ABD(Y,L,I,J))=ABD(Y,L,I,J);
 VW(Y,L,I,J)$(Lnat(L) and VY_IJ(Y,L,I,J)>0)=max(0,VY_IJ(Y,L,I,J)-SUM(L2,RSF(Y,L2,I,J))-SUM(L3,ABD(Y,L3,I,J)));
-
+VW(Y,L,I,J)$(LABDCUM(L) and sum(L2$(LABD(L2)),XF(Y,L2,I,J)))=sum(L2$(LABD(L2)),XF(Y,L2,I,J));
 
 VU(Y,L,I,J)$(VY_IJ(Y,L,I,J))=VY_IJ(Y,L,I,J);
 VU(Y,L,I,J)$(Lnat(L) and VY_IJ(Y,L,I,J) and SUM(L2,XF(Y,L2,I,J)))=max(0,VY_IJ(Y,L,I,J)-SUM(L2,XF(Y,L2,I,J)));
@@ -548,6 +552,9 @@ VU(Y,L,I,J)$(VU(Y,L,I,J)<10**(-7) AND VU(Y,L,I,J)>(-1)*10**(-7))=0;
 VW2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VW(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
 VW_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VW2(Y,L,I,J)*GAIJ(I,J));
 VW_reg(Y,L,R)$(sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2));
+VU2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VU(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
+VU_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VU2(Y,L,I,J)*GAIJ(I,J));
+VU_reg(Y,L,R)$(sum(R2$MAP_Ragg(R2,R),VU_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VU_reg(Y,L,R2));
 
 
 set
@@ -569,7 +576,7 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum((Lwwfnum2,Y2),VY_IJwwfnum(Y2,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 
 execute_unload '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-VY_IJwwfnum,VW_reg
+VY_IJwwfnum,VW_reg,VU_reg
 ;
 
 $endif.res

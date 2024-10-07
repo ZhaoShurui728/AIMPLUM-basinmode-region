@@ -184,17 +184,16 @@ C_BRF	.	C_B
 OTH_ARF	.	OTH_A
 /
 ;
-Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2);
+Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2),(Lmip,Lmip2);
 
 parameter
 FLAG_G(G)		Grid flag
 FLAG_IJ(I,J)		Grid flag
 Rarea_bio(G)
-
 VY_load(R,Y,L,G)
-VYLY_load(R,Y,Y,L,G)
 VY_IJ(Y,L,I,J)
 VY_IJmip(Y,Lmip,I,J)
+VYLY(R,Y,Y,L,G)	land use in all the earlier years
 YIELD_BIO(R,Y,G)
 YIELD_IJ(Y,L,I,J) tCO2 per ha per year
 GHGLG(Y,L,G)	MtCO2 per grid per year
@@ -366,7 +365,16 @@ $endif.carseq
 
 
 $ifthen.p %lumip%==on
-alias (Lmip,Lmip2);
+
+
+$gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$load VY_load=VYL VYLY
+
+* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
+VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
+VY_IJ(Y,L,I,J)$(FLAG_IJ(I,J) and LAFRTOT(L))=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYLY(R,Y,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
+VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
+
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
 VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0)=-99;
 
@@ -400,7 +408,7 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms icwtr
 
 
 $ifthen.gdxout %gdxout%==on
-execute_unload '../output/gdx/lumip_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+execute_unload '../output/gdx/analysis/lumip_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 VY_IJmip
 ;
 $endif.gdxout

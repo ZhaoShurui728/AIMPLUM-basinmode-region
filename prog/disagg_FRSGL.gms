@@ -107,12 +107,12 @@ C_BRF   sugar crops rainfed
 OTH_ARF other crops rainfed
 
 * Changes in land use
-NRFABD	naturally regenerating managed forest on abondoned land
-NRGABD	naturally regenerating managed grassland on abondoned land
+NRFABD	naturally regenerating managed forest on abandoned land
+NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
-NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
-NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
+NRFABDCUM	Cumulative naturally regenerating managed forest area on abandoned land
+NRGABDCUM	Cumulative naturally regenerating managed grassland on abandoned land
 
 * degreaded soil
 CLDEGS	cropland with degraded soil
@@ -138,12 +138,12 @@ EmitCat	Emissions categories /
 "Net"		Net emissions (= Positive - Negative)
 /
 LCHNG(L) changes in land use /
-NRFABD	naturally regenerating managed forest on abondoned land
-NRGABD	naturally regenerating managed grassland on abondoned land
+NRFABD	naturally regenerating managed forest on abandoned land
+NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
-NRFABDCUM	Cumulative naturally regenerating managed forest area on abondoned land
-NRGABDCUM	Cumulative naturally regenerating managed grassland on abondoned land
+NRFABDCUM	Cumulative naturally regenerating managed forest area on abandoned land
+NRGABDCUM	Cumulative naturally regenerating managed grassland on abandoned land
 /
 ;
 parameter

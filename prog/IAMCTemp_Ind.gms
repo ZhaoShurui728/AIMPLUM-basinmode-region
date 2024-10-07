@@ -123,6 +123,15 @@ CLIR    cropland rainged
 CLRF	cropland irrigated
 
 ABD	Abandoned land
+* BtC
+*abondoned land with original land category
+ABD_CL
+ABD_CROP_FLW
+ABD_BIO
+ABD_PAS
+ABD_MNGFRS
+ABD_AFR
+ABD_CUM	Cumulative gross abandoned land including restored area
 /
 AEZ	/AEZ1*AEZ18/
 SGHG	/CO2/
@@ -137,6 +146,8 @@ EmitCat	Emissions categories /
 /
 LCROPIR(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR/
 LCROPRF(L)/PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
+LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
+LABDCUM(L)/ABD_CUM/
 ;
 Alias(R,R2),(Y,Y2);
 
@@ -160,24 +171,37 @@ V/
 Lan_Cov
 Lan_Cov_Bui_Are
 Lan_Cov_Cro
+Lan_Cov_Cro_Non_Ene_Cro
 Lan_Cov_Cro_Irr
 Lan_Cov_Cro_Ene_Cro
+Lan_Cov_Cro_Ene_Cro_1st_gen
+Lan_Cov_Cro_Ene_Cro_2nd_gen
 Lan_Cov_Cro_Ene_Cro_Irr
 Lan_Cov_Frs
-Lan_Cov_Frs_Aff_and_Ref
+Lan_Cov_Frs_Aff_and_Ref	Cumulative Afforestation area
 Lan_Cov_Frs_Frs
 Lan_Cov_Frs_Frs_Har_Are
+Lan_Cov_Frs_Man
+Lan_Cov_Frs_Man_Aff
+Lan_Cov_Frs_Man_Ref
+Lan_Cov_Frs_Man_Tim_Pla
 Lan_Cov_Frs_Nat_Frs
+Lan_Cov_Frs_Nat_Frs_Prm_Frs
+Lan_Cov_Frs_Nat_Frs_Sec_Frs
+Lan_Cov_Frs_Prm_Frs
+Lan_Cov_Frs_Sec_Frs
 Lan_Cov_Oth_Ara_Lan
 Lan_Cov_Oth_Lan
 Lan_Cov_Oth_Nat_Lan
 Lan_Cov_Pst
-Lan_Cov_Frs_Man
 Lan_Cov_Cro_Cer
 Lan_Cov_Cro_Ric
 Lan_Cov_Cro_Whe
 Lan_Cov_Cro_Coa_gra
 Lan_Cov_Cro_Oil_See
+Lan_Cov_Cro_Oil_Cro
+Lan_Cov_Cro_Sug_Cro
+Lan_Cov_Cro_Oth_Cro
 Lan_Cov_Cro_Dou
 Lan_Cov_Cro_Rai
 Lan_Cov_Wat_Eco_Frs
@@ -185,19 +209,19 @@ Lan_Cov_Wat_Eco_Gla
 Lan_Cov_Wat_Eco_Lak
 Lan_Cov_Wat_Eco_Mou
 Lan_Cov_Wat_Eco_Wet
-Lan_Cov_Cro_Non_Ene_Cro
-Lan_Cov_Cro_Ene_Cro_1st_gen
-Lan_Cov_Cro_Ene_Cro_2nd_gen
-Lan_Cov_Frs_Sec
+
 Emi_CO2_Lan_Use_Flo_Pos_Emi
 Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
 Emi_CO2_Lan_Use_Flo_Neg_Seq
 Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
 Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For
-Car_Seq_Lan_Use_Soi_Car_Man	Carbon Sequestration|Land Use|Soil Carbon Management
 Emi_CO2_AFO_Lan_Aba_Man_Lan
 Emi_CO2_AFO_Lan
 Emi_CO2_AFO_Lan_Frs
+Car_Seq_Lan_Use_Soi_Car_Man	Carbon Sequestration|Land Use|Soil Carbon Management
+Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
+Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
+
 
 *Variables added in MOEJ-IIASA
 Lan_Cov_Frs_Frs_Old	Land Cover|Forest|Forest old
@@ -214,8 +238,6 @@ Emi_CO2_AFO_For_Man		Emissions|CO2|AFOLU|Forest Management
 Emi_CO2_AFO_Oth_Luc		Emissions|CO2|AFOLU|Other LUC
 
 * Original
-Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
-Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
 Lan_Cov_Frs_Agr	Land Cover|Agroforestry
 
 Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
@@ -228,23 +250,32 @@ ANNR_prod	Livestock numbers for producer animals (for slaughter)�@Absolute num
 
 
 MapLIAMPC(L,V)/
+$if %WWFlandout_exe%==off	NRFABDCUM	.	Lan_Cov_Abd_Lan
+$if %WWFlandout_exe%==off	NRGABDCUM	.	Lan_Cov_Abd_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Frs_Res_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res_Lan
+$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res_Lan
+
 FRS	.	Lan_Cov_Frs
 AFR	.	Lan_Cov_Frs
 MNGFRS	.	Lan_Cov_Frs_Man
 AFR	.	Lan_Cov_Frs_Man
-UMNFRS	.	Lan_Cov_Frs_Nat_Frs
-$if not %iav%==BIOD	NRFABDCUM	.	Lan_Cov_Frs_Nat_Frs
+AFR	.	Lan_Cov_Frs_Man_Aff
+*Lan_Cov_Frs_Man_Ref
+*Lan_Cov_Frs_Man_Tim_Pla
+PRMFRS	.	Lan_Cov_Frs_Nat_Frs
+NRMFRS	.	Lan_Cov_Frs_Nat_Frs
+PRMFRS	.	Lan_Cov_Frs_Nat_Frs_Prm_Frs
+NRMFRS	.	Lan_Cov_Frs_Nat_Frs_Sec_Frs
+PRMFRS	.	Lan_Cov_Frs_Prm_Frs
+SECFRS	.	Lan_Cov_Frs_Sec_Frs
+
 AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
 GL	.	Lan_Cov_Oth_Nat_Lan
 AGOFRS	.	Lan_Cov_Frs_Agr
-NRFABDCUM	.	Lan_Cov_Abd_Lan
-NRGABDCUM	.	Lan_Cov_Abd_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Frs_Res_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res_Lan
 
 CL	.	Lan_Cov_Cro
 BIO	.	Lan_Cov_Cro
@@ -259,11 +290,14 @@ SL	.	Lan_Cov_Bui_Are
 GRO .   Lan_Cov_Cro_Cer
 PDR .   Lan_Cov_Cro_Cer
 WHT .   Lan_Cov_Cro_Cer
-GRO .   Lan_Cov_Cro_Coa_gra
-
-OSD .   Lan_Cov_Cro_Oil_See
 PDR .   Lan_Cov_Cro_Ric
 WHT .   Lan_Cov_Cro_Whe
+GRO .   Lan_Cov_Cro_Coa_gra
+OSD .   Lan_Cov_Cro_Oil_See
+OSD .   Lan_Cov_Cro_Oil_Cro
+C_B .   Lan_Cov_Cro_Sug_Cro
+OTH_A .   Lan_Cov_Cro_Oth_Cro
+
 PDRIR   .   Lan_Cov_Cro_Irr
 WHTIR   .   Lan_Cov_Cro_Irr
 GROIR   .   Lan_Cov_Cro_Irr
@@ -276,8 +310,8 @@ GRORF   .   Lan_Cov_Cro_Rai
 OSDRF   .   Lan_Cov_Cro_Rai
 C_BRF   .   Lan_Cov_Cro_Rai
 OTH_ARF   .   Lan_Cov_Cro_Rai
-
 /
+
 U/"million ha","Mt CO2/yr","million head"/
 ;
 
@@ -439,14 +473,22 @@ $ifthen.wwflandout %WWFlandout_exe%==on
 
 parameter
 VW_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
+VU_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
 ;
 
 $gdxin '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-$load VW_reg
+$load VW_reg VU_reg
 
 
-IAMCTemp(R,"Lan_Cov_Res_Lan","million ha",Y)=VW_reg(Y,"RES",R)/1000;
-IAMCTemp(R,"Lan_Cov_Abd_Lan","million ha",Y)=VW_reg(Y,"ABD",R)/1000;
+$if not %iav%==BIOD IAMCTemp(R,"Lan_Cov_Res_Lan","million ha",Y)=VW_reg(Y,"RES",R)/1000;
+*$if not %iav%==BIOD IAMCTemp(R,"Lan_Cov_Abd_Lan","million ha",Y)=SUM(L$LABD(L),VW_reg(Y,L,R))/1000;
+
+IAMCTemp(R,"Lan_Cov_Abd_Lan","million ha",Y)=VW_reg(Y,"ABD_CUM",R)/1000;
+
+$if %iav%==BIOD IAMCTemp(R,"Lan_Cov_Res_Lan","million ha",Y)=VU_reg(Y,"RES",R)/1000;
+*$if %iav%==BIOD IAMCTemp(R,"Lan_Cov_Abd_Lan","million ha",Y)=VU_reg(Y,"RES",R)/1000;
+
+
 
 
 $endif.wwflandout
