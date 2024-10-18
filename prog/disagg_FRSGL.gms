@@ -302,9 +302,9 @@ VYL("FRSGL",G)=0;
 * Forest is devided into managed/unmanaged/primary/secondary.
 set
 landcatall /
-1	total
-2	forest
-3	managed_forest
+1	total  (11+20+31+32+40+53)
+2	forest (11+20+31+32)
+3	managed_forest (20+31+32)
 11	naturallyRegeneratingForest_unmanage
 20	naturallyRegeneratingForest_managed
 31	Planted_forests >15yrs
@@ -340,7 +340,8 @@ VYL("PLNFRS",G)$(VYL("MNGFRS",G) and forest_class_shareG("3",G))=VYL("MNGFRS",G)
 VYL("AGOFRS",G)$(VYL("CL",G) and forest_class_shareG("53",G))=min(VYL("CL",G), forest_class_shareG("53",G));
 
 
-VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G) * forest_management_shareG(G));
+*VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G) * forest_management_shareG(G));
+VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G));
 VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) - VYL("SECFRS",G);
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
@@ -369,7 +370,7 @@ VYL("DEG",G)$(delta_Y("GL",G)<0)=delta_Y("GL",G)*(-1);
 
 * Deforestation happens in managed forest first then the rest in unmanaged forest
 VYL("MNGFRS",G)$(CS_base(G))         =VYL_pre("MNGFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("MNGFRS",G));
-VYL("UMNFRS",G)$(VYL_pre("UMNFRS",G))=VYL_pre("UMNFRS",G)                     -max(0,VYL("DEF",G)-VYL_pre("MNGFRS",G));
+VYL("UMNFRS",G)$(VYL_pre("UMNFRS",G))=VYL_pre("UMNFRS",G)                -max(0,VYL("DEF",G)-VYL_pre("MNGFRS",G));
 
 VYL("NRMFRS",G)$(VYL("FRS",G) and forest_class_shareG("3",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("MNGFRS",G))*forest_class_shareG("20",G)/forest_class_shareG("3",G);
 VYL("PLNFRS",G)$(VYL("FRS",G) and forest_class_shareG("3",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("MNGFRS",G))*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);

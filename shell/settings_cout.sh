@@ -4,18 +4,18 @@
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
 #YEAR0=(2010)
 # Set Global [on/off]
-global=off
+global=on
 # if global=off, the following country code should be assigned
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
 #CountryC=(USA XOC XE25)
-CountryC=(JPN)
+CountryC=(CHN)
 # Set Scenarios
 scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
 scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_NoCC_No SSP2_BaU_BIOD_No)
-scn=(SSP2_BaU_BIOD_No)
+#scn=(SSP2_BaU_NoCC_No)
 
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -33,35 +33,35 @@ CPUthreads=17
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=off
+DataPrep=on
 # Set Data Preparation 2 Process [on/off]
-DataPrep2=off
+DataPrep2=on
 
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=off
+Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
-    Sub_Futuresim_NormalRun=off
+    Sub_Futuresim_NormalRun=on
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
-    Sub_Futuresim_DisagrrFRS=off
+    Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
 ScnMerge=on
-    Sub_ScnMerge_Baserun=off
+    Sub_ScnMerge_Baserun=on
 	## Calculate wwf regional restored area [on/off] 
 	Sub_ScnMerge_Restorecal=off
 	## Calcuate livestock distribution map [on/off]
-	Sub_ScnMerge_Livdiscal=off
+	Sub_ScnMerge_Livdiscal=on
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
 	## Output wwf restored area in IAMC temp [on/off]  (To be on, you need wwf regional restored area with Sub_ScnMerge_Restorecal=on)  
-	WWFrestore_iamc=on
+	WWFrestore_iamc=off
 	## Set Livestock number output in IAMC temp  [on/off]  (To be on, you need livestock distribution map with Sub_ScnMerge_Livdiscal=on)  
 	Livestock_iamc=on
 
@@ -69,9 +69,9 @@ ScnMerge=on
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
 MergeResCSV4NC=on
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
-    Sub_MergeResCSV4NC_basecsv=off
+    Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
-    Sub_MergeResCSV4NC_lumip=off
+    Sub_MergeResCSV4NC_lumip=on
     ## if you would like to make BTC basis 3 options, then turn on BTC3option. This switch will be also used in :netcdfgen (around 3GB per scenario memory and 5min are taken in this process)
     Sub_MergeResCSV4NC_BTC3option=off
     ## if you would like to make AIMSSPRCP dataformat nc file, turn on ssprcp. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)

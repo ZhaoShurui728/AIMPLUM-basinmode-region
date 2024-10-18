@@ -63,6 +63,7 @@
 	ERI	.	XAF
 	EST	.	XE25
 	SWZ	.	XAF
+	ESH	.	XAF
 	ETH	.	XAF
 	FRO	.	XER
 	FJI	.	XSA
@@ -105,7 +106,7 @@
 	KIR	.	XSA
 	PRK	.	XSE
 	KOR	.	XSE
-*	XKX	.	
+	XKX	.	XME	
 	KWT	.	XME
 	KGZ	.	CIS
 	LAO	.	XSE
@@ -200,6 +201,7 @@
 	TUN	.	XNF
 *	TUR	.	TUR
 	TKM	.	CIS
+	TWN	.	CHN
 	TCA	.	XLM
 	TUV	.	XSA
 	UGA	.	XAF
