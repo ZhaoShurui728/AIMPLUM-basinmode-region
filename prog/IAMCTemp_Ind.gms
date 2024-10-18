@@ -57,7 +57,7 @@ GL      grassland
 AFR     afforestation
 CL      cropland
 CROP_FLW        fallow land
-PAS     grazing pasture
+PAS     managed pasture + rangeland
 BIO     bio crops
 SL      built_up
 OL      ice or water
@@ -121,8 +121,8 @@ CLDEGS	cropland with degraded soil
 * original
 CLIR    cropland rainged
 CLRF	cropland irrigated
-
 ABD	Abandoned land
+
 * BtC
 *abondoned land with original land category
 ABD_CL
@@ -257,6 +257,17 @@ $if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
 $if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res_Lan
 $if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res_Lan
 
+FRS	.	Lan_Cov
+AFR	.	Lan_Cov
+GL	.	Lan_Cov
+CL	.	Lan_Cov
+BIO	.	Lan_Cov
+CROP_FLW	.	Lan_Cov
+PAS	.	Lan_Cov
+SL	.	Lan_Cov
+GL	.	Lan_Cov
+OL	.	Lan_Cov
+
 FRS	.	Lan_Cov_Frs
 AFR	.	Lan_Cov_Frs
 MNGFRS	.	Lan_Cov_Frs_Man
@@ -265,9 +276,9 @@ AFR	.	Lan_Cov_Frs_Man_Aff
 *Lan_Cov_Frs_Man_Ref
 *Lan_Cov_Frs_Man_Tim_Pla
 PRMFRS	.	Lan_Cov_Frs_Nat_Frs
-NRMFRS	.	Lan_Cov_Frs_Nat_Frs
+SECFRS	.	Lan_Cov_Frs_Nat_Frs
 PRMFRS	.	Lan_Cov_Frs_Nat_Frs_Prm_Frs
-NRMFRS	.	Lan_Cov_Frs_Nat_Frs_Sec_Frs
+SECFRS	.	Lan_Cov_Frs_Nat_Frs_Sec_Frs
 PRMFRS	.	Lan_Cov_Frs_Prm_Frs
 SECFRS	.	Lan_Cov_Frs_Sec_Frs
 
@@ -286,6 +297,8 @@ PAS	.	Lan_Cov_Pst
 BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
 BIO	.	Lan_Cov_Cro_Ene_Cro
 SL	.	Lan_Cov_Bui_Are
+GL	.	Lan_Cov_Oth_Lan
+OL	.	Lan_Cov_Oth_Lan
 
 GRO .   Lan_Cov_Cro_Cer
 PDR .   Lan_Cov_Cro_Cer
