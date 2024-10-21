@@ -9,13 +9,13 @@ global=on
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
 #CountryC=(USA XOC XE25)
-CountryC=(CHN)
+CountryC=(IND)
 # Set Scenarios
 scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
 scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_NoCC_No SSP2_BaU_BIOD_No)
-#scn=(SSP2_BaU_NoCC_No)
+scn=(SSP2_BaU_NoCC_No)
 
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -33,15 +33,15 @@ CPUthreads=17
 pausemode=off
 
 # Set Data Preparation Process [on/off]
-DataPrep=on
+DataPrep=off
 # Set Data Preparation 2 Process [on/off]
-DataPrep2=on
+DataPrep2=off
 
 # Set Base Year Simulation [on/off]
-Basesim=on
+Basesim=off
 
 # Set Future Simulation [on/off]
-Futuresim=on
+Futuresim=off
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -52,7 +52,7 @@ Futuresim=on
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=on
+ScnMerge=off
     Sub_ScnMerge_Baserun=on
 	## Calculate wwf regional restored area [on/off] 
 	Sub_ScnMerge_Restorecal=off

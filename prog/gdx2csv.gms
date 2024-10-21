@@ -39,7 +39,7 @@ Set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
-World,Non-OECD,ASIA2
+World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 $    ifthen.agmip %agmip%==on
       OSA
@@ -157,6 +157,19 @@ maize
 sugarcrops
 oilcrops
 othercrops
+*	Irrigation (units fraction of grid area) Temporary to calculate fraction to cropland area
+	irrig_c3ann_g
+	irrig_c3per_g
+	irrig_c4ann_g
+	irrig_c4per_g
+	irrig_c3nfx_g
+	flood_g
+*	Biofuel crops (fraction of crop type area occupied by biofuel crops)Temporary to calculate fraction to cropland area
+	crpbf_c3ann_g
+	crpbf_c4ann_g
+	crpbf_c3per_g
+	crpbf_c4per_g
+	crpbf_c3nfx_g
 /
 MAP_LUMIP(Lmip,L)/
 $include ../%prog_loc%/define/lumip.map
@@ -184,7 +197,7 @@ C_BRF	.	C_B
 OTH_ARF	.	OTH_A
 /
 ;
-Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2),(Lmip,Lmip2);
+Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2),(Lmip,Lmip2,Lmip3);
 
 parameter
 FLAG_G(G)		Grid flag
@@ -366,9 +379,27 @@ $endif.carseq
 
 $ifthen.p %lumip%==on
 
+set
+Lmip_fracmap(Lmip,Lmip,Lmip)/
+* Irrigation (units fraction of grid area)
+irrig_c3ann	.	irrig_c3ann_g	.	c3ann
+irrig_c3per	.	irrig_c3per_g	.	c3per
+irrig_c4ann	.	irrig_c4ann_g	.	c4ann
+irrig_c4per	.	irrig_c4per_g	.	c4per
+irrig_c3nfx	.	irrig_c3nfx_g	.	c3nfx
+flood	.	flood_g	.	c3ann
+* Biofuel crops (fraction of crop type area occupied by biofuel crops)
+crpbf_c3ann	.	crpbf_c3ann_g	.	c3ann
+crpbf_c4ann	.	crpbf_c4ann_g	.	c4ann
+crpbf_c3per	.	crpbf_c3per_g	.	c3per
+crpbf_c4per	.	crpbf_c4per_g	.	c4per
+crpbf_c3nfx	.	crpbf_c3nfx_g	.	c3nfx
+/
+
 
 $gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_load=VYL VYLY
+;
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
@@ -376,7 +407,8 @@ VY_IJ(Y,L,I,J)$(FLAG_IJ(I,J) and LAFRTOT(L))=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_R
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
-VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0)=-99;
+VY_IJmip(Y,Lmip,I,J)$(SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip3,I,J)))=SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip2,I,J))/SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip3,I,J));
+VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0 and sum((Y2,I2,J2),VY_IJmip(Y2,Lmip,I2,J2))=0)=-99;
 
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c4ann

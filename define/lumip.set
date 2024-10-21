@@ -35,8 +35,9 @@
 	irrig_c3per
 	irrig_c4ann
 	irrig_c4per
-	irrig_c3nfx
-	flood
+	irrig_c3nfx	
+	flood	flooded fraction of C3 annual crop area
+	
 *	Fertilizer (units kg N/ha/yr (crop season))
 	fertl_c3ann
 	fertl_c4ann
