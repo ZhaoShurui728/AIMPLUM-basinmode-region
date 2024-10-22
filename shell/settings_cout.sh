@@ -16,6 +16,19 @@ scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_NoCC_No SSP2_BaU_BIOD_No)
 scn=(SSP2_BaU_NoCC_No)
+scn=(SSP2_BaU_NoCC_No \
+     SSP2_CurPol_NoCC_No \
+     SSP2_400C_2025CP_NoCC_No \
+     SSP2_1100C_2025CP_NoCC_No \
+     SSP2_400C_2025CP-low_NoCC_No \
+     SSP2_400C_2025CP-high_NoCC_No \
+     SSP3_BaU_NoCC_No \
+     SSP5_BaU_NoCC_No \
+     SSP1_400C_2025CP-high_NoCC_No \
+     SSP1_400C_2025CP_NoCC_No \
+     SSP1_400C_2025CP-low_NoCC_No \
+     )
+scn=(SSP1_400C_2025CP-high_NoCC_No)
 
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -45,25 +58,25 @@ Futuresim=off
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
-    Sub_Futuresim_NormalRun=on
+    Sub_Futuresim_NormalRun=off
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
     Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=off
+ScnMerge=on
     Sub_ScnMerge_Baserun=on
 	## Calculate wwf regional restored area [on/off] 
 	Sub_ScnMerge_Restorecal=off
 	## Calcuate livestock distribution map [on/off]
-	Sub_ScnMerge_Livdiscal=on
+	Sub_ScnMerge_Livdiscal=off
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
 	## Output wwf restored area in IAMC temp [on/off]  (To be on, you need wwf regional restored area with Sub_ScnMerge_Restorecal=on)  
 	WWFrestore_iamc=off
 	## Set Livestock number output in IAMC temp  [on/off]  (To be on, you need livestock distribution map with Sub_ScnMerge_Livdiscal=on)  
-	Livestock_iamc=on
+	Livestock_iamc=off
 
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
@@ -81,7 +94,7 @@ MergeResCSV4NC=on
     ## if you would like to make carbon sequestration nc file, turn on carseq. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
     Sub_MergeResCSV4NC_carseq=off
     ## if you would like to output livestock distribution map, turn on livdiscal. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
-    Sub_MergeResCSV4NC_livdiscal=on
+    Sub_MergeResCSV4NC_livdiscal=off
 
 # Set Netcdf Creation [on/off]
 netcdfgen=on
