@@ -395,6 +395,35 @@ crpbf_c3per	.	crpbf_c3per_g	.	c3per
 crpbf_c4per	.	crpbf_c4per_g	.	c4per
 crpbf_c3nfx	.	crpbf_c3nfx_g	.	c3nfx
 /
+Lmip_out(Lmip) Lmip to be included in nc file/
+c3ann
+c4ann
+c3per
+c4per
+c3nfx
+range
+pastr
+primf
+secdf
+primn
+secdn
+urban
+irrig_c3ann
+irrig_c4ann
+irrig_c3per
+irrig_c4per
+irrig_c3nfx
+crpbf_c4ann
+flood
+fallow
+rice
+wheat
+maize
+sugarcrops
+oilcrops
+othercrops
+icwtr
+/
 
 
 $gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
@@ -408,7 +437,7 @@ VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
 VY_IJmip(Y,Lmip,I,J)$(SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip3,I,J)))=SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip2,I,J))/SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip3,I,J));
-VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0 and sum((Y2,I2,J2),VY_IJmip(Y2,Lmip,I2,J2))=0)=-99;
+VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0 and Lmip_out(Lmip))=-99;
 
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c4ann

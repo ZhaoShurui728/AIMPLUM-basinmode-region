@@ -55,7 +55,7 @@ $  endif.agmip
 R(Rall)	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
-World,Non-OECD,ASIA2
+World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 $    ifthen.agmip %agmip%==on
       OSA

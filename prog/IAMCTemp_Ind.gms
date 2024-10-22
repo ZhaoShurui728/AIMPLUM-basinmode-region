@@ -265,7 +265,6 @@ BIO	.	Lan_Cov
 CROP_FLW	.	Lan_Cov
 PAS	.	Lan_Cov
 SL	.	Lan_Cov
-GL	.	Lan_Cov
 OL	.	Lan_Cov
 
 FRS	.	Lan_Cov_Frs

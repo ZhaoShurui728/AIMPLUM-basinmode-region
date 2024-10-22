@@ -15,6 +15,7 @@ scn=(SSP2_BaU_NoCC SSP2_600C_CACNup200_All_lancet_affccur)
 scn=(SSP2_500C_CACN_FullComb_NoCC)
 scn=(SSP2_BaU_NoCC SSP2_BaU_fdm SSP2_BaU_fdm_diet)
 scn=(SSP2_BaU_NoCC_No SSP2_BaU_BIOD_No)
+scn=(SSP2_BaU_BIOD_No)
 scn=(SSP2_BaU_NoCC_No)
 
 #group1
@@ -52,7 +53,7 @@ Futuresim=off
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=off
+ScnMerge=on
     Sub_ScnMerge_Baserun=on
 	## Calculate wwf regional restored area [on/off] 
 	Sub_ScnMerge_Restorecal=off
