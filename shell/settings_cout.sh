@@ -4,7 +4,7 @@
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
 #YEAR0=(2010)
 # Set Global [on/off]
-global=on
+global=off
 # if global=off, the following country code should be assigned
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
@@ -51,10 +51,10 @@ DataPrep=off
 DataPrep2=off
 
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=off
+Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
