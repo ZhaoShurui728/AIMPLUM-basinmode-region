@@ -90,17 +90,17 @@ netcdfgen=on
     Sub_Netcdfgen_projectname=BTC
 
 # Set PREDICTS output [on/off]  (If on, calculate BII by PREDICTS. You need AIMPLUM netcdf output with Sub_MergeResCSV4NC_BTC3option=on)  
-PREDICTS=on
+PREDICTS=off
     ## Data preparation process. If you want to calculate PREDICTS coefficients, you need to run. Once you run, you can skipp. (default off)
-    Sub_PREDICTS_DataPrep=on
+    Sub_PREDICTS_DataPrep=off
     ## If you want to calculate PREDICTS coefficients, turn on the switch below. (default off)
-    Sub_PREDICTS_EstCoefs=on
+    Sub_PREDICTS_EstCoefs=off
     ## Flag to differenciate result used in file and directory. If 'default', skipped two process before and use coefficients in tools/PREDICTS_biodiversity/data/
     PRJ=default
     ## Flag to differenciate modelsettings.[BTC/HPD]
-    modelsettings=HPD
+    modelsettings=BTC
     ## Flag of whtere considering climate chagne or not. Only used for HPD modelsettings. [none/ssp370/ssp126]
-    Climate_sce=ssp370
+    Climate_sce=none
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
 gdx4png=off
