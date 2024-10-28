@@ -482,7 +482,7 @@ function PREDICTSRexe() {
 }
 function PREDICTScalc {
   Rscript --no-save --no-restore --no-site-file ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/dirSettings.R AIMPLUM ${parent_dir}
-  # Data preparation processs
+  #Data preparation processs
   if [ ${Sub_PREDICTS_DataPrep}      == "on" ] && [ ${PRJ}     != "default" ]; then 
     echo "Running preparing data process ..."
     PREDICTSRexe "../output/lst/PREDICTS_pre1.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_climdata.R > "../output/log/PREDICTS_pre1.log" 2>&1 
@@ -497,18 +497,18 @@ function PREDICTScalc {
     echo ${S}
     ScenarioSpecName
     
-    # Estimate coefficients process
+    #Estimate coefficients process
     if [ ${Sub_PREDICTS_EstCoefs}       == "on" ] && [ ${PRJ}     != "default" ]; then 
       echo "Estimating coefficients process ..."
       PREDICTSRexe "../output/lst/Estimate_coef.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/estimate_coefficients.R ${PRJ} ${Climate_sce} ${SCE} > "../output/log/Coefficients_calc.log" 2>&1
       echo "Estimating coefficients process completed." 
     fi
 
-    # PREDICTS projection process
+    #PREDICTS projection process
     echo "Projecting Grid BII ..."
-    PREDICTSRexe "../output/lst/PREDICTS_exe.lst" "../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/BII_grid.R" ${S} ${PRJ} ${Climate_sce} > "../output/log/PREDICTS_exe.log" 2>&1
+    PREDICTSRexe "../output/lst/PREDICTS_exe.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/BII_grid.R ${S} ${PRJ} ${Climate_sce} > "../output/log/PREDICTS_exe.log" 2>&1
     echo "Gathring grid BII to regional"
-    PREDICTSRexe "../output/lst/PREDICTS_exe2.lst" "../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/gathering_gridBII_to17region.R" ${S} ${PRJ} ${gams_sys_dir} ${Climate_sce} > "../output/log/PREDICTS_exe2.log" 2>&1 
+    PREDICTSRexe "../output/lst/PREDICTS_exe2.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/gathering_gridBII_to17region.R ${S} ${PRJ} ${gams_sys_dir} ${Climate_sce} > "../output/log/PREDICTS_exe2.log" 2>&1 
     #echo "Projecting regional BII"
     #Rexe "../output/lst/PREDICTS_exe2.lst" "prog/${modelsettings}/BII_regional.R" ${S} ${PRJ} ${gams_sys_dir} > "../output/log/PREDICTS_exe2.log" 2>&1 
     gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1
