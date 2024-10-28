@@ -470,39 +470,51 @@ function netcdfgen() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 7. PREDICTS execution -------------------------------------------------------------------------------
-function PREDICTScalcRun() {
-  echo "$(date '+%Y-%m-%d %H:%M:%S') - Executing R script: Rscript "$2" "${@:3}" " 
-  #Execute Rscript and capture each line of output
-  Rscript "$2" "${@:3}" > "$1" 2> >( while IFS= read -r line; do
-      echo "$line"
-  done)
+## 7. PREDICTS execution
+function PREDICTSRexe() { 
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Executing R script: Rscript "$2" "${@:3}" " 
+    #Execute Rscript and capture each line of output
+    Rscript --no-save --no-restore --no-site-file "$2" "${@:3}" > "$1" 2> >( while IFS= read -r line; do
+        echo "$line"
+    done)
 
-  echo "$(date '+%Y-%m-%d %H:%M:%S') - R script execution finished" 
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - R script execution finished" 
 }
+function PREDICTScalc {
+  Rscript --no-save --no-restore --no-site-file ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/dirSettings.R AIMPLUM ${parent_dir}
+  # Data preparation processs
+  if [ ${Sub_PREDICTS_DataPrep}      == "on" ] && [ ${PRJ}     != "default" ]; then 
+    echo "Running preparing data process ..."
+    PREDICTSRexe "../output/lst/PREDICTS_pre1.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_climdata.R > "../output/log/PREDICTS_pre1.log" 2>&1 
+    PREDICTSRexe "../output/lst/PREDICTS_pre2.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_humanpop.R ${gams_sys_dir} > "../output/log/PREDICTS_pre2.log" 2>&1 
+    PREDICTSRexe "../output/lst/PREDICTS_pre3.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_PREDICTSdatabase.R > "../output/log/PREDICTS_pre3.log" 2>&1 
+    PREDICTSRexe "../output/lst/PREDICTS_pre4.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/biodiversityindex_calc.R > "../output/log/PREDICTS_pre4.log" 2>&1 
+    echo "Preparing data process completed." 
+  fi
 
-function PREDICTScalc() {
-  for S in ${scn[@]} 
+  for S in ${scn[@]}
   do
-    #load scenario specification 
-    echo "${S}"
+    echo ${S}
     ScenarioSpecName
-    #Caclulate BII coefficients  
-    if [ ${Sub_Calc_PREDICTScoef} = "on" ]; then 
-        PREDICTScalcRun "../output/lst/PREDICTS_pre.lst" "../${parent_dir}/tools/PREDICTS/prog/Estimate_coefficients.R" ${parent_dir} > "../output/log/PREDICTS_pre.log" 2>&1 ; fi
-    #Calculate BII both regional and grid scale
-    if [ ${Sub_Calc_Scale} = "Both" ]; then 
-        PREDICTScalcRun "../output/lst/PREDICTS_grid.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_grid.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1
-        PREDICTScalcRun "../output/lst/PREDICTS_regional.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_regional.R" ${S} ${parent_dir} >> "../output/log/PREDICTS_exe.log" 2>&1
-        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 >> "../output/log/PREDICTS_exe.log" 2>&1 ; fi
-    #Calculate BII regional scale    
-    if [ ${Sub_Calc_Scale} = "Regional" ]; then 
-        PREDICTScalcRun "../output/lst/PREDICTS_regional.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_regional.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1
-        gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1 ; fi
-    #Calculate BII grid scale    
-    if [ ${Sub_Calc_Scale} = "Grid" ]; then 
-        PREDICTScalcRun "../output/lst/PREDICTS_grid.lst" "../${parent_dir}/tools/PREDICTS/prog/BII_grid.R" ${S} ${parent_dir} > "../output/log/PREDICTS_exe.log" 2>&1 ; fi
+    
+    # Estimate coefficients process
+    if [ ${Sub_PREDICTS_EstCoefs}       == "on" ] && [ ${PRJ}     != "default" ]; then 
+      echo "Estimating coefficients process ..."
+      PREDICTSRexe "../output/lst/Estimate_coef.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/estimate_coefficients.R ${PRJ} ${Climate_sce} ${SCE} > "../output/log/Coefficients_calc.log" 2>&1
+      echo "Estimating coefficients process completed." 
+    fi
+
+    # PREDICTS projection process
+    echo "Projecting Grid BII ..."
+    PREDICTSRexe "../output/lst/PREDICTS_exe.lst" "../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/BII_grid.R" ${S} ${PRJ} ${Climate_sce} > "../output/log/PREDICTS_exe.log" 2>&1
+    echo "Gathring grid BII to regional"
+    PREDICTSRexe "../output/lst/PREDICTS_exe2.lst" "../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/gathering_gridBII_to17region.R" ${S} ${PRJ} ${gams_sys_dir} ${Climate_sce} > "../output/log/PREDICTS_exe2.log" 2>&1 
+    #echo "Projecting regional BII"
+    #Rexe "../output/lst/PREDICTS_exe2.lst" "prog/${modelsettings}/BII_regional.R" ${S} ${PRJ} ${gams_sys_dir} > "../output/log/PREDICTS_exe2.log" 2>&1 
+    gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1
+          
   done
+  echo "BII projection process completed."
 }
  
 ## 8. Generation of GDX Files for Plotting
