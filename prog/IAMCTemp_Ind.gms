@@ -246,6 +246,8 @@ Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
 ANNR_herd	Total livestock animal numbers including follower herd�@Absolute number
 ANNR_prod	Livestock numbers for producer animals (for slaughter)�@Absolute number
 
+*
+Ter_Bio_BII
 /
 
 
@@ -324,7 +326,7 @@ C_BRF   .   Lan_Cov_Cro_Rai
 OTH_ARF   .   Lan_Cov_Cro_Rai
 /
 
-U/"million ha","Mt CO2/yr","million head"/
+U/"million ha","Mt CO2/yr","million head","%"/
 ;
 
 parameter
@@ -423,7 +425,7 @@ $onlisting
 $offdelim
 ;
 
-IAMCTemp(R,"Terrestrial Biodiversity|BII","%",Y)=Ter_Bio_BII(R,Y)*100;
+IAMCTemp(R,"Ter_Bio_BII","%",Y)=Ter_Bio_BII(R,Y)*100;
 
 $endif.PREDICTS_exe
 

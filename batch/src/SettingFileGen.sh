@@ -7,10 +7,10 @@ do
   do
     for IA in ${IA1}
     do
-    if [ -e settings/${Soc}_${CL}_${IA}.bat ]; then
+    if [ -e ScenarioSet/${Soc}_${CL}_${IA}.bat ]; then
       echo "g"
     else
-      echo -e "set SCE=${Soc}\nset CLP=${CL}\nset IAV=${IA}" > settings/${Soc}_${CL}_${IA}.bat
+      echo -e "set SCE=${Soc}\nset CLP=${CL}\nset IAV=${IA}" > ScenarioSet/${Soc}_${CL}_${IA}.bat
     fi
     done
   done

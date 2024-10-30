@@ -3,13 +3,14 @@ cd `dirname $0`
 git config --global core.autocrlf input
 export gams_sys_dir=`which gams --skip-alias|xargs dirname`
 #to make scenario names mapping for netCDF files, ../${parent_dir}/data/scenariomap.txt should be used.
+
 # Functions ---------------------------------------------------------------------------------------
 #-----function definition
 function rexe() {
   R --no-save --no-restore --no-site-file --slave $2 < $1
 } 
 function ScenarioSpecName(){
-  source ../${parent_dir}/shell/settings/${S}.sh
+  source ../${parent_dir}/shell/ScenarioSet/${S}.sh
   if [ -z "${ModelInt}" ]; then
     ModelInt2="NoValue"
   else
@@ -488,7 +489,7 @@ function PREDICTScalc {
     PREDICTSRexe "../output/lst/PREDICTS_pre1.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_climdata.R > "../output/log/PREDICTS_pre1.log" 2>&1 
     PREDICTSRexe "../output/lst/PREDICTS_pre2.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_humanpop.R ${gams_sys_dir} > "../output/log/PREDICTS_pre2.log" 2>&1 
     PREDICTSRexe "../output/lst/PREDICTS_pre3.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/DataPrep/process_PREDICTSdatabase.R > "../output/log/PREDICTS_pre3.log" 2>&1 
-    PREDICTSRexe "../output/lst/PREDICTS_pre4.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/biodiversityindex_calc.R > "../output/log/PREDICTS_pre4.log" 2>&1 
+    PREDICTSRexe "../output/lst/PREDICTS_pre4.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${PREDICTSmodelsettings}/biodiversityindex_calc.R > "../output/log/PREDICTS_pre4.log" 2>&1 
     echo "Preparing data process completed." 
   fi
 
@@ -496,21 +497,20 @@ function PREDICTScalc {
   do
     echo ${S}
     ScenarioSpecName
-    
+
     #Estimate coefficients process
     if [ ${Sub_PREDICTS_EstCoefs}       == "on" ] && [ ${PRJ}     != "default" ]; then 
       echo "Estimating coefficients process ..."
-      PREDICTSRexe "../output/lst/Estimate_coef.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/estimate_coefficients.R ${PRJ} ${Climate_sce} ${SCE} > "../output/log/Coefficients_calc.log" 2>&1
+      PREDICTSRexe "../output/lst/Estimate_coef.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${PREDICTSmodelsettings}/estimate_coefficients.R ${PRJ} ${Climate_sce} ${SCE} > "../output/log/Coefficients_calc.log" 2>&1
       echo "Estimating coefficients process completed." 
     fi
 
     #PREDICTS projection process
     echo "Projecting Grid BII ..."
-    PREDICTSRexe "../output/lst/PREDICTS_exe.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/BII_grid.R ${S} ${PRJ} ${Climate_sce} > "../output/log/PREDICTS_exe.log" 2>&1
+    PREDICTSRexe "../output/lst/PREDICTS_exe.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${PREDICTSmodelsettings}/BII_grid.R ${S} ${PRJ} ${Climate_sce} > "../output/log/PREDICTS_exe.log" 2>&1
     echo "Gathring grid BII to regional"
-    PREDICTSRexe "../output/lst/PREDICTS_exe2.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${modelsettings}/gathering_gridBII_to17region.R ${S} ${PRJ} ${gams_sys_dir} ${Climate_sce} > "../output/log/PREDICTS_exe2.log" 2>&1 
-    #echo "Projecting regional BII"
-    #Rexe "../output/lst/PREDICTS_exe2.lst" "prog/${modelsettings}/BII_regional.R" ${S} ${PRJ} ${gams_sys_dir} > "../output/log/PREDICTS_exe2.log" 2>&1 
+    PREDICTSRexe "../output/lst/PREDICTS_exe2.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${PREDICTSmodelsettings}/gathering_gridBII_to17region.R ${S} ${PRJ} ${gams_sys_dir} ${Climate_sce} > "../output/log/PREDICTS_exe2.log" 2>&1 
+    echo "Projecting regional BII"
     gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1
           
   done
@@ -587,6 +587,7 @@ function Allmerge() {
 
 cd ../
 parent_dir=`basename ${PWD}`
+rootdirorig=$PWD
 echo "Parent directory is ${parent_dir}"
 
 #Unzip large files
@@ -599,11 +600,19 @@ done
 if [ ! -e ../${parent_dir}/data/biomass/data/rcp_grid.gdx ]; then tar zxfvmp ../${parent_dir}/largefile/biomassdata.tar.gz -C ../${parent_dir}/data; fi
 rm ../${parent_dir}/largefile/biomassdata.tar.gz
 
+#Submodule updates
+git config --global --add safe.directory ${rootdirorig}
+git submodule init
+git submodule update
+cd ../${parent_dir}/tools/PREDICTS_biodiversity 
+git switch main
+cd ../../
+
 # Settings
 ## load settings
-source ../${parent_dir}/shell/settings_cout.sh  # default
+source ../${parent_dir}/shell/settings/settings_cout.sh  # default
 if [ $# -ge 1 ]; then
-  source ../${parent_dir}/shell/$1           # manual settings
+  source ../${parent_dir}/shell/settings/$1           # manual settings
 fi
 
 ## set regions

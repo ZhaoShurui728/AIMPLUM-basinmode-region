@@ -9,25 +9,32 @@ global=on
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
 CountryC=(BRA)
 # Set Scenarios
-scn=(SSP2_Tech_BaU_NoCC_GEO71 SSP2_Life_BaU_NoCC_GEO71 SSP2_Life_500C_CACN_DAC_NoCC_GEO71 SSP2_Tech_500C_CACN_DAC_NoCC_GEO71)
-scn=(SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No SSP2_500C_CACN_DAC_BIOD_No)
-#scn=(SSP2_SDGLand_500C_CACN_DAC_BIOD_No SSP2_SDGLand_500C_CACN_DAC_NoCC_No SSP2_SDGLand_BaU_BIOD_No)
-scn=(SSP2_500C_CACN_DAC_NoCC_No SSP2_BaU_NoCC_No SSP2_SDGLand_500C_CACN_DAC_NoCC_No)
-scn=(SSP2_BaU_NoCC_No SSP2_BaU_BIOD_No SSP2_Life_500C_CACN_DAC_BIOD_No SSP2_Life_BaU_BIOD_No SSP2_500C_CACN_DAC_BIOD_No SSP2_SDGLand_500C_CACN_DAC_BIOD_No SSP2_SDGLand_BaU_BIOD_No)
+scn=(SSP2_BaU_NoCC_No \
+     SSP2_CurPol_NoCC_No \
+     SSP2_400C_2025CP_NoCC_No \
+     SSP2_1100C_2025CP_NoCC_No \
+     SSP2_400C_2025CP-low_NoCC_No \
+     SSP2_400C_2025CP-high_NoCC_No \
+     SSP3_BaU_NoCC_No \
+     SSP5_BaU_NoCC_No \
+#     SSP1_400C_2025CP-high_NoCC_No \
+     SSP1_400C_2025CP_NoCC_No \
+#     SSP1_400C_2025CP-low_NoCC_No \
+     )
 
 #scn=(SSP2_BaU_BIOD_No)
 
 # Set CPU Core Threads
-CPUthreads=40
+CPUthreads=30
 # Set Pause Mode [on/off]
 pausemode=off
 # Set Data Preparation Process [on/off]
 DataPrep=off
 # Set Base Year Simulation [on/off]
-Basesim=on
+Basesim=off
 
 # Set Future Simulation [on/off]
-Futuresim=on
+Futuresim=off
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=CTY
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -38,7 +45,7 @@ Futuresim=on
     Sub_Futuresim_Biocurve=on
 
 # Set Scenario Merge [on/off]
-ScnMerge=on
+ScnMerge=off
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
 
@@ -58,19 +65,31 @@ MergeResCSV4NC=off
     Sub_MergeResCSV4NC_carseq=off
 
 # Set Netcdf Creation [on/off]
-netcdfgen=on
+netcdfgen=off
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=IBS
 
 # Set Making GDX Files for PNG File Creation Default Map [on/off]
-gdx4png=on
+gdx4png=off
     ## set year for map visualization.
     YearListFig=(2010 2100)
     ## difference from base year is ploted if this switch on
     Sub_gdx4png_dif=off
 
+PREDICTS=on
+    ## Data preparation process. If you want to calculate PREDICTS coefficients, you need to run. Once you run, you can skipp. (default off)
+    Sub_PREDICTS_DataPrep=off
+    ## If you want to calculate PREDICTS coefficients, turn on the switch below. (default off)
+    Sub_PREDICTS_EstCoefs=off
+    ## Flag to differenciate result used in file and directory. If 'default', skipped two process before and use coefficients in tools/PREDICTS_biodiversity/data/
+    PRJ=default
+    ## Flag to differenciate PREDICTSmodelsettings.[BTC/HPD]
+    PREDICTSmodelsettings=BTC
+    ## Flag of whtere considering climate chagne or not. Only used for HPD PREDICTSmodelsettings. [none/ssp370/ssp126]
+    Climate_sce=none
+
 # Set PNG File Creation [on/off]
-plot=on
+plot=off
 
 # Set Merge Final Results for All Scenarios [on/off] 
 Allmerge=on

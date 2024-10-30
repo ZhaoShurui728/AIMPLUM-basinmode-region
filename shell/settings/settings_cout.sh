@@ -98,7 +98,7 @@ PREDICTS=off
     ## Flag to differenciate result used in file and directory. If 'default', skipped two process before and use coefficients in tools/PREDICTS_biodiversity/data/
     PRJ=default
     ## Flag to differenciate modelsettings.[BTC/HPD]
-    modelsettings=BTC
+    PREDICTSmodelsettings=BTC
     ## Flag of whtere considering climate chagne or not. Only used for HPD modelsettings. [none/ssp370/ssp126]
     Climate_sce=none
 
