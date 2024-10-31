@@ -71,6 +71,8 @@ UMNFRS  unmanage forest
 NRMFRS  naturally regenerating managed forest
 PLNFRS  planted forest excl AFR
 AGOFRS	agroforestry
+AFRS	afforestation
+RFRS	reforestation
 
 * grassland subcategory
 PRMGL	primary grassland
@@ -178,7 +180,9 @@ Lan_Cov_Cro_Ene_Cro_1st_gen
 Lan_Cov_Cro_Ene_Cro_2nd_gen
 Lan_Cov_Cro_Ene_Cro_Irr
 Lan_Cov_Frs
-Lan_Cov_Frs_Aff_and_Ref	Cumulative Afforestation area
+Lan_Cov_Frs_Aff_and_Ref	Cumulative afforestation + reforestation area
+Lan_Cov_Frs_Aff	Cumulative afforestation area
+Lan_Cov_Frs_Ref	Cumulative reforestation area
 Lan_Cov_Frs_Frs
 Lan_Cov_Frs_Frs_Har_Are
 Lan_Cov_Frs_Man
@@ -282,6 +286,8 @@ PRMFRS	.	Lan_Cov_Frs_Prm_Frs
 SECFRS	.	Lan_Cov_Frs_Sec_Frs
 
 AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
+AFRS	.	Lan_Cov_Frs_Aff
+RFRS	.	Lan_Cov_Frs_Ref
 DEF	.	Lan_Cov_Frs_Def_Rat
 DEFCUM	.	Lan_Cov_Frs_Def_Cum
 GL	.	Lan_Cov_Oth_Nat_Lan
@@ -325,6 +331,38 @@ OTH_ARF   .   Lan_Cov_Cro_Rai
 /
 
 U/"million ha","Mt CO2/yr","million head"/
+
+MapEmisIAMPC(V,EmitCat,L)/
+	Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff	.	Negative	.	AFRTOT
+*!!all managed forest is accounted which is not consistent with IAM convention but this account is based on the inventory guideline wherer managed land should be accounted
+	Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For	.	Negative	.	MNGFRS
+*!!Account abandoned area
+	Emi_CO2_AFO_Lan_Aba_Man_Lan	.	Negative	.	NRFABDCUM
+	Emi_CO2_AFO_Aff	.	Negative	.	AFRTOT
+*	Emi_CO2_AFO_For_Man	.	Negative	.	AFRTOT
+*	Emi_CO2_AFO_For_Man	.	Negative	.	NRFABDCUM
+	Emi_CO2_AFO_Def	.	Positive	.	DEF
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	CL
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	PAS
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	CROP_FLW
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	GL
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	NRFABDCUM
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	NRGABDCUM
+	Emi_CO2_AFO_Oth_Luc	.	Net	.	DEG
+	Emi_CO2_AFO_Lan_Frs	.	Net	.	FRS
+	Car_Seq_Lan_Use_Soi_Car_Man_Cro	.	Negative	.	CROP_FLW
+	Car_Seq_Lan_Use_Soi_Car_Man_Cro	.	Negative	.	CLDEGS
+	Car_Seq_Lan_Use_Soi_Car_Man_Gra	.	Negative	.	NRGABDCUM
+	Car_Seq_Lan_Use_Soi_Car_Man	.	Negative	.	CROP_FLW
+	Car_Seq_Lan_Use_Soi_Car_Man	.	Negative	.	CLDEGS
+	Car_Seq_Lan_Use_Soi_Car_Man	.	Negative	.	NRGABDCUM
+
+/
+Neg_Var(V)/
+Car_Seq_Lan_Use_Soi_Car_Man
+Car_Seq_Lan_Use_Soi_Car_Man_Cro
+Car_Seq_Lan_Use_Soi_Car_Man_Gra
+/
 ;
 
 parameter
@@ -394,6 +432,12 @@ IAMCTemp(R,"Lan_Cov_Frs_Frs_Old","million ha",Y)$(AREA(R,"%base_year%","FRS","LU
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
+IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
+
+IAMCTemp(R,V,"Mt CO2/yr",Y)=sum((EmitCat,L),MapEmisIAMPC(V,EmitCat,L));
+IAMCTemp(R,V,"Mt CO2/yr",Y)$(Neg_Var(V))=IAMCTemp(R,V,"Mt CO2/yr",Y)*(-1);
+
+$ontext
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");   !!all managed forest is accounted which is not consistent with IAM convention but this account is based on the inventory guideline wherer managed land should be accounted
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRFABDCUM");   !!Account abandoned area
@@ -403,13 +447,15 @@ IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
 IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
 IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","CROP_FLW")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Net","NRFABDCUM")+GHGL(R,Y,"Net","NRGABDCUM")+GHGL(R,Y,"Net","DEG");
 
-IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
+
 IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");
+
 
 IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)=(GHGL(R,Y,"Negative","CROP_FLW")+GHGL(R,Y,"Negative","CLDEGS"))*(-1);
 IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRGABDCUM")*(-1);
 IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man","Mt CO2/yr",Y)=IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y);
 
+$offtext
 
 
 $ifthen.PREDICTS_exe %PREDICTS_exe%==on

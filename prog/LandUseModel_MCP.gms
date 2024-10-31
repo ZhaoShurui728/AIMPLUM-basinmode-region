@@ -43,9 +43,9 @@ $setglobal frsprotectexpand off
 $setglobal ohashiprotect off
 
 * WDPAprotect should be selected from protect_bs, protect_all, off.
-*protect_bs(G) protect area belong to WDPA IUCN_CAT Ia, Ib, II, III, and excluded in the baseline scenario
+*protect_bs(G) protect area belong to WDPA IUCN_CAT Ia, Ib, II. and III, are excluded in the baseline scenario See Wu et al 2019
 *protect_all(G) protect area including all categories of WDPA and KBA
-$setglobal WDPAprotect protect_all
+$setglobal WDPAprotect protect_bs
 
 *degradedlandprotect should be selected from i) serious_land_allpolicy, ii) serious_land, iii) severe_land and iv) off.
 $setglobal degradedlandprotect off
@@ -854,7 +854,7 @@ $endif
 *-----Protected area for Bending The Curve-----*
 $ifthen.biodiv %biodivcons%==off
   protectfracL(G,L)=0;
-  protectfrac(G)=0;
+*  protectfrac(G)=0;
 $else.biodiv
 $ ifthene.year %Sy%<%protectStartYear%
     protectfracL(G,L)=0;

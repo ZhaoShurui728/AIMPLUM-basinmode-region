@@ -4,7 +4,7 @@
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
 #YEAR0=(2010)
 # Set Global [on/off]
-global=off
+global=on
 # if global=off, the following country code should be assigned
 # valid codes: (XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF JPN USA XE25 XER TUR)
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
@@ -28,7 +28,7 @@ scn=(SSP2_BaU_NoCC_No \
      SSP1_400C_2025CP_NoCC_No \
      SSP1_400C_2025CP-low_NoCC_No \
      )
-scn=(SSP1_400C_2025CP-high_NoCC_No)
+#scn=(SSP1_400C_2025CP-high_NoCC_No)
 
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -58,7 +58,7 @@ Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
-    Sub_Futuresim_NormalRun=off
+    Sub_Futuresim_NormalRun=on
     ## switch whether disaggregation of forest and other natural land is carried out or not (normally it should be on)
     Sub_Futuresim_DisagrrFRS=on
     ## bio supply curve switch
