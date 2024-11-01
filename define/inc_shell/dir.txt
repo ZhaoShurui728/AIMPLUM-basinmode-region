@@ -12,7 +12,6 @@ output/gdx/landmap
 output/gdx/results
 output/gdx/comparison
 output/nc
-output/nc/PREDICTS
 output/csv
 output/txt
 output/txt/cpu
@@ -28,3 +27,8 @@ output/lst/Basesim
 output/lst/Futuresim
 output/save
 output/log
+output/PREDICTS
+output/PREDICTS/BII
+output/PREDICTS/coefficients
+output/PREDICTS/processedData
+output/PREDICTS/processedData/inputVariables

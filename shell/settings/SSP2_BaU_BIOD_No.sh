@@ -1,4 +1,0 @@
-SCE=SSP2
-CLP=BaU
-IAV=BIOD
-ModelInt=_No

@@ -1,3 +1,0 @@
-SCE=SSP2
-CLP=500C_CACN_FullComb
-IAV=NoCC

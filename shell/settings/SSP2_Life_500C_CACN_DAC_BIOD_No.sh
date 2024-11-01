@@ -1,4 +1,0 @@
-SCE=SSP2_Life
-CLP=500C_CACN_DAC
-IAV=BIOD
-ModelInt=_No
