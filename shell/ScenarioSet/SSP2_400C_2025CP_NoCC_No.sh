@@ -1,0 +1,4 @@
+SCE=SSP2
+CLP=400C_2025CP
+IAV=NoCC
+ModelInt=_No

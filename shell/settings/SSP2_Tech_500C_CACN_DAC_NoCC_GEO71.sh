@@ -1,5 +1,0 @@
-SCE=SSP2_Tech
-
-CLP=500C_CACN_DAC
-ModelInt=_GEO71
-IAV=NoCC

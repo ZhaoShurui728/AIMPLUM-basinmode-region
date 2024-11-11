@@ -1,0 +1,4 @@
+SCE=SSP2_Life
+CLP=BaU
+IAV=BIOD
+ModelInt=_No

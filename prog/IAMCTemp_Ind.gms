@@ -765,7 +765,7 @@ table
 Ter_Bio_BII(R,Y)
 $ondelim
 $offlisting
-$include ../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/BII_regionagg_prod_%SCE%_%CLP%_%IAV%%ModelInt%_IAMCTemp.csv
+$include ../output/PREDICTS/BII/csv/BII_regionagg_%SCE%_%CLP%_%IAV%%ModelInt%_IAMCTemp.csv
 $onlisting
 $offdelim
 ;

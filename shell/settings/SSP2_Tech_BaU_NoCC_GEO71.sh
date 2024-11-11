@@ -1,4 +1,0 @@
-SCE=SSP2_Tech
-CLP=BaU
-IAV=NoCC
-ModelInt=_GEO71

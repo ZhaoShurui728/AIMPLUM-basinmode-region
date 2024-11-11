@@ -1,0 +1,4 @@
+SCE=SSP2
+CLP=500C_CACN_DAC_noBEAff
+IAV=NoCC
+ModelInt=_No
