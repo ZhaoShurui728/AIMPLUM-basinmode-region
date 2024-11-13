@@ -515,6 +515,11 @@ function PREDICTScalc {
           
   done
   echo "BII projection process completed."
+  echo "All scenario merges have been done."
+  cd ../output/gdx/comparison/
+  gdxmerge *.gdx 
+  mv -f merged.gdx ../all/Mergedcomparison.gdx
+  cd ../../../exe
 }
  
 ## 8. Generation of GDX Files for Plotting
