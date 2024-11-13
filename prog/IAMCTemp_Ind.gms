@@ -71,6 +71,8 @@ UMNFRS  unmanage forest
 NRMFRS  naturally regenerating managed forest
 PLNFRS  planted forest excl AFR
 AGOFRS	agroforestry
+AFRS	afforestation
+RFRS	reforestation
 
 * grassland subcategory
 PRMGL	primary grassland
@@ -168,167 +170,354 @@ SL	.	URB
 OL	.	OTH
 /
 V/
-Lan_Cov
-Lan_Cov_Bui_Are
-Lan_Cov_Cro
-Lan_Cov_Cro_Non_Ene_Cro
-Lan_Cov_Cro_Irr
-Lan_Cov_Cro_Ene_Cro
-Lan_Cov_Cro_Ene_Cro_1st_gen
-Lan_Cov_Cro_Ene_Cro_2nd_gen
-Lan_Cov_Cro_Ene_Cro_Irr
-Lan_Cov_Frs
-Lan_Cov_Frs_Aff_and_Ref	Cumulative Afforestation area
-Lan_Cov_Frs_Frs
-Lan_Cov_Frs_Frs_Har_Are
-Lan_Cov_Frs_Man
-Lan_Cov_Frs_Man_Aff
-Lan_Cov_Frs_Man_Ref
-Lan_Cov_Frs_Man_Tim_Pla
-Lan_Cov_Frs_Nat_Frs
-Lan_Cov_Frs_Nat_Frs_Prm_Frs
-Lan_Cov_Frs_Nat_Frs_Sec_Frs
-Lan_Cov_Frs_Prm_Frs
-Lan_Cov_Frs_Sec_Frs
-Lan_Cov_Oth_Ara_Lan
-Lan_Cov_Oth_Lan
-Lan_Cov_Oth_Nat_Lan
-Lan_Cov_Pst
-Lan_Cov_Cro_Cer
-Lan_Cov_Cro_Ric
-Lan_Cov_Cro_Whe
-Lan_Cov_Cro_Coa_gra
-Lan_Cov_Cro_Oil_See
-Lan_Cov_Cro_Oil_Cro
-Lan_Cov_Cro_Sug_Cro
-Lan_Cov_Cro_Oth_Cro
-Lan_Cov_Cro_Dou
-Lan_Cov_Cro_Rai
-Lan_Cov_Wat_Eco_Frs
-Lan_Cov_Wat_Eco_Gla
-Lan_Cov_Wat_Eco_Lak
-Lan_Cov_Wat_Eco_Mou
-Lan_Cov_Wat_Eco_Wet
-
-Emi_CO2_Lan_Use_Flo_Pos_Emi
-Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha
-Emi_CO2_Lan_Use_Flo_Neg_Seq
-Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff
-Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For
-Emi_CO2_AFO_Lan_Aba_Man_Lan
-Emi_CO2_AFO_Lan
-Emi_CO2_AFO_Lan_Frs
-Car_Seq_Lan_Use_Soi_Car_Man	Carbon Sequestration|Land Use|Soil Carbon Management
-Car_Seq_Lan_Use_Soi_Car_Man_Cro	Carbon Sequestration|Land Use|Soil Carbon Management|Cropland
-Car_Seq_Lan_Use_Soi_Car_Man_Gra	Carbon Sequestration|Land Use|Soil Carbon Management|Grassland
-
-
+"Lan_Cov"	"Land Cover"
+"Lan_Cov_Bui_Are"	"Land Cover|Built-Up Area"
+"Lan_Cov_Cro"	"Land Cover|Cropland"
+"Lan_Cov_Cro_Non_Ene_Cro"
+"Lan_Cov_Cro_Irr"	"Land Cover|Cropland|Irrigated"
+"Lan_Cov_Cro_Ene_Cro"	"Land Cover|Cropland|Energy Crops"
+"Lan_Cov_Cro_Ene_Cro_1st_gen"
+"Lan_Cov_Cro_Ene_Cro_2nd_gen"
+"Lan_Cov_Cro_Ene_Cro_Irr"	"Land Cover|Cropland|Energy Crops|Irrigated"
+"Lan_Cov_Frs"	"Land Cover|Forest"
+"Lan_Cov_Frs_Aff_and_Ref"	"Cumulative afforestation + reforestation area"
+"Lan_Cov_Frs_Aff"	"Cumulative afforestation area"
+"Lan_Cov_Frs_Ref"	"Cumulative reforestation area"
+"Lan_Cov_Frs_Frs"
+"Lan_Cov_Frs_Frs_Har_Are"
+"Lan_Cov_Frs_Man"
+"Lan_Cov_Frs_Man_Aff"
+"Lan_Cov_Frs_Man_Ref"
+"Lan_Cov_Frs_Man_Tim_Pla"
+"Lan_Cov_Frs_Nat_Frs"
+"Lan_Cov_Frs_Nat_Frs_Prm_Frs"
+"Lan_Cov_Frs_Nat_Frs_Sec_Frs"
+"Lan_Cov_Frs_Prm_Frs"
+"Lan_Cov_Frs_Sec_Frs"
+"Lan_Cov_Oth_Ara_Lan"
+"Lan_Cov_Oth_Lan"	"Land Cover|Other Land"
+"Lan_Cov_Oth_Nat_Lan"
+"Lan_Cov_Pst"	"Land Cover|Pasture"
+"Lan_Cov_Cro_Cer"	"Land Cover|Cropland|Cereals"
+"Lan_Cov_Cro_Ric"
+"Lan_Cov_Cro_Whe"
+"Lan_Cov_Cro_Coa_gra"
+"Lan_Cov_Cro_Oil_See"
+"Lan_Cov_Cro_Oil_Cro"	"Land Cover|Cropland|Oil Crops"
+"Lan_Cov_Cro_Sug_Cro"	"Land Cover|Cropland|Sugar Crops"
+"Lan_Cov_Cro_Oth_Cro"	"Land Cover|Cropland|Other Crops"
+"Lan_Cov_Cro_Dou"
+"Lan_Cov_Cro_Rai"	"Land Cover|Cropland|Rainfed"
+"Lan_Cov_Wat_Eco_Frs"
+"Lan_Cov_Wat_Eco_Gla"
+"Lan_Cov_Wat_Eco_Lak"
+"Lan_Cov_Wat_Eco_Mou"
+"Lan_Cov_Wat_Eco_Wet"
+"Emi_CO2_Lan_Use_Flo_Pos_Emi"
+"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha"
+"Emi_CO2_Lan_Use_Flo_Neg_Seq"
+"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff"
+"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For"
+"Emi_CO2_AFO_Lan_Aba_Man_Lan"
+"Emi_CO2_AFO_Lan"
+"Emi_CO2_AFO_Lan_Frs"
+"Car_Seq_Lan_Use_Soi_Car_Man"	"Carbon Sequestration|Land Use|Soil Carbon Management"
+"Car_Seq_Lan_Use_Soi_Car_Man_Cro"	"Carbon Sequestration|Land Use|Soil Carbon Management|Cropland"
+"Car_Seq_Lan_Use_Soi_Car_Man_Gra"	"Carbon Sequestration|Land Use|Soil Carbon Management|Grassland"
 *Variables added in MOEJ-IIASA
-Lan_Cov_Frs_Frs_Old	Land Cover|Forest|Forest old
-Lan_Cov_Frs_Def_Rat	Land Cover|Forest|Deforestation rate
-Lan_Cov_Frs_Def_Cum	Land Cover|Forest|Deforestation|Cumulative
-Lan_Cov_Oth_Nat_Lan_Res_Lan	Land Cover|Other Natual Land|Restoration Land
-Lan_Cov_Frs_Res_Lan	Land Cover|Forest|Restoration Land
-Lan_Cov_Res_Lan	Land Cover|Restoration Land
-Lan_Cov_Abd_Lan	Land Cover|Abandoned Land
-
-Emi_CO2_AFO_Aff		Emissions|CO2|AFOLU|Afforestation
-Emi_CO2_AFO_Def		Emissions|CO2|AFOLU|Deforestation
-Emi_CO2_AFO_For_Man		Emissions|CO2|AFOLU|Forest Management
-Emi_CO2_AFO_Oth_Luc		Emissions|CO2|AFOLU|Other LUC
-
+"Lan_Cov_Frs_Frs_Old"	"Land Cover|Forest|Forest old"
+"Lan_Cov_Frs_Def_Rat"	"Land Cover|Forest|Deforestation rate"
+"Lan_Cov_Frs_Def_Cum"	"Land Cover|Forest|Deforestation|Cumulative"
+"Lan_Cov_Oth_Nat_Lan_Res_Lan"	"Land Cover|Other Natual Land|Restoration Land"
+"Lan_Cov_Frs_Res_Lan"	"Land Cover|Forest|Restoration Land"
+"Lan_Cov_Res_Lan"	"Land Cover|Restoration Land"
+"Lan_Cov_Abd_Lan"	"Land Cover|Abandoned Land"
+"Emi_CO2_AFO_Aff"	"Emissions|CO2|AFOLU|Afforestation"
+"Emi_CO2_AFO_Def"	"Emissions|CO2|AFOLU|Deforestation"
+"Emi_CO2_AFO_For_Man"	"Emissions|CO2|AFOLU|Forest Management"
+"Emi_CO2_AFO_Oth_Luc"	"Emissions|CO2|AFOLU|Other LUC"
 * Original
-Lan_Cov_Frs_Agr	Land Cover|Agroforestry
-
-Liv_Ani_Sto_Num_Rum	Livestock animal stock numbers|ruminant
-Liv_Ani_Sto_Num_Nrm	Livestock animal stock numbers|non-ruminant
-Liv_Ani_Sto_Num_Dry	Livestock animal stock numbers|dairy
-ANNR_herd	Total livestock animal numbers including follower herd�@Absolute number
-ANNR_prod	Livestock numbers for producer animals (for slaughter)�@Absolute number
-
-*
-Ter_Bio_BII
+"Lan_Cov_Frs_Agr"	"Land Cover|Agroforestry"
+"Liv_Ani_Sto_Num_Rum"	"Livestock animal stock numbers|ruminant"
+"Liv_Ani_Sto_Num_Nrm"	"Livestock animal stock numbers|non-ruminant"
+"Liv_Ani_Sto_Num_Dry"	"Livestock animal stock numbers|dairy"
+"ANNR_herd"	"Total livestock animal numbers including follower herd Absolute number"
+"ANNR_prod"	"Livestock numbers for producer animals (for slaughter) Absolute number"
+"Car_Rem_Lan_Use"	"Carbon Removal|Land Use"
+"Car_Rem_Lan_Use_Agr"	"Carbon Removal|Land Use|Agroforestry"
+"Car_Rem_Lan_Use_Bio"	"Carbon Removal|Land Use|Biochar"
+"Car_Rem_Lan_Use_Frs_Man"	"Carbon Removal|Land Use|Forest Management"
+"Car_Rem_Lan_Use_ReA"	"Carbon Removal|Land Use|ReAfforestation"
+"Car_Rem_Lan_Use_ReA_Nat_Frs"	"Carbon Removal|Land Use|ReAfforestation|Natural Forest"
+"Car_Rem_Lan_Use_ReA_Pla"	"Carbon Removal|Land Use|ReAfforestation|Plantation"
+"Car_Rem_Lan_Use_Soi_Car_Man"	"Carbon Removal|Land Use|Soil Carbon Management"
+"Car_Rem_Lan_Use_Soi_Car_Man_Cro"	"Carbon Removal|Land Use|Soil Carbon Management|Cropland"
+"Car_Rem_Lan_Use_Soi_Car_Man_Gra"	"Carbon Removal|Land Use|Soil Carbon Management|Grassland"
+"Emi_CO2_AFO"	"Emissions|CO2|AFOLU"
+"Frs_Are_Cha"	"Forest Area Change"
+"Frs_Are_Cha_Def"	"Forest Area Change|Deforestation"
+"Frs_Are_Cha_Def_Prm"	"Forest Area Change|Deforestation|Primary"
+"Frs_Are_Cha_Def_Sec"	"Forest Area Change|Deforestation|Secondary"
+"Frs_Are_Cha_Frs_Exp"	"Forest Area Change|Forest Expansion"
+"Frs_Are_Cha_Frs_Exp_Pla"	"Forest Area Change|Forest Expansion|Planted"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat"	"Forest Area Change|Forest Expansion|Planted|Natural"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat_Oth"	"Forest Area Change|Forest Expansion|Planted|Natural|Other"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat_ReA"	"Forest Area Change|Forest Expansion|Planted|Natural|ReAfforestation"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla"	"Forest Area Change|Forest Expansion|Planted|Plantation"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"	"Forest Area Change|Forest Expansion|Planted|Plantation|ReAfforestation"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla_Tim"	"Forest Area Change|Forest Expansion|Planted|Plantation|Timber"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"	"Forest Area Change|Forest Expansion|Planted|Plantation|Other"
+"Frs_Are_Cha_Frs_Exp_Sec"	"Forest Area Change|Forest Expansion|Secondary"
+"Gro_Emi_CO2_AFO"	"Gross Emissions|CO2|AFOLU"
+"Lan_Cov_Cro_Cer_Irr"	"Land Cover|Cropland|Cereals|Irrigated"
+"Lan_Cov_Cro_Cer_Rai"	"Land Cover|Cropland|Cereals|Rainfed"
+"Lan_Cov_Cro_Ene_Cro_Rai"	"Land Cover|Cropland|Energy Crops|Rainfed"
+"Lan_Cov_Cro_Oil_Cro_Irr"	"Land Cover|Cropland|Oil Crops|Irrigated"
+"Lan_Cov_Cro_Oil_Cro_Rai"	"Land Cover|Cropland|Oil Crops|Rainfed"
+"Lan_Cov_Cro_Oth_Cro_Irr"	"Land Cover|Cropland|Other Crops|Irrigated"
+"Lan_Cov_Cro_Oth_Cro_Rai"	"Land Cover|Cropland|Other Crops|Rainfed"
+"Lan_Cov_Cro_Sug_Cro_Irr"	"Land Cover|Cropland|Sugar Crops|Irrigated"
+"Lan_Cov_Cro_Sug_Cro_Rai"	"Land Cover|Cropland|Sugar Crops|Rainfed"
+"Lan_Cov_Frs_Pla"	"Land Cover|Forest|Planted"
+"Lan_Cov_Frs_Pla_Nat"	"Land Cover|Forest|Planted|Natural"
+"Lan_Cov_Frs_Pla_Nat_Oth"	"Land Cover|Forest|Planted|Natural|Other"
+"Lan_Cov_Frs_Pla_Nat_ReA"	"Land Cover|Forest|Planted|Natural|ReAfforestation"
+"Lan_Cov_Frs_Pla_Pla"	"Land Cover|Forest|Planted|Plantation"
+"Lan_Cov_Frs_Pla_Pla_ReA"	"Land Cover|Forest|Planted|Plantation|ReAfforestation"
+"Lan_Cov_Frs_Pla_Pla_Tim"	"Land Cover|Forest|Planted|Plantation|Timber"
+"Lan_Cov_Frs_Pla_Pla_Oth"	"Land Cover|Forest|Planted|Plantation|Other"
+"Lan_Cov_Frs_Prm"	"Land Cover|Forest|Primary"
+"Lan_Cov_Frs_Sec"	"Land Cover|Forest|Secondary"
+"Lan_Cov_Oth_Nat"	"Land Cover|Other Natural"
+"Lan_Cov_Oth_Nat_Prm_Non"	"Land Cover|Other Natural|Primary Non-Forest"
+"Lan_Cov_Oth_Nat_Rec"	"Land Cover|Other Natural|Recovered"
+"Lan_Cov_Oth_Nat_Res"	"Land Cover|Other Natural|Restored"
+"Ter_Bio_Bio_Int_Ind"	"Terrestrial Biodiversity|Biodiversity Intactness Index"
+"Ter_Bio_Bio_Int_Ind_Are_Out_Key_Con_and_Cro_Lan"	"Terrestrial Biodiversity|Biodiversity Intactness Index|Areas Outside Key Conservation and Cropland Landscapes"
+"Ter_Bio_Bio_Int_Ind_Bio_Hot"	"Terrestrial Biodiversity|Biodiversity Intactness Index|Biodiversity Hotspots"
+"Ter_Bio_Bio_Int_Ind_Cro_Lan"	"Terrestrial Biodiversity|Biodiversity Intactness Index|Cropland Landscapes"
+"Ter_Bio_Bio_Int_Ind_Key_Con_Lan"	"Terrestrial Biodiversity|Biodiversity Intactness Index|Key Conservation Landscapes"
+"Ter_Bio_Mea_Spe_Abu"	"Terrestrial Biodiversity|Mean Species Abundance"
+"Ter_Bio_Mea_Spe_Abu_Pla"	"Terrestrial Biodiversity|Mean Species Abundance|Plants"
+"Ter_Bio_Mea_Spe_Abu_Ver"	"Terrestrial Biodiversity|Mean Species Abundance|Vertebrates"
+*	"Terrestrial Biodiversity|Shannon Crop Diversity Index"
 /
 
 
-MapLIAMPC(L,V)/
+MapAreaIAMPC(L,V)/
 $if %WWFlandout_exe%==off	NRFABDCUM	.	Lan_Cov_Abd_Lan
 $if %WWFlandout_exe%==off	NRGABDCUM	.	Lan_Cov_Abd_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Frs_Res_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Oth_Nat_Lan_Res_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRFABDCUM	.	Lan_Cov_Res_Lan
-$if %WWFlandout_exe%_%iav%==off_BIOD	NRGABDCUM	.	Lan_Cov_Res_Lan
+*AIMPLUM code	.	var with ""
+*	.	"Lan_Cov"
+SL	.	"Lan_Cov_Bui_Are"
+CL	.	"Lan_Cov_Cro"
+BIO	.	"Lan_Cov_Cro"
+CROP_FLW	.	"Lan_Cov_Cro"
+CL	.	"Lan_Cov_Cro_Non_Ene_Cro"
+*	.	"Lan_Cov_Cro_Irr"
+BIO	.	"Lan_Cov_Cro_Ene_Cro"
+*	.	"Lan_Cov_Cro_Ene_Cro_1st_gen"
+BIO	.	"Lan_Cov_Cro_Ene_Cro_2nd_gen"
+*	.	"Lan_Cov_Cro_Ene_Cro_Irr"
+FRS	.	"Lan_Cov_Frs"
+AFRTOT	.	"Lan_Cov_Frs_Aff_and_Ref"
+AFRS	.	"Lan_Cov_Frs_Aff"
+RFRS	.	"Lan_Cov_Frs_Ref"
+FRS	.	"Lan_Cov_Frs_Frs"
+AFR	.	"Lan_Cov_Frs_Frs"
+*	.	"Lan_Cov_Frs_Frs_Har_Are"
+MNGFRS	.	"Lan_Cov_Frs_Man"
+AFRS	.	"Lan_Cov_Frs_Man_Aff"
+RFRS	.	"Lan_Cov_Frs_Man_Ref"
+*	.	"Lan_Cov_Frs_Man_Tim_Pla"
+*	.	"Lan_Cov_Frs_Nat_Frs"
+PRMFRS	.	"Lan_Cov_Frs_Nat_Frs_Prm_Frs"
+SECFRS	.	"Lan_Cov_Frs_Nat_Frs_Sec_Frs"
+PRMFRS	.	"Lan_Cov_Frs_Prm_Frs"
+SECFRS	.	"Lan_Cov_Frs_Sec_Frs"
+*	.	"Lan_Cov_Oth_Ara_Lan"
+OL	.	"Lan_Cov_Oth_Lan"
+GL	.	"Lan_Cov_Oth_Nat_Lan"
+PAS	.	"Lan_Cov_Pst"
+PDRIR	.	"Lan_Cov_Cro_Cer"
+WHTIR	.	"Lan_Cov_Cro_Cer"
+GROIR	.	"Lan_Cov_Cro_Cer"
+PDRRF	.	"Lan_Cov_Cro_Cer"
+WHTRF	.	"Lan_Cov_Cro_Cer"
+GRORF	.	"Lan_Cov_Cro_Cer"
+PDRIR	.	"Lan_Cov_Cro_Ric"
+PDRRF	.	"Lan_Cov_Cro_Ric"
+WHTIR	.	"Lan_Cov_Cro_Whe"
+WHTRF	.	"Lan_Cov_Cro_Whe"
+GROIR	.	"Lan_Cov_Cro_Coa_gra"
+GRORF	.	"Lan_Cov_Cro_Coa_gra"
+OSDIR	.	"Lan_Cov_Cro_Oil_See"
+OSDRF	.	"Lan_Cov_Cro_Oil_See"
+OSDIR	.	"Lan_Cov_Cro_Oil_Cro"
+OSDRF	.	"Lan_Cov_Cro_Oil_Cro"
+C_BIR	.	"Lan_Cov_Cro_Sug_Cro"
+C_BRF	.	"Lan_Cov_Cro_Sug_Cro"
+OTH_AIR	.	"Lan_Cov_Cro_Oth_Cro"
+OTH_ARF	.	"Lan_Cov_Cro_Oth_Cro"
+*	.	"Lan_Cov_Cro_Dou"
+*	.	"Lan_Cov_Cro_Rai"
+*	.	"Lan_Cov_Wat_Eco_Frs"
+*	.	"Lan_Cov_Wat_Eco_Gla"
+*	.	"Lan_Cov_Wat_Eco_Lak"
+*	.	"Lan_Cov_Wat_Eco_Mou"
+*	.	"Lan_Cov_Wat_Eco_Wet"
+*	.	*Variables added in MOEJ-IIASA
+*	.	"Lan_Cov_Frs_Frs_Old"
+DEF	.	"Lan_Cov_Frs_Def_Rat"
+DEFCUM	.	"Lan_Cov_Frs_Def_Cum"
+NRGABDCUM	.	"Lan_Cov_Oth_Nat_Lan_Res_Lan"
+NRFABDCUM	.	"Lan_Cov_Frs_Res_Lan"
+*	.	* Original
+AGOFRS	.	"Lan_Cov_Frs_Agr"
+PDRIR	.	"Lan_Cov_Cro_Cer_Irr"
+WHTIR	.	"Lan_Cov_Cro_Cer_Irr"
+GROIR	.	"Lan_Cov_Cro_Cer_Irr"
+PDRRF	.	"Lan_Cov_Cro_Cer_Rai"
+WHTRF	.	"Lan_Cov_Cro_Cer_Rai"
+GRORF	.	"Lan_Cov_Cro_Cer_Rai"
+BIO	.	"Lan_Cov_Cro_Ene_Cro_Rai"
+OSDIR	.	"Lan_Cov_Cro_Oil_Cro_Irr"
+OSDRF	.	"Lan_Cov_Cro_Oil_Cro_Rai"
+OTH_AIR	.	"Lan_Cov_Cro_Oth_Cro_Irr"
+OTH_ARF	.	"Lan_Cov_Cro_Oth_Cro_Rai"
+C_BIR	.	"Lan_Cov_Cro_Sug_Cro_Irr"
+C_BRF	.	"Lan_Cov_Cro_Sug_Cro_Rai"
+AFRTOT	.	"Lan_Cov_Frs_Pla_Pla_ReA"
+*	.	"Lan_Cov_Frs_Pla_Pla_Tim"
+PLNFRS 	.	"Lan_Cov_Frs_Pla_Pla_Oth"
+PRMFRS 	.	"Lan_Cov_Frs_Prm"
+NRMFRS	.	"Lan_Cov_Frs_Sec"
+GL	.	"Lan_Cov_Oth_Nat"
+PRMGL	.	"Lan_Cov_Oth_Nat_Prm_Non"
+NRGABDCUM	.	"Lan_Cov_Oth_Nat_Rec"
+NRGABDCUM	.	"Lan_Cov_Oth_Nat_Res"
 
-FRS	.	Lan_Cov
-AFR	.	Lan_Cov
-GL	.	Lan_Cov
-CL	.	Lan_Cov
-BIO	.	Lan_Cov
-CROP_FLW	.	Lan_Cov
-PAS	.	Lan_Cov
-SL	.	Lan_Cov
-OL	.	Lan_Cov
-
-FRS	.	Lan_Cov_Frs
-AFR	.	Lan_Cov_Frs
-MNGFRS	.	Lan_Cov_Frs_Man
-AFR	.	Lan_Cov_Frs_Man
-AFR	.	Lan_Cov_Frs_Man_Aff
-*Lan_Cov_Frs_Man_Ref
-*Lan_Cov_Frs_Man_Tim_Pla
-PRMFRS	.	Lan_Cov_Frs_Nat_Frs
-SECFRS	.	Lan_Cov_Frs_Nat_Frs
-PRMFRS	.	Lan_Cov_Frs_Nat_Frs_Prm_Frs
-SECFRS	.	Lan_Cov_Frs_Nat_Frs_Sec_Frs
-PRMFRS	.	Lan_Cov_Frs_Prm_Frs
-SECFRS	.	Lan_Cov_Frs_Sec_Frs
-
-AFRTOT	.	Lan_Cov_Frs_Aff_and_Ref
-DEF	.	Lan_Cov_Frs_Def_Rat
-DEFCUM	.	Lan_Cov_Frs_Def_Cum
-GL	.	Lan_Cov_Oth_Nat_Lan
-AGOFRS	.	Lan_Cov_Frs_Agr
-
-CL	.	Lan_Cov_Cro
-BIO	.	Lan_Cov_Cro
-CROP_FLW	.	Lan_Cov_Cro
-CL	.	Lan_Cov_Cro_Non_Ene_Cro
-CROP_FLW	.	Lan_Cov_Cro_Non_Ene_Cro
-PAS	.	Lan_Cov_Pst
-BIO	.	Lan_Cov_Cro_Ene_Cro_2nd_gen
-BIO	.	Lan_Cov_Cro_Ene_Cro
-SL	.	Lan_Cov_Bui_Are
-GL	.	Lan_Cov_Oth_Lan
-OL	.	Lan_Cov_Oth_Lan
-
-GRO .   Lan_Cov_Cro_Cer
-PDR .   Lan_Cov_Cro_Cer
-WHT .   Lan_Cov_Cro_Cer
-PDR .   Lan_Cov_Cro_Ric
-WHT .   Lan_Cov_Cro_Whe
-GRO .   Lan_Cov_Cro_Coa_gra
-OSD .   Lan_Cov_Cro_Oil_See
-OSD .   Lan_Cov_Cro_Oil_Cro
-C_B .   Lan_Cov_Cro_Sug_Cro
-OTH_A .   Lan_Cov_Cro_Oth_Cro
-
-PDRIR   .   Lan_Cov_Cro_Irr
-WHTIR   .   Lan_Cov_Cro_Irr
-GROIR   .   Lan_Cov_Cro_Irr
-OSDIR   .   Lan_Cov_Cro_Irr
-C_BIR   .   Lan_Cov_Cro_Irr
-OTH_AIR   .   Lan_Cov_Cro_Irr
-PDRRF   .   Lan_Cov_Cro_Rai
-WHTRF   .   Lan_Cov_Cro_Rai
-GRORF   .   Lan_Cov_Cro_Rai
-OSDRF   .   Lan_Cov_Cro_Rai
-C_BRF   .   Lan_Cov_Cro_Rai
-OTH_ARF   .   Lan_Cov_Cro_Rai
+DEF	.	"Frs_Are_Cha_Def"
+AFR	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"
+/
+MapAreChaIAMPC(L,V)/
+PLNFRS	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"
+NRMFRS	.       "Frs_Are_Cha_Frs_Exp_Sec"
 /
 
 U/"million ha","Mt CO2/yr","million head","%"/
-;
+MapEmisIAMPC(L,V,EmitCat)/
+*AIMPLUM code	.	zz	.	EmitCat with zz
+*	.	"Emi_CO2_Lan_Use_Flo_Pos_Emi"	.	"Positive"
+*	.	"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha"	.	"Positive"
+*	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq"	.	"Negative"
+AFRTOT	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff"	.	"Negative"
+*MNGFRS	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For"	.	"Negative"
+NRFABDCUM	.	"Emi_CO2_AFO_Lan_Aba_Man_Lan"	.	"Negative"
+*	.	"Emi_CO2_AFO_Lan"	.
+FRS	.	"Emi_CO2_AFO_Lan_Frs"	.	"Net"
+CROP_FLW	.	"Car_Seq_Lan_Use_Soi_Car_Man"	.	"Negative"
+CLDEGS	.	"Car_Seq_Lan_Use_Soi_Car_Man"	.	"Negative"
+NRGABDCUM	.	"Car_Seq_Lan_Use_Soi_Car_Man"	.	"Negative"
+CROP_FLW	.	"Car_Seq_Lan_Use_Soi_Car_Man_Cro"	.	"Negative"
+CLDEGS	.	"Car_Seq_Lan_Use_Soi_Car_Man_Cro"	.	"Negative"
+NRGABDCUM	.	"Car_Seq_Lan_Use_Soi_Car_Man_Gra"	.	"Negative"
+AFRTOT	.	"Emi_CO2_AFO_Aff"	.	"Negative"
+DEF	.	"Emi_CO2_AFO_Def"	.	"Positive"
+*MNGFRS	.	"Emi_CO2_AFO_For_Man"	.	"Negative"
+CL	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+PAS	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+CROP_FLW	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+GL	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+NRFABDCUM	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+NRGABDCUM	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+DEG	.	"Emi_CO2_AFO_Oth_Luc"	.	"Net"
+*	.	"Car_Rem_Lan_Use"	.
+AGOFRS	.	"Car_Rem_Lan_Use_Agr"	.	"Negative"
+*	.	"Car_Rem_Lan_Use_Bio"	.	"Negative"
+*MNGFRS	.	"Car_Rem_Lan_Use_Frs_Man"	.	"Negative"
+AFRTOT	.	"Car_Rem_Lan_Use_ReA"	.	"Negative"
+NRFABDCUM	.	"Car_Rem_Lan_Use_ReA_Nat_Frs"	.	"Negative"
+AFRTOT	.	"Car_Rem_Lan_Use_ReA_Pla"	.	"Negative"
+CROP_FLW	.	"Car_Rem_Lan_Use_Soi_Car_Man"	.	"Negative"
+CLDEGS	.	"Car_Rem_Lan_Use_Soi_Car_Man"	.	"Negative"
+NRGABDCUM	.	"Car_Rem_Lan_Use_Soi_Car_Man"	.	"Negative"
+CROP_FLW	.	"Car_Rem_Lan_Use_Soi_Car_Man_Cro"	.	"Negative"
+CLDEGS	.	"Car_Rem_Lan_Use_Soi_Car_Man_Cro"	.	"Negative"
+NRGABDCUM	.	"Car_Rem_Lan_Use_Soi_Car_Man_Gra"	.	"Negative"
+*	.	"Emi_CO2_AFO"	.
+*	.	"Gro_Emi_CO2_AFO"	.	"Positive"
 
+/
+
+Neg_Var(V)/
+Car_Seq_Lan_Use_Soi_Car_Man
+Car_Seq_Lan_Use_Soi_Car_Man_Cro
+Car_Seq_Lan_Use_Soi_Car_Man_Gra
+"Car_Rem_Lan_Use"	"Carbon Removal|Land Use"
+"Car_Rem_Lan_Use_Agr"	"Carbon Removal|Land Use|Agroforestry"
+"Car_Rem_Lan_Use_Bio"	"Carbon Removal|Land Use|Biochar"
+"Car_Rem_Lan_Use_Frs_Man"	"Carbon Removal|Land Use|Forest Management"
+"Car_Rem_Lan_Use_ReA"	"Carbon Removal|Land Use|ReAfforestation"
+"Car_Rem_Lan_Use_ReA_Nat_Frs"	"Carbon Removal|Land Use|ReAfforestation|Natural Forest"
+"Car_Rem_Lan_Use_ReA_Pla"	"Carbon Removal|Land Use|ReAfforestation|Plantation"
+"Car_Rem_Lan_Use_Soi_Car_Man"	"Carbon Removal|Land Use|Soil Carbon Management"
+"Car_Rem_Lan_Use_Soi_Car_Man_Cro"	"Carbon Removal|Land Use|Soil Carbon Management|Cropland"
+"Car_Rem_Lan_Use_Soi_Car_Man_Gra"	"Carbon Removal|Land Use|Soil Carbon Management|Grassland"
+
+
+/
+MAP_AGGRE(V,V)  Left is aggregation of right/
+*upper	.	lower
+"Lan_Cov"	.	"Lan_Cov_Bui_Are"
+"Lan_Cov"	.	"Lan_Cov_Cro"
+"Lan_Cov"	.	"Lan_Cov_Frs"
+"Lan_Cov"	.	"Lan_Cov_Oth_Lan"
+"Lan_Cov"	.	"Lan_Cov_Oth_Nat_Lan"
+"Lan_Cov"	.	"Lan_Cov_Pst"
+"Lan_Cov_Cro_Irr"	.	"Lan_Cov_Cro_Cer_Irr"
+"Lan_Cov_Cro_Irr"	.	"Lan_Cov_Cro_Oil_Cro_Irr"
+"Lan_Cov_Cro_Irr"	.	"Lan_Cov_Cro_Oth_Cro_Irr"
+"Lan_Cov_Cro_Irr"	.	"Lan_Cov_Cro_Sug_Cro_Irr"
+"Lan_Cov_Cro_Irr"	.	"Lan_Cov_Cro_Ene_Cro_Irr"
+"Lan_Cov_Cro_Rai"	.	"Lan_Cov_Cro_Cer_Rai"
+"Lan_Cov_Cro_Rai"	.	"Lan_Cov_Cro_Oil_Cro_Rai"
+"Lan_Cov_Cro_Rai"	.	"Lan_Cov_Cro_Oth_Cro_Rai"
+"Lan_Cov_Cro_Rai"	.	"Lan_Cov_Cro_Sug_Cro_Rai"
+"Lan_Cov_Res_Lan"	.	"Lan_Cov_Oth_Nat_Lan_Res_Lan"
+"Lan_Cov_Res_Lan"	.	"Lan_Cov_Frs_Res_Lan"
+"Car_Rem_Lan_Use"	.	"Car_Rem_Lan_Use_Agr"
+"Car_Rem_Lan_Use"	.	"Car_Rem_Lan_Use_Bio"
+"Car_Rem_Lan_Use"	.	"Car_Rem_Lan_Use_Frs_Man"
+"Car_Rem_Lan_Use"	.	"Car_Rem_Lan_Use_ReA"
+"Car_Rem_Lan_Use"	.	"Car_Rem_Lan_Use_Soi_Car_Man"
+"Car_Rem_Lan_Use_ReA"	.	"Car_Rem_Lan_Use_ReA_Nat_Frs"
+"Car_Rem_Lan_Use_ReA"	.	"Car_Rem_Lan_Use_ReA_Pla"
+"Emi_CO2_AFO"	.	"Emi_CO2_AFO_Lan"
+"Frs_Are_Cha"	.	"Frs_Are_Cha_Def"
+"Frs_Are_Cha"	.	"Frs_Are_Cha_Frs_Exp"
+"Frs_Are_Cha_Def"	.	"Frs_Are_Cha_Def_Prm"
+"Frs_Are_Cha_Def"	.	"Frs_Are_Cha_Def_Sec"
+"Frs_Are_Cha_Frs_Exp"	.	"Frs_Are_Cha_Frs_Exp_Pla"
+"Frs_Are_Cha_Frs_Exp"	.	"Frs_Are_Cha_Frs_Exp_Sec"
+"Frs_Are_Cha_Frs_Exp_Pla"	.	"Frs_Are_Cha_Frs_Exp_Pla_Nat"
+"Frs_Are_Cha_Frs_Exp_Pla"	.	"Frs_Are_Cha_Frs_Exp_Pla_Pla"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla"	.	"Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla"	.	"Frs_Are_Cha_Frs_Exp_Pla_Pla_Tim"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla"	.	"Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat"	.	"Frs_Are_Cha_Frs_Exp_Pla_Nat_Oth"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat"	.	"Frs_Are_Cha_Frs_Exp_Pla_Nat_ReA"
+"Gro_Emi_CO2_AFO"	.	"Emi_CO2_Lan_Use_Flo_Pos_Emi"
+"Lan_Cov_Frs_Pla"	.	"Lan_Cov_Frs_Pla_Nat"
+"Lan_Cov_Frs_Pla"	.	"Lan_Cov_Frs_Pla_Pla"
+"Lan_Cov_Frs_Pla_Pla"	.	"Lan_Cov_Frs_Pla_Pla_ReA"
+"Lan_Cov_Frs_Pla_Pla"	.	"Lan_Cov_Frs_Pla_Pla_Tim"
+"Lan_Cov_Frs_Pla_Pla"	.	"Lan_Cov_Frs_Pla_Pla_Oth"
+"Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Prm_Frs"
+"Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Sec_Frs"
+/
+;
+Alias(V,V2);
 parameter
 GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
 GHGLR(R,Y,EmitCat,L,RISO)		GHG emission of land category L in year Y [MtCO2 per year]
@@ -359,6 +548,7 @@ GHG(R,Y,*,SMODEL)	GHG emission of land category L in year Y [MtCO2 per year]
 AREA(R,Y,L,SMODEL)	Regional area of land category L [kha]
 IAMCTemp(R,V,U,Y)
 IAMCTempwoU(R,V,Y)
+AreCha(R,Y,L,SMODEL)	Area change of land category L [kha]
 ;
 
 $gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
@@ -389,28 +579,28 @@ AREA(R,Y,"DEGCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_loa
 
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
-IAMCTemp(R,V,"million ha",Y)=SUM(L$(MapLIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
+AreCha(R,Y,L,SMODEL)$(AREA(R,Y,L,SMODEL) and AREA(R,Y-1,L,SMODEL))=AREA(R,Y,L,SMODEL)-AREA(R,Y-1,L,SMODEL);
+
+IAMCTemp(R,V,"million ha",Y)$(SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM")))=SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
 IAMCTemp(R,"Lan_Cov_Frs_Frs_Old","million ha",Y)$(AREA(R,"%base_year%","FRS","LUM"))=(AREA(R,"%base_year%","FRS","LUM")-AREA(R,Y,"DEFCUM","LUM"))/1000;
 
+IAMCTemp(R,V,"million ha",Y)$(SUM(L$(MapAreChaIAMPC(L,V)),AreCha(R,Y,L,"LUM"))>0)=SUM(L$(MapAreChaIAMPC(L,V)),AreCha(R,Y,L,"LUM"))/1000;
 
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq","Mt CO2/yr",Y)=GHG(R,Y,"Sink","LUM");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
-IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","MNGFRS");   !!all managed forest is accounted which is not consistent with IAM convention but this account is based on the inventory guideline wherer managed land should be accounted
-IAMCTemp(R,"Emi_CO2_AFO_Lan_Aba_Man_Lan","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRFABDCUM");   !!Account abandoned area
-
-IAMCTemp(R,"Emi_CO2_AFO_Aff","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT");
-*IAMCTemp(R,"Emi_CO2_AFO_For_Man","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","AFRTOT")+GHGL(R,Y,"Negative","NRFABDCUM");
-IAMCTemp(R,"Emi_CO2_AFO_Def","Mt CO2/yr",Y)=GHGL(R,Y,"Positive","DEF");
-IAMCTemp(R,"Emi_CO2_AFO_Oth_Luc","Mt CO2/yr",Y)=GHGL(R,Y,"Net","CL")+GHGL(R,Y,"Net","PAS")+GHGL(R,Y,"Net","CROP_FLW")+GHGL(R,Y,"Net","GL")+GHGL(R,Y,"Net","NRFABDCUM")+GHGL(R,Y,"Net","NRGABDCUM")+GHGL(R,Y,"Net","DEG");
-
 IAMCTemp(R,"Emi_CO2_AFO_Lan","Mt CO2/yr",Y)=GHG(R,Y,"Net_emissions","LUM");
-IAMCTemp(R,"Emi_CO2_AFO_Lan_Frs","Mt CO2/yr",Y)=GHGL(R,Y,"Net","FRS");
 
-IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)=(GHGL(R,Y,"Negative","CROP_FLW")+GHGL(R,Y,"Negative","CLDEGS"))*(-1);
-IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y)=GHGL(R,Y,"Negative","NRGABDCUM")*(-1);
-IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man","Mt CO2/yr",Y)=IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Cro","Mt CO2/yr",Y)+IAMCTemp(R,"Car_Seq_Lan_Use_Soi_Car_Man_Gra","Mt CO2/yr",Y);
+IAMCTemp(R,V,"Mt CO2/yr",Y)$(sum((EmitCat,L)$MapEmisIAMPC(L,V,EmitCat),GHGL(R,Y,EmitCat,L)))=sum((EmitCat,L)$MapEmisIAMPC(L,V,EmitCat),GHGL(R,Y,EmitCat,L));
+IAMCTemp(R,V,"Mt CO2/yr",Y)$(Neg_Var(V))=IAMCTemp(R,V,"Mt CO2/yr",Y)*(-1);
+
+
+*Aggregation
+SCALAR ite
+FOR(ite=1 to 6,
+IAMCTemp(R,V,U,Y)$(SUM(V2$(MAP_AGGRE(V,V2)),1))=SUM(V2$(MAP_AGGRE(V,V2)),IAMCTemp(R,V2,U,Y));
+
+);
 
 
 
@@ -425,7 +615,8 @@ $onlisting
 $offdelim
 ;
 
-IAMCTemp(R,"Ter_Bio_BII","%",Y)=Ter_Bio_BII(R,Y)*100;
+
+IAMCTemp(R,"Ter_Bio_Bio_Int_Ind","%",Y)=Ter_Bio_BII(R,Y)*100;
 
 $endif.PREDICTS_exe
 

@@ -34,8 +34,8 @@ set
 dum/1*1000000/
 G	Cell number of the target region but both USA and CAN for North America
 G0(G)	Cell number of the target region
-Y year	/ %base_year%*%end_year% /
-YBASE(Y)/ %base_year% /
+Y year	/ 1700,%base_year%*%end_year% /
+YBASE(Y)/ 1700,%base_year% /
 *Y       / %Sy%
 *$if not %Sy%==%base_year% 2005
 */
@@ -58,7 +58,7 @@ FRSGL   forest + grassland
 HAV_FRS  production forest
 FRS     forest
 GL      grassland
-AFR     afforestation
+AFR     afforestation + reforestation
 CL      cropland
 CROP_FLW        fallow land
 PAS     grazing pasture
@@ -79,6 +79,10 @@ UMNFRS  unmanage forest
 NRMFRS  naturally regenerating managed forest
 PLNFRS  planted forest excl AFR
 AGOFRS	agroforestry
+AFRS	afforestation
+RFRS	reforestation
+
+
 
 * grassland subcategory
 PRMGL	primary grassland
@@ -358,7 +362,6 @@ delta_VY("%Sy%",L,G)=0;
 VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 
 
-
 $else.mng
 
 * Take difference
@@ -395,7 +398,6 @@ VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 
 $endif.mng
-
 
 
 
@@ -487,13 +489,15 @@ VYL(L,G)$(not G0(G))=0;
 
 * calc land use change over time
 set
-LCUM(L)	land category considering cumulative change or delta_VY/
+LCUM(L)	land category in VYLY to consider cumulative change or delta_VY/
 NRFABDCUM
 NRGABDCUM
 NRFABD
 NRGABD
 AFRTOT
 AGOFRS
+AFRS	afforestation
+RFRS	reforestation
 /
 Ldelta(L)/
 AFRTOT
@@ -523,6 +527,10 @@ VYLY("%Sy%","AFRTOT",G)=VYL("AFR",G)+VYLY("%Sy%","NRFABDCUM",G);
 $else.afrt
 VYLY("%Sy%","AFRTOT",G)=VYL("AFR",G);
 $endif.afrt
+
+VYLY("%Sy%","RFRS",G)$(VYLY("%Sy%","AFRTOT",G) and frac_rcp("%Sr%","FRS","1700",G)) = VYLY("%Sy%","AFRTOT",G);
+VYLY("%Sy%","AFRS",G)$(VYLY("%Sy%","AFRTOT",G) and frac_rcp("%Sr%","FRS","1700",G)=0) = VYLY("%Sy%","AFRTOT",G);
+
 
 
 Area(L)$(not LCUM(L))= SUM(G$(G0(G)),VYL(L,G)*GA(G));

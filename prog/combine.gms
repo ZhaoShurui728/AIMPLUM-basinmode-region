@@ -134,6 +134,8 @@ UMNFRS  unmanage forest
 NRMFRS  naturally regenerating managed forest
 PLNFRS  planted forest excl AFR
 AGOFRS	agroforestry
+AFRS	afforestation
+RFRS	reforestation
 
 * grassland subcategory
 PRMGL	primary grassland
