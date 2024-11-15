@@ -115,8 +115,8 @@ NRFABD	naturally regenerating managed forest on abandoned land
 NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
-NRFABDCUM	Cumulative naturally regenerating managed forest area on abandoned land
-NRGABDCUM	Cumulative naturally regenerating managed grassland on abandoned land
+NRFABDCUM	Net change in naturally regenerating managed forest area on abandoned land from base year
+NRGABDCUM	Net change in naturally regenerating managed grassland on abandoned land from base year 
 
 * degreaded soil
 CLDEGS	cropland with degraded soil
@@ -495,12 +495,14 @@ set
 LCUM(L)	land category in VYLY to consider cumulative change or delta_VY/
 NRFABDCUM
 NRGABDCUM
-NRFABD
-NRGABD
+*NRFABD
+*NRGABD
 AFRTOT
 AGOFRS
 AFRS	afforestation
 RFRS	reforestation
+FRS
+GL
 /
 Ldelta(L)/
 AFRTOT
@@ -522,8 +524,8 @@ CSL("PAS")=2.5;
 
 VYLY("%Sy%",L,G)$(LCUM(L) and VYL(L,G))=VYL(L,G);
 
-VYLY("%Sy%","NRFABDCUM",G)=sum(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")),VYLY(Y2,"NRFABD",G));
-VYLY("%Sy%","NRGABDCUM",G)=sum(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")),VYLY(Y2,"NRGABD",G));
+VYLY("%Sy%","NRFABDCUM",G)=min(0,VYLY("%Sy%","FRS",G)-VYLY("%base_year%","FRS",G));
+VYLY("%Sy%","NRGABDCUM",G)=min(0,VYLY("%Sy%","GL",G)-VYLY("%base_year%","GL",G));
 
 $ifthen.afrt %iav%==BIOD
 VYLY("%Sy%","AFRTOT",G)=VYL("AFR",G)+VYLY("%Sy%","NRFABDCUM",G);
