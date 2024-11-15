@@ -325,6 +325,7 @@ forest_management_shareG(G) A ratio of managed forest area to total forest area 
 forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
 Soil_deg(G)	A share of area with soil degradation to grid area in grid G (0-1) Wu et al 2019 GCBB developed using GLADIS (Freddy & Monica 2011).
 frac_rcp(R,L,YBASE,G)	fraction of each gridcell G in land category L
+forest_planted_rate(G) A ratio of planted area(31+32) to managed forest area (20+31+32) in a grid cell G (0-1)
 ;
 $gdxin '../%prog_loc%/data/forest_class_export.gdx'
 $load forest_management_shareG,forest_class_shareG
@@ -334,6 +335,8 @@ $load	Soil_deg=serious_land
 
 $gdxin '../%prog_loc%/data/land_map_luh2.gdx'
 $load frac_rcp=frac
+
+forest_planted_rate(G)$(forest_class_shareG("3",G))=(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
 
 $ifthen.mng %Sy%==%base_year%
 VYL("MNGFRS",G)$(VYL("FRS",G) and forest_management_shareG(G))=VYL("FRS",G)*forest_management_shareG(G);
@@ -346,8 +349,8 @@ VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), 
 VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) - VYL("SECFRS",G);
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
-VYL("NRMFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*forest_class_shareG("20",G)/forest_class_shareG("3",G);
-VYL("PLNFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+VYL("PLNFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*forest_planted_rate(G);
+VYL("NRMFRS",G)$(VYL("SECFRS",G))=VYL("SECFRS",G)-VYL("PLNFRS",G);
 
 
 
@@ -383,8 +386,8 @@ VYL("AGOFRS",G)$(VYL("CL",G) and VYL_pre("AGOFRS",G))=min(VYL("CL",G), VYL_pre("
 VYL("SECFRS",G)$(CS_base(G))=VYL_pre("SECFRS",G) +VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G));
 VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G));
 
-VYL("NRMFRS",G)$(VYL("FRS",G) and forest_class_shareG("3",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_class_shareG("20",G)/forest_class_shareG("3",G);
-VYL("PLNFRS",G)$(VYL("FRS",G) and forest_class_shareG("3",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+VYL("NRMFRS",G)$(VYL("FRS",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*(1-forest_planted_rate(G));
+VYL("PLNFRS",G)$(VYL("FRS",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G);
 
 
 VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
