@@ -553,7 +553,7 @@ GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20","N") * VYL(L,G) *GA(G)/10**3 * (
 
 GHGLG("Negative",L,G)$(LAFRTOT(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 $if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20","N") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)), delta_VY(Y2,L,G)) *GA(G)/10**3;
-GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
+GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * 0.1 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
 
 $ifthen.scs not %clp%==BaU
 GHGLG("Negative",L,G)$(LCROPFLW(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G) * 44/12/10**3 * (-1);
