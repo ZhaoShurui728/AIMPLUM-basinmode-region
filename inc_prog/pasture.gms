@@ -25,7 +25,7 @@ FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 
 Planduse_pas=Planduse("%Sy%","GRAZING");
 Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-protect_wopas(G)>0)=VYL("PRM_SEC",G)-protect_wopas(G);
-*��N��PAS�̂���Z���ł�����Ƃ���܂ł����
+
 VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)>=Y_pre("PAS",G))=Y_pre("PAS",G);
 VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)<Y_pre("PAS",G))=Y_NPROT(G);
 Y_NPROTPASG(G)$(Y_NPROT(G) and Y_NPROT(G) - VYL("PAS",G)>SMALL)=Y_NPROT(G) - VYL("PAS",G);
