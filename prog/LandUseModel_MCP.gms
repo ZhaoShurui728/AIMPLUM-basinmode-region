@@ -140,6 +140,8 @@ GRO	other coarse grain
 OSD	oil crops
 C_B	sugar crops
 OTH_A	other crops
+
+TOT total
 /
 MAP_LLDM(L,LDM)/
 PRM_SEC	.	PRM_SEC
@@ -173,6 +175,7 @@ LCROPRF(L)/PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
 LDMCROPB(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO/
 LDMCROP(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A/
+LDMTOT(LDM)/PRM_SEC,CROP_FLW,CL,PAS,SL,OL,BIO/
 LFRS(L)/PRM_SEC,HAV_FRS,AFR/
 LPRMSEC(L)/PRM_SEC/
 LFRSGL(L)/FRSGL/
@@ -765,6 +768,7 @@ Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_bas
 *Y_base("CROP_FLW",G)$(Y_base("CROP_FLW",G)<0)=0;
 Y_base("OL",G)$(Y_base("OL",G)>max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G)))=max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G));
 GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
+
 *--- Y_pre
   Y_pre(L,G)$(Y_base(L,G))=Y_base(L,G);
   Y_pre(L,G)$SUM(L2$MAP_Lagg(L2,L),Y_pre(L2,G))=SUM(L2$MAP_Lagg(L2,L),Y_pre(L2,G));
@@ -1024,7 +1028,7 @@ PB(G)$MACF=PBR*ACF(G)/MACF;
 *-------- Land demand
 PlanduseT=SUM(LCGE,Planduse("%Sy%",LCGE));
 SF_planduse$PlanduseT=GATwoOL/PlanduseT;
-Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
+*Planduse("%Sy%",LCGE)$(PlanduseT>GAT)=Planduse("%Sy%",LCGE)*SF_planduse;
 
 PCDM0(Y,L)=0;
 
@@ -1444,24 +1448,31 @@ protect_area
 ;
 
 $ifthen %Sy%==%base_year%
+set
+Sacol /estimated,base_raw,base_adjusted,cge/
+;
 PARAMETER
   AREA_base(LDM,*)	Reginoal aggregated land-use area (kha)
 ;
   YIELD("PRM_SEC",G)$CS(G)=CS(G);
-  AREA_base(LDM,"estimates")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*VYL(L,G)));
-  AREA_base(LDM,"base")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
-  AREA_base("GL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
-  AREA_base("FRS","base")=SUM(G,GA(G)*frac_rcp("%Sr%","PRMFRS","%base_year%",G));
-$if not %UrbanLandData%==SSP AREA_base("SL","base")=SUM(G,GA(G)*frac_rcp("%Sr%","SL","%base_year%",G));
-$if %UrbanLandData%==SSP AREA_base("SL","base")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
+  AREA_base(LDM,"estimated")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*VYL(L,G)));
+  AREA_base(LDM,"base_raw")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
+  AREA_base("GL","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
+  AREA_base("FRS","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr%","PRMFRS","%base_year%",G));
+$if not %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr%","SL","%base_year%",G));
+$if %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
 
+  AREA_base(LDM,"base_adjusted")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_pre(L,G)));
+ 
   AREA_base(LDM,"cge")=PLDM(LDM);
-  AREA_base("CL","cge")=SUM(LDM$LDMCROP(LDM),PLDM(LDM));
+  AREA_base("CL","cge")=Planduse("%Sy%","CROP");
   AREA_base("PAS","cge")=Planduse("%Sy%","GRAZING");
   AREA_base("GL","cge")=Planduse("%Sy%","GRASS");
   AREA_base("FRS","cge")=Planduse("%Sy%","PRM_FRS")+Planduse("%Sy%","MNG_FRS");
   AREA_base("CROP_FLW","cge")=Planduse("%Sy%","CROP_FLW");
+  AREA_base("SL","cge")=Planduse("%Sy%","URB");
 
+  AREA_base("TOT",Sacol)=sum(LDM$LDMTOT(LDM),AREA_base(LDM,Sacol));
 
 execute_unload '../output/gdx/base/%Sr%/basedata.gdx'
 plcc roaddens GL GLMIN0

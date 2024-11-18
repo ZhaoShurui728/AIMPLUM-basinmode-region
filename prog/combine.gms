@@ -105,7 +105,7 @@ Ysupcuv(Y) year	/
 ST	/SSOLVE,SMODEL/
 SP	/SMCP,SNLP,SLP/
 Scol	/quantity,price,yield,area/
-Sacol	/cge,base,estimates/
+Sacol /estimated,base_raw,base_adjusted,cge/
 L land use type /
 PRM_SEC forest + grassland + pasture + fallow land
 FRSGL   forest + grassland
@@ -388,7 +388,7 @@ $load VYLY CSB_load=CSB
 
 Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 AreaLDM(R,Y,LDM)=SUM(L$MAP_LLDM(L,LDM),Area(R,Y,L));
-Area_base(R,L,"estimates")=Area(R,"%base_year%",L);
+Area_base(R,L,"estimated")=Area(R,"%base_year%",L);
 
 GHGL(Ragg,Y,EmitCat,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L));
 

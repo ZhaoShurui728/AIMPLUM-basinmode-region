@@ -29,7 +29,7 @@ scn=(SSP2_BaU_NoCC_No \
      SSP1_400C_2025CP_NoCC_No \
      SSP1_400C_2025CP-low_NoCC_No \
      )
-scn=(SSP2_400C_2025CP-high_NoCC_No)
+scn=(SSP1_400C_2025CP-high_NoCC_No)
 
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -52,10 +52,10 @@ DataPrep=off
 DataPrep2=off
 
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=off
+Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=SCN
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -103,7 +103,7 @@ netcdfgen=off
     Sub_Netcdfgen_projectname=BTC
 
 # Set PREDICTS output [on/off]  (If on, calculate BII by PREDICTS. You need AIMPLUM netcdf output with Sub_MergeResCSV4NC_BTC3option=on)  
-PREDICTS=on
+PREDICTS=off
     ## Data preparation process. If you want to calculate PREDICTS coefficients, you need to run. Once you run, you can skipp. (default off)
     Sub_PREDICTS_DataPrep=on
     ## If you want to calculate PREDICTS coefficients, turn on the switch below. (default off)
