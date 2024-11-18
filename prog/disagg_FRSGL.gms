@@ -115,8 +115,8 @@ NRFABD	naturally regenerating managed forest on abandoned land
 NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
-NRFABDCUM	Cumulative naturally regenerating managed forest area on abandoned land
-NRGABDCUM	Cumulative naturally regenerating managed grassland on abandoned land
+NRFABDCUM	Net change in naturally regenerating managed forest area on abandoned land from base year
+NRGABDCUM	Net change in naturally regenerating managed grassland on abandoned land from base year 
 
 * degreaded soil
 CLDEGS	cropland with degraded soil
@@ -325,6 +325,7 @@ forest_management_shareG(G) A ratio of managed forest area to total forest area 
 forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
 Soil_deg(G)	A share of area with soil degradation to grid area in grid G (0-1) Wu et al 2019 GCBB developed using GLADIS (Freddy & Monica 2011).
 frac_rcp(R,L,YBASE,G)	fraction of each gridcell G in land category L
+forest_planted_rate(G) A ratio of planted area(31+32) to managed forest area (20+31+32) in a grid cell G (0-1)
 ;
 $gdxin '../%prog_loc%/data/forest_class_export.gdx'
 $load forest_management_shareG,forest_class_shareG
@@ -334,6 +335,8 @@ $load	Soil_deg=serious_land
 
 $gdxin '../%prog_loc%/data/land_map_luh2.gdx'
 $load frac_rcp=frac
+
+forest_planted_rate(G)$(forest_class_shareG("3",G))=(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
 
 $ifthen.mng %Sy%==%base_year%
 VYL("MNGFRS",G)$(VYL("FRS",G) and forest_management_shareG(G))=VYL("FRS",G)*forest_management_shareG(G);
@@ -346,8 +349,8 @@ VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), 
 VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) - VYL("SECFRS",G);
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
-VYL("NRMFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*forest_class_shareG("20",G)/forest_class_shareG("3",G);
-VYL("PLNFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+VYL("PLNFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*forest_planted_rate(G);
+VYL("NRMFRS",G)$(VYL("SECFRS",G))=VYL("SECFRS",G)-VYL("PLNFRS",G);
 
 
 
@@ -383,8 +386,8 @@ VYL("AGOFRS",G)$(VYL("CL",G) and VYL_pre("AGOFRS",G))=min(VYL("CL",G), VYL_pre("
 VYL("SECFRS",G)$(CS_base(G))=VYL_pre("SECFRS",G) +VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G));
 VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G));
 
-VYL("NRMFRS",G)$(VYL("FRS",G) and forest_class_shareG("3",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_class_shareG("20",G)/forest_class_shareG("3",G);
-VYL("PLNFRS",G)$(VYL("FRS",G) and forest_class_shareG("3",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
+VYL("NRMFRS",G)$(VYL("FRS",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*(1-forest_planted_rate(G));
+VYL("PLNFRS",G)$(VYL("FRS",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G);
 
 
 VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
@@ -492,12 +495,14 @@ set
 LCUM(L)	land category in VYLY to consider cumulative change or delta_VY/
 NRFABDCUM
 NRGABDCUM
-NRFABD
-NRGABD
+*NRFABD
+*NRGABD
 AFRTOT
 AGOFRS
 AFRS	afforestation
 RFRS	reforestation
+FRS
+GL
 /
 Ldelta(L)/
 AFRTOT
@@ -519,8 +524,8 @@ CSL("PAS")=2.5;
 
 VYLY("%Sy%",L,G)$(LCUM(L) and VYL(L,G))=VYL(L,G);
 
-VYLY("%Sy%","NRFABDCUM",G)=sum(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")),VYLY(Y2,"NRFABD",G));
-VYLY("%Sy%","NRGABDCUM",G)=sum(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%")),VYLY(Y2,"NRGABD",G));
+VYLY("%Sy%","NRFABDCUM",G)=min(0,VYLY("%Sy%","FRS",G)-VYLY("%base_year%","FRS",G));
+VYLY("%Sy%","NRGABDCUM",G)=min(0,VYLY("%Sy%","GL",G)-VYLY("%base_year%","GL",G));
 
 $ifthen.afrt %iav%==BIOD
 VYLY("%Sy%","AFRTOT",G)=VYL("AFR",G)+VYLY("%Sy%","NRFABDCUM",G);
@@ -550,7 +555,7 @@ GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20","N") * VYL(L,G) *GA(G)/10**3 * (
 
 GHGLG("Negative",L,G)$(LAFRTOT(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 $if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20","N") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)), delta_VY(Y2,L,G)) *GA(G)/10**3;
-GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
+GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * 0.1 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
 
 $ifthen.scs not %clp%==BaU
 GHGLG("Negative",L,G)$(LCROPFLW(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G) * 44/12/10**3 * (-1);
