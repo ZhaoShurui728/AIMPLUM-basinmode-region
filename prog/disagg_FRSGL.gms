@@ -412,24 +412,27 @@ AFR00	control(actual biome)
 AFRMAX	foresttype with maximum carbon sink in each grid
 AFRDIV	foresttype with maximum carbon sink considering biodiversity in each grid
 AFRCUR	foresttype with
+NaturalFRS natural generated forest
 /
 ;
 parameter
   CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
-  CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
+  CFT_nat(G,Y,Y2)         carbon flow in year Y of natural forest generated in year Y2 in grid G
+  CFT_vst(LVST,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
 ;
 
 $gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load CFT_vst=CFTout
 
+  CFT_nat(G,Y,Y2)=CFT_vst("NaturalFRS",G,Y,Y2);
 $ifthen.afftype %afftype%==cact_vst
-  CFT(G,Y,Y2)=CFT_vst("AFR00","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFR00",G,Y,Y2);
 $elseif.afftype %afftype%==cdiv_vst
-  CFT(G,Y,Y2)=CFT_vst("AFRDIV","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRDIV",G,Y,Y2);
 $elseif.afftype %afftype%==cmax_vst
-  CFT(G,Y,Y2)=CFT_vst("AFRMAX","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRMAX",G,Y,Y2);
 $elseif.afftype %afftype%==ccur_vst
-  CFT(G,Y,Y2)=CFT_vst("AFRCUR","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRCUR",G,Y,Y2);
 $elseif.afftype %afftype%==cprevisit
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
 $load CFT

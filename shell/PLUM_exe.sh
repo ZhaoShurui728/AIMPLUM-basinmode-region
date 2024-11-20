@@ -1,6 +1,6 @@
 #!/bin/bash
 cd `dirname $0`
-git config --global core.autocrlf input
+git config --global core.autocrlf false
 export gams_sys_dir=`which gams --skip-alias|xargs dirname`
 #to make scenario names mapping for netCDF files, ../${parent_dir}/data/scenariomap.txt should be used.
 
@@ -515,6 +515,11 @@ function PREDICTScalc {
           
   done
   echo "BII projection process completed."
+  echo "All scenario merges have been done."
+  cd ../output/gdx/comparison/
+  gdxmerge *.gdx 
+  mv -f merged.gdx ../all/Mergedcomparison.gdx
+  cd ../../../exe
 }
  
 ## 8. Generation of GDX Files for Plotting
