@@ -1467,7 +1467,7 @@ $if not %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*frac_rcp("%S
 $if %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
 
   AREA_base(LDM,"base_adjusted")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_pre(L,G)));
- 
+
   AREA_base(LDM,"cge")=PLDM(LDM);
   AREA_base("CL","cge")=Planduse("%Sy%","CROP");
   AREA_base("PAS","cge")=Planduse("%Sy%","GRAZING");
