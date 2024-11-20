@@ -1,6 +1,6 @@
 #!/bin/bash
 cd `dirname $0`
-git config --global core.autocrlf input
+git config --global core.autocrlf false
 export gams_sys_dir=`which gams --skip-alias|xargs dirname`
 #to make scenario names mapping for netCDF files, ../${parent_dir}/data/scenariomap.txt should be used.
 
