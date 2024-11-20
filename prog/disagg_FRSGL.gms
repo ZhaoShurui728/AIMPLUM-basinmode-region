@@ -412,24 +412,27 @@ AFR00	control(actual biome)
 AFRMAX	foresttype with maximum carbon sink in each grid
 AFRDIV	foresttype with maximum carbon sink considering biodiversity in each grid
 AFRCUR	foresttype with
+NaturalFRS natural generated forest
 /
 ;
 parameter
   CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
-  CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
+  CFT_nat(G,Y,Y2)         carbon flow in year Y of natural forest generated in year Y2 in grid G
+  CFT_vst(LVST,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
 ;
 
 $gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load CFT_vst=CFTout
 
+  CFT_nat(G,Y,Y2)=CFT_vst("NaturalFRS",G,Y,Y2);
 $ifthen.afftype %afftype%==cact_vst
-  CFT(G,Y,Y2)=CFT_vst("AFR00","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFR00",G,Y,Y2);
 $elseif.afftype %afftype%==cdiv_vst
-  CFT(G,Y,Y2)=CFT_vst("AFRDIV","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRDIV",G,Y,Y2);
 $elseif.afftype %afftype%==cmax_vst
-  CFT(G,Y,Y2)=CFT_vst("AFRMAX","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRMAX",G,Y,Y2);
 $elseif.afftype %afftype%==ccur_vst
-  CFT(G,Y,Y2)=CFT_vst("AFRCUR","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRCUR",G,Y,Y2);
 $elseif.afftype %afftype%==cprevisit
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
 $load CFT
@@ -495,8 +498,6 @@ set
 LCUM(L)	land category in VYLY to consider cumulative change or delta_VY/
 NRFABDCUM
 NRGABDCUM
-*NRFABD
-*NRGABD
 AFRTOT
 AGOFRS
 AFRS	afforestation
@@ -524,8 +525,8 @@ CSL("PAS")=2.5;
 
 VYLY("%Sy%",L,G)$(LCUM(L) and VYL(L,G))=VYL(L,G);
 
-VYLY("%Sy%","NRFABDCUM",G)=min(0,VYLY("%Sy%","FRS",G)-VYLY("%base_year%","FRS",G));
-VYLY("%Sy%","NRGABDCUM",G)=min(0,VYLY("%Sy%","GL",G)-VYLY("%base_year%","GL",G));
+VYLY("%Sy%","NRFABDCUM",G)=max(0,VYLY("%Sy%","FRS",G)-VYLY("%base_year%","FRS",G));
+VYLY("%Sy%","NRGABDCUM",G)=max(0,VYLY("%Sy%","GL",G)-VYLY("%base_year%","GL",G));
 
 $ifthen.afrt %iav%==BIOD
 VYLY("%Sy%","AFRTOT",G)=VYL("AFR",G)+VYLY("%Sy%","NRFABDCUM",G);
@@ -554,8 +555,9 @@ GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L
 GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20","N") * VYL(L,G) *GA(G)/10**3 * (-1);
 
 GHGLG("Negative",L,G)$(LAFRTOT(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
-$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20","N") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)), delta_VY(Y2,L,G)) *GA(G)/10**3;
-GHGLG("Negative",L,G)$(LAGOFRS(L))= LEC0("LE20","P") * 0.1 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)) *GA(G)/10**3;
+*$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= LEC0("LE20","N") * 0.5 * SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)), delta_VY(Y2,L,G)) *GA(G)/10**3;
+$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT_nat(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LAGOFRS(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2) *0.1 *delta_VY(Y2,L,G)) *GA(G)* 44/12 /10**3 * (-1);
 
 $ifthen.scs not %clp%==BaU
 GHGLG("Negative",L,G)$(LCROPFLW(L))= CSoil(G) * (f_mg-1) * VYL(L,G) * Application_ratio(L) * GA(G) * 44/12/10**3 * (-1);

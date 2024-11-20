@@ -80,4 +80,5 @@ f_mg(R) = sum((continent,clim,Zeco,soiltype)$map_r_clim(R,continent,clim,Zeco,so
 execute_unload '../%prog_loc%/data/data_prep2.gdx'
 LEC
 f_mg
+g_w
 ;

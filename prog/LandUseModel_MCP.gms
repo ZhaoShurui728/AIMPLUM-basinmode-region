@@ -484,6 +484,7 @@ AFR00	control(actual biome)
 AFRMAX	foresttype with maximum carbon sink in each grid
 AFRDIV	foresttype with maximum carbon sink considering biodiversity in each grid
 AFRCUR
+NaturalFRS natural generated forest
 /
 *LCGAEZ(L) /PDR,WHT,GRO,OSD,C_B,OTH_A/
 LCisimip(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
@@ -634,6 +635,7 @@ popdens(G)	population density (inhabitants per km2)
   ACF(G)          average carbon flow in grid G
   MACF            mean value of average carbon flow in each region
   CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
+  CFT_nat(G,Y,Y2)             carbon flow in year Y of natural forest generated in year Y2 in grid G
   MF      management factor for bio crops
   MFA     management factor for bio crops in base year
   MFB     management factor for bio crops (coefficient)
@@ -888,9 +890,9 @@ frsprotectarea=0;
 
 *----Carbon flow
 parameter
-  ACF_vst(LVST,R,G)          average carbon flow in grid G (VISIT data)
+  ACF_vst(LVST,G)          average carbon flow in grid G (VISIT data)
   MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
-  CFT_vst(LVST,R,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
+  CFT_vst(LVST,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
 ;
 
 $gdxin '../%prog_loc%/data/fao_data.gdx'
@@ -899,22 +901,23 @@ $load TON_C Pprod
 $gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load ACF_vst=ACFout MACF_vst=MACFout CFT_vst=CFTout
 
+ CFT_nat(G,Y,Y2)=CFT_vst("NaturalFRS",G,Y,Y2);
 $ifthen.afftype %afftype%==cact_vst
-  ACF(G)=ACF_vst("AFR00","%Sr%",G);
+  ACF(G)=ACF_vst("AFR00",G);
   MACF=MACF_vst("AFR00","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFR00","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFR00",G,Y,Y2);
 $elseif.afftype %afftype%==cdiv_vst
-  ACF(G)=ACF_vst("AFRDIV","%Sr%",G);
+  ACF(G)=ACF_vst("AFRDIV",G);
   MACF=MACF_vst("AFRDIV","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFRDIV","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRDIV",G,Y,Y2);
 $elseif.afftype %afftype%==cmax_vst
-  ACF(G)=ACF_vst("AFRMAX","%Sr%",G);
+  ACF(G)=ACF_vst("AFRMAX",G);
   MACF=MACF_vst("AFRMAX","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFRMAX","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRMAX",G,Y,Y2);
 $elseif.afftype %afftype%==ccur_vst
-  ACF(G)=ACF_vst("AFRCUR","%Sr%",G);
+  ACF(G)=ACF_vst("AFRCUR",G);
   MACF=MACF_vst("AFRCUR","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFRCUR","%Sr%",G,Y,Y2);
+  CFT(G,Y,Y2)=CFT_vst("AFRCUR",G,Y,Y2);
 $elseif.afftype %afftype%==cprevisit
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
 $load ACF MACF CFT
@@ -1388,7 +1391,8 @@ GHGLG("Positive",L,G)$(CSL(L) AND delta_Y(L,G)<0) = CSL(L)*delta_Y(L,G) *GA(G) *
 GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0) = CS(G)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Negative",L,G)$(CSL(L) AND delta_Y(L,G)>0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20","N") *delta_Y(L,G) *GA(G)/10**3;
+*GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20","N") *delta_Y(L,G) *GA(G)/10**3;
+GHGLG("Negative",L,G)$(LFRSGL(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT_nat(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
@@ -1463,7 +1467,7 @@ $if not %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*frac_rcp("%S
 $if %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
 
   AREA_base(LDM,"base_adjusted")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_pre(L,G)));
- 
+
   AREA_base(LDM,"cge")=PLDM(LDM);
   AREA_base("CL","cge")=Planduse("%Sy%","CROP");
   AREA_base("PAS","cge")=Planduse("%Sy%","GRAZING");
