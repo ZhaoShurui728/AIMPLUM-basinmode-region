@@ -217,6 +217,7 @@ V/
 "Emi_CO2_Lan_Use_Flo_Neg_Seq"
 "Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff"
 "Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For"
+"Emi_CO2_Lan_Use_Flo_Neg_Seq_Nat_For"
 "Emi_CO2_AFO_Lan_Aba_Man_Lan"
 "Emi_CO2_AFO_Lan"
 "Emi_CO2_AFO_Lan_Frs"
@@ -411,7 +412,8 @@ MapEmisIAMPC(L,V,EmitCat)/
 *	.	"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha"	.	"Positive"
 *	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq"	.	"Negative"
 AFR	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq_Aff"	.	"Negative"
-NRFABDCUM	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For"	.	"Negative"
+MNGFRS	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq_Man_For"	.	"Negative"
+NRFABDCUM	.	"Emi_CO2_Lan_Use_Flo_Neg_Seq_Nat_For"	.	"Negative"
 NRFABDCUM	.	"Emi_CO2_AFO_Lan_Aba_Man_Lan"	.	"Negative"
 *	.	"Emi_CO2_AFO_Lan"	.
 FRS	.	"Emi_CO2_AFO_Lan_Frs"	.	"Net"
