@@ -29,7 +29,10 @@ scn=(SSP2_BaU_NoCC_No \
      SSP1_400C_2025CP_NoCC_No \
      SSP1_400C_2025CP-low_NoCC_No \
      )
-scn=(SSP1_400C_2025CP-high_NoCC_No)
+scn=(SSP1_400C_2025CP-high_NoCC_No \
+     SSP1_400C_2025CP-high_BIOD_No
+     )
+scn=(SSP1_400C_2025CP-high_BIOD_No)
 
 #group1
 #scn=(SSP2_600C_CACNup200_affccur SSP2_BaU_NoCC SSP2NoBio_600C_CACNup200_affccur SSP2NoBio_600C_CACNup200_affcdiv SSP2NoBio_600C_CACNup200_All_lancet_affccur SSP2NoBio_600C_CACNup200_All_lancet_affcdiv SSP2NoAff_600C_CACNup200_All_lancet SSP2NoAff_600C_CACNup200_NoCC)
@@ -52,7 +55,7 @@ DataPrep=off
 DataPrep2=off
 
 # Set Base Year Simulation [on/off]
-Basesim=on
+Basesim=off
 
 # Set Future Simulation [on/off]
 Futuresim=on

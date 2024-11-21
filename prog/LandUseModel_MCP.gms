@@ -479,6 +479,7 @@ PAS	.	PAS
 CL	.	CL
 ONV	.	PRM_SEC
 /
+Forestage/0,10,20,30,40,50,60,70,80,90,100/
 LVST/
 AFR00	control(actual biome)
 AFRMAX	foresttype with maximum carbon sink in each grid
@@ -634,8 +635,8 @@ popdens(G)	population density (inhabitants per km2)
   protectfracIJL(I,J,biodivconsdata,L_LC)
   ACF(G)          average carbon flow in grid G
   MACF            mean value of average carbon flow in each region
-  CFT(G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G
-  CFT_nat(G,Y,Y2)             carbon flow in year Y of natural forest generated in year Y2 in grid G
+  CFT(G,Forestage)             carbon flow in year Y of forest planted in year Y2 in grid G
+  CFT_nat(G,Forestage)             carbon flow in year Y of natural forest generated in year Y2 in grid G
   MF      management factor for bio crops
   MFA     management factor for bio crops in base year
   MFB     management factor for bio crops (coefficient)
@@ -892,7 +893,7 @@ frsprotectarea=0;
 parameter
   ACF_vst(LVST,G)          average carbon flow in grid G (VISIT data)
   MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
-  CFT_vst(LVST,G,Y,Y2)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
+  CFT_vst(LVST,G,Forestage)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
 ;
 
 $gdxin '../%prog_loc%/data/fao_data.gdx'
@@ -901,29 +902,30 @@ $load TON_C Pprod
 $gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load ACF_vst=ACFout MACF_vst=MACFout CFT_vst=CFTout
 
- CFT_nat(G,Y,Y2)=CFT_vst("NaturalFRS",G,Y,Y2);
+CFT_nat(G,Forestage)=CFT_vst("NaturalFRS",G,Forestage);
 $ifthen.afftype %afftype%==cact_vst
   ACF(G)=ACF_vst("AFR00",G);
   MACF=MACF_vst("AFR00","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFR00",G,Y,Y2);
+  CFT(G,Forestage)=CFT_vst("AFR00",G,Forestage);
 $elseif.afftype %afftype%==cdiv_vst
   ACF(G)=ACF_vst("AFRDIV",G);
   MACF=MACF_vst("AFRDIV","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFRDIV",G,Y,Y2);
+  CFT(G,Forestage)=CFT_vst("AFRDIV",G,Forestage);
 $elseif.afftype %afftype%==cmax_vst
   ACF(G)=ACF_vst("AFRMAX",G);
   MACF=MACF_vst("AFRMAX","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFRMAX",G,Y,Y2);
+  CFT(G,Forestage)=CFT_vst("AFRMAX",G,Forestage);
 $elseif.afftype %afftype%==ccur_vst
   ACF(G)=ACF_vst("AFRCUR",G);
   MACF=MACF_vst("AFRCUR","%Sr%");
-  CFT(G,Y,Y2)=CFT_vst("AFRCUR",G,Y,Y2);
+  CFT(G,Forestage)=CFT_vst("AFRCUR",G,Forestage);
 $elseif.afftype %afftype%==cprevisit
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
 $load ACF MACF CFT
 $else.afftype
 $gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%_aez.gdx'
 $load ACF MACF CFT
+
 $endif.afftype
 
 *---- Management factor for Biocrop yield ---*
@@ -1068,7 +1070,7 @@ pr_price("BIO")$(OUTPUTALL_Nominal("%Sy%","ECR") AND OUTPUTAC("%Sy%","ECR","COM_
 
 * mil.$/ha/year = mil.$/ton * ton/(ha*year)
 pr(L,G)$(FLAGDM(L))= pr_price(L) * YIELD(L,G);
-pr("AFR",G)$(PB(G))= PB(G) + PGHG("%Sy%") * SUM(Y$(ordy("%Sy%")<=ordy(Y) and ordy(Y)<=ordy(Y)+YPP),CFT(G,Y,"%Sy%")/((1+DR)**(ordy(Y)-ordy("%Sy%")))) / YPP;
+pr("AFR",G)$(PB(G))= PB(G) + PGHG("%Sy%") * SUM(Y$(ordy("%Sy%")<=ordy(Y) and ordy(Y)<=ordy(Y)+YPP),sum(Forestage$(%Sy%-Y.val+10=Forestage.val),CFT(G,Forestage))/((1+DR)**(ordy(Y)-ordy("%Sy%")))) / YPP;
 
 * [mil. $]
 pc_input(L)$(SUM(A$MAP_LA(L,A),1))=SUM(A$MAP_LA(L,A),OUTPUTALL_Nominal("%Sy%",A));
@@ -1392,8 +1394,8 @@ GHGLG("Positive",L,G)$(LFRSGL(L) AND delta_Y(L,G)<0) = CS(G)*delta_Y(L,G) *GA(G)
 
 GHGLG("Negative",L,G)$(CSL(L) AND delta_Y(L,G)>0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1);
 *GHGLG("Negative",L,G)$(LFRSGL(L) AND delta_Y(L,G)>0) = LEC0("LE20","N") *delta_Y(L,G) *GA(G)/10**3;
-GHGLG("Negative",L,G)$(LFRSGL(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT_nat(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
-GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), CFT(G,"%Sy%",Y2)*delta_VY(Y2,L,G)) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LFRSGL(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT_nat(G,Forestage)))  *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
 
 GHGLG("Net",L,G)$(GHGLG("Positive",L,G)+GHGLG("Negative",L,G))= GHGLG("Positive",L,G)+GHGLG("Negative",L,G);
 GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G));
