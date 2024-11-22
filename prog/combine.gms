@@ -105,7 +105,7 @@ Ysupcuv(Y) year	/
 ST	/SSOLVE,SMODEL/
 SP	/SMCP,SNLP,SLP/
 Scol	/quantity,price,yield,area/
-Sacol	/cge,base,estimates/
+Sacol /estimated,base_raw,base_adjusted,cge/
 L land use type /
 PRM_SEC forest + grassland + pasture + fallow land
 FRSGL   forest + grassland
@@ -122,7 +122,6 @@ OL      ice or water
 RES	restoration land that was used for cropland or pasture and set aside for restoration
 
 * total
-AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD) for GHG calc
 LUC
 "LUC+BIO"
 
@@ -187,7 +186,7 @@ ABD_CUM	Cumulative gross abandoned land including restored area
 LCROPA(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO,CROP_FLW/
 LPAS(L)/PAS/
 LAFR(L)/AFR/
-LAFRTOT(L)/AFRTOT/
+
 LBIO(L)/BIO/
 LFRSGL(L)/FRSGL,FRS,GL/
 Lused(L)/MNGFRS,AFR,CL,CROP_FLW,BIO,PAS/
@@ -388,7 +387,7 @@ $load VYLY CSB_load=CSB
 
 Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 AreaLDM(R,Y,LDM)=SUM(L$MAP_LLDM(L,LDM),Area(R,Y,L));
-Area_base(R,L,"estimates")=Area(R,"%base_year%",L);
+Area_base(R,L,"estimated")=Area(R,"%base_year%",L);
 
 GHGL(Ragg,Y,EmitCat,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L));
 
@@ -396,7 +395,6 @@ CSB(R)=CSB_load(R,"%base_year%");
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
-VY_IJ(Y,L,I,J)$(FLAG_IJ(I,J) and LAFRTOT(L))=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYLY(R,Y,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 *------------------------------------------------------

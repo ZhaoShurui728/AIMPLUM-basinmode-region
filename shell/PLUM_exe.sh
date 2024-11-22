@@ -598,16 +598,6 @@ echo "Parent directory is ${parent_dir}"
 git config --global core.autocrlf false
 git config --global --add safe.directory ${rootdirorig}
 
-#Unzip large files
-targzlist=(visit_forest_growth_function)
-cat ../${parent_dir}/largefile/DataBiomass.* >> ../${parent_dir}/largefile/biomassdata.tar.gz  ##Original directory is zip by "tar czvf - biomass | split -d -b 50M - DataBiomass.tar.gz"
-for fl in ${targzlist[@]}
-do
-  if [ ! -e ../${parent_dir}/data/${fl}.gdx ]; then tar -zxvf ../${parent_dir}/largefile/${fl}.tar.gz -C ../${parent_dir}/data; fi
-done
-if [ ! -e ../${parent_dir}/data/biomass/data/rcp_grid.gdx ]; then tar zxfvmp ../${parent_dir}/largefile/biomassdata.tar.gz -C ../${parent_dir}/data; fi
-rm ../${parent_dir}/largefile/biomassdata.tar.gz
-
 #Submodule updates
 if [ -z "$(ls -A "../${parent_dir}/tools/PREDICTS_biodiversity" 2>/dev/null)" ]; then
   git submodule init
