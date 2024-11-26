@@ -2,7 +2,7 @@
 
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
-#YEAR0=(2010)
+YEAR0=(2010)
 # Set Global [on/off]
 global=off
 # if global=off, the following country code should be assigned
