@@ -474,7 +474,7 @@ MAP_AGGRE(V,V)  Left is aggregation of right/
 "Lan_Cov"	.	"Lan_Cov_Bui_Are"
 "Lan_Cov"	.	"Lan_Cov_Cro"
 "Lan_Cov"	.	"Lan_Cov_Frs"
-"Lan_Cov"	.	"Lan_Cov_Oth_Lan"
+*"Lan_Cov"	.	"Lan_Cov_Oth_Lan"
 "Lan_Cov"	.	"Lan_Cov_Oth_Nat_Lan"
 "Lan_Cov"	.	"Lan_Cov_Pst"
 "Lan_Cov_Cro_Irr"	.	"Lan_Cov_Cro_Cer_Irr"
