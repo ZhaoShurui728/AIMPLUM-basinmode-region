@@ -1,6 +1,5 @@
 #!/bin/bash
 cd `dirname $0`
-git config --global core.autocrlf false
 export gams_sys_dir=`which gams --skip-alias|xargs dirname`
 #to make scenario names mapping for netCDF files, ../${parent_dir}/data/scenariomap.txt should be used.
 
@@ -595,14 +594,18 @@ parent_dir=`basename ${PWD}`
 rootdirorig=$PWD
 echo "Parent directory is ${parent_dir}"
 
-#Submodule updates
+# Git Configuration
+git config --global core.autocrlf false
 git config --global --add safe.directory ${rootdirorig}
-git submodule init
-git submodule update
-cd ../${parent_dir}/tools/PREDICTS_biodiversity 
-git switch main
-cd ../../
 
+#Submodule updates
+if [ -z "$(ls -A "../${parent_dir}/tools/PREDICTS_biodiversity" 2>/dev/null)" ]; then
+  git submodule init
+  git submodule update
+  cd ../${parent_dir}/tools/PREDICTS_biodiversity 
+  git switch main
+  cd ../../
+fi
 # Settings
 ## load settings
 source ../${parent_dir}/shell/settings/settings_cout.sh  # default
@@ -631,9 +634,6 @@ do
   if [ ${CPUthreads} -gt ${NScMl} ]; then CPLEXThreadOp=${Th}; fi
 done
 echo "The number of CPLEX threads is ${CPLEXThreadOp}"
-
-# Git Configuration
-git config --global core.autocrlf input
 
 # Generate Directories
 makedirectory
