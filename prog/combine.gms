@@ -128,6 +128,8 @@ RES	restoration land that was used for cropland or pasture and set aside for res
 * total
 LUC
 "LUC+BIO"
+TOT total
+TOTwoOL total witout OL
 
 * forest subcategory (composition of FRS excl AFR)
 PRMFRS	primary forest
@@ -198,6 +200,7 @@ Lnat(L)/GL,UMNFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
 LABDCUM(L)/ABD_CUM/
 LRES(L)/RES/
+LTOT(L)/FRS,GL,CROP_FLW,CL,PAS,SL,OL,BIO,AFR/
 LDM land use type /
 *PRM_SEC other forest and grassland
 HAV_FRS production forest
@@ -392,6 +395,10 @@ $load VYLY CSB_load=CSB
 Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 AreaLDM(R,Y,LDM)=SUM(L$MAP_LLDM(L,LDM),Area(R,Y,L));
 Area_base(R,L,"estimated")=Area(R,"%base_year%",L);
+
+Area_base(R,"TOT",Sacol)=sum(L$LTOT(L),AREA_base(R,L,Sacol));
+Area_base(R,"TOTwoOL",Sacol)=sum(L$LTOT(L),AREA_base(R,L,Sacol))-AREA_base(R,"OL",Sacol);
+
 
 GHGL(Ragg,Y,EmitCat,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L));
 

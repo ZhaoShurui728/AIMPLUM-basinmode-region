@@ -115,7 +115,7 @@ NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
 NRFABDCUM	Net change in naturally regenerating managed forest area on abandoned land from base year
-NRGABDCUM	Net change in naturally regenerating managed grassland on abandoned land from base year 
+NRGABDCUM	Net change in naturally regenerating managed grassland on abandoned land from base year
 
 * degreaded soil
 CLDEGS	cropland with degraded soil

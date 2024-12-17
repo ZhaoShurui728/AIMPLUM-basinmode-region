@@ -82,3 +82,35 @@ LEC
 f_mg
 g_w
 ;
+
+* Land area check
+set
+G	Cell number (1 to 360*720) / 1 * 259200 /
+Y / 2005 /
+MAP_RG(R,G)	Relationship between country R and cell G
+
+;
+parameter
+GA(G)		Grid area of cell G kha
+Gland(G) Cell number excluding ocean
+frac_rcp(R,*,Y,G)	fraction of each gridcell G in land category L
+Area_base(*)
+;
+
+$gdxin '../%prog_loc%/data/data_prep.gdx'
+$load GA MAP_RG
+
+Gland(G)=SUM(R$MAP_RG(R,G),1);
+
+$gdxin '../%prog_loc%/data/land_map_luh2.gdx'
+$load frac_rcp=frac
+
+
+Area_base("TOT")=sum(G$Gland(G),GA(G));
+Area_base("TOTwoOL")=sum(G$Gland(G),GA(G)*(1-sum(R,frac_rcp(R,"OL","2005",G))));
+Area_base("OL")=sum((G)$Gland(G),GA(G)*sum(R,frac_rcp(R,"OL","2005",G)));
+
+*execute_unload '../%prog_loc%/data/data_prep2_check.gdx'
+*Area_base,Gland,GA;
+
+
