@@ -1,6 +1,6 @@
 #!/bin/sh
 #PBS -l ncpus=%%%4,mpiprocs=%%%4,mem=%%%5gb,host=hpc_c%%%1
-#PBS -M fujimori.shinichiro.8a@kyoto-u.ac.jp
+#PBS -M %%%6
 #PBS -m abe
 #PBS -N PLUM-%%%2
 #PBS -e ../../output/jobreport
