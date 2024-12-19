@@ -31,12 +31,7 @@ CL	cropland
 LRCP(L) /PRM_SEC,PAS,CL/
 LCS(L)	land category of emission calculated based on carbon stock
 LCF(L)	land category of emission calculated based on carbon flow
-G	Cell number (1 to 360*720) /
-* 1 * 259200
-$offlisting
-$include %prog_dir%/define\set_g\G_%Sr%.set
-$onlisting
-/
+G	Cell number (1 to 360*720)
 I	Vertical position	/ 1*360 /
 J	Horizontal position	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
@@ -46,6 +41,9 @@ Alias (Y,Y2,Y3);
 LCS(L)=YES;
 LCS("AFR")=NO;
 LCF("AFR")=YES;
+
+$gdxin '../%prog_loc%/define/subG.gdx'
+$load G=G_%Sr%
 
 $gdxin '%prog_dir%/data/data_prep.gdx'
 $load Map_GIJ

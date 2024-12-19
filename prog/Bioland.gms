@@ -30,10 +30,14 @@ $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 Set
 R       17 regions      /
 $include ../%prog_loc%/define/region/region17.set
-WLD,OECD90,REF,ASIA,MAF,LAM
+$include ../%prog_loc%/define/region/region5.set
+World,Non-OECD,ASIA2,R2OECD,R2NonOECD
+Industrial,Transition,Developing
 /
 Sr(R)/
-WLD,OECD90,REF,ASIA,MAF,LAM
+$include ../%prog_loc%/define/region/region5.set
+World,Non-OECD,ASIA2,R2OECD,R2NonOECD
+Industrial,Transition,Developing
 /
 G       Cell number excluding ocean (Gland)
 Y year  /  %Sy%  /
@@ -313,7 +317,7 @@ $ifthen %bioscm%==BSP
 *YBIO(G)$(PBIO(G,LB)<%PBIOEXOP0%)=RAREA_BIOP(G);
 
 VYBIO.FX(G,LB)$(PBIO(G,LB)>%PBIOEXOP0%)=0;
-$if not %biodiversity%==off VYBIO.FX(SUBG(G),LB)=0�G
+$if not %biodiversity%==off VYBIO.FX(SUBG(G),LB)=0;
 
 EQVQ..  VQ =E= SUM(LB,SUM(G$(BIOENE(G) AND RAREA_BIOP(G) AND (PBIO(G,LB)<=%PBIOEXOP0%)), BIOENE(G) * GA(G) * VYBIO(G,LB))) / 10**6;
 EQVYBIO(G)$(BIOENE(G) AND RAREA_BIOP(G))..      SUM(LB$(PBIO(G,LB)<=%PBIOEXOP0%),VYBIO(G,LB)) =L= RAREA_BIOP(G);

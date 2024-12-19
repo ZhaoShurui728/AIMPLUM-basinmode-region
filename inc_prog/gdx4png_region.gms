@@ -1,5 +1,5 @@
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/analysis/%Sy%.gdx'
-$load VY_load
+$load VY_load=VYL
 $if %supcuv%==on $load Rarea_bio
 $if %supcuv%==on VY_load("BIOP",G)$Rarea_bio(G)=Rarea_bio(G);
 
@@ -33,6 +33,6 @@ $endif
 $ifthen.dif %dif%==on
 $ifthen.b not %Sy%==2005
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/analysis/%base_year%.gdx'
-$load VY_1=VY_load
+$load VY_1=VYL
 $endif.b
 $endif.dif

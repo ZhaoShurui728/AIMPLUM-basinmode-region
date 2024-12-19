@@ -15,7 +15,7 @@ CS(G)
 
 $ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/%pre_year%.gdx'
 $       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/%pre_year%.gdx'
-$       load Y_pre%1=VY_load
+$       load Y_pre%1=VYL
 $else.fileex
 Y_pre%1(LCL,G)=0;
 $endif.fileex
@@ -30,7 +30,7 @@ $endif.fileex
 $ifthen exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/%Sy%.gdx'
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/%Sy%.gdx'
 *$load PBIO%1=PBIO RAREA_BIOP%1=RAREA_BIOP
-$load VYL%1=VY_load
+$load VYL%1=VYL
 $load pa_bio%1=pa_bio pc%1=pc CS%1=CS
 
 $else

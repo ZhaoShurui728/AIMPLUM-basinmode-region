@@ -10,13 +10,13 @@ VYLAFR_nocc%1(LAFR,G)
 ;
 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/analysis/%Sy%.gdx'
-$load VY_load%1=VY_load
+$load VY_load%1=VYL
 
 VY_load(L,G)$VY_load%1(L,G)=VY_load%1(L,G);
 
 $ifthen.y2005 not %Sy%==2005 
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/analysis/%base_year%.gdx'
-$load VY_1%1=VY_load
+$load VY_1%1=VYL
 VY_1(L,G)$VY_1%1(L,G)=VY_1%1(L,G);
 $endif.y2005
 
@@ -48,7 +48,7 @@ $ontext
 $ifthen not %IAV%==NoCC
 
 $gdxin '%prog_dir%/../output/gdx/%SCE%_%CLP%_NoCC/%1/analysis/%Sy%.gdx'
-$load VYLAFR_nocc%1=VY_load
+$load VYLAFR_nocc%1=VYL
 
 VYLAFR_nocc(G)$VYLAFR_nocc%1("AFR",G)=VYLAFR_nocc%1("AFR",G);
 

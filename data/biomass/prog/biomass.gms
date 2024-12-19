@@ -11,12 +11,7 @@ R	17 regions	/
 Y 	year	/ %base_year%*%end_year% /
 YBASE(Y)/ %base_year% /
 LRCP /PRM_SEC,PAS,CL/
-G	grid number (1 to 360*720) /
-* 1 * 259200
-$offlisting
-$include %prog_dir%/define\set_g\G_%Sr%.set
-$onlisting
-/
+G	grid number (1 to 360*720)
 I	Vertical position	/ 1*360 /
 J	Horizontal position	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
@@ -26,6 +21,9 @@ parameter
 ordy(Y)
 ;
 ordy(Y) = ord(Y) + %base_year% -1;
+
+$gdxin '../%prog_loc%/define/subG.gdx'
+$load G=G_%Sr%
 
 *--- base-year carbon stock map
 
