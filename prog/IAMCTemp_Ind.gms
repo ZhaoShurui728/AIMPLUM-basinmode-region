@@ -14,6 +14,7 @@ $setglobal Livestockout_exe off
 $setglobal WWFlandout_exe off
 $setglobal wwfopt 1
 $setglobal agmip on
+$setglobal Ystep0 10
 
 set
 R	17 regions	/
@@ -398,14 +399,10 @@ NRGABDCUM	.	"Lan_Cov_Oth_Nat_Rec"
 NRGABDCUM	.	"Lan_Cov_Oth_Nat_Res"
 
 DEF	.	"Frs_Are_Cha_Def"
-AFR	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"
-/
-MapAreChaIAMPC(L,V)/
-PLNFRS	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"
-NRMFRS	.       "Frs_Are_Cha_Frs_Exp_Sec"
 /
 
-U/"million ha","Mt CO2/yr","million head","%"/
+
+U/"million ha","Mt CO2/yr","million head","%","million ha/yr"/
 MapEmisIAMPC(L,V,EmitCat)/
 *AIMPLUM code	.	zz	.	EmitCat with zz
 *	.	"Emi_CO2_Lan_Use_Flo_Pos_Emi"	.	"Positive"
@@ -466,8 +463,27 @@ Car_Seq_Lan_Use_Soi_Car_Man_Gra
 "Car_Rem_Lan_Use_Soi_Car_Man"	"Carbon Removal|Land Use|Soil Carbon Management"
 "Car_Rem_Lan_Use_Soi_Car_Man_Cro"	"Carbon Removal|Land Use|Soil Carbon Management|Cropland"
 "Car_Rem_Lan_Use_Soi_Car_Man_Gra"	"Carbon Removal|Land Use|Soil Carbon Management|Grassland"
-
-
+/
+MapAreChaIAMPC(L,V)/
+AFR	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"
+PLNFRS	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"
+NRMFRS	.       "Frs_Are_Cha_Frs_Exp_Sec"
+/
+FAC_Var(V) Annual forest area chagne/
+"Frs_Are_Cha"	"Forest Area Change"
+"Frs_Are_Cha_Def"	"Forest Area Change|Deforestation"
+"Frs_Are_Cha_Def_Prm"	"Forest Area Change|Deforestation|Primary"
+"Frs_Are_Cha_Def_Sec"	"Forest Area Change|Deforestation|Secondary"
+"Frs_Are_Cha_Frs_Exp"	"Forest Area Change|Forest Expansion"
+"Frs_Are_Cha_Frs_Exp_Pla"	"Forest Area Change|Forest Expansion|Planted"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat"	"Forest Area Change|Forest Expansion|Planted|Natural"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat_Oth"	"Forest Area Change|Forest Expansion|Planted|Natural|Other"
+"Frs_Are_Cha_Frs_Exp_Pla_Nat_ReA"	"Forest Area Change|Forest Expansion|Planted|Natural|ReAfforestation"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla"	"Forest Area Change|Forest Expansion|Planted|Plantation"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"	"Forest Area Change|Forest Expansion|Planted|Plantation|ReAfforestation"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla_Tim"	"Forest Area Change|Forest Expansion|Planted|Plantation|Timber"
+"Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"	"Forest Area Change|Forest Expansion|Planted|Plantation|Other"
+"Frs_Are_Cha_Frs_Exp_Sec"	"Forest Area Change|Forest Expansion|Secondary"
 /
 MAP_AGGRE(V,V)  Left is aggregation of right/
 *upper	.	lower
@@ -519,6 +535,12 @@ MAP_AGGRE(V,V)  Left is aggregation of right/
 "Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Sec_Frs"
 /
 ;
+parameter
+Ystep(Y)
+;
+Ystep(Y)=%Ystep0%;
+$if %Ystep0%==10 Ystep("2010")=5;
+
 Alias(V,V2);
 parameter
 GHGL(R,Y,EmitCat,L)	MtCO2 per year in region R
@@ -550,7 +572,7 @@ GHG(R,Y,*,SMODEL)	GHG emission of land category L in year Y [MtCO2 per year]
 AREA(R,Y,L,SMODEL)	Regional area of land category L [kha]
 IAMCTemp(R,V,U,Y)
 IAMCTempwoU(R,V,Y)
-AreCha(R,Y,L,SMODEL)	Area change of land category L [kha]
+AreCha(R,Y,L,SMODEL)	Annual change in area of land category L [kha per year]
 ;
 
 $gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
@@ -581,12 +603,14 @@ AREA(R,Y,"DEGCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_loa
 
 AREA(R2,Y,L,SMODEL)$SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL))=SUM(R$MAP_RAGG(R,R2),AREA(R,Y,L,SMODEL));
 
-AreCha(R,Y,L,SMODEL)$(AREA(R,Y,L,SMODEL) and AREA(R,Y-1,L,SMODEL))=AREA(R,Y,L,SMODEL)-AREA(R,Y-1,L,SMODEL);
+AreCha(R,Y,L,SMODEL)$(AREA(R,Y,L,SMODEL) and AREA(R,Y-1,L,SMODEL) and Ystep(Y))=(AREA(R,Y,L,SMODEL)-AREA(R,Y-1,L,SMODEL))/Ystep(Y);
 
-IAMCTemp(R,V,"million ha",Y)$(SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM")))=SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
+IAMCTemp(R,V,"million ha",Y)$(SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM")) and not FAC_Var(V))=SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000;
+IAMCTemp(R,V,"million ha/yr",Y)$(FAC_Var(V) and Ystep(Y))=SUM(L$(MapAreaIAMPC(L,V)),AREA(R,Y,L,"LUM"))/1000/Ystep(Y);
+
 IAMCTemp(R,"Lan_Cov_Frs_Frs_Old","million ha",Y)$(AREA(R,"%base_year%","FRS","LUM"))=(AREA(R,"%base_year%","FRS","LUM")-AREA(R,Y,"DEFCUM","LUM"))/1000;
 
-IAMCTemp(R,V,"million ha",Y)$(SUM(L$(MapAreChaIAMPC(L,V)),AreCha(R,Y,L,"LUM"))>0)=SUM(L$(MapAreChaIAMPC(L,V)),AreCha(R,Y,L,"LUM"))/1000;
+IAMCTemp(R,V,"million ha/yr",Y)$(SUM(L$(MapAreChaIAMPC(L,V)),AreCha(R,Y,L,"LUM"))>0)=SUM(L$(MapAreChaIAMPC(L,V)),AreCha(R,Y,L,"LUM"))/1000;
 
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
 IAMCTemp(R,"Emi_CO2_Lan_Use_Flo_Pos_Emi_Lan_Use_Cha","Mt CO2/yr",Y)=GHG(R,Y,"Emissions","LUM");
