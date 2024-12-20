@@ -355,8 +355,8 @@ VYL("NRMFRS",G)$(VYL("SECFRS",G))=VYL("SECFRS",G)-VYL("PLNFRS",G);
 VYL("SECGL",G)$(VYL("GL",G)) = min(frac_rcp("%Sr%","SECGL","%base_year%",G),VYL("GL",G));
 VYL("PRMGL",G)$(VYL("GL",G)) = VYL("GL",G) - VYL("SECGL",G);
 
-VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
-VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
+*VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+*VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 delta_VY("%Sy%",L,G)=0;
 
@@ -391,10 +391,10 @@ VYL("PLNFRS",G)$(VYL("FRS",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF"
 VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL_pre("SECGL",G));
 
-VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
-VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+*VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
+*VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
 
-VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
+*VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
 
 VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 

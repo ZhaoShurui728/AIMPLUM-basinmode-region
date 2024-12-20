@@ -106,6 +106,10 @@ RES	restoration land that was used for cropland or pasture and set aside for res
 TOT	Total
 LUC
 
+* grassland subcategory
+MNGPAS	managed pasture
+RAN	rangeland
+
 * crop types with irrigation/rainfed
 PDRIR	rice irrigated
 WHTIR	wheat irrigated
@@ -1305,7 +1309,7 @@ $endif
 
 
 *------ Pasture -----------*
-$include ../%prog_loc%/inc_prog/pasture.gms
+$include ../%prog_loc%/inc_prog/pasture_range.gms
 *------ Crop fallow -----------*
 $include ../%prog_loc%/inc_prog/crop_fallow.gms
 
