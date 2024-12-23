@@ -10,7 +10,8 @@ FLAG_YIELD(G)	flag of grid where potential crop yields exist.
 RANarea total area of rangeland allocated
 MNGPASarea_poten total potenrial area of rangeland
 MNGPASarea total area of rangeland allocated
-ADD_MNGPAS additional area of managed pasture
+ADD_MNGPAS additional area to pasture in previous year or round
+ADD_RAN additional area to rangeland in previous year or round
 
 Y_MNGPASG(G) the rest of potential area fraction for managed pasture
 SF_PASG(G) potential incrase ratio at grid G
@@ -36,28 +37,33 @@ VYL("RAN",G)$((CS(G) OR FLAG_YIELD(G) and VYL("PRM_SEC",G)))=min(Y_pre("RAN",G),
 RANarea=SUM(G$(VYL("RAN",G)),VYL("RAN",G)*GA(G));
 * Fraction of potential area of manged pasture that is not allowed to locate in protected area
 VYL("MNGPAS",G)$((CS(G) OR FLAG_YIELD(G)) and VYL("PRM_SEC",G))=min(Y_pre("MNGPAS",G),VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G)));
-MNGPASarea_poten=SUM(G$(VYL("MNGPAS",G)),VYL("MNGPAS",G)*GA(G));
-
+MNGPASarea=SUM(G$(VYL("MNGPAS",G)),VYL("MNGPAS",G)*GA(G));
 Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G))>0)=VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G));
+Y_MNGPASG(G)$(Y_NPROT(G) - VYL("MNGPAS",G)>0)=Y_NPROT(G) - VYL("MNGPAS",G);
+MNGPASarea_poten=SUM(G$(Y_MNGPASG(G) and VYL("MNGPAS",G)),VYL("MNGPAS",G)*GA(G));
 
-ADD_MNGPAS=Planduse_pas-RANarea;
-
+ADD_RAN=Planduse_pas-RANarea;
+ADD_MNGPAS=Planduse_pas-RANarea-MNGPASarea;
 *execute_unload '../output/temp_pas_step0.gdx'
 
 
 * if pasture area is smaller than rangeland area in previous year, rangeland fraction is decreased at the same ratio.
-IF(ADD_MNGPAS<0,
+IF(ADD_RAN<=0,
 VYL("RAN",G)$(Y_pre("RAN",G) AND RANarea)=VYL("RAN",G)*Planduse_pas/RANarea;
 VYL("MNGPAS",G)=0;
 )
-
+* if pasture area is larger than rangeland area but smaller than pasure total in previous year, rangeland fraction keep at the same and managed pasture is decreased at the same ratio.
+IF(ADD_RAN>0 AND ADD_MNGPAS<=0,
+VYL("RAN",G)$(Y_pre("RAN",G))=VYL("RAN",G);
+VYL("MNGPAS",G)$(Y_pre("MNGPAS",G) AND MNGPASarea)=VYL("MNGPAS",G)*ADD_RAN/MNGPASarea;
+)
 *execute_unload '../output/temp_pas_step1.gdx'
 scalar iter;
 
 IteCounter=0;
 
 *###STEP2 (updated)
-While(((ADD_MNGPAS>0 AND SF_PAS>0)  AND IteCounter<=1000),
+While(((ADD_RAN>0 AND ADD_MNGPAS>0 AND SF_PAS>0)  AND IteCounter<=1000),
 Y_MNGPASG(G)=0;
 SF_PASG(G)=0;
 SF_PAS=0;
@@ -95,7 +101,7 @@ BacktoStep1	/0/
 
 IteCounter=0;
 *###STEP3-1
-While(((ADD_MNGPAS>0 AND BacktoStep1=0)  AND IteCounter<=1000),
+While(((ADD_RAN>0 AND ADD_MNGPAS>0 AND BacktoStep1=0)  AND IteCounter<=1000),
 PNBPAS(G)=0;
 AREA_NPAS=0;
 SF_PAS2=0;
@@ -135,5 +141,4 @@ IteCounter=IteCounter+1;
 
 VYL("PAS",G)$(VYL("RAN",G)+VYL("MNGPAS",G))=VYL("RAN",G)+VYL("MNGPAS",G);
 VYL("FRSGL",G)$(VYL("PRM_SEC",G)-VYL("PAS",G)>=0)=VYL("PRM_SEC",G)-VYL("PAS",G);
-
 *execute_unload '../output/temp_pas_step3.gdx'
