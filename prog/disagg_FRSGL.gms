@@ -418,12 +418,17 @@ parameter
   CFT(G,Forestage)             carbon flow in year Y of forest planted in year Y2 in grid G
   CFT_nat(G,Forestage)         carbon flow in year Y of natural forest generated in year Y2 in grid G
   CFT_vst(LVST,G,Forestage)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
-;
+  ACF_nat(G)         average carbon flow in forest lifetime of natural forest generated in grid G
+  ACF_vst(LVST,G)             average carbon flow in forest lifetime of natural forest generated in grid G (VISIT data)
+  
 
 $gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
-$load CFT_vst=CFTout
+$load CFT_vst=CFTout ACF_vst=ACFout
+;
 
   CFT_nat(G,Forestage)=CFT_vst("NaturalFRS",G,Forestage);
+  ACF_nat(G)=ACF_vst("NaturalFRS",G);
+
 $ifthen.afftype %afftype%==cact_vst
   CFT(G,Forestage)=CFT_vst("AFR00",G,Forestage);
 $elseif.afftype %afftype%==cdiv_vst
@@ -450,7 +455,7 @@ LDEF(L)/DEF/
 LDEG(L)/DEG/
 LCLDEGS(L)/CLDEGS/
 MAP_EMIAGG(L,L)/
-(AFR,NRFABDCUM,DEF,AGOFRS)	.	FRS
+(AFR,NRFABDCUM,DEF,AGOFRS,MNGFRS)	.	FRS
 (NRGABDCUM,DEG)	.	GL
 (FRS,GL,CL,CROP_FLW,PAS,SL,OL)	.	LUC
 (FRS,GL,CL,CROP_FLW,PAS,SL,OL,BIO)	.	"LUC+BIO"
@@ -513,7 +518,8 @@ NRFABDCUM
 LNLUC(L) land category excluded from LUC to avoid double accounting/
 BIO
 FRS
-MNGFRS
+GL
+*MNGFRS
 LUC
 /
 ;
@@ -545,11 +551,12 @@ $if not %Sy%==%base_year%	GHGLG("Positive",L,G)$(CSL(L) AND delta_Y(L,G)<0) = CS
 $if not %Sy%==%base_year%	GHGLG("Negative",L,G)$(CSL(L) AND delta_Y(L,G)>0) = CSL(L)*delta_Y(L,G) *GA(G) * 44/12 /10**3 * (-1)/Ystep;
 
 GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L,G) *GA(G) * 44/12 /10**3/Ystep;
-GHGLG("Negative",L,G)$(LMNGFRS(L))= -LEC0("G20","N") * VYL(L,G) *GA(G)/10**3 * (-1);
+GHGLG("Negative",L,G)$(LMNGFRS(L))= ACF_nat(G) * VYL(L,G) *GA(G)* 44/12/10**3 * (-1);
 
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
-$if %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
-$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT_nat(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
+*$if %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
+*$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT_nat(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
+GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT_nat(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LAGOFRS(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage)*0.1)) *GA(G)* 44/12 /10**3 * (-1);
 
 $ifthen.scs not %clp%==BaU
