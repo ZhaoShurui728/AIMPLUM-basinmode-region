@@ -21,6 +21,7 @@ R	17 regions	/
 $include ../%prog_loc%/define/region/region17exclNations.set
 $include ../%prog_loc%/define/region/region_iso.set
 $include ../%prog_loc%/define/region/region5.set
+$include ../%prog_loc%/define/region/region10.set
 World,Non-OECD,ASIA2,R2NonOECD,R2OECD
 Industrial,Transition,Developing
 $    ifthen.agmip %agmip%==on

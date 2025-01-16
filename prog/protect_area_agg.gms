@@ -12,12 +12,9 @@ $setglobal protectStartYear 2030
 set
 R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
+$include ../%prog_loc%/define/region/region5.set
+$include ../%prog_loc%/define/region/region10.set
 World
-R5ASIA
-"R5OECD90+EU"
-R5REF
-R5MAF
-R5LAM
 /
 set
 L land use type /

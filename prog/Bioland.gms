@@ -31,11 +31,13 @@ Set
 R       17 regions      /
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
+$include ../%prog_loc%/define/region/region10.set
 World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 /
 Sr(R)/
 $include ../%prog_loc%/define/region/region5.set
+$include ../%prog_loc%/define/region/region10.set
 World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 /
