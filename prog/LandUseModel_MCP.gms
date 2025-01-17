@@ -334,6 +334,7 @@ frsprotectarea	protected forest area (kha)
 CSB     carbon stock boundary in forest and grassland (MgC ha-1)
 C_TON	average carbon density of crops (tonne Carbon per tonne Crop) /0.5/
 YPNMAXCL	Maximum change in ratio of cropland area
+SLOPE(G)
 ;
 * if bioland on then FLAG_BIO should be zero to exclude BIO from allocation.
 FLAG_BIO(L)=1;
@@ -368,6 +369,7 @@ EQFRSPRT	Constraint for protected forest area in region
 EQYPMAX(G)	Constraint for maximum increase in area ratio of land category L in cell G
 EQYNMAX(G)	Constraint for maximum decrease in area ratio of land category L in cell G
 EQYPROTECTL(G,L)	Constraint for protected area of land category L in cell G
+EQYSLOPE(G)	Constraint on cropland distribution in steep (high slope) area
 ;
 
 *--Equation
@@ -405,6 +407,8 @@ EQYPROTECTL(G,L)$(protectfracL(G,L) and (not LPAS(L)))..        sum(L2$MAP_Laggp
 
 EQFRSPRT$(frsprotectarea)..	SUM(G$(CS(G)>CSB),VY("PRM_SEC",G)*GA(G)) =G= frsprotectarea;
 
+EQYSLOPE(G)..   SLOPE(G) =G= VY("PDRIR",G) + VY("WHTIR",G) + VY("GROIR",G) + VY("OSDIR",G) + VY("C_BIR",G) + VY("OTH_AIR",G) + VY("PDRRF",G) + VY("WHTRF",G) + VY("GRORF",G) + VY("OSDRF",G) + VY("C_BRF",G) + VY("OTH_ARF",G) + VY("BIO",G);
+
 
 MODEL
 LandUseModel/
@@ -415,6 +419,7 @@ EQLDM
 EQCDM
 EQYPRMFRS
 EQYAFR
+EQYSLOPE
 /
 LandUseModel_LP/
 EQYPN
@@ -432,6 +437,7 @@ EQYPROTECTL
 EQFRSPRT
 EQYPMAX
 EQYNMAX
+EQYSLOPE
 /
 
 ;
@@ -761,6 +767,8 @@ $load popdens_load=popdens
 popdens(G)=popdens_load("%Sy%","%SSP%",G);
 GDPCAP$Ppopulation("%Sy%","%Sr%")=GDP_load("%Sy%","%Sr%")/Ppopulation("%Sy%","%Sr%");
 
+$gdxin '../%prog_loc%/data/slopedata.gdx'
+$load slope=slope2
 *-------Pre-year land map load ----------*
 $ifthen.baseyear %Sy%==%base_year%
 *---Y_base preparation
