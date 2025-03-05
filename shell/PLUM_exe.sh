@@ -109,6 +109,7 @@ function BaseRunDisaggfrs() {
 }
 
 function Basesim() {
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo base year simulation starts for ${COUNTRY0[@]}
   rm ../output/txt/cpu/basesim/*.txt 2> /dev/null
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
@@ -175,6 +176,7 @@ function FuturesimRun() {
 function Futuresim() {
   rm ../output/txt/cpu/futuresim/* 2> /dev/null
   rm ../output/txt/cpu/futuresimpost/* 2> /dev/null
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo future scenario simulation is run
   if [ ${Sub_Futuresim_NormalRun} = "on" ]; then
   if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
@@ -213,6 +215,7 @@ function Futuresim() {
   wait
   fi
   if [ ${Sub_Futuresim_DisagrrFRS} = "on" ]; then
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "Disaggregation of forest area is executed" 
   for S in ${scn[@]}
   do
@@ -271,18 +274,18 @@ function ScnMergeRun() {
   cd ../../../../exe
   
   if [ ${Baserun} = "on" ]; then
-	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4  
+  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4
   fi
   if [ ${Restorecal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	
+    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
   fi
   if [ ${Livdiscal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	
+    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
   fi
   if [ ${Biocurvesort} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	
+    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
   fi
-
+  wait
   read -p "push any key";
   gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
   read -p "push any key";
@@ -295,6 +298,7 @@ function ScnMergeRun() {
 
 function ScnMerge() {
   rm ../output/txt/cpu/merge1/*.txt 2> /dev/null
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo scenario results merge
   
   for S in ${scn[@]}
@@ -364,6 +368,7 @@ function MergeResCSV4NCRun() {
 }
 
 function MergeResCSV4NC() {
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "make ASCII files for NetCDF"
   rm ../output/txt/cpu/merge2/*.txt 2> /dev/null
   for S in ${scn[@]} 
@@ -437,6 +442,7 @@ function netcdfgenRun() {
 }
 
 function netcdfgen() {
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "NetCDF generation starts"
   FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_ghg ncheader_livdis)
   for F in ${FileCopyList[@]} 
@@ -628,7 +634,7 @@ do
 done
 
 CPLEXThreadOp=1
-for Th in 2 3
+for Th in `seq 2 10`
 do
   NScMl=$((${NSc}*${Th}))
   if [ ${CPUthreads} -gt ${NScMl} ]; then CPLEXThreadOp=${Th}; fi
