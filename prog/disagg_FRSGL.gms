@@ -388,7 +388,7 @@ VYL("NRMFRS",G)$(VYL("FRS",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF"
 VYL("PLNFRS",G)$(VYL("FRS",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G);
 
 
-VYL("SECGL",G)$(CS_base(G))=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
+VYL("SECGL",G)=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL_pre("SECGL",G));
 
 *VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
