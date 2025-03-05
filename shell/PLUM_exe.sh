@@ -109,6 +109,7 @@ function BaseRunDisaggfrs() {
 }
 
 function Basesim() {
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo base year simulation starts for ${COUNTRY0[@]}
   rm ../output/txt/cpu/basesim/*.txt 2> /dev/null
   rm ../output/txt/cpu/basedsaggfrs/*.txt 2> /dev/null
@@ -175,6 +176,7 @@ function FuturesimRun() {
 function Futuresim() {
   rm ../output/txt/cpu/futuresim/* 2> /dev/null
   rm ../output/txt/cpu/futuresimpost/* 2> /dev/null
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo future scenario simulation is run
   if [ ${Sub_Futuresim_NormalRun} = "on" ]; then
   if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
@@ -213,6 +215,7 @@ function Futuresim() {
   wait
   fi
   if [ ${Sub_Futuresim_DisagrrFRS} = "on" ]; then
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "Disaggregation of forest area is executed" 
   for S in ${scn[@]}
   do
@@ -295,6 +298,7 @@ function ScnMergeRun() {
 
 function ScnMerge() {
   rm ../output/txt/cpu/merge1/*.txt 2> /dev/null
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo scenario results merge
   
   for S in ${scn[@]}
@@ -364,6 +368,7 @@ function MergeResCSV4NCRun() {
 }
 
 function MergeResCSV4NC() {
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "make ASCII files for NetCDF"
   rm ../output/txt/cpu/merge2/*.txt 2> /dev/null
   for S in ${scn[@]} 
@@ -437,6 +442,7 @@ function netcdfgenRun() {
 }
 
 function netcdfgen() {
+  echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "NetCDF generation starts"
   FileCopyList=(ncheader_all_lumip ncheader_all final ncheader_all_yield ncheader_all_aimssprcplu_landcategory ncheader_all_wwf ncheader_all_ghg ncheader_livdis)
   for F in ${FileCopyList[@]} 
@@ -628,7 +634,7 @@ do
 done
 
 CPLEXThreadOp=1
-for Th in 2 3
+for Th in `seq 2 10`
 do
   NScMl=$((${NSc}*${Th}))
   if [ ${CPUthreads} -gt ${NScMl} ]; then CPLEXThreadOp=${Th}; fi

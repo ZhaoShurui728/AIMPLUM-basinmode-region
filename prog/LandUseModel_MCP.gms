@@ -460,7 +460,7 @@ CCROP(C) crop commodities
 F(AC)  factors
 FL(AC) Land use AEZ
 Produnit /TON,C/
-LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
+LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH,AFF_FRS/
 LRCP(L) /HAV_FRS,PAS,OL/
 LRCPnonNat(L)/
 CL	cropland
@@ -1050,7 +1050,8 @@ PCDM0(Y,L)=0;
 
 * [1000ha]
 PLDM0(Y,LDM)$(LDMCROPB(LDM))=SUM(A$MAP_LDMA(LDM,A), Pland("%Sy%",A));
-PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
+PLDM0(Y,"AFR")$((NOT SUM(Y2,Planduse(Y2,"AFF_FRS"))) AND Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
+PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 
 *[tonne carbon]
 PCDM(L)$(PCDM0("%Sy%",L))=PCDM0("%Sy%",L);
