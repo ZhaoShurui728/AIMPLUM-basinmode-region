@@ -15,7 +15,7 @@ ADD_RAN additional area to rangeland in previous year or round
 
 Y_MNGPASG(G) the rest of potential area fraction for managed pasture
 SF_PASG(G) potential incrase ratio at grid G
-SF_PAS    minimium potential incrase ratio across all managed pasture grids 
+SF_PAS    minimium potential incrase ratio across all managed pasture grids
 R_ADD_MNGPAS increase ratio of total managed pasture area
 AREA_NPAS total area of Y_NPROT in neighborhood cells
 SF_PAS2
@@ -23,7 +23,7 @@ SF_PAS2
 
 * STEP0: dividing pasture (PAS) into managed pasture (MNGPAS) and rangeland (RAN)
 Y_pre("MNGPAS",G)$(Y_pre("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_pre("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
-Y_pre("RAN",G)$(Y_pre("PAS",G)) = Y_pre("PAS",G) - Y_pre("MNGPAS",G);
+Y_pre("RAN",G)$(Y_pre("PAS",G)) = max(0,Y_pre("PAS",G) - Y_pre("MNGPAS",G));
 
 
 * STEP1 (updated)

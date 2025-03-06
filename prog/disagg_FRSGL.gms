@@ -115,7 +115,7 @@ NRGABD	naturally regenerating managed grassland on abandoned land
 DEF	deforestion (decrease in forest area FRS from previou year)
 DEG	decrease in grassland area GL from previou year
 NRFABDCUM	Net change in naturally regenerating managed forest area on abandoned land from base year
-NRGABDCUM	Net change in naturally regenerating managed grassland on abandoned land from base year 
+NRGABDCUM	Net change in naturally regenerating managed grassland on abandoned land from base year
 
 * degreaded soil
 CLDEGS	cropland with degraded soil
@@ -400,7 +400,7 @@ VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 
 $endif.mng
 
-
+VYL(L,G)$(LSUM2(L))=VYL(L,G)/SUM(L2$LSUM2(L2),VYL(L2,G));
 
 
 *----Forest growth ratio
@@ -420,7 +420,7 @@ parameter
   CFT_vst(LVST,G,Forestage)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
   ACF_nat(G)         average carbon flow in forest lifetime of natural forest generated in grid G
   ACF_vst(LVST,G)             average carbon flow in forest lifetime of natural forest generated in grid G (VISIT data)
-  
+
 
 $gdxin '../%prog_loc%/data/visit_forest_growth_function.gdx'
 $load CFT_vst=CFTout ACF_vst=ACFout
