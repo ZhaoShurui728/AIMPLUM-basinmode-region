@@ -142,5 +142,5 @@ IteCounter=IteCounter+1;
 );
 
 VYL("PAS",G)$(VYL("RAN",G)+VYL("MNGPAS",G))=VYL("RAN",G)+VYL("MNGPAS",G);
-VYL("FRSGL",G)$(VYL("PRM_SEC",G)-VYL("PAS",G)>=0)=VYL("PRM_SEC",G)-VYL("PAS",G);
+VYL("FRSGL",G)$(VYL("PRM_SEC",G)-VYL("PAS",G)>=0)=max(0,VYL("PRM_SEC",G)-VYL("PAS",G));
 *execute_unload '../output/temp_pas_step3.gdx'

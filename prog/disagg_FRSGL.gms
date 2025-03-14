@@ -123,6 +123,10 @@ CLDEGS	cropland with degraded soil
 LCROPB(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO/
 LPRMSEC(L)/PRM_SEC/
 LSUM(L)/AFR,CL,CROP_FLW,PAS,BIO,SL,OL/
+LSUM2(L)/AFR,CL,CROP_FLW,MNGPAS,RAN,BIO,SL,OL,PRMFRS,SECFRS,PRMGL,SECGL/
+LSUMFRS1(L)/MNGFRS,UMNFRS/
+LSUMFRS2(L)/NRMFRS,PLNFRS/
+LSUMFRS3(L)/PRMFRS,SECFRS/
 L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
 L_UNUSED(L)/SL,OL/
 LFRSGL(L)/FRSGL/
@@ -338,25 +342,25 @@ forest_planted_rate(G)$(forest_class_shareG("3",G))=(forest_class_shareG("31",G)
 
 $ifthen.mng %Sy%==%base_year%
 VYL("MNGFRS",G)$(VYL("FRS",G) and forest_management_shareG(G))=VYL("FRS",G)*forest_management_shareG(G);
-VYL("UMNFRS",G)$(VYL("FRS",G))=VYL("FRS",G)-VYL("MNGFRS",G);
+VYL("UMNFRS",G)$(VYL("FRS",G))=max(0,VYL("FRS",G)-VYL("MNGFRS",G));
 
 VYL("AGOFRS",G)$(VYL("CL",G) and forest_class_shareG("53",G))=min(VYL("CL",G), forest_class_shareG("53",G));
 
 *VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G) * forest_management_shareG(G));
 VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G));
-VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) - VYL("SECFRS",G);
+VYL("PRMFRS",G)$(VYL("FRS",G)) = max(0,VYL("FRS",G) - VYL("SECFRS",G));
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
 VYL("PLNFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*forest_planted_rate(G);
-VYL("NRMFRS",G)$(VYL("SECFRS",G))=VYL("SECFRS",G)-VYL("PLNFRS",G);
+VYL("NRMFRS",G)$(VYL("SECFRS",G))=max(0,VYL("SECFRS",G)-VYL("PLNFRS",G));
 
 
 
 VYL("SECGL",G)$(VYL("GL",G)) = min(frac_rcp("%Sr%","SECGL","%base_year%",G),VYL("GL",G));
-VYL("PRMGL",G)$(VYL("GL",G)) = VYL("GL",G) - VYL("SECGL",G);
+VYL("PRMGL",G)$(VYL("GL",G)) = max(0,VYL("GL",G) - VYL("SECGL",G));
 
 *VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
-*VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
+*VYL("RAN",G)$(VYL("PAS",G)) = max(0,VYL("PAS",G) - VYL("MNGPAS",G));
 
 delta_VY("%Sy%",L,G)=0;
 
@@ -375,21 +379,21 @@ VYL("DEF",G)$(delta_Y("FRS",G)<0)=delta_Y("FRS",G)*(-1);
 VYL("DEG",G)$(delta_Y("GL",G)<0)=delta_Y("GL",G)*(-1);
 
 * Deforestation happens in managed forest first then the rest in unmanaged forest
-VYL("MNGFRS",G)$(CS_base(G))         =VYL_pre("MNGFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("MNGFRS",G));
-VYL("UMNFRS",G)$(VYL_pre("UMNFRS",G))=VYL_pre("UMNFRS",G)                -max(0,VYL("DEF",G)-VYL_pre("MNGFRS",G));
+VYL("MNGFRS",G)$(CS_base(G))         =max(0,VYL_pre("MNGFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("MNGFRS",G)));
+VYL("UMNFRS",G)$(VYL_pre("UMNFRS",G))=max(0,VYL_pre("UMNFRS",G)                -max(0,VYL("DEF",G)-VYL_pre("MNGFRS",G)));
 
 VYL("AGOFRS",G)$(VYL("CL",G) and VYL_pre("AGOFRS",G))=min(VYL("CL",G), VYL_pre("AGOFRS",G));
 
 * Deforestation happens in secondary forest first then the rest in primary forest
-VYL("SECFRS",G)$(CS_base(G))=VYL_pre("SECFRS",G) +VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G));
-VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G));
+VYL("SECFRS",G)$(CS_base(G))=max(0,VYL_pre("SECFRS",G) +VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G)));
+VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = =max(0,VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G)));
 
-VYL("NRMFRS",G)$(VYL("FRS",G))=VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*(1-forest_planted_rate(G));
-VYL("PLNFRS",G)$(VYL("FRS",G))=VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G);
+VYL("NRMFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*(1-forest_planted_rate(G)));
+VYL("PLNFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G));
 
 
 VYL("SECGL",G)=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
-VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL_pre("SECGL",G));
+VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = max(0,VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL_pre("SECGL",G)));
 
 *VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
 *VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
@@ -400,7 +404,10 @@ VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 
 $endif.mng
 
-VYL(L,G)$(LSUM2(L))=VYL(L,G)/SUM(L2$LSUM2(L2),VYL(L2,G));
+VYL(L,G)$(LSUM2(L) and SUM(L2$LSUM2(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUM2(L2),VYL(L2,G));
+VYL(L,G)$(LSUMFRS1(L) and SUM(L2$LSUMFRS1(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUMFRS1(L2),VYL(L2,G))*VYL("FRS",G);
+VYL(L,G)$(LSUMFRS2(L) and SUM(L2$LSUMFRS2(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUMFRS2(L2),VYL(L2,G))*VYL("SECFRS",G);
+VYL(L,G)$(LSUMFRS3(L) and SUM(L2$LSUMFRS3(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUMFRS3(L2),VYL(L2,G))*VYL("FRS",G);
 
 
 *----Forest growth ratio

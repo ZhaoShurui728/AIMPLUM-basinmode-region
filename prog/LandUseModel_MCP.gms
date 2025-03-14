@@ -34,7 +34,7 @@ $setglobal CPLEXThreadOp 3
 *'cact_vst' assuming actual current forest type calcuated by VISIT.
 *'cmax_vst' assuming forest type with maximum forest carbon flow (sink)calcuated by VISIT.
 *'off' assuming afforestation's carbon sink estimated by AEZ.
-$setglobal afftype off
+$setglobal afftype ccur_vst
 
 * FAO FRA protection
 $setglobal frsprotectexpand off
