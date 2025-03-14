@@ -145,7 +145,6 @@ OSD	oil crops
 C_B	sugar crops
 OTH_A	other crops
 
-TOT total
 /
 MAP_LLDM(L,LDM)/
 PRM_SEC	.	PRM_SEC
@@ -179,7 +178,6 @@ LCROPRF(L)/PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
 LDMCROPB(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO/
 LDMCROP(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A/
-LDMTOT(LDM)/PRM_SEC,CROP_FLW,CL,PAS,SL,OL,BIO/
 LFRS(L)/PRM_SEC,HAV_FRS,AFR/
 LPRMSEC(L)/PRM_SEC/
 LFRSGL(L)/FRSGL/
@@ -462,7 +460,7 @@ CCROP(C) crop commodities
 F(AC)  factors
 FL(AC) Land use AEZ
 Produnit /TON,C/
-LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH/
+LCGE 	land use category in AIMCGE /CROP, PRM_FRS, MNG_FRS, CROP_FLW, GRAZING, GRASS,BIOCROP,URB,OTH,AFF_FRS/
 LRCP(L) /HAV_FRS,PAS,OL/
 LRCPnonNat(L)/
 CL	cropland
@@ -812,6 +810,7 @@ Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr%",G))= SSP_frac("SL","%Sy%","%Sr%",G);
 
 *---adjust exogenous variables to satisfy constraint
 Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
+
 *Y_pre("OL",G)$(Y_pre("OL",G)>max(0,1-Y_pre("CL",G)-Y_pre("PAS",G)-Y_pre("SL",G)-Y_pre("CROP_FLW",G)))=max(0,1-Y_pre("CL",G)-Y_pre("PAS",G)-Y_pre("SL",G)-Y_pre("CROP_FLW",G));
 
 
@@ -1051,7 +1050,8 @@ PCDM0(Y,L)=0;
 
 * [1000ha]
 PLDM0(Y,LDM)$(LDMCROPB(LDM))=SUM(A$MAP_LDMA(LDM,A), Pland("%Sy%",A));
-PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
+PLDM0(Y,"AFR")$((NOT SUM(Y2,Planduse(Y2,"AFF_FRS"))) AND Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
+PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 
 *[tonne carbon]
 PCDM(L)$(PCDM0("%Sy%",L))=PCDM0("%Sy%",L);
@@ -1490,7 +1490,6 @@ $if %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*SSP_frac("SL","%
   AREA_base("CROP_FLW","cge")=Planduse("%Sy%","CROP_FLW");
   AREA_base("SL","cge")=Planduse("%Sy%","URB");
 
-  AREA_base("TOT",Sacol)=sum(LDM$LDMTOT(LDM),AREA_base(LDM,Sacol));
 
 execute_unload '../output/gdx/base/%Sr%/basedata.gdx'
 plcc roaddens GL GLMIN0
