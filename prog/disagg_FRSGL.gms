@@ -386,7 +386,7 @@ VYL("AGOFRS",G)$(VYL("CL",G) and VYL_pre("AGOFRS",G))=min(VYL("CL",G), VYL_pre("
 
 * Deforestation happens in secondary forest first then the rest in primary forest
 VYL("SECFRS",G)$(CS_base(G))=max(0,VYL_pre("SECFRS",G) +VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G)));
-VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) = =max(0,VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G)));
+VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) =max(0,VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G)));
 
 VYL("NRMFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*(1-forest_planted_rate(G)));
 VYL("PLNFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G));
