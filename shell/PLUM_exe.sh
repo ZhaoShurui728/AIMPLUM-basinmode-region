@@ -174,27 +174,30 @@ function FuturesimRun() {
 
 
 function Futuresim() {
-  rm ../output/txt/cpu/futuresim/* 2> /dev/null
-  rm ../output/txt/cpu/futuresimpost/* 2> /dev/null
   echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo future scenario simulation is run
   if [ ${Sub_Futuresim_NormalRun} = "on" ]; then
-  if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
-    for A in ${COUNTRY0[@]}
-    do
-    echo "Region ${A} simulation has been started." 
-      FuturesimRun ${parent_dir} ${A} scn YEAR0 ${CPLEXThreadOp}  > ../output/log/futuresim_${A}.log 2>&1 &
-      LoopmultiCPU 5 COUNTRY0 "futuresim" ${CPUthreads}
-    done
-  elif [ ${Sub_Futuresim_Loop} = "SCN" ]; then 
-    for S in ${scn[@]}
-    do
-      echo "scenario ${S} simulation has been started." 
-      FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
-      LoopmultiCPU 5 scn "futuresim" ${CPUthreads}
-    done
-	
-  fi
+    if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
+      for A in ${COUNTRY0[@]};    do
+        rm ../output/txt/cpu/futuresim/${A}.txt 2> /dev/null
+        rm ../output/txt/cpu/futuresim/end_${A}.txt 2> /dev/null
+      done
+      for A in ${COUNTRY0[@]};    do
+        echo "Region ${A} simulation has been started." 
+        FuturesimRun ${parent_dir} ${A} scn YEAR0 ${CPLEXThreadOp}  > ../output/log/futuresim_${A}.log 2>&1 &
+        LoopmultiCPU 5 COUNTRY0 "futuresim" ${CPUthreads}
+      done
+    elif [ ${Sub_Futuresim_Loop} = "SCN" ]; then 
+      for S in ${scn[@]};    do
+        rm ../output/txt/cpu/futuresim/${S}.txt ../output/txt/cpu/futuresim/end_${S}.txt 2> /dev/null
+      done
+      for S in ${scn[@]};    do
+        echo "scenario ${S} simulation has been started." 
+        FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
+        LoopmultiCPU 5 scn "futuresim" ${CPUthreads}
+      done
+    
+    fi
   fi
   wait
   echo "All future simulations have been done. Post process is running"
@@ -297,12 +300,13 @@ function ScnMergeRun() {
 }
 
 function ScnMerge() {
-  rm ../output/txt/cpu/merge1/*.txt 2> /dev/null
   echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo scenario results merge
-  
-  for S in ${scn[@]}
-  do	
+  for S in ${scn[@]};  do	
+    rm ../output/txt/cpu/merge1/${S}.txt 2> /dev/null
+    rm ../output/txt/cpu/merge1/end_${S}.txt 2> /dev/null
+  done  
+  for S in ${scn[@]};  do	
     ScnMergeRun ${parent_dir} ${S} COUNTRY0 ${Sub_ScnMerge_Baserun} ${Sub_ScnMerge_Restorecal} ${Sub_ScnMerge_Livdiscal} ${Sub_ScnMerge_BiocurveSort} ${WWFrestore_iamc} ${Livestock_iamc}  > ../output/log/ScnmergeRun_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "merge1" ${CPUthreads}
   done
@@ -370,9 +374,10 @@ function MergeResCSV4NCRun() {
 function MergeResCSV4NC() {
   echo `date +"%m-%d-%y-%H-%M-%S"` 
   echo "make ASCII files for NetCDF"
-  rm ../output/txt/cpu/merge2/*.txt 2> /dev/null
-  for S in ${scn[@]} 
-  do
+  for S in ${scn[@]};   do
+    rm ../output/txt/cpu/merge2/${S}.txt ../output/txt/cpu/merge2/end_${S}.txt 2> /dev/null
+  done
+  for S in ${scn[@]};   do
     MergeResCSV4NCRun ${parent_dir} ${S} ${Sub_MergeResCSV4NC_basecsv} ${Sub_MergeResCSV4NC_BTC3option} ${Sub_MergeResCSV4NC_lumip} ${Sub_MergeResCSV4NC_bioyielcal} ${Sub_MergeResCSV4NC_ssprcp} ${Sub_MergeResCSV4NC_carseq} ${Sub_MergeResCSV4NC_livdiscal} > ../output/log/MergeResCSV4NCRun_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "merge2" ${CPUthreads}
   done
@@ -556,10 +561,10 @@ function gdx4pngRun() {
 }
 
 function gdx4png() {
-  rm ../output/txt/cpu/gdx4png/*.txt 2> /dev/null
-  
-  for S in ${scn[@]} 
-  do
+  for S in ${scn[@]};   do
+    rm ../output/txt/cpu/gdx4png/end_${S}.txt ../output/txt/cpu/gdx4png/${S}.txt 2> /dev/null
+  done  
+  for S in ${scn[@]};  do
     gdx4pngRun ${parent_dir} ${S} YearListFig ${global} COUNTRY0 ${Sub_gdx4png_dif} > ../output/log/gdx4png_${S}.log 2>&1 &
     LoopmultiCPU 5 scn "gdx4png" ${CPUthreads}
   done
