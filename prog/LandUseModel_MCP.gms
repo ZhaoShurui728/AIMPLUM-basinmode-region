@@ -781,6 +781,8 @@ Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_bas
 *Y_base("CROP_FLW",G)$(Y_base("CROP_FLW",G)<0)=0;
 Y_base("OL",G)$(Y_base("OL",G)>max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G)))=max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G));
 GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
+Y_base("MNGPAS",G)$(Y_base("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_base("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+Y_base("RAN",G)$(Y_base("PAS",G)) = max(0,Y_base("PAS",G) - Y_base("MNGPAS",G));
 
 *--- Y_pre
   Y_pre(L,G)$(Y_base(L,G))=Y_base(L,G);

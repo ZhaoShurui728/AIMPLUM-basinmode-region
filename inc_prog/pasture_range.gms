@@ -21,9 +21,9 @@ AREA_NPAS total area of Y_NPROT in neighborhood cells
 SF_PAS2
 ;
 
-* STEP0: dividing pasture (PAS) into managed pasture (MNGPAS) and rangeland (RAN)
-Y_pre("MNGPAS",G)$(Y_pre("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_pre("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
-Y_pre("RAN",G)$(Y_pre("PAS",G)) = max(0,Y_pre("PAS",G) - Y_pre("MNGPAS",G));
+* STEP0: dividing pasture (PAS) into managed pasture (MNGPAS) and rangeland (RAN) !! Moved to the main code.
+*Y_pre("MNGPAS",G)$(Y_pre("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_pre("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+*Y_pre("RAN",G)$(Y_pre("PAS",G)) = max(0,Y_pre("PAS",G) - Y_pre("MNGPAS",G));
 
 
 * STEP1 (updated)
