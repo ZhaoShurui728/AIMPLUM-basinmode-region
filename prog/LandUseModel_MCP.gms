@@ -1416,7 +1416,7 @@ GHGLG(EmitCat,"LUC",G)$(SUM(L$(not LBIO(L)),GHGLG(EmitCat,L,G)))= SUM(L$(not LBI
 GHGL(EmitCat,L)= SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
 
 *----- Change in carbon stock -----*
-CS_post(G)$(CS(G) AND GA(G)) = max(0, (CS(G) * GA(G) - GHGLG("Net","LUC",G) * Ystep *10**3 *12/44)/GA(G));
+CS_post(G)$(CS(G) AND GA(G)) = max(0, (CS(G) * GA(G) - GHGLG("Net","LUC",G) *10**3 *12/44)/GA(G));
 
 *----- Average yield output -----*
 YIELDL_OUT(L)$(LCROPA(L) AND SUM(G$(YIELD(L,G)*VYL(L,G)),VYL(L,G)*GA(G)))=SUM(G$(YIELD(L,G)*VYL(L,G)),YIELD(L,G)*VYL(L,G)*GA(G))/SUM(G$(YIELD(L,G)*VYL(L,G)),VYL(L,G)*GA(G));
