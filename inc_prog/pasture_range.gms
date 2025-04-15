@@ -36,9 +36,9 @@ Planduse_pas=Planduse("%Sy%","GRAZING");
 VYL("RAN",G)$((CS(G) OR FLAG_YIELD(G) and VYL("PRM_SEC",G)))=min(Y_pre("RAN",G),VYL("PRM_SEC",G));
 RANarea=SUM(G$(VYL("RAN",G)),VYL("RAN",G)*GA(G));
 * Fraction of potential area of manged pasture that is not allowed to locate in protected area
-VYL("MNGPAS",G)$((CS(G) OR FLAG_YIELD(G)) and VYL("PRM_SEC",G))=min(0,Y_pre("MNGPAS",G),VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G)));
+VYL("MNGPAS",G)$((CS(G) OR FLAG_YIELD(G)) and VYL("PRM_SEC",G))=max(0,min(Y_pre("MNGPAS",G),VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G))));
 MNGPASarea=SUM(G$(VYL("MNGPAS",G)),VYL("MNGPAS",G)*GA(G));
-Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G))>0)=VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G));
+Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G))>0)=max(0,VYL("PRM_SEC",G)-max(VYL("RAN",G),protect_wopas(G)));
 Y_MNGPASG(G)$(Y_NPROT(G) - VYL("MNGPAS",G)>0)=Y_NPROT(G) - VYL("MNGPAS",G);
 MNGPASarea_poten=SUM(G$(Y_MNGPASG(G) and VYL("MNGPAS",G)),VYL("MNGPAS",G)*GA(G));
 
@@ -77,7 +77,7 @@ SF_PASG(G)$(Y_MNGPASG(G) and VYL("MNGPAS",G))=Y_MNGPASG(G)/VYL("MNGPAS",G);
 SF_PAS=min(R_ADD_MNGPAS,smin(G$(SF_PASG(G)),SF_PASG(G)));
 
 *execute_unload '../output/temp_pas_step2-1.gdx'
-;
+*;
 VYL("MNGPAS",G)$(SF_PASG(G)) =VYL("MNGPAS",G)*(1+SF_PAS);
 
 Y_MNGPASG(G)=0;
