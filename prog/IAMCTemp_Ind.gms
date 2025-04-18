@@ -536,9 +536,12 @@ MAP_AGGRE(V,V)  Left is aggregation of right/
 "Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Prm_Frs"
 "Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Sec_Frs"
 /
+ST	/SSOLVE,SMODEL/
+SP	/SMCP,SNLP,SLP/
 ;
 parameter
 Ystep(Y)
+Psol_stat(R,Y,ST,SP)                  Solution report
 ;
 Ystep(Y)=%Ystep0%;
 $if %Ystep0%==10 Ystep("2010")=5;
@@ -551,6 +554,9 @@ Area_load(R,Y,L)
 AreaR(R,Y,L,RISO)	Regional area of land category L in RISO category [kha]
 Ter_Bio_BII(R,Y)
 ;
+
+$gdxin '../output/gdx/results/cbnal_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$load Psol_stat
 
 $gdxin '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGL GHGLR
@@ -729,7 +735,7 @@ $endif.wwflandout
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 
 execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU;
+GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU,Psol_stat;
 
 
 
