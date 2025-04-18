@@ -22,6 +22,7 @@ output/txt/cpu/merge2
 output/txt/cpu/gdx4png
 output/txt/cpu/basedsaggfrs
 output/txt/cpu/futuresimpost
+output/txt/cpu/disagrfrs
 output/lst
 output/lst/Basesim
 output/lst/Futuresim
