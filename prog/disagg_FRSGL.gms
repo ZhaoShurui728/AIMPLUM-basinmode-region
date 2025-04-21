@@ -122,13 +122,13 @@ CLDEGS	cropland with degraded soil
 /
 LCROPB(L)/PDRIR,WHTIR,GROIR,OSDIR,C_BIR,OTH_AIR,PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF,BIO/
 LPRMSEC(L)/PRM_SEC/
-LSUM(L)/AFR,CL,CROP_FLW,PAS,BIO,SL,OL/
+*LSUM(L)/AFR,CL,CROP_FLW,PAS,BIO,SL,OL/
 LSUM2(L)/AFR,CL,CROP_FLW,MNGPAS,RAN,BIO,SL,OL,PRMFRS,SECFRS,PRMGL,SECGL/
 LSUMFRS1(L)/MNGFRS,UMNFRS/
 LSUMFRS2(L)/NRMFRS,PLNFRS/
 LSUMFRS3(L)/PRMFRS,SECFRS/
-L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
-L_UNUSED(L)/SL,OL/
+*L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
+*L_UNUSED(L)/SL,OL/
 LFRSGL(L)/FRSGL/
 LdeltaY(L)/FRS,GL,CL,PAS,BIO/
 LFRS(L)/FRS/
@@ -223,14 +223,14 @@ $endif
 
 $if %biocurve%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
 
-
+$ontext
 *----Total adjustment
 
 VYL(L,G)$(SUM(LL$(L_USEDTOTAL(LL)),VYL(LL,G)) AND NOT L_UNUSED(L))=VYL(L,G)*(1-SUM(LL$(L_UNUSED(LL)),VYL(LL,G)))/SUM(LL$(L_USEDTOTAL(LL)),VYL(LL,G));
 
 * Sum of pixel shares should be 1.
 VYL("FRSGL",G)$VYL("FRSGL",G)=1-sum(L$(LSUM(L) and (not sameas(L,"FRSGL"))),VYL(L,G));
-
+$offtext
 
 
 *--- Division into Forest and Grassland -----------
@@ -359,8 +359,8 @@ VYL("NRMFRS",G)$(VYL("SECFRS",G))=max(0,VYL("SECFRS",G)-VYL("PLNFRS",G));
 VYL("SECGL",G)$(VYL("GL",G)) = min(frac_rcp("%Sr%","SECGL","%base_year%",G),VYL("GL",G));
 VYL("PRMGL",G)$(VYL("GL",G)) = max(0,VYL("GL",G) - VYL("SECGL",G));
 
-*VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
-*VYL("RAN",G)$(VYL("PAS",G)) = max(0,VYL("PAS",G) - VYL("MNGPAS",G));
+VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+VYL("RAN",G)$(VYL("PAS",G)) = max(0,VYL("PAS",G) - VYL("MNGPAS",G));
 
 delta_VY("%Sy%",L,G)=0;
 
@@ -395,10 +395,10 @@ VYL("PLNFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("PLNFRS",G)                -min(VYL
 VYL("SECGL",G)=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = max(0,VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL_pre("SECGL",G)));
 
-*VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
-*VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
+VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= max(0,VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)));
 
-*VYL("RAN",G)$(VYL("PAS",G)) = VYL("PAS",G) - VYL("MNGPAS",G);
+VYL("RAN",G)$(VYL("PAS",G)) = max(0,VYL("PAS",G) - VYL("MNGPAS",G));
 
 VYL("CLDEGS",G)$(VYL("CL",G) and Soil_deg(G)) = min(VYL("CL",G),Soil_deg(G));
 

@@ -26,13 +26,16 @@ FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 Planduse_pas=Planduse("%Sy%","GRAZING");
 Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-protect_wopas(G)>0)=VYL("PRM_SEC",G)-protect_wopas(G);
 
-VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)>=Y_pre("PAS",G))=Y_pre("PAS",G);
-VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)<Y_pre("PAS",G))=Y_NPROT(G);
-Y_NPROTPASG(G)$(Y_NPROT(G) and Y_NPROT(G) - VYL("PAS",G)>SMALL)=Y_NPROT(G) - VYL("PAS",G);
+*VYL("PAS",G)$(Y_pre("PAS",G))=max(Y_NPROT(G),Y_pre("PAS",G));
+VYL("PAS",G)$(Y_pre("PAS",G))=Y_pre("PAS",G);
+*VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)>=Y_pre("PAS",G))=Y_pre("PAS",G);
+*VYL("PAS",G)$(Y_pre("PAS",G) AND Y_NPROT(G) AND Y_NPROT(G)<Y_pre("PAS",G))=Y_NPROT(G);
+Y_NPROTPASG(G)$(Y_NPROT(G))=max(0,Y_NPROT(G) - VYL("PAS",G));
 PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
 PASarea=SUM(G$VYL("PAS",G),VYL("PAS",G)*GA(G));
 
 ADD_PAS=Planduse_pas-PASarea;
+*execute_unload '../output/temp_pas_step0.gdx'
 
 * if pasture area decreases from previous year, pasture fraction is decreased at the same ratio.
 IF(ADD_PAS<0,
@@ -49,7 +52,7 @@ SF_PASG(G)=0;
 SF_PAS=0;
 R_ADD_PAS=0;
 
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
+Y_NPROTPASG(G)$(Y_NPROT(G))=max(0,Y_NPROT(G) - VYL("PAS",G));
 
 R_ADD_PAS$PASarea_NPROT=ADD_PAS/PASarea_NPROT;
 
@@ -60,7 +63,7 @@ SF_PAS=min(R_ADD_PAS,smin(G$(SF_PASG(G)),SF_PASG(G)));
 VYL("PAS",G)$(VYL("PAS",G) AND SF_PASG(G)) =VYL("PAS",G)*(1+SF_PAS);
 
 Y_NPROTPASG(G)=0;
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
+Y_NPROTPASG(G)$(Y_NPROT(G))=max(0,Y_NPROT(G) - VYL("PAS",G));
 
 PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
 
@@ -128,7 +131,7 @@ $offtext
 IteCounter=IteCounter+1;
 );
 
-
+*execute_unload '../output/temp_pas_step2.gdx';
 
 SF_PAS=1;
 IteCounter=0;
@@ -139,7 +142,7 @@ SF_PASG(G)=0;
 SF_PAS=0;
 R_ADD_PAS=0;
 
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
+Y_NPROTPASG(G)$(Y_NPROT(G))=max(0,Y_NPROT(G) - VYL("PAS",G));
 
 R_ADD_PAS$PASarea_NPROT=ADD_PAS/PASarea_NPROT;
 
@@ -150,7 +153,7 @@ SF_PAS=min(R_ADD_PAS,smin(G$(SF_PASG(G)),SF_PASG(G)));
 VYL("PAS",G)$(VYL("PAS",G) AND SF_PASG(G)) =VYL("PAS",G)*(1+SF_PAS);
 
 Y_NPROTPASG(G)=0;
-Y_NPROTPASG(G)$(Y_NPROT(G) and (Y_NPROT(G)-VYL("PAS",G))>SMALL)=Y_NPROT(G) - VYL("PAS",G);
+Y_NPROTPASG(G)$(Y_NPROT(G))=max(0,Y_NPROT(G) - VYL("PAS",G));
 
 PASarea_NPROT=SUM(G$(VYL("PAS",G) AND Y_NPROTPASG(G)),VYL("PAS",G)*GA(G));
 
@@ -162,4 +165,6 @@ IteCounter=IteCounter+1;
 );
 
 
-VYL("FRSGL",G)$(VYL("PRM_SEC",G)-VYL("PAS",G)>=0)=VYL("PRM_SEC",G)-VYL("PAS",G);
+VYL("FRSGL",G)$(VYL("PRM_SEC",G)-VYL("PAS",G))=max(0,VYL("PRM_SEC",G)-VYL("PAS",G));
+
+*execute_unload '../output/temp_pas_step3.gdx'
