@@ -186,6 +186,7 @@ LPAS(L)/PAS/
 LBIO(L)/BIO/
 LOBJ(L)
 LFIX(L)/SL,OL/
+LFRSGLPAS(L)/FRSGL,PAS/
 
 ;
 Alias (G,G2,G3,G4,G5,G6,G7,G8),(L,L2),(Y,Y2,Y3);
@@ -294,6 +295,8 @@ REVG(G) cells allowed for conversion/set.G/
 protect_cat	protection area categories/
 WDPA_KBA_Wu2019
 WildArea_KBA_WDPA_BTC
+protect_bs
+protect_all
 /
 ;
 Parameter
@@ -703,7 +706,7 @@ popdens(G)	population density (inhabitants per km2)
   VYPL(L,G)	output of VYP
   VZL(L,G)	output of VZ
   protect_wopas(G)
-  VY_baseresults(LFRSGL,G)
+  VY_baseresults(LFRSGLPAS,G)
   VYLY(Y,L,G)	land use in all the earlier years
   delta_VY(Y,L,G)	Changes in land use in all the earlier years
   CSL(L)	carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
@@ -843,7 +846,7 @@ $ if %degradedlandprotect%==off degradedland(G)=0;
   protectfrac(G)$(protectfrac(G)>Y_pre("PRM_SEC",G) or (popdens(G)<0.1))=Y_pre("PRM_SEC",G);
 
 * protect data aggregation in NoCC
-  protect_area("WDPA_KBA_Wu2019","TOT")=SUM(G,GA(G)*protectfrac(G));
+  protect_area("%WDPAprotect%","TOT")=SUM(G,GA(G)*protectfrac(G));
 
 $else.prtec
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'
@@ -1051,8 +1054,11 @@ PCDM0(Y,L)=0;
 
 * [1000ha]
 PLDM0(Y,LDM)$(LDMCROPB(LDM))=SUM(A$MAP_LDMA(LDM,A), Pland("%Sy%",A));
+*!!!TEMPORARY!!!
 PLDM0(Y,"AFR")$((NOT SUM(Y2,Planduse(Y2,"AFF_FRS"))) AND Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
 PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
+*PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
+*!!!TEMPORARY!!!
 
 *[tonne carbon]
 PCDM(L)$(PCDM0("%Sy%",L))=PCDM0("%Sy%",L);
@@ -1321,9 +1327,20 @@ $endif
 
 
 *------ Pasture -----------*
-$include ../%prog_loc%/inc_prog/pasture_range.gms
+$include ../%prog_loc%/inc_prog/pasture.gms
 *------ Crop fallow -----------*
 $include ../%prog_loc%/inc_prog/crop_fallow.gms
+
+*----Total adjustment
+set
+LSUM(L)/AFR,CL,CROP_FLW,PAS,BIO,SL,OL/
+L_USEDTOTAL(L)/PAS,CL,BIO,AFR,CROP_FLW,FRSGL/
+L_UNUSED(L)/SL,OL/
+;
+VYL(L,G)$(SUM(L2$(L_USEDTOTAL(L2)),VYL(L2,G)) AND NOT L_UNUSED(L))=VYL(L,G)*(1-SUM(L2$(L_UNUSED(L2)),VYL(L2,G)))/SUM(L2$(L_USEDTOTAL(L2)),VYL(L2,G));
+
+* Sum of pixel shares should be 1.
+VYL("FRSGL",G)$VYL("FRSGL",G)=1-sum(L$(LSUM(L) and (not sameas(L,"FRSGL"))),VYL(L,G));
 
 *------ Digit adjustment -----------*
 
