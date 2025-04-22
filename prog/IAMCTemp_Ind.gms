@@ -542,9 +542,19 @@ MAP_AGGRE(V,V)  Left is aggregation of right/
 "Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Prm_Frs"
 "Lan_Cov_Frs_Nat_Frs"	.	"Lan_Cov_Frs_Nat_Frs_Sec_Frs"
 /
+ST	/SSOLVE,SMODEL/
+SP	/SMCP,SNLP,SLP/
+protect_cat	protection area categories/
+WDPA_KBA_Wu2019
+WildArea_KBA_WDPA_BTC
+protect_bs
+protect_all
+/
 ;
 parameter
 Ystep(Y)
+Psol_stat(R,Y,ST,SP)                  Solution report
+protect_area(R,Y,protect_cat,L)	Regional aggregated protection area (kha)
 ;
 Ystep(Y)=%Ystep0%;
 $if %Ystep0%==10 Ystep("2010")=5;
@@ -558,6 +568,9 @@ AreaR(R,Y,L,RISO)	Regional area of land category L in RISO category [kha]
 Ter_Bio_BII(R,Y)
 ;
 
+$gdxin '../output/gdx/results/cbnal_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$load Psol_stat protect_area
+
 $gdxin '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load GHGL GHGLR
 $load Area_load=Area AreaR
@@ -566,6 +579,7 @@ $load Area_load=Area AreaR
 GHGL(RISO,Y,EmitCat,L)$sum(R,GHGLR(R,Y,EmitCat,L,RISO))=sum(R,GHGLR(R,Y,EmitCat,L,RISO));
 
 Area_load(RISO,Y,L)$sum(R,AreaR(R,Y,L,RISO))=sum(R,AreaR(R,Y,L,RISO));
+protect_area(R2,Y,protect_cat,L)=sum(R$MAP_RAGG(R,R2),protect_area(R,Y,protect_cat,L));
 
 *---GHG emissions
 
@@ -735,7 +749,7 @@ $endif.wwflandout
 IAMCTempwoU(R,V,Y)=SUM(U,IAMCTemp(R,V,U,Y));
 
 execute_unload '../output/gdx/comparison/%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU;
+GHG,GHGL,AREA,IAMCTemp,IAMCTempwoU,Psol_stat,protect_area;
 
 
 

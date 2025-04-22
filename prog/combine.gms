@@ -442,7 +442,6 @@ GHGLG
 GHGLR
 YIELDLDM_annual
 YIELDLDM_ratio
-Psol_stat
 ;
 
 

@@ -1210,6 +1210,9 @@ VYN.FX(L,G)$((NOT LPRMSEC(L)) AND ((SUM(LDM$MAP_LLDM(L,LDM),PLDM(LDM)-PLDM_load(
 VY.FX("SL",G)$(Y_pre("SL",G))=Y_pre("SL",G);
 VY.FX("OL",G)$(Y_pre("OL",G))=Y_pre("OL",G);
 
+VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND CS(G)>=CSB)=0;
+
+$ontext
 $ifthen %Sr%==CAN
   VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2050 AND CS(G)>=CSB*1.5*1.02**(%Sy%-2050))=0;
 $elseif %Sr%==USA
@@ -1249,7 +1252,7 @@ $if %CLP%==800Cf_CACNup200 VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND %Sy%>=2090 A
 $else
   VY.FX("AFR",G)$((NOT Y_pre("AFR",G)) AND CS(G)>=CSB)=0;
 $endif
-
+$offtext
 F_PLDM(L,G)$(LAFR(L) AND (SUM(LDM$MAP_LLDM(L,LDM),PLDM(LDM)-PLDM_load(LDM))=0) AND Y_pre(L,G))=1;
 
 *------- Solve ----------*

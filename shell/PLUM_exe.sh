@@ -19,7 +19,7 @@ function ScenarioSpecName(){
 
 function TimeDif() {
   Now=`date '+%s'`
-  Dif=$((${Now}-$1))
+  Dif=$((${Now} - 1))
   ((sec=${Dif}%60, min=(${Dif}%3600)/60, hrs=${Dif}/3600))
   hms=$(printf "%d:%02d:%02d" ${hrs} ${min} ${sec})
   echo ${hms}
@@ -42,7 +42,7 @@ function LoopmultiCPU() {
   done
  
   if [ ${X} -ge $4 ]; then EceCPU="ON"; fi
-  echo "Waiting due to the core number limitation" ${X}
+#  echo "Waiting due to the core number limitation" ${X}
   sleep ${TM}
   if [ ${EceCPU} = "ON" ]; then 
     LoopmultiCPU $1 $2 $3 $4
@@ -119,15 +119,15 @@ function Basesim() {
   for A in ${COUNTRY0[@]} 
   do
     BasesimRun ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basesim_${A}.log 2>&1 &
-    LoopmultiCPU 5 COUNTRY0 "basesim" ${CPUthreads}
+    LoopmultiCPU 1 COUNTRY0 "basesim" ${AvailRunNum4CPLEX}
   done
   wait
   echo "All base year simulations have been done."
 
   for A in ${COUNTRY0[@]} 
   do
-    BaseRunDisaggfrs ${parent_dir} ${A} ${CPLEXThreadOp} > ../output/log/Basedisagg_${A}.log 2>&1 &
-    LoopmultiCPU 5 COUNTRY0 "basedsaggfrs" ${CPUthreads}
+    BaseRunDisaggfrs ${parent_dir} ${A} 1 > ../output/log/Basedisagg_${A}.log 2>&1 &
+    LoopmultiCPU 1 COUNTRY0 "basedsaggfrs" ${CPUthreads}
   done
   wait
   echo "All base disaggregation have been done."
@@ -145,8 +145,7 @@ function FuturesimRun() {
 
   echo "`date '+%s'`" > ../output/txt/cpu/futuresim/${PARALLEL}.txt
 
-  for L in ${LOOP[@]}
-  do
+  for L in ${LOOP[@]};  do
     if [ ${Sub_Futuresim_Loop} = "CTY" ]; then 
       S=${L}
       A=${PARALLEL}
@@ -161,15 +160,35 @@ function FuturesimRun() {
     cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
     parallelSW=on
     if [ ${pausemode} = "on" ]; then parallelSW=off; fi 
-    for Y in ${YEAR[@]} 
-    do
-      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst   lo=4
+    for Y in ${YEAR[@]};    do
+      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
     done
   done
   
 
   echo $(TimeDif `cat ../output/txt/cpu/futuresim/${PARALLEL}.txt`) > ../output/txt/cpu/futuresim/end_${PARALLEL}.txt
   rm ../output/txt/cpu/futuresim/${PARALLEL}.txt
+}
+
+function FuturesimFullRun() {
+  set -x 
+  S=$2
+  A=$3
+  declare -n YEAR=$4
+  echo "`date '+%s'`" > ../output/txt/cpu/futuresim/${S}_${A}.txt
+  #Load scenario specification
+  ScenarioSpecName
+  parallelSW=on
+  if [ ${pausemode} = "on" ]; then parallelSW=off; fi 
+  for Y in ${YEAR[@]};    do
+    if [ "${Y}" == "2010" ]; then
+      cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
+      cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
+    fi
+    gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${S}.lst lo=4
+  done
+  echo $(TimeDif `cat ../output/txt/cpu/futuresim/${S}_${A}.txt`) > ../output/txt/cpu/futuresim/end_${S}_${A}.txt
+  rm ../output/txt/cpu/futuresim/${S}_${A}.txt
 }
 
 
@@ -185,7 +204,7 @@ function Futuresim() {
       for A in ${COUNTRY0[@]};    do
         echo "Region ${A} simulation has been started." 
         FuturesimRun ${parent_dir} ${A} scn YEAR0 ${CPLEXThreadOp}  > ../output/log/futuresim_${A}.log 2>&1 &
-        LoopmultiCPU 5 COUNTRY0 "futuresim" ${CPUthreads}
+        LoopmultiCPU 1 COUNTRY0 "futuresim" ${AvailRunNum4CPLEX}
       done
     elif [ ${Sub_Futuresim_Loop} = "SCN" ]; then 
       for S in ${scn[@]};    do
@@ -194,9 +213,21 @@ function Futuresim() {
       for S in ${scn[@]};    do
         echo "scenario ${S} simulation has been started." 
         FuturesimRun ${parent_dir} ${S} COUNTRY0 YEAR0 ${CPLEXThreadOp} > ../output/log/futuresim_${S}.log 2>&1 &
-        LoopmultiCPU 5 scn "futuresim" ${CPUthreads}
+        LoopmultiCPU 1 scn "futuresim" ${AvailRunNum4CPLEX}
       done
-    
+    elif [ ${Sub_Futuresim_Loop} = "Full" ]; then 
+      IteCounter=0
+      for XXX in ${FullList[@]};    do
+        rm ../output/txt/cpu/futuresim/${XXX}.txt ../output/txt/cpu/futuresim/end_${XXX}.txt ../output/log/futuresim_${XXX}.log ../output/lst/Futuresim/LandUseModel_mcp_${XXX}.lst 2> /dev/null
+      done
+      for A in ${COUNTRY0[@]};    do
+        for S in ${scn[@]};    do
+          echo "scenario ${S} ${A} simulation has been started with full parallel mode." 
+          FuturesimFullRun ${parent_dir} ${S} ${A} YEAR0 ${CPLEXThreadOp} > ../output/log/futuresim_${S}_${A}.log 2>&1 &
+          LoopmultiCPU 1 FullList "futuresim" ${AvailRunNum4CPLEX}
+          IteCounter=$(( IteCounter + 1 ))
+        done
+      done  
     fi
   fi
   wait
@@ -205,12 +236,10 @@ function Futuresim() {
 #Post process for disaggregation of forest and bioenergy
   if [ ${Sub_Futuresim_Biocurve} = "on" ]; then
   echo "Bioenergy curve is executed" 
-    for S in ${scn[@]}
-    do
+    for S in ${scn[@]}; do
     #Load scenario specification
       ScenarioSpecName
-      for Y in ${YEAR0[@]}
-      do
+      for Y in ${YEAR0[@]};  do
         gams ../${parent_dir}/prog/Bioland.gms --prog_loc=${parent_dir} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --supcuvout=on \
           MaxProcDir=100 o=../output/lst/Futuresim/Bioland_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.lst lf=../output/log/Futuresim/Bioland_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.log lo=4  > ../output/log/Bioland_${A}.log 2>&1 & 
       done
@@ -218,22 +247,31 @@ function Futuresim() {
   wait
   fi
   if [ ${Sub_Futuresim_DisagrrFRS} = "on" ]; then
-  echo `date +"%m-%d-%y-%H-%M-%S"` 
-  echo "Disaggregation of forest area is executed" 
-  for S in ${scn[@]}
-  do
-    #Load scenario specification
-    ScenarioSpecName
-    for Y in ${YEAR0[@]}
-    do
-      for A in ${COUNTRY0[@]}
-        do
-          gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off \
-            MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL_${A}_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.lst lo=4  > ../output/log/disagg_FRSGL_${A}.log 2>&1 & 
-        done
-      wait
+    echo `date +"%m-%d-%y-%H-%M-%S"` 
+    echo "Disaggregation of forest area is executed" 
+    for XXX in ${FullList[@]};    do
+      rm ../output/txt/cpu/disagrfrs/${XXX}.txt ../output/txt/cpu/disagrfrs/end_${XXX}.txt 2> /dev/null
     done
-  done
+    for S in ${scn[@]};    do
+      #Load scenario specification
+      ScenarioSpecName
+      for A in ${COUNTRY0[@]};    do
+        echo "disaggregation of forest ${S} ${A} has been started with full parallel mode." 
+        {
+          echo "" > ../output/txt/cpu/disagrfrs/${S}_${A}.txt
+          for Y in ${YEAR0[@]};    do
+            gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off \
+              MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL_${S}_${A}.lst lo=4  > ../output/log/disagg_FRSGL_${S}_${A}.log
+          done
+          echo $(TimeDif `cat ../output/txt/cpu/disagrfrs/${S}_${A}.txt`) > ../output/txt/cpu/disagrfrs/end_${S}_${A}.txt
+          rm ../output/txt/cpu/disagrfrs/${S}_${A}.txt
+        } &
+        LoopmultiCPU 1 FullList "disagrfrs" ${CPUthreads}
+      done
+      echo "disaggregation of forest ${S} ${A} has been finished." 
+    done
+    wait  
+
   fi
   echo "All post processes have been done." 
 
@@ -251,17 +289,15 @@ function ScnMergeRun() {
   Biocurvesort=$7
   	
   echo "`date '+%s'`" > ../output/txt/cpu/merge1/$2.txt
-  for A in ${COUNTRY[@]}
-  do
+  for A in ${COUNTRY[@]};  do
 	# This change directry used for gdxmerge is to run with windows OS where the path with slash does not work in gdxmerge. 
-	cd ../output/gdx/$2/${A}
-	gdxmerge *.gdx 
-	mv merged.gdx ../cbnal/${A}.gdx
-	cd ./analysis
-	gdxmerge *.gdx
-	mv merged.gdx ../../analysis/${A}.gdx
-	cd ../../../../../exe
- 
+    cd ../output/gdx/$2/${A}
+    gdxmerge *.gdx 
+    mv merged.gdx ../cbnal/${A}.gdx
+    cd ./analysis
+    gdxmerge *.gdx
+    mv merged.gdx ../../analysis/${A}.gdx
+    cd ../../../../../exe
   done
   cd ../output/gdx/$2/cbnal
   gdxmerge *.gdx output=../../results/cbnal_$2.gdx
@@ -289,7 +325,6 @@ function ScnMergeRun() {
     gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
   fi
   wait
-  read -p "push any key";
   gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
   read -p "push any key";
 
@@ -624,13 +659,14 @@ fi
 
 ## set regions
 if [ ${global} = "on" ]; then 
-  COUNTRY0=(JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM CIS XME XNF XAF)
+  COUNTRY0=(CIS XAF JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM XME XNF)
 elif [ ${global} = "off" ]; then
   COUNTRY0=${CountryC}
 fi
 
 ## set CPLEX threads number 
 NSc=0
+MaxThread=5
 for S in ${scn[@]}
 do
   NSc=$((${NSc} + 1))
@@ -640,9 +676,21 @@ CPLEXThreadOp=1
 for Th in `seq 2 10`
 do
   NScMl=$((${NSc}*${Th}))
-  if [ ${CPUthreads} -gt ${NScMl} ]; then CPLEXThreadOp=${Th}; fi
+  if [ ${CPUthreads} -gt ${NScMl} ]; then 
+    CPLEXThreadOp=${Th}
+  fi
 done
-echo "The number of CPLEX threads is ${CPLEXThreadOp}"
+if [ "$MaxThread" -lt "$CPLEXThreadOp" ]; then  CPLEXThreadOp=$MaxThread; fi
+AvailRunNum4CPLEX=$(( (CPUthreads + CPLEXThreadOp - 1) / CPLEXThreadOp ))
+echo "The number of CPLEX threads is ${CPLEXThreadOp} and parallel process is ${AvailRunNum4CPLEX}"
+
+#Assign full list
+FullList=()
+for S in ${scn[@]};    do
+  for A in ${COUNTRY0[@]};    do
+    FullList+=("${S}_${A}")
+  done
+done
 
 # Generate Directories
 makedirectory
