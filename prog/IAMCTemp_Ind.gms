@@ -15,6 +15,12 @@ $setglobal WWFlandout_exe off
 $setglobal wwfopt 1
 $setglobal agmip on
 $setglobal Ystep0 10
+$setglobal not1stiter off
+
+$if exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenario/IAV/%iav%.gms
+$if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenario/IAV/NoCC.gms
+$if %not1stiter%==off $setglobal IAVload %IAV%
+$if %not1stiter%==on $setglobal IAVload %preIAV%
 
 set
 R	17 regions	/
@@ -597,7 +603,7 @@ GHG(R,Y,"Sink","LUM")=GHGL(R,Y,"Negative","LUC");
 GHG(R,Y,"Net_emissions",SMODEL)=GHG(R,Y,"Emissions",SMODEL)+GHG(R,Y,"Sink",SMODEL);
 
 * AREA comparison
-Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAV%%ModelInt%",Y,R,LCGE);
+Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,LCGE);
 AREA(R,Y,L,"CGE")$SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE))=SUM(LCGE$MAP_LCGE(L,LCGE),Planduse(Y,R,LCGE));
 AREA(R,Y,L,"LUM")=Area_load(R,Y,L);
 AREA(R,Y,"DEFCUM","LUM")=sum(Y2$(%base_year%<=Y2.val AND Y2.val<=Y.val),Area_load(R,Y2,"DEF"));
