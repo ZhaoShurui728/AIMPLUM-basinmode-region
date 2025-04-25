@@ -220,6 +220,8 @@ $batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms CAN
 $else
 $batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR.gms %Sr%
 $endif
+$batinclude ../%prog_loc%/inc_prog/disagg_FRSGLR_analysis.gms %Sr%
+
 
 $if %biocurve%==on VYL("FRSGL",G)$VYL("BIO",G)=VYL("FRSGL",G)-VYL("BIO",G);
 
