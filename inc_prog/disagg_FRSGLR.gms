@@ -3,8 +3,6 @@ VYL%1(L,G)
 YBIO%1(G)
 CS%1(G) carbon density in year Y of forest planed in year Y2 in cell G (MgC ha-1 year-1)
 CS_base%1(G)	carbon stock in base year
-VYL_pre%1(L,G)
-VYLY%1(Y,L,G)	land use in all the earlier years
 ;
 
 $if not %Sy%==%base_year% $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/%Sy%.gdx'
@@ -30,20 +28,6 @@ VYL("BIO",G)$(YBIO%1(G))=YBIO%1(G);
 $endif
 
 
-
-*--------Land use change -------*
-
-
-$ifthen.mng2 not %Sy%==%base_year%
-
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%1/analysis/%pre_year%.gdx'
-$load VYL_pre%1=VYL
-$load VYLY%1=VYLY
-
-VYL_pre(L,G)$(VYL_pre%1(L,G))=VYL_pre%1(L,G);
-VYLY(Y,L,G)$VYLY%1(Y,L,G)=VYLY%1(Y,L,G);
-
-$endif.mng2
 
 
 
