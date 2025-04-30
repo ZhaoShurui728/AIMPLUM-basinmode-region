@@ -1,6 +1,7 @@
 file output_%1 / "../output/csv/%SCE%_%CLP%_%IAV%%ModelInt%/%1.csv" /;
 put output_%1;
-output_%1.pw=100000;
+*output_%1.pw=100000;
+output_%1.pw=32767;
 put " %1", "= "/;
 
 
