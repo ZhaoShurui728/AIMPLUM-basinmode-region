@@ -31,6 +31,7 @@ scn=( SSP2_BaU_NoCC_No \
       SSP2_400C_2020NDC-low_NoCC_ScenarioMIP_global2)
 #scn=( SSP2_400C_2020NDC-low_NoCC_ScenarioMIP_global2)
 #scn=( SSP2_400C_2020NDC_NoCC_scenarioMIP_global2)
+scn=( SSP1_600C_2020NDC-high-Sus_NoCC_scenarioMIP_global2)
 
 # Set CPU Core Threads
 CPUthreads=32

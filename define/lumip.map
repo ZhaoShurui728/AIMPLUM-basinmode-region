@@ -5,12 +5,11 @@
 	c3ann	.	WHTIR
 	c4ann	.	GRORF
 	c4ann	.	GROIR
-	c4ann	.	C_BRF
-	c4ann	.	C_BIR
-	c4ann	.	BIO
+	c4per	.	C_BRF
+	c4per	.	C_BIR
+	c4per	.	BIO
 	c3per	.	OTH_ARF
 	c3per	.	OTH_AIR
-*	c4per	.	na
 	c3nfx	.	OSDRF
 	c3nfx	.	OSDIR
 	range	.	RAN
@@ -24,11 +23,10 @@
 	irrig_c3ann_g	.	PDRIR
 	irrig_c3ann_g	.	WHTIR
 	irrig_c4ann_g	.	GROIR
-	irrig_c4ann_g	.	C_BIR
+	irrig_c4per_g	.	C_BIR
 	irrig_c3per_g	.	OTH_AIR
-*	irrig_c4per_g	.	na
 	irrig_c3nfx_g	.	OSDIR
-	crpbf_c4ann_g	.	BIO
+	crpbf_c4per_g	.	BIO
 	flood_g	.	PDRRF
 	flood_g	.	PDRIR
 	fallow	.	CROP_FLW

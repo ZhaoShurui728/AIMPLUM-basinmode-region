@@ -414,7 +414,7 @@ irrig_c4ann
 irrig_c3per
 irrig_c4per
 irrig_c3nfx
-crpbf_c4ann
+crpbf_c4per
 flood
 fallow
 rice
@@ -454,10 +454,10 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms secdn
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms urban
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4ann
-*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3per
-*$batinclude %prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4per
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3nfx
-$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms crpbf_c4ann
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms crpbf_c4per
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms flood
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms fallow
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms rice
