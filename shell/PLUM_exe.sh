@@ -96,14 +96,14 @@ function DataPrep2() {
 function BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
   echo "SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2}, ${S}"
-  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
+  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=700 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
   rm ../output/txt/cpu/basesim/$2.txt
 }
 function BaseRunDisaggfrs() {
   echo "`date '+%s'`" > ../output/txt/cpu/basedsaggfrs/$2.txt
-  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
+  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
   echo $(TimeDif `cat ../output/txt/cpu/basedsaggfrs/$2.txt`) > ../output/txt/cpu/basedsaggfrs/end_$2.txt
   rm ../output/txt/cpu/basedsaggfrs/$2.txt
 }
@@ -161,7 +161,7 @@ function FuturesimRun() {
     parallelSW=on
     if [ ${pausemode} = "on" ]; then parallelSW=off; fi 
     for Y in ${YEAR[@]};    do
-      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=100 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
+      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
     done
   done
   
@@ -241,7 +241,7 @@ function Futuresim() {
       ScenarioSpecName
       for Y in ${YEAR0[@]};  do
         gams ../${parent_dir}/prog/Bioland.gms --prog_loc=${parent_dir} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --supcuvout=on \
-          MaxProcDir=100 o=../output/lst/Futuresim/Bioland_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.lst lf=../output/log/Futuresim/Bioland_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.log lo=4  > ../output/log/Bioland_${A}.log 2>&1 & 
+          MaxProcDir=700 o=../output/lst/Futuresim/Bioland_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.lst lf=../output/log/Futuresim/Bioland_${SCE}_${CLP}_${IAV}${ModelInt}_${Y}.log lo=4  > ../output/log/Bioland_${A}.log 2>&1 & 
       done
     done
   wait
@@ -261,7 +261,7 @@ function Futuresim() {
           echo "" > ../output/txt/cpu/disagrfrs/${S}_${A}.txt
           for Y in ${YEAR0[@]};    do
             gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off \
-              MaxProcDir=100 o=../output/lst/Futuresim/disagg_FRSGL_${S}_${A}.lst lo=4  > ../output/log/disagg_FRSGL_${S}_${A}.log
+              MaxProcDir=700 o=../output/lst/Futuresim/disagg_FRSGL_${S}_${A}.lst lo=4  > ../output/log/disagg_FRSGL_${S}_${A}.log
           done
           echo $(TimeDif `cat ../output/txt/cpu/disagrfrs/${S}_${A}.txt`) > ../output/txt/cpu/disagrfrs/end_${S}_${A}.txt
           rm ../output/txt/cpu/disagrfrs/${S}_${A}.txt
@@ -313,19 +313,19 @@ function ScnMergeRun() {
   cd ../../../../exe
   
   if [ ${Baserun} = "on" ]; then
-  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4
+  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4
   fi
   if [ ${Restorecal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4	&
   fi
   if [ ${Livdiscal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4	&
   fi
   if [ ${Biocurvesort} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4	&
   fi
   wait
-  gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=100  o=../output/lst/comparison_scenario_$2.lst  lo=4
+  gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=700  o=../output/lst/comparison_scenario_$2.lst  lo=4
   read -p "push any key";
 
   echo $(TimeDif `cat ../output/txt/cpu/merge1/$2.txt`) > ../output/txt/cpu/merge1/end_$2.txt
@@ -366,7 +366,7 @@ function MergeResCSV4NCRun() {
   livdiscal=$9
   
   echo "`date '+%s'`" > ../output/txt/cpu/merge2/$2.txt
-  GAMSRunArg="--prog_loc=$1 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=100 lo=4 "
+  GAMSRunArg="--prog_loc=$1 --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4 "
   echo "--sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2}"
   # csv file creation
   if [ ${basecsv} = "on" ]; then
@@ -554,7 +554,7 @@ function PREDICTScalc {
     echo "Gathring grid BII to regional"
     PREDICTSRexe "../output/lst/PREDICTS_exe2.lst" ../${parent_dir}/tools/PREDICTS_biodiversity/prog/${PREDICTSmodelsettings}/gathering_gridBII_to17region.R ${S} ${PRJ} ${gams_sys_dir} ${Climate_sce} > "../output/log/PREDICTS_exe2.log" 2>&1 
     echo "Projecting regional BII"
-    gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=100  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1
+    gams ../${parent_dir}/prog/IAMCTemp_Ind.gms --prog_loc=${parent_dir} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --PREDICTS_exe=on MaxProcDir=700  o=../output/lst/comparison_scenario_${S}.lst  lo=4 > "../output/log/PREDICTS_exe.log" 2>&1
           
   done
   echo "BII projection process completed."
@@ -580,11 +580,11 @@ function gdx4pngRun() {
   for Y in ${YListFig[@]} 
   do
     if [ ${global} = "on" ]; then
-      gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png1.lst
+      gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} --dif=${dif} MaxProcDir=700 o=../output/lst/gdx4png1.lst
     elif [ ${global} = "off" ]; then
       for A in ${COUNTRY[@]} 
       do
-        gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} --dif=${dif} MaxProcDir=100 o=../output/lst/gdx4png2.lst
+        gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} --dif=${dif} MaxProcDir=700 o=../output/lst/gdx4png2.lst
       done
     fi
   done
