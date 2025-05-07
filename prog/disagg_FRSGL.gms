@@ -125,7 +125,6 @@ LPRMSEC(L)/PRM_SEC/
 *LSUM(L)/AFR,CL,CROP_FLW,PAS,BIO,SL,OL/
 LSUM2(L)/AFR,CL,CROP_FLW,MNGPAS,RAN,BIO,SL,OL,PRMFRS,SECFRS,PRMGL,SECGL/
 LSUMFRS1(L)/MNGFRS,UMNFRS/
-LSUMFRS2(L)/NRMFRS,PLNFRS/
 LSUMFRS3(L)/PRMFRS,SECFRS/
 *L_USEDTOTAL(L)/PAS,GL,CL,BIO,AFR,CROP_FLW,FRSGL/
 *L_UNUSED(L)/SL,OL/
@@ -353,8 +352,8 @@ VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), 
 VYL("PRMFRS",G)$(VYL("FRS",G)) = max(0,VYL("FRS",G) - VYL("SECFRS",G));
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
-VYL("PLNFRS",G)$(VYL("SECFRS",G) and forest_class_shareG("3",G))=VYL("SECFRS",G)*forest_planted_rate(G);
-VYL("NRMFRS",G)$(VYL("SECFRS",G))=max(0,VYL("SECFRS",G)-VYL("PLNFRS",G));
+VYL("PLNFRS",G)=0;
+VYL("NRMFRS",G)=VYL("PRMFRS",G)+VYL("SECFRS",G);
 
 
 
@@ -390,8 +389,8 @@ VYL("AGOFRS",G)$(VYL("CL",G) and VYL_pre("AGOFRS",G))=min(VYL("CL",G), VYL_pre("
 VYL("SECFRS",G)$(CS_base(G))=max(0,VYL_pre("SECFRS",G) +VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G)));
 VYL("PRMFRS",G)$(VYL_pre("PRMFRS",G)) =max(0,VYL_pre("PRMFRS",G) - max(0,VYL("DEF",G)-VYL_pre("SECFRS",G)));
 
-VYL("NRMFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("NRMFRS",G)+VYL("NRFABD",G)-min(VYL("DEF",G),VYL_pre("SECFRS",G))*(1-forest_planted_rate(G)));
-VYL("PLNFRS",G)$(VYL("FRS",G))=max(0,VYL_pre("PLNFRS",G)                -min(VYL("DEF",G),VYL_pre("SECFRS",G))*forest_planted_rate(G));
+VYL("NRMFRS",G)=VYL("PRMFRS",G)+VYL("SECFRS",G);
+VYL("PLNFRS",G)=VYL("AFR",G);
 
 
 VYL("SECGL",G)=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SECGL",G));
@@ -408,7 +407,6 @@ $endif.mng
 
 VYL(L,G)$(LSUM2(L) and SUM(L2$LSUM2(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUM2(L2),VYL(L2,G));
 VYL(L,G)$(LSUMFRS1(L) and SUM(L2$LSUMFRS1(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUMFRS1(L2),VYL(L2,G))*VYL("FRS",G);
-VYL(L,G)$(LSUMFRS2(L) and SUM(L2$LSUMFRS2(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUMFRS2(L2),VYL(L2,G))*VYL("SECFRS",G);
 VYL(L,G)$(LSUMFRS3(L) and SUM(L2$LSUMFRS3(L2),VYL(L2,G)))=VYL(L,G)/SUM(L2$LSUMFRS3(L2),VYL(L2,G))*VYL("FRS",G);
 
 
@@ -513,8 +511,6 @@ NRFABDCUM
 NRGABDCUM
 AFR
 AGOFRS
-AFRS	afforestation
-RFRS	reforestation
 FRS
 GL
 /
@@ -542,8 +538,8 @@ VYLY("%Sy%",L,G)$(LCUM(L) and VYL(L,G))=VYL(L,G);
 VYLY("%Sy%","NRFABDCUM",G)=max(0,VYLY("%Sy%","FRS",G)-VYLY("%base_year%","FRS",G));
 VYLY("%Sy%","NRGABDCUM",G)=max(0,VYLY("%Sy%","GL",G)-VYLY("%base_year%","GL",G));
 
-VYLY("%Sy%","RFRS",G)$(VYLY("%Sy%","AFR",G) and frac_rcp("%Sr%","FRS","1700",G)) = VYLY("%Sy%","AFR",G);
-VYLY("%Sy%","AFRS",G)$(VYLY("%Sy%","AFR",G) and frac_rcp("%Sr%","FRS","1700",G)=0) = VYLY("%Sy%","AFR",G);
+VYL("RFRS",G)$(VYL("AFR",G) and frac_rcp("%Sr%","FRS","1700",G)) = VYL("AFR",G);
+VYL("AFRS",G)$(VYL("AFR",G) and frac_rcp("%Sr%","FRS","1700",G)=0) = VYL("AFR",G);
 
 
 
@@ -563,8 +559,6 @@ GHGLG("Positive",L,G)$((LDEF(L) OR LDEG(L)) AND CS(G) AND VYL(L,G))= CS(G)*VYL(L
 GHGLG("Negative",L,G)$(LMNGFRS(L))= ACF_nat(G) * VYL(L,G) *GA(G)* 44/12/10**3 * (-1);
 
 GHGLG("Negative",L,G)$(LAFR(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
-*$if %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
-*$if not %iav%==BIOD	GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT_nat(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LNRFABDCUM(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT_nat(G,Forestage))) *GA(G) * 44/12 /10**3 * (-1);
 GHGLG("Negative",L,G)$(LAGOFRS(L))= SUM(Y2$(ordy("%base_year%")<=ordy(Y2) AND ordy(Y2)<=ordy("%Sy%") and delta_VY(Y2,L,G)>0), delta_VY(Y2,L,G)* sum(Forestage$(%Sy%-Y2.val+10=Forestage.val),CFT(G,Forestage)*0.1)) *GA(G)* 44/12 /10**3 * (-1);
 

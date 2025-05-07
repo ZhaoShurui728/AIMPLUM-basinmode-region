@@ -88,7 +88,6 @@ PROTECT protected area
 RES	restoration land that was used for cropland or pasture and set aside for restoration (only from 2020 onwards)
 
 * total
-AFRTOT     afforestation (AFR in NoCC and AFR+NRF in BIOD) consistent with GHG calc
 LUC
 TOT	total
 
@@ -143,7 +142,6 @@ ABD_MNGFRS
 ABD_AFR
 /
 LAFR(L)/AFR/
-LAFRTOT(L)/AFRTOT/
 Lused(L)/MNGFRS,AFR,CL,CROP_FLW,BIO,PAS/
 Lnat(L)/GL,UMNFRS/
 LABD(L)/ABD_CL,ABD_CROP_FLW,ABD_BIO,ABD_PAS,ABD_MNGFRS,ABD_AFR/
@@ -165,12 +163,17 @@ othercrops
 	irrig_c4per_g
 	irrig_c3nfx_g
 	flood_g
-*	Biofuel crops (fraction of crop type area occupied by biofuel crops)Temporary to calculate fraction to cropland area
-	crpbf_c3ann_g
-	crpbf_c4ann_g
-	crpbf_c3per_g
-	crpbf_c4per_g
-	crpbf_c3nfx_g
+*	Biofuel crops (units fraction of grid area) Temporary to calculate fraction to cropland area
+	cpbf1_c3ann_g
+	cpbf1_c4ann_g
+	cpbf1_c3per_g
+	cpbf1_c4per_g
+	cpbf1_c3nfx_g
+	cpbf2_c3ann_g
+	cpbf2_c4ann_g
+	cpbf2_c3per_g
+	cpbf2_c4per_g
+	cpbf2_c3nfx_g
 /
 MAP_LUMIP(Lmip,L)/
 $include ../%prog_loc%/define/lumip.map
@@ -207,7 +210,6 @@ Rarea_bio(G)
 VY_load(R,Y,L,G)
 VY_IJ(Y,L,I,J)
 VY_IJmip(Y,Lmip,I,J)
-VYLY(R,Y,Y,L,G)	land use in all the earlier years
 YIELD_BIO(R,Y,G)
 YIELD_IJ(Y,L,I,J) tCO2 per ha per year
 GHGLG(Y,L,G)	MtCO2 per grid per year
@@ -370,7 +372,7 @@ $load GHGLG
 GHG_IJ(Y,L,I,J)$(FLAG_IJ(I,J))=SUM(G$(MAP_GIJ(G,I,J) and GHGLG(Y,L,G)),GHGLG(Y,L,G));
 GHGC_IJ(Y,L,I,J)$(LABL(L) and FLAG_IJ(I,J))=GHG_IJ("2010",L,I,J)*5 + sum(Y2$(ordy("2020")<=ordy(Y2) and ordy(Y2)<=ordy(Y) and GHG_IJ(Y2,L,I,J)),GHG_IJ(Y2,L,I,J)*Y_step);
 
-$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms AFRTOT
+$batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms AFR
 $batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms BIO
 $batinclude ../%prog_loc%/inc_prog/outputcsv_ghg.gms LUC
 
@@ -390,11 +392,16 @@ irrig_c4per	.	irrig_c4per_g	.	c4per
 irrig_c3nfx	.	irrig_c3nfx_g	.	c3nfx
 flood	.	flood_g	.	c3ann
 * Biofuel crops (fraction of crop type area occupied by biofuel crops)
-crpbf_c3ann	.	crpbf_c3ann_g	.	c3ann
-crpbf_c4ann	.	crpbf_c4ann_g	.	c4ann
-crpbf_c3per	.	crpbf_c3per_g	.	c3per
-crpbf_c4per	.	crpbf_c4per_g	.	c4per
-crpbf_c3nfx	.	crpbf_c3nfx_g	.	c3nfx
+cpbf1_c3ann	.	cpbf1_c3ann_g	.	c3ann
+cpbf1_c4ann	.	cpbf1_c4ann_g	.	c4ann
+cpbf1_c3per	.	cpbf1_c3per_g	.	c3per
+cpbf1_c4per	.	cpbf1_c4per_g	.	c4per
+cpbf1_c3nfx	.	cpbf1_c3nfx_g	.	c3nfx
+cpbf2_c3ann	.	cpbf2_c3ann_g	.	c3ann
+cpbf2_c4ann	.	cpbf2_c4ann_g	.	c4ann
+cpbf2_c3per	.	cpbf2_c3per_g	.	c3per
+cpbf2_c4per	.	cpbf2_c4per_g	.	c4per
+cpbf2_c3nfx	.	cpbf2_c3nfx_g	.	c3nfx
 /
 Lmip_out(Lmip) Lmip to be included in nc file/
 c3ann
@@ -409,12 +416,13 @@ secdf
 primn
 secdn
 urban
+pltns
 irrig_c3ann
 irrig_c4ann
 irrig_c3per
 irrig_c4per
 irrig_c3nfx
-crpbf_c4per
+cpbf2_c4per
 flood
 fallow
 rice
@@ -428,12 +436,11 @@ icwtr
 
 
 $gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
-$load VY_load=VYL VYLY
+$load VY_load=VYL
 ;
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
-VY_IJ(Y,L,I,J)$(FLAG_IJ(I,J) and LAFRTOT(L))=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYLY(R,Y,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
@@ -452,12 +459,13 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms secdf
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms primn
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms secdn
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms urban
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms pltns
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4ann
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3per
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c4per
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms irrig_c3nfx
-$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms crpbf_c4per
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms cpbf2_c4per
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms flood
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms fallow
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms rice

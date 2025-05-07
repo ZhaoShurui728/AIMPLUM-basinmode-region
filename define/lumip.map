@@ -16,7 +16,7 @@
 	pastr	.	MNGPAS
 	primf	.	PRMFRS
 	secdf	.	SECFRS
-	secdf	.	AFR
+	pltns	.	AFR
 	primn	.	PRMGL
 	secdn	.	SECGL
 	urban	.	SL
@@ -26,7 +26,7 @@
 	irrig_c4per_g	.	C_BIR
 	irrig_c3per_g	.	OTH_AIR
 	irrig_c3nfx_g	.	OSDIR
-	crpbf_c4per_g	.	BIO
+	cpbf2_c4per_g	.	BIO
 	flood_g	.	PDRRF
 	flood_g	.	PDRIR
 	fallow	.	CROP_FLW
