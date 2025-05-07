@@ -62,7 +62,7 @@ FRSGL   forest + grassland
 HAV_FRS        production forest
 FRS     forest
 GL      grassland
-AFR     afforestation
+AFR     afforestation and reforestation
 CL      cropland
 CROP_FLW        fallow land
 PAS     managed pasture + rangeland
@@ -72,12 +72,12 @@ OL      ice or water
 RES	restoration land that was used for cropland or pasture and set aside for restoration
 
 * forest subcategory
-PRMFRS	primary forest
-SECFRS	secoundary forest excl AFR
+PRMFRS	primary natural forest
+SECFRS	secoundary natural forest excl AFR
 MNGFRS  managed forest excl AFR
 UMNFRS  unmanage forest
 NRMFRS  naturally regenerating managed forest
-PLNFRS  planted forest excl AFR
+PLNFRS  planted forest incl AFR
 AGOFRS	agroforestry
 AFRS	afforestation
 RFRS	reforestation
@@ -398,7 +398,7 @@ C_BIR	.	"Lan_Cov_Cro_Sug_Cro_Irr"
 C_BRF	.	"Lan_Cov_Cro_Sug_Cro_Rai"
 AFR	.	"Lan_Cov_Frs_Pla_Pla_ReA"
 *	.	"Lan_Cov_Frs_Pla_Pla_Tim"
-PLNFRS 	.	"Lan_Cov_Frs_Pla_Pla_Oth"
+*PLNFRS 	.	"Lan_Cov_Frs_Pla_Pla_Oth"
 PRMFRS 	.	"Lan_Cov_Frs_Prm"
 NRMFRS	.	"Lan_Cov_Frs_Sec"
 GL	.	"Lan_Cov_Oth_Nat"
@@ -474,7 +474,7 @@ Car_Seq_Lan_Use_Soi_Car_Man_Gra
 /
 MapAreChaIAMPC(L,V)/
 AFR	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_ReA"
-PLNFRS	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"
+*PLNFRS	.       "Frs_Are_Cha_Frs_Exp_Pla_Pla_Oth"
 NRMFRS	.       "Frs_Are_Cha_Frs_Exp_Sec"
 /
 FAC_Var(V) Annual forest area chagne/
