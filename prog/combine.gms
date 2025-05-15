@@ -18,6 +18,7 @@ $if %supcuvout%==on $setglobal biocurve on
 $setglobal restorecalc off
 $setglobal livdiscalc off
 
+
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
 $if exist ../%prog_loc%/scenario/climate_policy/%clp%.gms $include ../%prog_loc%/scenario/climate_policy/%clp%.gms
@@ -354,6 +355,8 @@ VYLY(R,Y,Y,L,G)	land use in all the earlier years
 VY_IJ(Y,L,I,J)
 FLAG_IJ(I,J)		Grid flag
 GAIJ(I,J)           Grid area of cell I J kha
+protectfrac(R,Y,G)	Protected area fraction (0 to 1) in each cell G
+protectfracL(R,Y,G,L)	Protected area fraction (0 to 1) of land category L in each cell G
 ;
 
 ordy(Y) = ord(Y) + %base_year% -1;
@@ -386,6 +389,7 @@ Area_base(Ragg,L,Sacol)$(SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol)))=SUM(R$MAP
 
 $gdxin '../output/gdx/results/cbnal_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load Psol_stat VYPL=VYP_load pa_road pa_emit pa_lab pa_irri YIELDL_OUT YIELDLDM_OUT
+$load protectfrac protectfracL
 
 
 $gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
@@ -430,6 +434,42 @@ YIELDLDM_annual(R,Yanu,LDM)$(2070<=Yanu.val and Yanu.val<2080)=YIELDLDM_OUT(R,"2
 YIELDLDM_annual(R,Yanu,LDM)$(2080<=Yanu.val and Yanu.val<2090)=YIELDLDM_OUT(R,"2080",LDM)*YIELDLDM_ratio(R,"2090",LDM)**(Yanu.val-2080);
 YIELDLDM_annual(R,Yanu,LDM)$(2090<=Yanu.val and Yanu.val<=2100)=YIELDLDM_OUT(R,"2090",LDM)*YIELDLDM_ratio(R,"2100",LDM)**(Yanu.val-2090);
 
+*----Protected area map
+set
+Lmip_protect/
+prtct_primf protected fraction of primary forest
+prtct_primn protected fraction of primary non-forest
+prtct_secdf protected fraction of secondary forest
+prtct_secdn protected fraction of secondary non-forest
+prtct_pltns protected fraction of plantation forest
+prtct_crop  protected fraction of cropland (this is not lumip category)
+prtct_all   all protected fraction (this is not lumip category)
+/
+MAP_Lmip_protect(L,Lmip_protect)/
+PRMFRS	.	prtct_primf
+SECFRS	.	prtct_secdf
+PRMGL	.	prtct_primn
+SECGL	.	prtct_secdn
+PRMFRS	.	prtct_all
+SECFRS	.	prtct_all
+PRMGL	.	prtct_all
+SECGL	.	prtct_all
+*AFR	.	prtct_pltns
+/
+;
+parameter
+protect_prmsec(R,Y,G)
+VYL_protect(R,Y,Lmip_protect,G)	a fraction of land-use L region R in year Y grid G
+;
+
+protect_prmsec(R,Y,G)$(protectfrac(R,Y,G)+protectfracL(R,Y,G,"PRM_SEC"))=max(protectfrac(R,Y,G),protectfracL(R,Y,G,"PRM_SEC"));
+
+*VYL_protect(R,Y,Lmip_protect,G)$(VY_load(R,Y,"FRS",G)+VY_load(R,Y,"GL",G)+VY_load(R,Y,"MNGPAS",G)+VY_load(R,Y,"RAN",G)+VY_load(R,Y,"CROP_FLW",G))=max(protectfrac(R,Y,G),protectfracL(R,Y,G,"PRM_SEC"))*sum(L$(MAP_Lmip_protect(L,Lmip_protect)),VY_load(R,Y,L,G))/(VY_load(R,Y,"FRS",G)+VY_load(R,Y,"GL",G)+VY_load(R,Y,"MNGPAS",G)+VY_load(R,Y,"RAN",G)+VY_load(R,Y,"CROP_FLW",G));
+VYL_protect(R,Y,"prtct_primf",G)$(protect_prmsec(R,Y,G)+VY_load(R,Y,"PRMFRS",G))=min(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMFRS",G));
+VYL_protect(R,Y,"prtct_secdf",G)=max(0,min(VY_load(R,Y,"SECFRS",G),protect_prmsec(R,Y,G)-VYL_protect(R,Y,"prtct_primf",G)));
+VYL_protect(R,Y,"prtct_primn",G)$(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMGL",G))=min(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMGL",G));
+VYL_protect(R,Y,"prtct_secdn",G)=max(0,min(VY_load(R,Y,"SECGL",G),protect_prmsec(R,Y,G)-VYL_protect(R,Y,"prtct_primn",G)));
+VYL_protect(R,Y,"prtct_crop",G)=protectfracL(R,Y,G,"CL");
 
 execute_unload '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 Area
@@ -442,6 +482,7 @@ GHGLG
 GHGLR
 YIELDLDM_annual
 YIELDLDM_ratio
+VYL_protect
 ;
 
 

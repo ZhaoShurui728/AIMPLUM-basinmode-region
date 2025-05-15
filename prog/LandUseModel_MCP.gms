@@ -293,10 +293,8 @@ GAT=SUM(G$FLAG_G(G),GA(G));
 set
 REVG(G) cells allowed for conversion/set.G/
 protect_cat	protection area categories/
-WDPA_KBA_Wu2019
-WildArea_KBA_WDPA_BTC
-protect_bs
-protect_all
+%biodivdata%
+%WDPAprotect%
 /
 ;
 Parameter
@@ -884,11 +882,11 @@ $ elseife.year %Sy%==%protectStartYear%
 $gdxin '../%prog_loc%/individual/BendingTheCurve/LC_cons_AIM_omit0_v3.gdx'
 $load protectfracIJL=LC_cons_AIM_v3
   protectfracL(G,L)$(SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC))))= SUM((I,J)$MAP_GIJ(G,I,J),SUM(L_LC$(map_L_LC(L_LC,L)),protectfracIJL(I,J,"%biodivdata%",L_LC)));
-  protectfracL(G,L)$(protectfracL(G,L) and protectfracL(G,L)>sum(L2$MAP_Lagg(L2,L),Y_pre(L2,G)))=sum(L2$MAP_Lagg(L2,L),Y_pre(L2,G));
+  protectfracL(G,L)$(protectfracL(G,L) and protectfracL(G,L)>sum(L2$MAP_Laggprotection(L2,L),Y_pre(L2,G)))=sum(L2$MAP_Laggprotection(L2,L),Y_pre(L2,G));
 
 * protect data aggregation in NoCC
-  protect_area("WildArea_KBA_WDPA_BTC",L)=SUM(G,GA(G)*protectfracL(G,L));
-  protect_area("WildArea_KBA_WDPA_BTC","TOT")=sum(L,protect_area("WildArea_KBA_WDPA_BTC",L));
+  protect_area("%biodivdata%",L)=SUM(G,GA(G)*protectfracL(G,L));
+  protect_area("%biodivdata%","TOT")=sum(L,protect_area("%biodivdata%",L));
 $ else.year
 *---minimize protected fraction to satify constraint
 $gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%protectStartYear%.gdx'

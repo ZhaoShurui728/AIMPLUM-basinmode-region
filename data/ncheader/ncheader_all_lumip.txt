@@ -160,6 +160,37 @@ variables:
 		icwtr:long_name = "ice and water";
 		icwtr:units = "1";
 		icwtr:missing_value = -99.0f ;
+	float prtct_primf(time, lat, lon) ;
+		prtct_primf:standard_name = "fraction of grid cell area";
+		prtct_primf:long_name = "protected fraction of primary forest";
+		prtct_primf:units = "1";
+		prtct_primf:missing_value = -99.0f ;
+	float prtct_primn(time, lat, lon) ;
+		prtct_primn:standard_name = "fraction of grid cell area";
+		prtct_primn:long_name = "protected fraction of primary non-forest";
+		prtct_primn:units = "1";
+		prtct_primn:missing_value = -99.0f ;
+	float prtct_secdf(time, lat, lon) ;
+		prtct_secdf:standard_name = "fraction of grid cell area";
+		prtct_secdf:long_name = "protected fraction of secondary forest";
+		prtct_secdf:units = "1";
+		prtct_secdf:missing_value = -99.0f ;
+	float prtct_secdn(time, lat, lon) ;
+		prtct_secdn:standard_name = "fraction of grid cell area";
+		prtct_secdn:long_name = "protected fraction of secondary non-forest";
+		prtct_secdn:units = "1";
+		prtct_secdn:missing_value = -99.0f ;
+	float prtct_crop(time, lat, lon) ;
+		prtct_crop:standard_name = "fraction of grid cell area";
+		prtct_crop:long_name = "protected fraction of cropland";
+		prtct_crop:units = "1";
+		prtct_crop:missing_value = -99.0f ;
+	float prtct_all(time, lat, lon) ;
+		prtct_all:standard_name = "fraction of grid cell area";
+		prtct_all:long_name = "protected fraction of all protected area";
+		prtct_all:units = "1";
+		prtct_all:missing_value = -99.0f ;
+
 
 data:
 

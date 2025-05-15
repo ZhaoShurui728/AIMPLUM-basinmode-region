@@ -545,8 +545,12 @@ MAP_AGGRE(V,V)  Left is aggregation of right/
 ST	/SSOLVE,SMODEL/
 SP	/SMCP,SNLP,SLP/
 protect_cat	protection area categories/
-WDPA_KBA_Wu2019
-WildArea_KBA_WDPA_BTC
+KBA_WDPA
+WDPA
+WDPA_WildArea
+WildArea
+WildArea_KBA
+WildArea_KBA_WDPA
 protect_bs
 protect_all
 /

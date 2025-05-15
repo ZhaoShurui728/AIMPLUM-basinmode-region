@@ -174,6 +174,8 @@ othercrops
 	cpbf2_c3per_g
 	cpbf2_c4per_g
 	cpbf2_c3nfx_g
+* protected area
+  prtct_all   all protected fraction (this is not lumip category)
 /
 MAP_LUMIP(Lmip,L)/
 $include ../%prog_loc%/define/lumip.map
@@ -432,19 +434,33 @@ sugarcrops
 oilcrops
 othercrops
 icwtr
+prtct_primf protected fraction of primary forest
+prtct_primn protected fraction of primary non-forest
+prtct_secdf protected fraction of secondary forest
+prtct_secdn protected fraction of secondary non-forest
+prtct_all   all protected fraction (this is not lumip category)
 /
-
+;
+parameter
+VYL_protect(R,Y,Lmip,G)	a fraction of land-use L region R in year Y grid G
+VYL_protectIJ(Y,Lmip,I,J)	a fraction of land-use L region R in year Y grid G
+;
 
 $gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_load=VYL
+;
+$gdxin '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$load VYL_protect
 ;
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
+VYL_protectIJ(Y,Lmip,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYL_protect(R,Y,Lmip,G))/SUM(R$(MAP_RG(R,G)),1));
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));
 VY_IJmip(Y,Lmip,I,J)$(SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip3,I,J)))=SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip2,I,J))/SUM((Lmip2,Lmip3)$Lmip_fracmap(Lmip,Lmip2,Lmip3),VY_IJmip(Y,Lmip3,I,J));
+VY_IJmip(Y,Lmip,I,J)$(VYL_protectIJ(Y,Lmip,I,J))=VYL_protectIJ(Y,Lmip,I,J);
 VY_IJmip(Y,Lmip,I,J)$(sum((Lmip2,Y2),VY_IJmip(Y2,Lmip2,I,J))=0 and VY_IJmip(Y,Lmip,I,J)=0 and Lmip_out(Lmip))=-99;
 
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms c3ann
@@ -475,6 +491,11 @@ $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms sugarcrops
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms oilcrops
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms othercrops
 $batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms icwtr
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms prtct_all
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms prtct_primf
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms prtct_primn
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms prtct_secdf
+$batinclude ../%prog_loc%/inc_prog/outputcsv_lumip.gms prtct_secdn
 
 
 $ifthen.gdxout %gdxout%==on
