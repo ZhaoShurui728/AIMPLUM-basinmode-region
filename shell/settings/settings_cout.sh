@@ -127,6 +127,10 @@ gdx4png=off
 
 # Set PNG File Creation [on/off]
 plot=off
+    ## To export lumip landtype images, turn on lumip switch. To turn on, you also need to make netcdrgen with lumip format.
+    Sub_Plot_lumip=on
+    ## To make BTC images, then turn on BTC switch. To turn on, you also need to make netcdrgen with BTC format.
+    Sub_Plot_BTC=off
 
 # Set Merge Final Results for All Scenarios [on/off] 
 Allmerge=off

@@ -627,7 +627,7 @@ VY_IJwwfnum(Y,Lwwfnum,I,J)=round(VY_IJwwfnum(Y,Lwwfnum,I,J),10);
 * put -99 for missing values for both terrestiral and ocean pixels. Then define -999 as NaN when making netCDF files.s
 VY_IJwwfnum(Y,Lwwfnum,I,J)$(sum((Lwwfnum2,Y2),VY_IJwwfnum(Y2,Lwwfnum2,I,J))=0 and VY_IJwwfnum(Y,Lwwfnum,I,J)=0)=-99;
 
-execute_unload '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+execute_unload '../output/gdx/analysis/btc_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 VY_IJwwfnum,VW_reg,VU_reg
 ;
 

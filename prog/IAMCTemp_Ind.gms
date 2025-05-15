@@ -733,7 +733,7 @@ VW_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 yea
 VU_reg(Y,L,R)	Land area of land use category L and year Y considering the 30 years delay restored at the same time as abandance in region R (kha)
 ;
 
-$gdxin '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$gdxin '../output/gdx/analysis/btc_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VW_reg VU_reg
 
 

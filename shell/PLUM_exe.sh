@@ -611,12 +611,16 @@ function gdx4png() {
 function plot() {
   for S in ${scn[@]} 
   do
-    if [ ${global} = "on" ]; then
-      echo "WLD" > ../output/txt/${S}_region.txt
-    else
-      echo ${CountryC} > ../output/txt/${S}_region.txt
+    #For LUMIP 
+    if [ ${Sub_Plot_lumip} == on ]; then
+      echo 'creating lumip category maps'
+      R --vanilla --slave --args ${S} ${gams_sys_dir} < ../${parent_dir}/R/prog/plot_scenario_lumip.R
     fi
-    R --vanilla --slave --args ${S} ${gams_sys_dir} < ../${parent_dir}/R/prog/plot_scenario.R 
+    #Bending the curve 
+    if [ ${Sub_Plot_BTC} == on ]; then
+      echo 'creating BtC category maps'
+      R --vanilla --slave --args ${S} ${gams_sys_dir} < ../${parent_dir}/R/prog/plot_scenario_btc.R
+    fi
   done
 
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi

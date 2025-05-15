@@ -515,7 +515,7 @@ plwwfnum/17/
 VY_IJwwfnum(Y,Lwwfnum,I,J)
 ;
 
-$gdxin '../output/gdx/analysis/restore_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
+$gdxin '../output/gdx/analysis/btc_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_IJwwfnum
 
 
@@ -565,51 +565,7 @@ put "pixel_area", "= "/;
 put /;
 
 
-* Protected area
-$ontext
 
-parameter
-protectfracL(R,G,L)	Protected area fraction (0 to 1) of land category L in each cell G
-protectfracLIJ(Y,I,J)	Protected area fraction (0 to 1) of land category L in each cell I J
-;
-protectfracLIJ(Y,I,J)=0;
-
-$ifthen.protect not %IAV%==NoCC
-
-$gdxin '../output/gdx/analysis/%SCE%_%CLP%_%IAV%.gdx'
-$load protectfracL
-
-protectfracLIJ(Y,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfracL(R,G,"PRM_SEC")+protectfracL(R,G,"CL")));
-
-$endif.protect
-
-$if %CLP%==BaU protectfracIJ(I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R,protectfrac(R,"2010",G)));
-
-file output_protect / "../output/csv/%SCE%_%CLP%_%IAV%_protect.csv" /;
-put output_protect;
-*output_protect.pw=100000;
-output_protect.pw=32767;
-put " protected_pixel_area_share", "= "/;
-
-protectfracLIJ(Y,I,J)$(protectfracLIJ(Y,I,J)=0 AND (NOT FLAG_IJ(I,J)))=-999;
-
-protectfracLIJ(Y,I,J)$(protectfracLIJ(Y,I,J)=0 AND FLAG_IJ(I,J))=0;
-
-
-loop(Y,
- loop(I,
-  loop(J,
-    output_protect.nd=10; output_protect.nz=0; output_protect.nr=0; output_protect.nw=15;
-    put protectfracLIJ(Y,I,J);
-    IF( NOT (ORD(J)=720 AND ORD(I)=360 AND ORD(Y)=10),put ",";
-    ELSE put ";";
-    );
-   );
- put /;
- );
-);
-put /;
-$offtext
 
 
 
