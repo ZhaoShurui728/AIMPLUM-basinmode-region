@@ -467,7 +467,7 @@ protect_prmsec(R,Y,G)$(protectfrac(R,Y,G)+protectfracL(R,Y,G,"PRM_SEC"))=max(pro
 *VYL_protect(R,Y,Lmip_protect,G)$(VY_load(R,Y,"FRS",G)+VY_load(R,Y,"GL",G)+VY_load(R,Y,"MNGPAS",G)+VY_load(R,Y,"RAN",G)+VY_load(R,Y,"CROP_FLW",G))=max(protectfrac(R,Y,G),protectfracL(R,Y,G,"PRM_SEC"))*sum(L$(MAP_Lmip_protect(L,Lmip_protect)),VY_load(R,Y,L,G))/(VY_load(R,Y,"FRS",G)+VY_load(R,Y,"GL",G)+VY_load(R,Y,"MNGPAS",G)+VY_load(R,Y,"RAN",G)+VY_load(R,Y,"CROP_FLW",G));
 VYL_protect(R,Y,"prtct_primf",G)$(protect_prmsec(R,Y,G)+VY_load(R,Y,"PRMFRS",G))=min(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMFRS",G));
 VYL_protect(R,Y,"prtct_secdf",G)=max(0,min(VY_load(R,Y,"SECFRS",G),protect_prmsec(R,Y,G)-VYL_protect(R,Y,"prtct_primf",G)));
-VYL_protect(R,Y,"prtct_primn",G)$(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMGL",G))=min(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMGL",G));
+VYL_protect(R,Y,"prtct_primn",G)$(protect_prmsec(R,Y,G)+VY_load(R,Y,"PRMGL",G))=min(protect_prmsec(R,Y,G),VY_load(R,Y,"PRMGL",G));
 VYL_protect(R,Y,"prtct_secdn",G)=max(0,min(VY_load(R,Y,"SECGL",G),protect_prmsec(R,Y,G)-VYL_protect(R,Y,"prtct_primn",G)));
 VYL_protect(R,Y,"prtct_crop",G)=protectfracL(R,Y,G,"CL");
 
