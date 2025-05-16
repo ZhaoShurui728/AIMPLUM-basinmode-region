@@ -10,4 +10,5 @@ tools/Gridmapping/prog/R.Rproj
 tools/Gridmapping/prog/*.lst
 tools/Gridmapping/prog/*/
 tools/Gridmapping/output/
+tools/Gridmapping/data/Basin/major_hydrobasins*
 *.bak
