@@ -53,6 +53,7 @@ LOG(J)=ordj(J)*GS;
 $gdxin '../%prog_loc%/define/countrymap.gdx'
 $load MAP_RISO MAP_RIJ=MAP_R17IJ MAP_RISOIJ
 
+$ontext
 MAP_RISOIJ("MKD","97","403")=Yes;
 MAP_RISOIJ("MKD","97","404")=Yes;
 MAP_RISOIJ("MKD","97","405")=Yes;
@@ -259,7 +260,7 @@ MAP_RIJ("CIS","44","5")=Yes;
 MAP_RIJ("CIS","43","1")=Yes;
 MAP_RIJ("CIS","43","2")=Yes;
 
-
+$offtext
 
 
 

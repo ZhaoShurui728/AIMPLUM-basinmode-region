@@ -1,3 +1,0 @@
-gams convert.gms
-
-pause
