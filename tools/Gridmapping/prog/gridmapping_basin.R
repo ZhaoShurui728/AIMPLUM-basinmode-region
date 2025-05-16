@@ -56,13 +56,13 @@ pts_joined <- st_join(pts_sf, Basin, join = st_intersects, left = TRUE) %>%
 pts_joined2<- full_join(pts_joined,basin_agg,by="MAJ_BAS")  %>%
   filter(!is.na(MAJ_BAS2)) %>% select(!MAJ_BAS) %>% rename("MAJ_BAS"="MAJ_BAS2")
 
-pts_joined3 <- pts_joined2[c(-1,-2,-5,-6)]
+pts_joined3 <- pts_joined2[c(-1,-2,-6)]
 
 # display results
 #head(pts_joined2)
 
-symDim <- 4
+symDim <- 5
 attr(pts_joined3, "symName") <- "gridbasin"
 lst <- wgdx.reshape(pts_joined3, symDim)
-wgdx.lst(gdxName = "../output/gridbasinmap.gdx",lst)
+wgdx.lst(gdxName = "../output/gridbasinmap_wname.gdx",lst)
 
