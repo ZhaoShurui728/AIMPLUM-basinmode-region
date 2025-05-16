@@ -58,16 +58,8 @@ pts_joined2<- full_join(pts_joined,basin_agg,by="MAJ_BAS")  %>%
 
 pts_joined3 <- pts_joined2[c(-1,-2,-5,-6)]
 
-# 結果を確認
+# display results
 #head(pts_joined2)
-
-#write_csv(pts_joined2,file=str_c(output_dir,'/gridbasinmap_full.csv'))
-#write_csv(pts_joined3,file=str_c(output_dir,'/gridbasinmap.csv'))
-
-symDim1 <- 8
-attr(pts_joined2, "symName") <- "gridbasin"
-lst <- wgdx.reshape(pts_joined2, symDim1)
-wgdx.lst(gdxName = "../output/gridbasinmap_full.gdx",lst)
 
 symDim <- 4
 attr(pts_joined3, "symName") <- "gridbasin"
