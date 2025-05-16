@@ -1,0 +1,253 @@
+group,region,R106
+1,Aruba,XCA
+2,Afghanistan,XSA
+3,Angola,XSS
+5,Anguilla,XCA
+6,Albania,XER
+7,Finland,FIN
+10,Andorra,XER
+11,United Arab Emirates,ARE
+17,Argentina,ARG
+21,Armenia,XCI
+24,American Samoa,XOC
+25,Antarctica,-
+133,Australia,AUS
+134,French Southern and Antarctic Lands,-
+137,Antigua,XCA
+138,Barbuda,XCA
+181,Austria,AUT
+182,Azerbaijan,XCI
+186,Burundi,XSS
+187,Belgium,58
+188,Benin,XSS
+189,Burkina Faso,XSS
+190,Bangladesh,BGD
+197,Bulgaria,BGR
+198,Bahrain,XME
+199,Bahamas,XCA
+214,Bosnia and Herzegovina,XYU
+215,Saint Barthelemy,XCA
+216,Belarus,BLR
+217,Belize,XCA
+220,Bermuda,XCA
+221,Bolivia,XSM
+222,Brazil,BRA
+239,Barbados,XCA
+240,Brunei,XSE
+242,Bhutan,XSA
+243,Botswana,XSS
+244,Central African Republic,XSS
+245,Canada,CAN
+386,Switzerland,CHE
+387,Chile,CHL
+418,China,CHN
+431,Ivory Coast,XSS
+433,Cameroon,XSS
+434,Democratic Republic of the Congo,XSS
+435,Republic of Congo,XSS
+436,Cook Islands,XOC
+437,Colombia,COL
+439,Comoros,XSS
+442,Cape Verde,XSS
+450,Costa Rica,CRI
+451,Cuba,CUB
+458,Curacao,XCA
+459,Cayman Islands,XCA
+462,Cyprus,XE10
+464,Czech Republic,CZE
+465,Germany,DEU
+471,Djibouti,XSS
+472,Dominica,XCA
+473,Denmark,DNK
+485,Dominican Republic,DOM
+486,Algeria,DZA
+487,Ecuador,ECU
+496,Egypt,EGY
+497,Eritrea,XSS
+500,Canary Islands,XSS
+507,Spain,ESP
+512,Estonia,XBT
+516,Ethiopia,XSS
+525,Fiji,XOC
+543,Falkland Islands,XSM
+549,Reunion,XSS
+550,Mayotte,XSS
+551,French Guiana,XSM
+552,Martinique,XCA
+553,Guadeloupe,XCA
+556,France,FRA
+559,Faroe Islands,XER
+564,Micronesia,XOC
+569,Gabon,XSS
+570,UK,GBR
+593,Georgia,XCI
+594,Guernsey,-
+595,Ghana,XSS
+596,Guinea,XSS
+597,Gambia,XSS
+598,Guinea-Bissau,XSS
+605,Equatorial Guinea,XSS
+607,Greece,GRC
+647,Grenada,XCA
+648,Greenland,-
+665,Guatemala,GTM
+666,Guam,XOC
+667,Guyana,XSM
+671,Heard Island,-
+672,Honduras,XCA
+675,Croatia,HRV
+688,Haiti,XCA
+691,Hungary,HUN
+692,Indonesia,IDN
+825,Isle of Man,XER
+826,India,IND
+840,Cocos Islands,XOC
+842,Christmas Island,XOC
+843,Chagos Archipelago,XSA
+844,Ireland,IRL
+846,Iran,IRN
+848,Iraq,IRQ
+849,Iceland,XENI
+850,Israel,ISR
+851,Italy,ITA
+859,San Marino,XER
+860,Jamaica,XCA
+861,Jersey,-
+862,Jordan,XME
+863,Japan,JPN
+897,Siachen Glacier,-
+898,Kazakhstan,KAZ
+902,Kenya,KEN
+904,Kyrgyzstan,XCS
+908,Cambodia,XSE
+911,Kiribati,XOC
+930,Nevis,XCA
+931,Saint Kitts,XCA
+932,South Korea,KOR
+943,Kosovo,CSXX
+944,Kuwait,KWT
+946,Laos,XSE
+947,Lebanon,LBN
+948,Liberia,XSS
+949,Libya,LBY
+950,Saint Lucia,XCA
+951,Liechtenstein,XENI
+952,Sri Lanka,LKA
+955,Lesotho,XSS
+956,Lithuania,XBT
+958,Luxembourg,58
+959,Latvia,XBT
+961,Saint Martin,XCA
+962,Morocco,MAR
+963,Monaco,XENI
+964,Moldova,XCI
+965,Madagascar,XSS
+968,Maldives,XSA
+970,Mexico,MEX
+986,Marshall Islands,XOC
+991,Macedonia,XYU
+992,Mali,XSS
+993,Malta,XE10
+995,Myanmar,XSE
+1014,Montenegro,CSXX
+1015,Mongolia,MNG
+1016,Northern Mariana Islands,XOC
+1022,Mozambique,XSS
+1025,Mauritania,XSS
+1027,Montserrat,XCA
+1028,Mauritius,XSS
+1029,Malawi,XSS
+1032,Malaysia,MYS
+1041,Namibia,XSS
+1042,New Caledonia,XOC
+1048,Niger,XSS
+1049,Norfolk Island,XCA
+1050,Nigeria,NGA
+1052,Nicaragua,XCA
+1053,Niue,XOC
+1054,Bonaire,XCA
+1055,Sint Eustatius,XCA
+1056,Saba,XCA
+1057,Netherlands,NLD
+1066,Norway,NOR
+1098,Nepal,XSA
+1099,Nauru,XOC
+1100,New Zealand,NZL
+1113,Oman,OMN
+1117,Pakistan,PAK
+1118,Panama,PAN
+1123,Pitcairn Islands,XCA
+1124,Peru,PER
+1125,Philippines,PHL
+1173,Palau,XOC
+1175,Papua New Guinea,XOC
+1201,Poland,POL
+1202,Puerto Rico,XCA
+1205,North Korea,PRK
+1207,Madeira Islands,PRT
+1208,Azores,PRT
+1215,Portugal,PRT
+1216,Paraguay,XSM
+1217,Palestine,XME
+1219,French Polynesia,XOC
+1240,Qatar,QAT
+1241,Romania,ROU
+1242,Russia,RUS
+1340,Rwanda,XSS
+1341,Western Sahara,XSS
+1342,Saudi Arabia,SAU
+1346,Sudan,SDN
+1347,South Sudan,SDN
+1348,Senegal,XSS
+1349,Singapore,SGP
+1350,South Sandwich Islands,-
+1351,South Georgia,-
+1352,Saint Helena,XSS
+1353,Ascension Island,XSS
+1354,Solomon Islands,XOC
+1375,Sierra Leone,XSS
+1377,El Salvador,SLV
+1379,Somalia,XSS
+1381,Saint Pierre and Miquelon,CAN
+1383,Serbia,CSXX
+1384,Sao Tome and Principe,XSS
+1386,Suriname,XSM
+1387,Slovakia,SVK
+1388,Slovenia,SVN
+1389,Sweden,SWE
+1395,Swaziland,XSS
+1396,Sint Maarten,XCA
+1397,Seychelles,XSS
+1398,Syria,XME
+1399,Turks and Caicos Islands,XCA
+1402,Chad,XSS
+1403,Togo,XSS
+1404,Thailand,THA
+1414,Tajikistan,XCS
+1417,Turkmenistan,XCS
+1419,Timor-Leste,XSE
+1422,Tonga,XOC
+1425,Trinidad,XCA
+1426,Tobago,XCA
+1427,Tunisia,TUN
+1430,Turkey,TUR
+1433,Taiwan,TWN
+1435,Tanzania,XSS
+1439,Uganda,XSS
+1440,Ukraine,UKR
+1442,Uruguay,URY
+1443,USA,USA
+1570,Uzbekistan,UZB
+1574,Vatican,ITA
+1575,Grenadines,XCA
+1577,Saint Vincent,XCA
+1578,Venezuela,VEN
+1583,Virgin Islands,XCA
+1589,Vietnam,VNM
+1597,Vanuatu,XOC
+1611,Wallis and Futuna,XOC
+1613,Samoa,XOC
+1615,Yemen,YEM
+1620,South Africa,ZAF
+1623,Zambia,XSS
+1624,Zimbabwe,XSS

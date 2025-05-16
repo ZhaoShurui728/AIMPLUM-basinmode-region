@@ -5,3 +5,9 @@
 .prog.Rproj
 data/cgeoutput/analysis.gdx
 shell/jobsche_tmp/*
+tools/Gridmapping/prog/.Rproj.user
+tools/Gridmapping/prog/R.Rproj
+tools/Gridmapping/prog/*.lst
+tools/Gridmapping/prog/*/
+tools/Gridmapping/output/
+*.bak
