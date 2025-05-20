@@ -2,7 +2,7 @@
 
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
-YEAR0=(2010)
+YEAR1=(2010)
 # Set Global [on/off]
 global=off
 # if global=off, the following country code should be assigned
@@ -117,13 +117,6 @@ PREDICTS=off
     PREDICTSmodelsettings=BTC
     ## Flag of whtere considering climate chagne or not. Only used for HPD modelsettings. [none/ssp370/ssp126]
     Climate_sce=none
-
-# Set Making GDX Files for PNG File Creation Default Map [on/off]
-gdx4png=off
-    ## set year for map visualization.
-    YearListFig=(2010 2100)
-    ## difference from base year is ploted if this switch on
-    Sub_gdx4png_dif=off
 
 # Set PNG File Creation [on/off]
 plot=off

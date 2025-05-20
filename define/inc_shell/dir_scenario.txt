@@ -2,5 +2,4 @@ output/gdx/${S}
 output/gdx/${S}/cbnal
 output/gdx/${S}/analysis
 output/gdx/${S}/bio
-output/gdxii/${S}
 output/csv/${S}

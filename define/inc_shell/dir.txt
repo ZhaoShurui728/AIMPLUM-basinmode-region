@@ -19,7 +19,6 @@ output/txt/cpu/basesim
 output/txt/cpu/futuresim
 output/txt/cpu/merge1
 output/txt/cpu/merge2
-output/txt/cpu/gdx4png
 output/txt/cpu/basedsaggfrs
 output/txt/cpu/futuresimpost
 output/txt/cpu/disagrfrs

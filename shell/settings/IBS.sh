@@ -2,6 +2,7 @@
 
 # Set Simulation Year [ten year step from 2010]
 YEAR0=(2010 2020 2030 2040 2050 2060 2070 2080 2090 2100)
+YEAR1=(2010)
 # Set Global [on/off]
 global=on
 # if global=off, the following country code should be assigned
@@ -34,8 +35,17 @@ Futuresim=on
 
 # Set Scenario Merge [on/off]
 ScnMerge=on
+    Sub_ScnMerge_Baserun=on
+	## Calculate wwf regional restored area [on/off] 
+	Sub_ScnMerge_Restorecal=off
+	## Calcuate livestock distribution map [on/off]
+	Sub_ScnMerge_Livdiscal=off
     ## option to calculation biomass supply curve
     Sub_ScnMerge_BiocurveSort=off
+	## Output wwf restored area in IAMC temp [on/off]  (To be on, you need wwf regional restored area with Sub_ScnMerge_Restorecal=on)  
+	WWFrestore_iamc=off
+	## Set Livestock number output in IAMC temp  [on/off]  (To be on, you need livestock distribution map with Sub_ScnMerge_Livdiscal=on)  
+	Livestock_iamc=off
 
 # Set Merge Results for Each Scenario and Make CSV for Netcdf Files [on/off] (full running excluding base takes around 15 min. Full execution including netcdf file generation would be around 45 min)
 MergeResCSV4NC=on
@@ -57,15 +67,12 @@ netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=IBS
 
-# Set Making GDX Files for PNG File Creation Default Map [on/off]
-gdx4png=on
-    ## set year for map visualization.
-    YearListFig=(2010 2100)
-    ## difference from base year is ploted if this switch on
-    Sub_gdx4png_dif=off
-
 # Set PNG File Creation [on/off]
 plot=on
+    ## To export lumip landtype images, turn on lumip switch. To turn on, you also need to make netcdrgen with lumip format.
+    Sub_Plot_lumip=on
+    ## To make BTC images, then turn on BTC switch. To turn on, you also need to make netcdrgen with BTC format.
+    Sub_Plot_BTC=off
 
 # Set Merge Final Results for All Scenarios [on/off] 
 Allmerge=off

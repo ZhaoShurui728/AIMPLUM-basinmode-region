@@ -73,7 +73,6 @@ function makedirectory() {
     do
       mkdir -p ../output/gdx/base/${A}/analysis
       mkdir -p ../output/gdx/${S}/${A}/analysis
-      mkdir -p ../output/gdxii/${S}/${A}
     done    
   done
 }
@@ -565,49 +564,7 @@ function PREDICTScalc {
   cd ../../../exe
 }
  
-## 8. Generation of GDX Files for Plotting
-function gdx4pngRun() {
-  #Load scenario specification
-  ScenarioSpecName
-  declare -n YListFig=$3
-  global=$4
-  declare -n COUNTRY=$5  
-  dif=$6
-
-  echo ${YListFig[@]} > ../output/txt/$2_year.txt
-  echo "`date '+%s'`" > ../output/txt/cpu/gdx4png/$2.txt
-
-  for Y in ${YListFig[@]} 
-  do
-    if [ ${global} = "on" ]; then
-      gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=WLD --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} --dif=${dif} MaxProcDir=700 o=../output/lst/gdx4png1.lst
-    elif [ ${global} = "off" ]; then
-      for A in ${COUNTRY[@]} 
-      do
-        gams ../$1/prog/gdx4png.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2} --dif=${dif} MaxProcDir=700 o=../output/lst/gdx4png2.lst
-      done
-    fi
-  done
-
-  echo $(TimeDif `cat ../output/txt/cpu/gdx4png/$2.txt`) > ../output/txt/cpu/gdx4png/end_$2.txt
-  rm ../output/txt/cpu/gdx4png/$2.txt
-}
-
-function gdx4png() {
-  for S in ${scn[@]};   do
-    rm ../output/txt/cpu/gdx4png/end_${S}.txt ../output/txt/cpu/gdx4png/${S}.txt 2> /dev/null
-  done  
-  for S in ${scn[@]};  do
-    gdx4pngRun ${parent_dir} ${S} YearListFig ${global} COUNTRY0 ${Sub_gdx4png_dif} > ../output/log/gdx4png_${S}.log 2>&1 &
-    LoopmultiCPU 5 scn "gdx4png" ${CPUthreads}
-  done
-  wait
-  echo "GDX preparation for plot has been done."
-
-  if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
-}
-
-## 9. Graphics
+## 8. Graphics
 function plot() {
   for S in ${scn[@]} 
   do
@@ -626,7 +583,7 @@ function plot() {
   if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 }
 
-## 10. Merge All Results
+## 9. Merge All Results
 function Allmerge() {
   cd ../output/gdx/analysis
   gdxmerge *.gdx output=../final_results.gdx
@@ -723,7 +680,6 @@ if [ ${ScnMerge}       = "on" ]; then ScnMerge       ; fi
 if [ ${MergeResCSV4NC} = "on" ]; then MergeResCSV4NC ; fi
 if [ ${netcdfgen}      = "on" ]; then netcdfgen      ; fi
 if [ ${PREDICTS}       = "on" ]; then PREDICTScalc   ; fi
-if [ ${gdx4png}        = "on" ]; then gdx4png        ; fi
 if [ ${plot}           = "on" ]; then plot           ; fi
 if [ ${Allmerge}       = "on" ]; then Allmerge       ; fi
 

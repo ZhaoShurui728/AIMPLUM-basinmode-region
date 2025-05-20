@@ -30,20 +30,22 @@ scn=( SSP2_BaU_NoCC_No \
       SSP2_400C_2020NDC_NoCC_scenarioMIP_global2\
       SSP2_400C_2020NDC-low_NoCC_ScenarioMIP_global2)
 #scn=( SSP2_400C_2020NDC-low_NoCC_ScenarioMIP_global2)
-#scn=( SSP2_400C_2020NDC_NoCC_scenarioMIP_global2)
-scn=( SSP1_600C_2020NDC-high-Sus_NoCC_scenarioMIP_global2)
+scn=( SSP2_400C_2020NDC_NoCC_scenarioMIP_global2)
+#scn=( SSP1_600C_2020NDC-high-Sus_NoCC_scenarioMIP_global2)
 
 # Set CPU Core Threads
 CPUthreads=32
 # Set Pause Mode [on/off]
 pausemode=off
 # Set Data Preparation Process [on/off]
-DataPrep=off
+DataPrep=on
+# Set Data Preparation 2 Process [on/off]
+DataPrep2=off
 # Set Base Year Simulation [on/off]
 Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=on
+Futuresim=off
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=CTY
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -57,7 +59,7 @@ Futuresim=on
 ScnMerge=on
     Sub_ScnMerge_Baserun=on
 	## Calculate wwf regional restored area [on/off] 
-	Sub_ScnMerge_Restorecal=on
+	Sub_ScnMerge_Restorecal=off
 	## Calcuate livestock distribution map [on/off]
 	Sub_ScnMerge_Livdiscal=off
     ## option to calculation biomass supply curve
@@ -72,27 +74,34 @@ MergeResCSV4NC=on
     ## if you would like to make base calculation for this process, then turn on basecsv. This process can be skipped once you run (but needs to be run if you revised the results)
     Sub_MergeResCSV4NC_basecsv=on
     ## if you would like to export lumip type netcdf turn on lumip switch. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
-    Sub_MergeResCSV4NC_lumip=off
+    Sub_MergeResCSV4NC_lumip=on
     ## if you would like to make BTC basis 5 options, then turn on BTC3option. This switch will be also used in :netcdfgen (around 3GB per scenario memory and 5min are taken in this process)
-    Sub_MergeResCSV4NC_BTC3option=on
+    Sub_MergeResCSV4NC_BTC3option=off
     ## if you would like to make AIMSSPRCP dataformat nc file, turn on ssprcp. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on)
     Sub_MergeResCSV4NC_ssprcp=off
     ## if you would like to make bioenergy potential yield, turn on bioyieldcal. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
     Sub_MergeResCSV4NC_bioyielcal=off
     ## if you would like to make carbon sequestration nc file, turn on carseq. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
     Sub_MergeResCSV4NC_carseq=off
-
+    ## if you would like to output livestock distribution map, turn on livdiscal. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
+    Sub_MergeResCSV4NC_livdiscal=off
 # Set Netcdf Creation [on/off]
 netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
-    Sub_Netcdfgen_projectname=IBS_tmp
+    Sub_Netcdfgen_projectname=BTC
 
-# Set Making GDX Files for PNG File Creation Default Map [on/off]
-gdx4png=off
-    ## set year for map visualization.
-    YearListFig=(2010 2100)
-    ## difference from base year is ploted if this switch on
-    Sub_gdx4png_dif=off
+# Set PREDICTS output [on/off]  (If on, calculate BII by PREDICTS. You need AIMPLUM netcdf output with Sub_MergeResCSV4NC_BTC3option=on)  
+PREDICTS=off
+    ## Data preparation process. If you want to calculate PREDICTS coefficients, you need to run. Once you run, you can skipp. (default off)
+    Sub_PREDICTS_DataPrep=on
+    ## If you want to calculate PREDICTS coefficients, turn on the switch below. (default off)
+    Sub_PREDICTS_EstCoefs=on
+    ## Flag to differenciate result used in file and directory. If 'default', skipped two process before and use coefficients in tools/PREDICTS_biodiversity/data/
+    PRJ=default
+    ## Flag to differenciate modelsettings.[BTC/HPD]
+    PREDICTSmodelsettings=BTC
+    ## Flag of whtere considering climate chagne or not. Only used for HPD modelsettings. [none/ssp370/ssp126]
+    Climate_sce=none
 
 # Set PNG File Creation [on/off]
 plot=on
