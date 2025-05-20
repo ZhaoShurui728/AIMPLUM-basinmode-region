@@ -42,6 +42,7 @@ options(future.seed = TRUE)
 
 
 basin_agg <- read.xlsx("../data/Basin/Basin_agg.xlsx",sheet = "Aggregate")
+basin_name <- read.xlsx("../data/Basin/Basin_agg.xlsx",sheet = "Basin_name")
 
 # POINTジオメトリ化
 pts_sf <- st_as_sf(grid_points, coords = c("lon005", "lat005"), crs = 4326, remove = FALSE)
@@ -55,14 +56,14 @@ pts_joined <- st_join(pts_sf, Basin, join = st_intersects, left = TRUE) %>%
 
 pts_joined2<- full_join(pts_joined,basin_agg,by="MAJ_BAS")  %>%
   filter(!is.na(MAJ_BAS2)) %>% select(!MAJ_BAS) %>% rename("MAJ_BAS"="MAJ_BAS2")
-
-pts_joined3 <- pts_joined2[c(-1,-2,-6)]
+pts_joined3 <- pts_joined2[c(-1,-2,-5,-6)]
+pts_joined3 <- left_join(pts_joined3,basin_name,by="MAJ_BAS") %>% select(!MAJ_BAS)
 
 # display results
-#head(pts_joined2)
+head(pts_joined3)
 
-symDim <- 5
+symDim <- 4
 attr(pts_joined3, "symName") <- "gridbasin"
 lst <- wgdx.reshape(pts_joined3, symDim)
-wgdx.lst(gdxName = "../output/gridbasinmap_wname.gdx",lst)
+wgdx.lst(gdxName = "../output/gridbasinmap.gdx",lst)
 
