@@ -369,9 +369,6 @@ function MergeResCSV4NCRun() {
   echo "--sce=${SCE} --clp=${CLP} --iav=${IAV} --ModelInt2=${ModelInt2}"
   # csv file creation
   if [ ${basecsv} = "on" ]; then
-    cd ../output/gdx/$2/analysis
-    gdxmerge *.gdx output=../../results/results_$2.gdx
-    cd ../../../../exe
     gams ../$1/prog/gdx2csv.gms --split=1 S=${savedir}gdx2csv2nc1_$2 o=../output/lst/gdx2csv1_base_$2.lst lf=../output/log/gdx2csv1_base_$2.log ${GAMSRunArg}
   fi
 

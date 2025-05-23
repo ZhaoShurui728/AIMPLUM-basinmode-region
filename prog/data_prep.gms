@@ -7,10 +7,14 @@ Gland(G) Cell number excluding ocean
 I	Vertical position	/ 1*360 /
 J	Horizontal position	/ 1*720 /
 IJland(I,J)	Cell number excluding ocean
-R	17 regions	/
+Rall 17 regions + ISO countries /
+$include      ../%prog_loc%/define/region/region17exclNations.set
+$include      ../%prog_loc%/define/region/region_iso.set
+/
+R(Rall)	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 /
-RISO	ISO countries	/
+RISO(Rall)	ISO countries	/
 $include ../%prog_loc%/define/region/region_iso.set
 /
 ;
@@ -40,7 +44,8 @@ rad_degree	/0.0174532925/
 ordi(I)
 ordj(J)
 ordg(G)
-
+landshare(I,J,Rall)      parcentage ratio of land area to grid area (0 to 1) in PLUM lat lon sets
+landshareG(G,Rall)      parcentage ratio of land area to grid area (0 to 1) in PLUM lat lon sets
 ;
 
 ordi(I)=ord(I);
@@ -51,7 +56,7 @@ LAT(I)=90-GS*ordi(i);
 LOG(J)=ordj(J)*GS;
 
 $gdxin '../%prog_loc%/define/countrymap.gdx'
-$load MAP_RISO MAP_RIJ=MAP_R17IJ MAP_RISOIJ
+$load MAP_RISO MAP_RIJ=MAP_R17IJ_mult MAP_RISOIJ landshare
 
 MAP_RISOIJ("GUF","169","253")=Yes;
 MAP_RISOIJ("GUF","169","254")=Yes;
@@ -156,6 +161,8 @@ GLIJ(R,I,J,I2,J2)$(MAP_RIJ(R,I,J) AND MAP_RIJ(R,I2,J2) AND (NOT (LAT(I)-LAT(I2)=
 
 GL(R,G,G2)$(MAP_RG(R,G) AND MAP_RG(R,G2))=SUM((I,J)$MAP_GIJ(G,I,J),SUM((I2,J2)$MAP_GIJ(G2,I2,J2), GLIJ(R,I,J,I2,J2)));
 
+landshareG(G,Rall)$(sum((I,J)$MAP_GIJ(G,I,J),landshare(I,J,Rall)))=sum((I,J)$MAP_GIJ(G,I,J),landshare(I,J,Rall));
+
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  USA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XE25
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XER
@@ -176,43 +183,9 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XAF
 
 set
 G_USACAN(G)
-G_USA(G)
-G_XE25(G)
-G_XER(G)
-G_TUR(G)
-G_XOC(G)
-G_CHN(G)
-G_IND(G)
-G_JPN(G)
-G_XSE(G)
-G_XSA(G)
-G_CAN(G)
-G_BRA(G)
-G_XLM(G)
-G_CIS(G)
-G_XME(G)
-G_XNF(G)
-G_XAF(G)
 ;
 
 G_USACAN(G)$(MAP_RG("USA",G) or MAP_RG("CAN",G))=Yes;
-G_USA(G)$(MAP_RG("USA",G))=Yes;
-G_XE25(G)$(MAP_RG("XE25",G))=Yes;
-G_XER(G)$(MAP_RG("XER",G))=Yes;
-G_TUR(G)$(MAP_RG("TUR",G))=Yes;
-G_XOC(G)$(MAP_RG("XOC",G))=Yes;
-G_CHN(G)$(MAP_RG("CHN",G))=Yes;
-G_IND(G)$(MAP_RG("IND",G))=Yes;
-G_JPN(G)$(MAP_RG("JPN",G))=Yes;
-G_XSE(G)$(MAP_RG("XSE",G))=Yes;
-G_XSA(G)$(MAP_RG("XSA",G))=Yes;
-G_CAN(G)$(MAP_RG("CAN",G))=Yes;
-G_BRA(G)$(MAP_RG("BRA",G))=Yes;
-G_XLM(G)$(MAP_RG("XLM",G))=Yes;
-G_CIS(G)$(MAP_RG("CIS",G))=Yes;
-G_XME(G)$(MAP_RG("XME",G))=Yes;
-G_XNF(G)$(MAP_RG("XNF",G))=Yes;
-G_XAF(G)$(MAP_RG("XAF",G))=Yes;
 
 execute_unload '../%prog_loc%/define/subG.gdx'
 G_USACAN
@@ -258,7 +231,8 @@ MAP_WG
 MAP_RISOG
 Gland
 MAP_RISO
-
+landshareG
+;
 
 
 $exit

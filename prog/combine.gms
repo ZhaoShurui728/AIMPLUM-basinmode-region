@@ -357,12 +357,14 @@ FLAG_IJ(I,J)		Grid flag
 GAIJ(I,J)           Grid area of cell I J kha
 protectfrac(R,Y,G)	Protected area fraction (0 to 1) in each cell G
 protectfracL(R,Y,G,L)	Protected area fraction (0 to 1) of land category L in each cell G
+landshareG(G,Rall) Parcentage ratio of land area to grid area (0 to 1)
 ;
 
 ordy(Y) = ord(Y) + %base_year% -1;
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA MAP_RIJ GAIJ MAP_RG
+$load landshareG
 
 FLAG_IJ(I,J)$SUM(R,MAP_RIJ(R,I,J))=1;
 
@@ -408,8 +410,11 @@ GHGL(Ragg,Y,EmitCat,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L))=SUM(R$MAP_RAG
 
 CSB(R)=CSB_load(R,"%base_year%");
 
+* Subtract area of the other countries that share the same grid cell from "OL".
+VY_load(R,Y,"OL",G)$(landshareG(G,R))=VY_load(R,Y,"OL",G)-(1-landshareG(G,R));
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
-VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
+*VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
+VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM((G,R)$MAP_GIJ(G,I,J),VY_load(R,Y,L,G));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 *------------------------------------------------------

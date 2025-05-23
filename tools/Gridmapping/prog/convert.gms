@@ -30,7 +30,9 @@ $        include ../../../define/region/region_iso_17exclNations.map
 $        include ../../../define/region/region_iso.map
 /
 MAP_R17IJ(Sr17,I,J)	Relationship between 17 regions and cell position I J
-MAP_RISOIJ(RISO,I,J)	Relationship between ISO countries and cell position I J
+MAP_RISOIJ(RISO,I,J)	Relationship between ISO countries and cell position I J each grid cell belongs to a single country which occupies the largest area of the grid.
+MAP_R17IJ_mult(Sr17,I,J)	Relationship between 17 regions and cell position I J allowing multiple regions share a grid cell
+MAP_RISOIJ_mult(RISO,I,J)	Relationship between ISO countries and cell position I J allowing multiple countries share a grid cell
 *MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
 ;
 
@@ -50,7 +52,8 @@ landarea_riso_check(RISO,I,J)       total land area in 17 regions (kha)
 landarea_riso_check2(RISO)       total land area in 17 regions (kha)
 
 landarea_r17_check(Sr17,I,J)       total land area in 17 regions (kha)
-
+num_RISO(I,J)
+num_R17(I,J)
 ;
 
 $gdxin '../../../data/data_prep.gdx'
@@ -67,8 +70,15 @@ landshare(I,J,Sr17)$(sum(RISO$(map_RISO(RISO,Sr17) and landshare(I,J,RISO)),GAIJ
 
 landshare_r17(Sr17)$(sum(RISO$map_RISO(RISO,Sr17),sum((I,J)$landshare(I,J,RISO),GAIJ(I))))=sum(RISO$map_RISO(RISO,Sr17),sum((I,J)$landshare(I,J,RISO),GAIJ(I)*landshare(I,J,RISO)))/sum(RISO$map_RISO(RISO,Sr17),sum((I,J)$landshare(I,J,RISO),GAIJ(I)));
 
+* assume only one country for a grid cell
 MAP_RISOIJ(RISO,I,J)$(landshare(I,J,RISO)=smax(RRISO$(landshare(I,J,RRISO)),landshare(I,J,RRISO)))=Yes;
 MAP_R17IJ(Sr17,I,J)$(sum(RISO$map_RISO(RISO,Sr17),MAP_RISOIJ(RISO,I,J)))=Yes;
+
+* allow multiple countries in a grid cell
+MAP_RISOIJ_mult(RISO,I,J)$(landshare(I,J,RISO))=Yes;
+MAP_R17IJ_mult(Sr17,I,J)$(sum(RISO$map_RISO(RISO,Sr17),MAP_RISOIJ_mult(RISO,I,J)))=Yes;
+num_RISO(I,J)$(sum(RISO$MAP_RISOIJ_mult(RISO,I,J),1))=sum(RISO$MAP_RISOIJ_mult(RISO,I,J),1);
+num_R17(I,J)$(sum(Sr17$MAP_R17IJ_mult(Sr17,I,J),1))=sum(Sr17$MAP_R17IJ_mult(Sr17,I,J),1);
 
 
 * for check
@@ -81,8 +91,13 @@ execute_unload '../output/countrymap.gdx'
 Sr17
 RISO
 map_RISO
-MAP_R17IJ
-MAP_RISOIJ
+*MAP_R17IJ
+MAP_R17IJ_mult=MAP_R17IJ
+*MAP_RISOIJ
+MAP_RISOIJ_mult=MAP_RISOIJ
+num_RISO
+num_R17
+landshare
 ;
 
 $ontext

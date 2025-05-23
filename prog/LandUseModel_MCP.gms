@@ -278,6 +278,8 @@ GAT		Total grid area
 GATwoOL		Total grid area without ice and water
 FLAG_G(G)		Grid flag
 GL(G,G2)		Distance between grid G and G2
+landshare(G)  Parcentage ratio of land area to grid area (0 to 1)
+landshareG(G,R) Parcentage ratio of land area to grid area (0 to 1)
 ;
 
 $gdxin '../%prog_loc%/define/subG.gdx'
@@ -285,10 +287,12 @@ $load G=G_%Sr%
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load GA
 $load MAP_GIJ Map_RG
+$load landshareG
 
 FLAG_G(G)$MAP_RG("%Sr%",G)=1;
 GA(G)$(FLAG_G(G)=0)=0;
 GAT=SUM(G$FLAG_G(G),GA(G));
+landshare(G)=landshareG(G,"%Sr%");
 
 set
 REVG(G) cells allowed for conversion/set.G/
@@ -781,8 +785,8 @@ Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_bas
 *Y_base("CROP_FLW",G)$(Y_base("CROP_FLW",G)<0)=0;
 Y_base("OL",G)$(Y_base("OL",G)>max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G)))=max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G));
 GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
-Y_base("MNGPAS",G)$(Y_base("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_base("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
-Y_base("RAN",G)$(Y_base("PAS",G)) = max(0,Y_base("PAS",G) - Y_base("MNGPAS",G));
+*Y_base("MNGPAS",G)$(Y_base("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_base("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+*Y_base("RAN",G)$(Y_base("PAS",G)) = max(0,Y_base("PAS",G) - Y_base("MNGPAS",G));
 
 *--- Y_pre
   Y_pre(L,G)$(Y_base(L,G))=Y_base(L,G);

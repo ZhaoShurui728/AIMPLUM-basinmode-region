@@ -51,6 +51,12 @@ PLDMtmp(LDM)=PLDM(LDM);
 Y_pre("FRSGL",G)=1-SUM(L$LRCPnonNat(L),frac_rcp("%Sr%",L,"%base_year%",G));
 Y_pre("PAS",G)=frac_rcp("%Sr%","PAS","%base_year%",G);
 
+*---Adjust area of the grid cell which is included in more than one country.
+*---Include area of the other countries in OL and scale down area of the other categories.
+Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
+Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
+*---END adjust
+
 VY.SCALE(L,G)$(Y_pre(L,G))=SQRT(ABS(Y_pre(L,G)));
 VY.L(L,G)=Y_pre(L,G);
 exclflag(L,G)$(LFIX(L) OR Y_pre(L,G)=0 OR (NOT SUM(LDM$(MAP_LLDM2(L,LDM)),1)))=1;
@@ -71,6 +77,7 @@ parameter aaa;
 aaa(LDM)$(PLDM(LDM) AND (NOT SUM(L$(MAP_LLDM2(L,LDM) AND LFix(L)),1)))= 1 ;
 Y_pre("OL",G)$(Y_pre("SL",G) +Y_pre("OL",G)=SUM((L,LDM)$(PLDM(LDM) AND MAP_LLDM2(L,LDM)),Y_pre(L,G)))=1-Y_pre("SL",G) ;
 PLDM("OL")=SUM(G,Y_pre("OL",G)*ga(G)); 
+PLDM("SL")=SUM(G,Y_pre("SL",G)*ga(G)); 
 PLDM("PRM_SEC")=SUM(G,ga(G))-(SUM(LDM,PLDM(LDM))-PLDM("PRM_SEC"));
 
 $if %parallel%==off execute_unload '../output/temp.gdx';
@@ -78,7 +85,7 @@ SOLVE CEBaseAdjModel using NLP minimizing VOBJ;
 
 *post process
 Y_pre(L,G)=Y_pretmp(L,G);
-PLDM(LDM)=PLDMtmp(LDM);
+PLDM(LDM)$((not sameas(LDM,"SL")) and (not sameas(LDM,"OL")))=PLDMtmp(LDM);
 Y_pre(L,G)=VY.L(L,G);
 Y_pre("PRM_SEC",G)=VY.L("FRSGL",G)+VY.L("PAS",G);
 VY.SCALE(L,G)=1;
