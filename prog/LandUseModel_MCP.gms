@@ -74,8 +74,13 @@ $if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenar
 $setglobal protectStartYear 2030
 *$setglobal protectStartYear %second_year%
 
+* AgLU basin-based run. If basin-based AgLU result is used, then it should be turned on otherwise keep off.
+$setglobal agluauto off
+$include ../%prog_loc%/individual/basin/setglobal_region_basin.gms
+
 Set
-R	17 regions	/%Sr%/
+R	 regions	/%Sr%/
+R17	17 regions mapped with R /%Sr17%/
 G	Cell number of the target region
 MAP_RG(R,G)	Relationship between region R and cell G
 I /1*360/
@@ -178,6 +183,7 @@ LCROPRF(L)/PDRRF,WHTRF,GRORF,OSDRF,C_BRF,OTH_ARF/
 LDMCROPA(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO,CROP_FLW/
 LDMCROPB(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A,BIO/
 LDMCROP(LDM)/PDR,WHT,GRO,OSD,C_B,OTH_A/
+LDMAFR(LDM)/AFR/
 LFRS(L)/PRM_SEC,HAV_FRS,AFR/
 LPRMSEC(L)/PRM_SEC/
 LFRSGL(L)/FRSGL/
@@ -262,7 +268,7 @@ C_BRF	.	CL
 OTH_ARF	.	CL
 BIO	.	CL
 /
-ohashi(R,G)
+ohashi(R17,G)
 ;
 
 Parameter
@@ -594,43 +600,43 @@ Alias(AC,ACP),(A,AP),(C,CP);
 CCROP("COM_ECR")=YES;
 
 parameter
-land_basemap(R,G,L)	Percentage share of land type in base year
+land_basemap(R17,G,L)	Percentage share of land type in base year
 crop_basemap(LDM,G)	Percentage share of cropland type in base year
-frac_rcp(R,L,YBASE,G)	fraction of each gridcell G in land category L
+frac_rcp(R17,L,YBASE,G)	fraction of each gridcell G in land category L
 PVISIT(CVST,G)	Yield of land category L cell G in year Y [Mg C per ha per year]
-YIELD_cge(Y,R,LDM)	CGE output of yield of land category L region R in year Y [tonne per ha per year]
+YIELD_cge(Y,R17,LDM)	CGE output of yield of land category L region R in year Y [tonne per ha per year]
 YIELD_gaez(L,G)	GAEZ yield of land category L cell G in year Y [tonne per ha per year]
 YIELD_AVE(LDM)	Agerage yield of land category L region R in year Y [tonne per ha per year]
 Pisimip(L,G)    ISIMIP (LPJmL) yield of land category L cell G in year Y [tonne per ha per year]
-Pprod(Y,R,LDM,PRODUNIT)	Production
-TON_C(R,CVST)	Ratio of tonne to tonne Carbon [tonne per tonne C]
+Pprod(Y,R17,LDM,PRODUNIT)	Production
+TON_C(R17,CVST)	Ratio of tonne to tonne Carbon [tonne per tonne C]
 DW_TON	Ratio of dry matter tonne to tonne [dry matter tonne per ton] source: GAEZ model conversion factor pasture/
 0.1/
 C_DW		Ratio of tonne carbon to tonne dry matter of biomass [tonne C per dry matter tonne]/
 0.47
 /
-Planduse_load(*,Y,R,LCGE)                                Land use | kha
+Planduse_load(*,Y,R17,LCGE)                                Land use | kha
 
 Planduse(Y,LCGE)
 PlanduseT	total land demand (kha or tonne carbon)
 SF_planduse	scale factor
 ordy(Y)
-Ppopulation(Y0,R)
-POP(*,Y0,R)
-GDP_load(Y0,R)
-GDP(*,Y0,R)
+Ppopulation(Y0,R17)
+POP(*,Y0,R17)
+GDP_load(Y0,R17)
+GDP(*,Y0,R17)
 GDPCAP_WLD	global average of gdp per capita in base year (10 thousand $ per capita)	/0.68/
 GDPCAP		GDP per capita (10 thousand $ per capita)
 GDPCAP_base     GDP per capita in base year (10 thousand $ per capita)
-PGHG_load(*,Y0,R)	Carbon price [k$ per tonne CO2]
+PGHG_load(*,Y0,R17)	Carbon price [k$ per tonne CO2]
 PGHG	Carbon price [million $ per tonne C]
 Pirri(LDM,G)	Irrigation ratio of crop LDM cell G (0 to 1)
 SF_YIELD(LDM)   Scale factor to adjust average yield to CGE estimates
-SSP_frac(L,Y,R,G) Fraction of built-up (SL) per grid in year Y
+SSP_frac(L,Y,R17,G) Fraction of built-up (SL) per grid in year Y
 
-Pland_load(*,Y,R,A)                                     Land area by sectors
-OUTPUTALL_Nominal_load(*,Y,R,AC)                         Output of sector AC nominal value| Million USD per year
-OUTPUTAC_load(*,Y,R,A,C)                                 Output of C from A | mil.$ or ktoe
+Pland_load(*,Y,R17,A)                                     Land area by sectors
+OUTPUTALL_Nominal_load(*,Y,R17,AC)                         Output of sector AC nominal value| Million USD per year
+OUTPUTAC_load(*,Y,R17,A,C)                                 Output of C from A | mil.$ or ktoe
 Pland(Y,AC)                                     Land area by sectors
 OUTPUTALL_Nominal(Y,AC)                         Output of sector AC nominal value| Million USD per year
 OUTPUTAC(Y,A,C)                                 Output of C from A | mil.$ or ktoe
@@ -642,7 +648,7 @@ popdens(G)	population density (inhabitants per km2)
   PLDM_load(LDM)
   PCDM_load(L)
 
-  FRA_load(R,Y,i_FRA)  protected forest area (kha) in FRA(2010)
+  FRA_load(R17,Y,i_FRA)  protected forest area (kha) in FRA(2010)
   frsprotect_check
   protectfracIJL(I,J,biodivconsdata,L_LC)
   ACF(G)          average carbon flow in grid G
@@ -672,7 +678,7 @@ popdens(G)	population density (inhabitants per km2)
   irricost_WLD	global average of irrigation investment cost  (million $ per ha)	/0.01/
   irricost	irrigation investment cost (million $ per ha)
   plcc(L)	land conversion cost per ha
-  ruralroadlength(R)	total load length in rural area (km)
+  ruralroadlength(R17)	total load length in rural area (km)
   roaddens	mean load density in rural area (km per ha)
   GLMINHA(L,G)	minimum distance per unit grid area from the nearest cell G within the same category L (km per ha)
   psmax(L)
@@ -750,14 +756,14 @@ $load Planduse_load=Planduse
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
 $if %not1stiter%==on $setglobal IAVload %preIAV%
-Ppopulation(Y0,R)=POP("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R);
-GDP_load(Y0,R)=GDP("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R);
-$if %carbonprice%==off PGHG_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R)=0;
-Planduse(Y,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",LCGE);
-PGHG(Y0)=PGHG_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,"%Sr%")/1000*44/12;
-Pland(Y,A)=Pland_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A);
-OUTPUTALL_Nominal(Y,A)=OUTPUTALL_Nominal_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A);
-OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr%",A,C);
+Ppopulation(Y0,R17)=POP("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R17);
+GDP_load(Y0,R17)=GDP("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R17);
+$if %carbonprice%==off PGHG_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,R17)=0;
+Planduse(Y,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr17%",LCGE);
+PGHG(Y0)=PGHG_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y0,"%Sr17%")/1000*44/12;
+Pland(Y,A)=Pland_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr17%",A);
+OUTPUTALL_Nominal(Y,A)=OUTPUTALL_Nominal_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr17%",A);
+OUTPUTAC(Y,A,C)=OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,"%Sr17%",A,C);
 
 * Base-year irrigation map data
 $gdxin '../%prog_loc%/data/mirca.gdx'
@@ -767,25 +773,25 @@ $gdxin '../%prog_loc%/data/ssppopmap.gdx'
 $load popdens_load=popdens
 
 popdens(G)=popdens_load("%Sy%","%SSP%",G);
-GDPCAP$Ppopulation("%Sy%","%Sr%")=GDP_load("%Sy%","%Sr%")/Ppopulation("%Sy%","%Sr%");
+GDPCAP$Ppopulation("%Sy%","%Sr17%")=GDP_load("%Sy%","%Sr17%")/Ppopulation("%Sy%","%Sr17%");
 
 $gdxin '../%prog_loc%/data/slopedata.gdx'
 $load slope=slope2
 *-------Pre-year land map load ----------*
 $ifthen.baseyear %Sy%==%base_year%
 *---Y_base preparation
-Y_base(L,G)$(LRCP(L))=frac_rcp("%Sr%",L,"%base_year%",G);
-$if %UrbanLandData%==SSP Y_base("SL",G)$(SSP_frac("SL","2010","%Sr%",G))= SSP_frac("SL","2010","%Sr%",G);
-$if not %UrbanLandData%==SSP Y_base("SL",G)=frac_rcp("%Sr%","SL","%base_year%",G);
-Y_base(L,G)$(LPRMSEC(L))=frac_rcp("%Sr%","PRM_SEC","%base_year%",G) + frac_rcp("%Sr%","PAS","%base_year%",G);
+Y_base(L,G)$(LRCP(L))=frac_rcp("%Sr17%",L,"%base_year%",G);
+$if %UrbanLandData%==SSP Y_base("SL",G)$(SSP_frac("SL","2010","%Sr17%",G))= SSP_frac("SL","2010","%Sr17%",G);
+$if not %UrbanLandData%==SSP Y_base("SL",G)=frac_rcp("%Sr17%","SL","%base_year%",G);
+Y_base(L,G)$(LPRMSEC(L))=frac_rcp("%Sr17%","PRM_SEC","%base_year%",G) + frac_rcp("%Sr17%","PAS","%base_year%",G);
 Y_base(L,G)$(LCROPIR(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*Pirri(LDM,G));
 Y_base(L,G)$(LCROPRF(L))=sum(LDM$MAP_LLDM(L,LDM),crop_basemap(LDM,G)*(1-Pirri(LDM,G)));
 Y_base("CL",G)=sum(L$LCROP(L),Y_base(L,G));
-Y_base("CROP_FLW",G)$(frac_rcp("%Sr%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G))>0)=frac_rcp("%Sr%","CL","%base_year%",G)-Y_base("CL",G);
+Y_base("CROP_FLW",G)$(frac_rcp("%Sr17%","CL","%base_year%",G)-SUM(L$LCROP(L),Y_base(L,G))>0)=frac_rcp("%Sr17%","CL","%base_year%",G)-Y_base("CL",G);
 *Y_base("CROP_FLW",G)$(Y_base("CROP_FLW",G)<0)=0;
 Y_base("OL",G)$(Y_base("OL",G)>max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G)))=max(0,1-Y_base("CL",G)-Y_base("PAS",G)-Y_base("SL",G)-Y_base("CROP_FLW",G));
 GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
-*Y_base("MNGPAS",G)$(Y_base("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = Y_base("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+*Y_base("MNGPAS",G)$(Y_base("PAS",G) and frac_rcp("%Sr17%","MNGPAS","%base_year%",G)+frac_rcp("%Sr17%","RAN","%base_year%",G)) = Y_base("PAS",G) * frac_rcp("%Sr17%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr17%","MNGPAS","%base_year%",G)+frac_rcp("%Sr17%","RAN","%base_year%",G));
 *Y_base("RAN",G)$(Y_base("PAS",G)) = max(0,Y_base("PAS",G) - Y_base("MNGPAS",G));
 
 *--- Y_pre
@@ -812,7 +818,7 @@ $endif.fileex
 Y_pre(L,G)$(VY_load(L,G) and not sameas(L,"SL"))=VY_load(L,G);
 
 *---load SL data for every year excl. base yr
-Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr%",G))= SSP_frac("SL","%Sy%","%Sr%",G);
+Y_pre("SL",G)$(SSP_frac("SL","%Sy%","%Sr17%",G))= SSP_frac("SL","%Sy%","%Sr17%",G);
 
 *---adjust exogenous variables to satisfy constraint
 Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
@@ -863,16 +869,16 @@ $load FRA_load=FRA
 frsprotectarea=0;
 
 $ifthen not %Sy%==%base_year%
-$ if %frsprotectexpand%==off frsprotectarea=FRA_load("%Sr%","2010","Conservation of biodiversity");
-$ if %frsprotectexpand%==on frsprotectarea=FRA_load("%Sr%","2010","Conservation of biodiversity")*(1+0.5*(%Sy%-2010)/(2100-2010));
+$ if %frsprotectexpand%==off frsprotectarea=FRA_load("%Sr17%","2010","Conservation of biodiversity");
+$ if %frsprotectexpand%==on frsprotectarea=FRA_load("%Sr17%","2010","Conservation of biodiversity")*(1+0.5*(%Sy%-2010)/(2100-2010));
 $endif
 
 *-----Ohashi's protected area-----*
 $ifthen not %ohashiprotect%==off
 $gdxin '../%prog_loc%/data/ohashiset.gdx'
-$if %Sr%==XER $load ohashi = ohashi75
-$if not %Sr%==XER $load ohashi = %ohashiprotect%
-REVG(G)$ohashi("%Sr%", G)=no;
+$if %Sr17%==XER $load ohashi = ohashi75
+$if not %Sr17%==XER $load ohashi = %ohashiprotect%
+REVG(G)$ohashi("%Sr17%", G)=no;
 $endif
 
 *-----Protected area for Bending The Curve-----*
@@ -909,7 +915,7 @@ frsprotectarea=0;
 *----Carbon flow
 parameter
   ACF_vst(LVST,G)          average carbon flow in grid G (VISIT data)
-  MACF_vst(LVST,R)            mean value of average carbon flow in each region (VISIT data)
+  MACF_vst(LVST,R17)            mean value of average carbon flow in each region (VISIT data)
   CFT_vst(LVST,G,Forestage)             carbon flow in year Y of forest planted in year Y2 in grid G (VISIT data)
 ;
 
@@ -922,32 +928,32 @@ $load ACF_vst=ACFout MACF_vst=MACFout CFT_vst=CFTout
 CFT_nat(G,Forestage)=CFT_vst("NaturalFRS",G,Forestage);
 $ifthen.afftype %afftype%==cact_vst
   ACF(G)=ACF_vst("AFR00",G);
-  MACF=MACF_vst("AFR00","%Sr%");
+  MACF=MACF_vst("AFR00","%Sr17%");
   CFT(G,Forestage)=CFT_vst("AFR00",G,Forestage);
 $elseif.afftype %afftype%==cdiv_vst
   ACF(G)=ACF_vst("AFRDIV",G);
-  MACF=MACF_vst("AFRDIV","%Sr%");
+  MACF=MACF_vst("AFRDIV","%Sr17%");
   CFT(G,Forestage)=CFT_vst("AFRDIV",G,Forestage);
 $elseif.afftype %afftype%==cmax_vst
   ACF(G)=ACF_vst("AFRMAX",G);
-  MACF=MACF_vst("AFRMAX","%Sr%");
+  MACF=MACF_vst("AFRMAX","%Sr17%");
   CFT(G,Forestage)=CFT_vst("AFRMAX",G,Forestage);
 $elseif.afftype %afftype%==ccur_vst
   ACF(G)=ACF_vst("AFRCUR",G);
-  MACF=MACF_vst("AFRCUR","%Sr%");
+  MACF=MACF_vst("AFRCUR","%Sr17%");
   CFT(G,Forestage)=CFT_vst("AFRCUR",G,Forestage);
 $elseif.afftype %afftype%==cprevisit
-$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr17%.gdx'
 $load ACF MACF CFT
 $else.afftype
-$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%_aez.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr17%_aez.gdx'
 $load ACF MACF CFT
 
 $endif.afftype
 
 *---- Management factor for Biocrop yield ---*
 $ifthen.baseyear %Sy%==%base_year%
-  GDPCAP_base$Ppopulation("%base_year%","%Sr%")=GDP_load("%base_year%","%Sr%")/Ppopulation("%base_year%","%Sr%");
+  GDPCAP_base$Ppopulation("%base_year%","%Sr17%")=GDP_load("%base_year%","%Sr17%")/Ppopulation("%base_year%","%Sr17%");
   MFA$(GDPCAP_base>=1)=1;
   MFA$(GDPCAP_base>0.35 AND GDPCAP_base<1)=0.6;
   MFA$(GDPCAP_base>0 AND GDPCAP_base<=0.35)=0.4;
@@ -978,13 +984,13 @@ $load yield_miscanthus_rainfed_num
 $load yield_swichgrass_rainfed_num
 
   YIELDBIO_H08(G)=SUM((I,J)$(MAP_GIJ(G,I,J) AND yield_miscanthus_rainfed_num(I,J)+yield_swichgrass_rainfed_num(I,J)),yield_miscanthus_rainfed_num(I,J)+yield_swichgrass_rainfed_num(I,J))/2/1000;
-  TON_C(R,"C4natural")= 1/C_DW/DW_TON;
+  TON_C(R17,"C4natural")= 1/C_DW/DW_TON;
 
 *YIELD(L,G)$(LCGAEZ(L) AND YIELD_gaez(L,G))=YIELD_gaez(L,G);
   YIELD(L,G)$(LCisimip(L) AND Pisimip(L,G))=Pisimip(L,G);
 
 * MgC/ha/year] --> [tonne/ha/year]
-*YIELD(L,G)$(LCVST(L) AND LCTON(L)) = SUM(CVST$Map_LCVST(L,CVST),PVISIT(CVST,G) * TON_C("%Sr%",CVST));
+*YIELD(L,G)$(LCVST(L) AND LCTON(L)) = SUM(CVST$Map_LCVST(L,CVST),PVISIT(CVST,G) * TON_C("%Sr17%",CVST));
 * MgC/ha/year]
 *YIELD(L,G)$(LCVST(L) AND LCC(L))   = SUM(CVST$Map_LCVST(L,CVST),PVISIT(CVST,G));
 * [tonne/ha/year] --> MgC/ha/year]
@@ -995,7 +1001,7 @@ $load yield_swichgrass_rainfed_num
 
 *--- Adjustment of productivity (crop yield) to CGE estimates ---*
   YIELD_AVE(LDM)$(LDMCROPA(LDM) AND SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G))))= SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)*YIELD(L,G))) / SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
-  SF_YIELD(LDM)$(LDMCROPA(LDM) AND YIELD_AVE(LDM))=YIELD_cge("%base_year%","%Sr%",LDM)/YIELD_AVE(LDM);
+  SF_YIELD(LDM)$(LDMCROPA(LDM) AND YIELD_AVE(LDM))=YIELD_cge("%base_year%","%Sr17%",LDM)/YIELD_AVE(LDM);
   YIELD(L,G)$(LCROPA(L) AND SUM(LDM$MAP_LLDM(L,LDM),SF_YIELD(LDM)) )=YIELD(L,G)*SUM(LDM$MAP_LLDM(L,LDM),SF_YIELD(LDM));
   YIELD(LAFR,G)$ACF(G)=ACF(G);
   YIELD(L,G)$(LBIO(L) AND YIELD(L,G))=YIELD(L,G)*MFA;
@@ -1010,7 +1016,7 @@ YIELD(L,G)$(LBIO(L) AND YIELD(L,G))=YIELD(L,G)*MF;
 
 *-----Carbon stock ---*
 $ifthen.baseyear %Sy%==%base_year%
-$ gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
+$ gdxin '../%prog_loc%/data/biomass/output/biomass%Sr17%.gdx'
 $ load CS
 CSB=0;
 $else.baseyear
@@ -1062,20 +1068,32 @@ PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 *PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
 *!!!TEMPORARY!!!
 
+$ifthen.agluout %agluauto%==on
+parameter
+Planduse_aglu(R,LDM,Y,*)                                Land use | kha
+PLDM_aglu0(Y,LDM)
+;
+$gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
+$load Planduse_aglu=AgLULandusedata
+PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%Sr%",LDM,Y,"Value");
+$endif.agluout
+
+
 *[tonne carbon]
 PCDM(L)$(PCDM0("%Sy%",L))=PCDM0("%Sy%",L);
-PLDM(LDM)$(PLDM0("%Sy%",LDM)>0.01)=PLDM0("%Sy%",LDM);
+$if not %agluauto%==on  PLDM(LDM)$(PLDM0("%Sy%",LDM)>0.01)=PLDM0("%Sy%",LDM);
+$if %agluauto%==on  PLDM(LDM)$(PLDM0("%Sy%",LDM)>0.01)=PLDM_aglu0("%Sy%",LDM);
 PLDM("SL")=SUM(G,GA(G)*Y_pre("SL",G));
 PLDM("OL")=SUM(G,GA(G)*Y_pre("OL",G));
 
 FLAGDM(L)$(SUM(LDM$MAP_LLDM(L,LDM),PLDM(LDM)) OR PCDM(L))=1;
 
 * mil.$/ton or mil.$/tonC
-pr_price_base0(LDM)$(LDMCTON(LDM) AND Pprod("%base_year%","%Sr%",LDM,"TON")) =  SUM(A$MAP_LDMA(LDM,A),OUTPUTALL_Nominal("%base_year%",A)) / Pprod("%base_year%","%Sr%",LDM,"TON");
-pr_price_base0(LDM)$(LDMCC(LDM) AND Pprod("%base_year%","%Sr%",LDM,"C")) =  SUM(A$MAP_LDMA(LDM,A),OUTPUTALL_Nominal("%base_year%",A)) / Pprod("%base_year%","%Sr%",LDM,"C");
+pr_price_base0(LDM)$(LDMCTON(LDM) AND Pprod("%base_year%","%Sr17%",LDM,"TON")) =  SUM(A$MAP_LDMA(LDM,A),OUTPUTALL_Nominal("%base_year%",A)) / Pprod("%base_year%","%Sr17%",LDM,"TON");
+pr_price_base0(LDM)$(LDMCC(LDM) AND Pprod("%base_year%","%Sr17%",LDM,"C")) =  SUM(A$MAP_LDMA(LDM,A),OUTPUTALL_Nominal("%base_year%",A)) / Pprod("%base_year%","%Sr17%",LDM,"C");
 
 pr_price_base(L)$(FLAGDM(L))=SUM(LDM$MAP_LLDM(L,LDM),pr_price_base0(LDM));
-pr_price_base("CROP_FLW")$SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr%",LDM,"TON")) =  SUM(A$(ACROP(A)),OUTPUTALL_Nominal("%base_year%",A)) / SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr%",LDM,"TON"));
+pr_price_base("CROP_FLW")$SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr17%",LDM,"TON")) =  SUM(A$(ACROP(A)),OUTPUTALL_Nominal("%base_year%",A)) / SUM(LDM$LDMCROP(LDM),Pprod("%base_year%","%Sr17%",LDM,"TON"));
 
 pr_pricey(Y,L)$(FLAGDM(L) AND SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),OUTPUTAC(Y,A,C)))) =
   SUM(A$MAP_LA(L,A),OUTPUTALL_Nominal(Y,A)) / SUM(A$MAP_LA(L,A),SUM(C$MAP_LC(L,C),OUTPUTAC(Y,A,C)));
@@ -1132,11 +1150,12 @@ irricost=irricost_WLD*(GDPCAP/GDPCAP_WLD)**0.5;
 $ifthen %Sy%==%base_year%
 $gdxin '../%prog_loc%/data/roads.gdx'
 $load ruralroadlength
-  roaddens=ruralroadlength("%Sr%")/SUM(LDM$LDMCROP(LDM),PLDM(LDM))/1000;
-$gdxin '../%prog_loc%/data/data_prep.gdx'
+  roaddens=ruralroadlength("%Sr17%")/SUM(LDM$LDMCROP(LDM),PLDM0("%Sy%",LDM))/1000;
+$if not %agluauto%==on  $gdxin '../%prog_loc%/data/GL_R17.gdx'
+$if %agluauto%==on  $gdxin '../%prog_loc%/data/GL_basin.gdx'
 $load GL=GL%Sr%
 
-* ��苗���ȏ㗣�ꂽ�G���A�ɂ͍ő�l������
+
   GLMAX=smax((G,G2)$GL(G,G2),GL(G,G2));
   GL(G,G2)$(GL(G,G2)=0 AND (NOT sameas(G,G2)))=GLMAX;
   GLMIN0(L,G)$(LAFR(L) AND NOT Y_base("HAV_FRS",G))=smin(G2$(Y_base("HAV_FRS",G2)),GL(G,G2));
@@ -1461,29 +1480,27 @@ VZL
 PLDM
 PCDM
 *ps,PLDM,pr,pr_price_base,pr_price_indx,pc,pc_input,pc_area
-SSP_frac
+*SSP_frac
 Psol_stat
 *VYP,VYN
 VOBJ
 CS_post=CS
 CSL
-delta_Y
+*delta_Y
 *GHGLG
 GHGL
 VYLY
-delta_VY
+*delta_VY
 protectfrac
 protectfracL
 protect_wopas
 $if %Sy%==%protectStartYear% protectland
 $if %Sy%==%protectStartYear% degradedland
 *$if %supcuv%==on PBIO,RAREA_BIOP
-frsprotect_check,frsprotectarea
 pa_bio pa_road pa_emit pa_lab pa_irri pc MF
 VYPL=VYP_load
 YIELDL_OUT
 YIELDLDM_OUT
-data_check
 PBIODIV
 protect_area
 ;
@@ -1498,10 +1515,10 @@ PARAMETER
   YIELD("PRM_SEC",G)$CS(G)=CS(G);
   AREA_base(LDM,"estimated")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*VYL(L,G)));
   AREA_base(LDM,"base_raw")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_base(L,G)));
-  AREA_base("GL","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr%","GL","%base_year%",G));
-  AREA_base("FRS","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr%","PRMFRS","%base_year%",G));
-$if not %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr%","SL","%base_year%",G));
-$if %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr%",G));
+  AREA_base("GL","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr17%","GL","%base_year%",G));
+  AREA_base("FRS","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr17%","PRMFRS","%base_year%",G));
+$if not %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*frac_rcp("%Sr17%","SL","%base_year%",G));
+$if %UrbanLandData%==SSP AREA_base("SL","base_raw")=SUM(G,GA(G)*SSP_frac("SL","%Sy%","%Sr17%",G));
 
   AREA_base(LDM,"base_adjusted")=SUM(L$MAP_LLDM(L,LDM),SUM(G,GA(G)*Y_pre(L,G)));
 

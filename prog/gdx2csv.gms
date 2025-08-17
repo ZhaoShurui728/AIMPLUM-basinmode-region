@@ -451,11 +451,10 @@ $load VY_load=VYL
 ;
 $gdxin '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VYL_protect
+$load VY_IJ
 ;
 
-* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
-VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
-VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
+* The double counting issue was solved by using land share directly.
 VYL_protectIJ(Y,Lmip,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYL_protect(R,Y,Lmip,G))/SUM(R$(MAP_RG(R,G)),1));
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));

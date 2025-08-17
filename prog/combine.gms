@@ -17,7 +17,7 @@ $setglobal agmip off
 $if %supcuvout%==on $setglobal biocurve on
 $setglobal restorecalc off
 $setglobal livdiscalc off
-
+$setglobal agluauto off
 
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
@@ -35,6 +35,7 @@ $include ../%prog_loc%/define/region/region17exclNations.set
 $include ../%prog_loc%/define/region/region_iso.set
 $include ../%prog_loc%/define/region/region5.set
 $include ../%prog_loc%/define/region/region10.set
+$include ../%prog_loc%/individual/basin/region_basin.set
 World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 $    ifthen.agmip %agmip%==on
@@ -58,6 +59,7 @@ R(Rall)	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
 $include ../%prog_loc%/define/region/region10.set
+$include ../%prog_loc%/individual/basin/region_basin.set
 World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 $    ifthen.agmip %agmip%==on
@@ -80,7 +82,11 @@ $  endif.agmip
 Ragg(R)/
 $include ../%prog_loc%/define/region/region5.set
 $include ../%prog_loc%/define/region/region10.set
+$include ../%prog_loc%/define/region/region17.set
 World
+/
+R17(Ragg)	17 regions	/
+$include ../%prog_loc%/define/region/region17.set
 /
 RBION(Rall)/
 $include ../%prog_loc%/define/region/region17exclNations.set
@@ -298,6 +304,12 @@ set
 MAP_RAGG(R,R2)	/
 $include ../%prog_loc%/define/region/region17_agg.map
 /
+MAP_RAGG_basin_17(R,R17)/
+$include ../%prog_loc%/individual/Basin/region_basin_17.map
+/
+Rbasin(R)	basin regions	/
+$include      ../%prog_loc%/individual/basin/region_basin.set
+/
 LULC_class/
 $include ../%prog_loc%/individual/BendingTheCurve/LULC_class.set
 /
@@ -385,9 +397,415 @@ $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CIS.gdx' $batinclude 
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XME.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XME
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XNF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XNF
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/XAF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XAF
+$ifthen.cmbr %agluauto%==on
+$offlisting
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AFG_AMDA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AFG_AMDA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AFG_CSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AFG_CSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AFG_FARA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AFG_FARA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AFG_HELM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AFG_HELM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AFG_INDU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AFG_INDU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AGO_ANGC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AGO_ANGC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AGO_ASII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AGO_ASII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AGO_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AGO_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AGO_ZAMB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AGO_ZAMB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ALB_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ALB_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARE_ARPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARE_ARPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_LAPL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_LAPL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_NASA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_NASA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_NEGR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_NEGR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_PAMP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_PAMP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_SACC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_SACC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_SASS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_SASS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARG_SGRN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARG_SGRN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ARM_CSSW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ARM_CSSW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ATG_CARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ATG_CARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUS_AEAC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUS_AEAC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUS_AINT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUS_AINT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUS_ASCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUS_ASCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUS_AUNC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUS_AUNC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUS_AWEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUS_AWEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUS_MRDA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUS_MRDA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AUT_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AUT_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/AZE_CSSW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AZE_CSSW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BDI_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BDI_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BDI_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BDI_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BEL_MAAS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BEL_MAAS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BEL_SCHE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BEL_SCHE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BEN_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BEN_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BEN_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BEN_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BEN_VOLT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BEN_VOLT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BFA_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BFA_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BFA_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BFA_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BFA_VOLT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BFA_VOLT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BGD_BBCN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BGD_BBCN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BGD_GABR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BGD_GABR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BGR_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BGR_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BGR_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BGR_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BHR_ARPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BHR_ARPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BHS_CARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BHS_CARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BIH_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BIH_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BIH_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BIH_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BLR_DAUG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BLR_DAUG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BLR_DNIP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BLR_DNIP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BLR_NEMA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BLR_NEMA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BLZ_YUPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BLZ_YUPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BOL_AMAZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BOL_AMAZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BOL_LAPL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BOL_LAPL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BOL_LPUN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BOL_LPUN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRA_AMAZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA_AMAZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRA_LAPL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA_LAPL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRA_SAOF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA_SAOF
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRA_TOCA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA_TOCA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRA_UBSA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRA_UBSA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BRB_CARC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BRB_CARC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BTN_GABR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BTN_GABR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BWA_ASII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BWA_ASII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BWA_LIMP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BWA_LIMP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/BWA_ORAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms BWA_ORAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAF_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAF_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAF_LCHA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAF_LCHA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_AOSB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_AOSB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_HBCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_HBCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_MACK.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_MACK
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_NWTT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_NWTT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_PACA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_PACA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_SNEL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_SNEL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CAN_STLA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CAN_STLA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHE_POOO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHE_POOO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHE_RHIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHE_RHIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHE_RHON.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHE_RHON
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHL_LPUN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHL_LPUN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHL_NCHI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHL_NCHI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHL_SCPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHL_SCPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN_AMUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN_AMUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN_CHIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN_CHIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN_GOBI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN_GOBI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN_HHEE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN_HHEE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN_TARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN_TARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CHN_YANG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CHN_YANG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CIV_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CIV_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CIV_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CIV_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CMR_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CMR_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CMR_GFGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CMR_GFGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CMR_LCHA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CMR_LCHA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CMR_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CMR_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COD_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COD_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COG_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COG_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COG_GFGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COG_GFGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COL_AMAZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COL_AMAZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COL_CARC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COL_CARC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COL_CEPC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COL_CEPC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COL_MAGD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COL_MAGD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COL_ORIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COL_ORIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/COM_MADA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms COM_MADA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CRI_SCAM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CRI_SCAM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CYP_MSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CYP_MSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CZE_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CZE_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CZE_ELBE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CZE_ELBE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/CZE_ODER.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms CZE_ODER
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DEU_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DEU_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DEU_DGCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DEU_DGCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DEU_ELBE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DEU_ELBE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DEU_EWES.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DEU_EWES
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DEU_RHIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DEU_RHIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DJI_ARGA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DJI_ARGA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DJI_RIFT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DJI_RIFT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DNK_DGCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DNK_DGCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DOM_CARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DOM_CARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DZA_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DZA_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DZA_MSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DZA_MSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/DZA_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms DZA_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ECU_AMAZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ECU_AMAZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ECU_CEPC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ECU_CEPC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/EGY_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms EGY_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/EGY_ARGA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms EGY_ARGA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/EGY_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms EGY_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_DOUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_DOUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_EBRO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_EBRO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_GUAD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_GUAD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_GUDA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_GUDA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_SPAC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_SPAC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_SSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_SSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ESP_TAGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ESP_TAGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/EST_BSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms EST_BSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/EST_NARV.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms EST_NARV
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ETH_ARGA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ETH_ARGA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ETH_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ETH_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ETH_RIFT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ETH_RIFT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ETH_SHJU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ETH_SHJU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FIN_FINL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FIN_FINL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FIN_SNCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FIN_SNCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FIN_SWED.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FIN_SWED
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FJI_SPII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FJI_SPII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FRA_FWCX.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FRA_FWCX
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FRA_GIRD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FRA_GIRD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FRA_LOIR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FRA_LOIR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FRA_NESO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FRA_NESO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FRA_RHON.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FRA_RHON
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/FRA_SEIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms FRA_SEIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GAB_GFGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GAB_GFGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GBR_EAWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GBR_EAWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GBR_IREL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GBR_IREL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GBR_SCTD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GBR_SCTD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GEO_BSSC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GEO_BSSC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GEO_CSSW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GEO_CSSW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GHA_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GHA_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GHA_VOLT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GHA_VOLT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GIN_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GIN_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GIN_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GIN_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GIN_SENE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GIN_SENE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GMB_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GMB_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GNB_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GNB_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GRC_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GRC_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GRD_CARC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GRD_CARC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GTM_GRIJ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GTM_GRIJ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GTM_SCAM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GTM_SCAM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GTM_YUPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GTM_YUPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GUY_AMAZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GUY_AMAZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/GUY_NESO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms GUY_NESO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/HKG_CHIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms HKG_CHIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/HND_SCAM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms HND_SCAM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/HRV_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms HRV_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/HRV_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms HRV_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/HTI_CARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms HTI_CARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/HUN_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms HUN_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IDN_IRJA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IDN_IRJA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IDN_JATI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IDN_JATI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IDN_KALI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IDN_KALI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IDN_SULA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IDN_SULA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IDN_SUMA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IDN_SUMA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IND_GABR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND_GABR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IND_GODA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND_GODA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IND_INDU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND_INDU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IND_KRIS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND_KRIS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IND_SABA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IND_SABA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRL_IREL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRL_IREL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRN_CIRA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRN_CIRA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRN_CSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRN_CSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRN_CSSW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRN_CSSW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRN_PGCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRN_PGCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRN_TIEU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRN_TIEU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/IRQ_TIEU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms IRQ_TIEU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ISL_ICEL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ISL_ICEL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ISR_DEAS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ISR_DEAS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ISR_MSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ISR_MSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ITA_IECO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ITA_IECO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ITA_IWCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ITA_IWCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ITA_MSII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ITA_MSII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ITA_POOO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ITA_POOO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ITA_TIBE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ITA_TIBE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/JAM_CARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JAM_CARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/JOR_DEAS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JOR_DEAS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/JOR_EJSS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JOR_EJSS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/JOR_SIPE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JOR_SIPE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/JPN_JAPN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms JPN_JAPN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KAZ_CSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KAZ_CSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KAZ_CSPC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KAZ_CSPC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KAZ_LKBH.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KAZ_LKBH
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KAZ_OBBB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KAZ_OBBB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KAZ_SYRD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KAZ_SYRD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KEN_AECC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KEN_AECC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KEN_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KEN_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KEN_RIFT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KEN_RIFT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KEN_SHJU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KEN_SHJU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KGZ_LKBH.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KGZ_LKBH
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KGZ_SYRD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KGZ_SYRD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KGZ_TARI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KGZ_TARI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KHM_GTCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KHM_GTCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KHM_MEKO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KHM_MEKO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KOR_NSKU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KOR_NSKU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KWT_ARPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KWT_ARPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/KWT_TIEU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms KWT_TIEU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LAO_MEKO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LAO_MEKO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LAO_VNCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LAO_VNCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LBN_DEAS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LBN_DEAS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LBN_MSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LBN_MSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LBR_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LBR_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LBY_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LBY_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LBY_MSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LBY_MSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LCA_CARC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LCA_CARC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LKA_SRIL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LKA_SRIL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LSO_ORAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LSO_ORAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LTU_BSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LTU_BSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LTU_NEMA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LTU_NEMA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LUX_RHIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LUX_RHIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LVA_BSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LVA_BSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/LVA_DAUG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms LVA_DAUG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MAC_XJIA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MAC_XJIA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MAR_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MAR_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MAR_ANWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MAR_ANWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MAR_MSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MAR_MSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MDA_BSNC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MDA_BSNC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MDA_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MDA_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MDA_DNIE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MDA_DNIE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MDG_MADA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MDG_MADA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_BJCA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_BJCA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_MCIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_MCIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_MNCW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_MNCW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_RGBV.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_RGBV
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_RIBA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_RIBA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_RIVE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_RIVE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_RLER.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_RLER
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MEX_YUPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MEX_YUPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MKD_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MKD_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MLI_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MLI_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MLI_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MLI_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MLI_SENE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MLI_SENE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MLT_MSII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MLT_MSII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MMR_BBCN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MMR_BBCN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MMR_IRRA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MMR_IRRA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MMR_PMAL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MMR_PMAL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MMR_SALW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MMR_SALW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MMR_SITT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MMR_SITT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MNE_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MNE_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MNE_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MNE_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MNG_AMUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MNG_AMUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MNG_GOBI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MNG_GOBI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MNG_YENS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MNG_YENS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MOZ_AECC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MOZ_AECC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MOZ_AIOC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MOZ_AIOC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MOZ_LIMP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MOZ_LIMP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MOZ_ZAMB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MOZ_ZAMB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MRT_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MRT_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MRT_ANWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MRT_ANWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MRT_SENE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MRT_SENE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MWI_AECC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MWI_AECC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MWI_ZAMB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MWI_ZAMB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MYS_NBCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MYS_NBCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/MYS_PMAL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms MYS_PMAL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NAM_ASII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NAM_ASII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NAM_NAMC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NAM_NAMC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NAM_ORAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NAM_ORAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NER_LCHA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NER_LCHA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NER_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NER_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NGA_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NGA_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NGA_GFGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NGA_GFGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NGA_LCHA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NGA_LCHA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NGA_NIGE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NGA_NIGE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NIC_SCAM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NIC_SCAM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NLD_MAAS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NLD_MAAS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NLD_RHIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NLD_RHIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NLD_SCHE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NLD_SCHE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NOR_SNCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NOR_SNCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NOR_SWED.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NOR_SWED
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NPL_GABR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NPL_GABR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/NZL_NZLZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms NZL_NZLZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/OMN_ARPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms OMN_ARPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PAK_ASAC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PAK_ASAC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PAK_HAMU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PAK_HAMU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PAK_INDU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PAK_INDU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PAK_SABA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PAK_SABA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PAN_CEPC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PAN_CEPC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PAN_SCAM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PAN_SCAM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PER_AMAZ.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PER_AMAZ
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PER_PERU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PER_PERU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PHL_PHIL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PHL_PHIL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PNG_FLYY.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PNG_FLYY
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PNG_IRJA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PNG_IRJA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PNG_PNGC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PNG_PNGC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PNG_SEPI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PNG_SEPI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/POL_ODER.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms POL_ODER
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/POL_PLCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms POL_PLCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/POL_WISL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms POL_WISL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PRT_DOUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PRT_DOUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PRT_GUAD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PRT_GUAD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PRT_SPAC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PRT_SPAC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PRT_TAGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PRT_TAGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/PRY_LAPL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms PRY_LAPL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/QAT_ARPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms QAT_ARPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ROU_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ROU_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_AMUR.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_AMUR
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_LENA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_LENA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_OBBB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_OBBB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_SNCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_SNCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_SWCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_SWCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_VOLG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_VOLG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RUS_YENS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RUS_YENS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RWA_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RWA_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/RWA_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms RWA_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SAU_ARPA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SAU_ARPA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SAU_RSEE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SAU_RSEE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SDN_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SDN_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SDN_ARGA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SDN_ARGA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SDN_LCHA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SDN_LCHA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SDN_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SDN_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SEN_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SEN_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SEN_SENE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SEN_SENE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SLB_SOLI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SLB_SOLI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SLB_SPII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SLB_SPII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SLE_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SLE_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SLV_SCAM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SLV_SCAM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SRB_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SRB_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/STP_GFGU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms STP_GFGU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SUR_NESO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SUR_NESO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SVK_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SVK_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SVN_AGBS.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SVN_AGBS
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SVN_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SVN_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SWE_SWED.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SWE_SWED
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/SWZ_SASC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms SWZ_SASC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TCD_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TCD_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TCD_LCHA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TCD_LCHA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TGO_AFWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TGO_AFWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TGO_VOLT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TGO_VOLT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/THA_CHAO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms THA_CHAO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/THA_GTCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms THA_GTCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/THA_MEKO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms THA_MEKO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/THA_PMAL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms THA_PMAL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TJK_AMDA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TJK_AMDA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TJK_SYRD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TJK_SYRD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TKM_AMDA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TKM_AMDA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TKM_CSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TKM_CSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TLS_JATI.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TLS_JATI
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TTO_CARC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TTO_CARC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUN_ANIN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUN_ANIN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUN_MSCC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUN_MSCC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUR_BSSC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR_BSSC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUR_CSSW.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR_CSSW
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUR_MSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR_MSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TUR_TIEU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TUR_TIEU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TZA_AECC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TZA_AECC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TZA_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TZA_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TZA_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TZA_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/TZA_RIFT.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms TZA_RIFT
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UGA_NILE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UGA_NILE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UKR_BSNC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UKR_BSNC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UKR_DANU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UKR_DANU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UKR_DNIE.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UKR_DNIE
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UKR_DNIP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UKR_DNIP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UKR_DONN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UKR_DONN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/URY_LAPL.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms URY_LAPL
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/URY_UBSA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms URY_UBSA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA_COLU.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA_COLU
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA_GFCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA_GFCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA_GMAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA_GMAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA_MSMM.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA_MSMM
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA_NACC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA_NACC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/USA_PACA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms USA_PACA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UZB_AMDA.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UZB_AMDA
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UZB_CSEC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UZB_CSEC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/UZB_SYRD.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms UZB_SYRD
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/VCT_CARC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms VCT_CARC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/VNM_HRIV.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms VNM_HRIV
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/VNM_MEKO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms VNM_MEKO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/VNM_VNCO.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms VNM_VNCO
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/VUT_SPII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms VUT_SPII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZAF_LIMP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZAF_LIMP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZAF_ORAN.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZAF_ORAN
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZAF_SASC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZAF_SASC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZAF_SAWC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZAF_SAWC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZMB_CONG.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZMB_CONG
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZMB_ZAMB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZMB_ZAMB
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZWE_AIOC.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZWE_AIOC
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZWE_ASII.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZWE_ASII
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZWE_LIMP.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZWE_LIMP
+$if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/cbnal/ZWE_ZAMB.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ZWE_ZAMB
+$onlisting
+$endif.cmbr
 
-Area_base(Ragg,L,Sacol)$(SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol)))=SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol));
-
+* If the basin-level data exists, it is used at high priority.
+Area_base(R17,L,Sacol)$(SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),Area_base(Rbasin,L,Sacol)))=SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),Area_base(Rbasin,L,Sacol));
+* If not, 17 reiongal data is used.
+Area_base(Ragg,L,Sacol)$(Area_base(Ragg,L,Sacol)=0 and SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol)))=SUM(R$MAP_RAGG(R,Ragg),Area_base(R,L,Sacol));
 
 $gdxin '../output/gdx/results/cbnal_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load Psol_stat VYPL=VYP_load pa_road pa_emit pa_lab pa_irri YIELDL_OUT YIELDLDM_OUT
@@ -398,7 +816,8 @@ $gdxin '../output/gdx/results/analysis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VY_load=VYL GHGL GHGLG GHGLR Area AreaR
 $load VYLY CSB_load=CSB
 
-Area(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
+Area(R17,Y,L)$(SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),Area(Rbasin,Y,L)))=SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),Area(Rbasin,Y,L));
+Area(Ragg,Y,L)$(Area(Ragg,Y,L)=0 and SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),Area(R,Y,L));
 AreaLDM(R,Y,LDM)=SUM(L$MAP_LLDM(L,LDM),Area(R,Y,L));
 Area_base(R,L,"estimated")=Area(R,"%base_year%",L);
 
@@ -406,15 +825,26 @@ Area_base(R,"TOT",Sacol)=sum(L$LTOT(L),AREA_base(R,L,Sacol));
 Area_base(R,"TOTwoOL",Sacol)=sum(L$LTOT(L),AREA_base(R,L,Sacol))-AREA_base(R,"OL",Sacol);
 
 
-GHGL(Ragg,Y,EmitCat,L)$SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L));
+GHGL(R17,Y,EmitCat,L)$(SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),GHGL(Rbasin,Y,EmitCat,L)))=SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),GHGL(Rbasin,Y,EmitCat,L));
+GHGL(Ragg,Y,EmitCat,L)$(GHGL(Ragg,Y,EmitCat,L)=0 and SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L)))=SUM(R$MAP_RAGG(R,Ragg),GHGL(R,Y,EmitCat,L));
 
 CSB(R)=CSB_load(R,"%base_year%");
 
 * Subtract area of the other countries that share the same grid cell from "OL".
 VY_load(R,Y,"OL",G)$(landshareG(G,R))=VY_load(R,Y,"OL",G)-(1-landshareG(G,R));
-* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
-*VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
-VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM((G,R)$MAP_GIJ(G,I,J),VY_load(R,Y,L,G));
+
+parameter
+VY_load2(R,Y,L,G) for basin aggregation
+;
+
+* If the basin-level data exists, it is used at high priority. If not, 17 reiongal data is used.
+* 1. Basin-level data aggregation
+VY_load2(R17,Y,L,G)$(SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VY_load(Rbasin,Y,L,G)))=SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VY_load(Rbasin,Y,L,G));
+* 2. 17 regional data aggregation if the sum of basin data does not exist.
+VY_load2(Ragg,Y,L,G)$(VY_load2(Ragg,Y,L,G)=0 and SUM(R$MAP_RAGG(R,Ragg),VY_load(Ragg,Y,L,G)))=SUM(R$MAP_RAGG(R,Ragg),VY_load(R,Y,L,G));
+
+* The double counting issue was solved by using land share directly.
+VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM((G,R)$MAP_GIJ(G,I,J),VY_load2(R,Y,L,G));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 
 *------------------------------------------------------
@@ -488,6 +918,7 @@ GHGLR
 YIELDLDM_annual
 YIELDLDM_ratio
 VYL_protect
+VY_IJ
 ;
 
 
@@ -606,12 +1037,14 @@ VW(Y,L,I,J)$(VW(Y,L,I,J)<10**(-7) AND VW(Y,L,I,J)>(-1)*10**(-7))=0;
 VU(Y,L,I,J)$(VU(Y,L,I,J)<10**(-7) AND VU(Y,L,I,J)>(-1)*10**(-7))=0;
 
 * To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
-VW2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VW(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
-VW_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VW2(Y,L,I,J)*GAIJ(I,J));
-VW_reg(Y,L,R)$(sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2));
-VU2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VU(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
-VU_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VU2(Y,L,I,J)*GAIJ(I,J));
-VU_reg(Y,L,R)$(sum(R2$MAP_Ragg(R2,R),VU_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VU_reg(Y,L,R2));
+*VW2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VW(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
+VW_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VW(Y,L,I,J)*GAIJ(I,J));
+VW_reg(Y,L,R17)$(sum(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VW_reg(Y,L,Rbasin)))=sum(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VW_reg(Y,L,Rbasin));
+VW_reg(Y,L,R)$(VW_reg(Y,L,R)=0 and sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VW_reg(Y,L,R2));
+*VU2(Y,L,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),VU(Y,L,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
+VU_reg(Y,L,R)=sum((I,J)$MAP_RIJ(R,I,J),VU(Y,L,I,J)*GAIJ(I,J));
+VU_reg(Y,L,R17)$(sum(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VU_reg(Y,L,Rbasin)))=sum(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VU_reg(Y,L,Rbasin));
+VU_reg(Y,L,R)$(VU_reg(Y,L,R)=0 and sum(R2$MAP_Ragg(R2,R),VU_reg(Y,L,R2)))=sum(R2$MAP_Ragg(R2,R),VU_reg(Y,L,R2));
 
 
 set
@@ -653,7 +1086,7 @@ Slnum/1*8/
 ALIV  Set for types of livestock sector in CGE
 CLIV  Set for types of livestock commopdity in CGE
 ;
-Alias (Sl,Sl2),(Slnum,Slnum2),(R,R2);
+Alias (Sl,Sl2),(Slnum,Slnum2),(R,R2),(R17,R172),(Rbasin,Rbasin2);
 parameter
 liv_dist_base(Sl,I,J)	number of animals in a grid cell I J in base year (head)
 liv_dist_baseave(Sl,R)	average number of animals in a grid cell in region R in base year (head)
@@ -671,8 +1104,8 @@ area_regsf(Sl,Y,R)	scale factor of area in region R and year t
 head_regsf(Sl,Y,R)	scale factor of head  in the cell with pasture in region R and year t
 LUnit livestock unit (250kg per head) /250/
 
-OUTPUTAC_load(*,Y,R,ALIV,CLIV)	Output (Production) of commodity C from sector A  (mil.$ or ktoe) (cge output)
-OUTPUTSL(Y,R,Sl)	Output (Production) of commodity C from sector A (mil.$ or ktoe) (cge output)
+OUTPUTAC_load(*,Y,R17,ALIV,CLIV)	Output (Production) of commodity C from sector A  (mil.$ or ktoe) (cge output)
+OUTPUTSL(Y,R17,Sl)	Output (Production) of commodity C from sector A (mil.$ or ktoe) (cge output)
 BW_map(Sl,I,J) body weight of animals (kg body weight per head)
 ;
 
@@ -709,34 +1142,38 @@ chickens	.	COM_OTH_L
 ducks	.	COM_OTH_L
 /
 ;
+parameter
+pas_rate(R,I,J) pasture share rate in a grid cell
+;
+pas_rate(R17,I,J)$(sum(R172$MAP_RIJ(R172,I,J),VY_IJ(Y,"PAS",I,J)))=sum(R17$MAP_RIJ(R17,I,J),VY_IJ(Y,"PAS",I,J))/sum(R172$MAP_RIJ(R172,I,J),VY_IJ(Y,"PAS",I,J));
+pas_rate(Rbasin,I,J)$(sum(Rbasin2$MAP_RIJ(Rbasin2,I,J),VY_IJ(Y,"PAS",I,J)))=sum(Rbasin$MAP_RIJ(Rbasin,I,J),VY_IJ(Y,"PAS",I,J))/sum(Rbasin2$MAP_RIJ(Rbasin2,I,J),VY_IJ(Y,"PAS",I,J));
 
-OUTPUTSL(Y,R,Sl)=SUM(ALIV$MAP_SALIV(Sl,ALIV),SUM(CLIV$MAP_SCLIV(Sl,CLIV),OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,ALIV,CLIV)));
+OUTPUTSL(Y,R17,Sl)=SUM(ALIV$MAP_SALIV(Sl,ALIV),SUM(CLIV$MAP_SCLIV(Sl,CLIV),OUTPUTAC_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R17,ALIV,CLIV)));
 
-liv_regbase(Sl,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist_base(Sl,I,J));
+liv_regbase(Sl,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist_base(Sl,I,J)*pas_rate(R,I,J));
 
-liv_dist_baseave(Sl,R)$sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),1)=sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),liv_dist_base(Sl,I,J))/sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),1);
+liv_dist_baseave(Sl,R)=sum((I,J)$(MAP_RIJ(R,I,J) and liv_dist_base(Sl,I,J)),liv_dist_base(Sl,I,J)*pas_rate(R,I,J));
 
 liv_dist_base0(Sl,Y,I,J)=liv_dist_base(Sl,I,J);
 liv_dist_base0(Sl,Y,I,J)$(liv_dist_base(Sl,I,J)=0 and VY_IJ("%base_year%","PAS",I,J)=0 and VY_IJ(Y,"PAS",I,J))=sum(R$(MAP_RIJ(R,I,J)),liv_dist_baseave(Sl,R));
 
-
-liv_regtar(Sl,Y,R)$OUTPUTSL("%base_year%",R,Sl)=liv_regbase(Sl,R) * OUTPUTSL(Y,R,Sl)/OUTPUTSL("%base_year%",R,Sl);
-
-liv_regwopas(Sl,Y,R)=sum((I,J)$(MAP_RIJ(R,I,J) and VY_IJ("%base_year%","PAS",I,J)=0 and VY_IJ(Y,"PAS",I,J)=0),liv_dist_base(Sl,I,J));
-liv_regonpas(Sl,Y,R)=liv_regtar(Sl,Y,R)-liv_regwopas(Sl,Y,R);
+liv_regtar(Sl,Y,R17)$OUTPUTSL("%base_year%",R17,Sl)=liv_regbase(Sl,R17) * OUTPUTSL(Y,R17,Sl)/OUTPUTSL("%base_year%",R17,Sl);
+liv_regtar(Sl,Y,Rbasin)$sum(R17$MAP_RAGG_basin_17(Rbasin,R17),OUTPUTSL("%base_year%",R17,Sl))=liv_regbase(Sl,Rbasin) * sum(R17$MAP_RAGG_basin_17(Rbasin,R17),OUTPUTSL(Y,R17,Sl)/OUTPUTSL("%base_year%",R17,Sl));
+*liv_regwopas(Sl,Y,R)=sum((I,J)$(MAP_RIJ(R,I,J) and VY_IJ("%base_year%","PAS",I,J)=0 and VY_IJ(Y,"PAS",I,J)=0),liv_dist_base(Sl,I,J));
+*liv_regonpas(Sl,Y,R)=liv_regtar(Sl,Y,R)-liv_regwopas(Sl,Y,R);
 
 prod_regsf(Sl,Y,R)$liv_regbase(Sl,R)=liv_regtar(Sl,Y,R)/liv_regbase(Sl,R);
-area_regsf(Sl,Y,R)$(sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ("%base_year%","PAS",I,J)*GAIJ(I,J)))=sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ(Y,"PAS",I,J)*GAIJ(I,J))/sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ("%base_year%","PAS",I,J)*GAIJ(I,J));
-head_regsf(Sl,Y,R)$area_regsf(Sl,Y,R)=prod_regsf(Sl,Y,R)/area_regsf(Sl,Y,R);
+*area_regsf(Sl,Y,R)$(sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ("%base_year%","PAS",I,J)*GAIJ(I,J)))=sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ(Y,"PAS",I,J)*GAIJ(I,J))/sum((I,J)$(MAP_RIJ(R,I,J)),VY_IJ("%base_year%","PAS",I,J)*GAIJ(I,J));
+*head_regsf(Sl,Y,R)$area_regsf(Sl,Y,R)=prod_regsf(Sl,Y,R)/area_regsf(Sl,Y,R);
 
 
 liv_dist(Sl,"%base_year%",I,J)=liv_dist_base(Sl,I,J);
 liv_dist(Sl,Y,I,J)$(liv_dist_base0(Sl,Y,I,J) and Y.val>%base_year%)=liv_dist_base0(Sl,Y,I,J)*sum(R$(MAP_RIJ(R,I,J)),prod_regsf(Sl,Y,R));
 
-* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
-liv_dist2(Sl,Y,I,J)$FLAG_IJ(I,J)=SUM(R$(MAP_RIJ(R,I,J)),liv_dist(Sl,Y,I,J))/SUM(R$(MAP_RIJ(R,I,J)),1);
-liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist2(Sl,Y,I,J));
-liv_reg(Sl,Y,R)$(sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2)))=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
+
+*liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist(Sl,Y,I,J));
+liv_reg(Sl,Y,R)=sum((I,J)$MAP_RIJ(R,I,J),liv_dist(Sl,Y,I,J)*pas_rate(R,I,J));
+liv_reg(Sl,Y,R)$(liv_reg(Sl,Y,R)=0 and sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2)))=sum(R2$MAP_Ragg(R2,R),liv_reg(Sl,Y,R2));
 
 
 execute_unload '../output/gdx/analysis/livdis_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
@@ -861,7 +1298,7 @@ $load PBIOSUP_load=PBIOSUP
 
 
 PBIOSUP(R,Y,G,LB,Scol)$MAP_RG(R,G)=PBIOSUP_load(Y,G,LB,Scol);
-PBIOSUP(Ragg,Y,G,LB,Scol)$(Ysupcuv(Y) AND SUM(R$MAP_RAGG(R,Ragg),PBIOSUP(R,Y,G,LB,Scol)))=SUM(R$MAP_RAGG(R,Ragg),PBIOSUP(R,Y,G,LB,Scol));
+PBIOSUP(Ragg,Y,G,LB,Scol)$(PBIOSUP(R,Y,G,LB,Scol)=0 and Ysupcuv(Y) AND SUM(R$MAP_RAGG(R,Ragg),PBIOSUP(R,Y,G,LB,Scol)))=SUM(R$MAP_RAGG(R,Ragg),PBIOSUP(R,Y,G,LB,Scol));
 PBIOSUP(RISO,Y,G,LB,Scol)$MAP_RISOG(RISO,G)=PBIOSUP_load(Y,G,LB,Scol);
 
 set
@@ -922,13 +1359,13 @@ BIIArea(R,Y)$SUM((L,G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))=SUM((L,G)$(BIIc
 BIILArea(R,Y,L)$SUM((G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))=SUM((G)$(BIIcoefG(L,G)),RR(G)*VYL(R,Y,L,G)*GA(G))/10**3;
 
 * Regional aggregation
-BVS(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BVS(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVS(R,Y));
-BVSL(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),BVSL(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BVSL(R,Y,L));
-BVSLDM(Ragg,Y,LDM)$(SUM(R$MAP_RAGG(R,Ragg),BVSLDM(R,Y,LDM)))=SUM(R$MAP_RAGG(R,Ragg),BVSLDM(R,Y,LDM));
-BVArea(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BVArea(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVArea(R,Y));
-BVLArea(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),BVLArea(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BVLArea(R,Y,L));
-BIIArea(Ragg,Y)$(SUM(R$MAP_RAGG(R,Ragg),BIIArea(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BIIArea(R,Y));
-BIILArea(Ragg,Y,L)$(SUM(R$MAP_RAGG(R,Ragg),BIILArea(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BIILArea(R,Y,L));
+BVS(Ragg,Y)$(BVS(Ragg,Y)=0 and SUM(R$MAP_RAGG(R,Ragg),BVS(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVS(R,Y));
+BVSL(Ragg,Y,L)$(BVSL(Ragg,Y,L)=0 and SUM(R$MAP_RAGG(R,Ragg),BVSL(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BVSL(R,Y,L));
+BVSLDM(Ragg,Y,LDM)$(BVSLDM(Ragg,Y,LDM)=0 and SUM(R$MAP_RAGG(R,Ragg),BVSLDM(R,Y,LDM)))=SUM(R$MAP_RAGG(R,Ragg),BVSLDM(R,Y,LDM));
+BVArea(Ragg,Y)$(BVArea(Ragg,Y)=0 and SUM(R$MAP_RAGG(R,Ragg),BVArea(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BVArea(R,Y));
+BVLArea(Ragg,Y,L)$(BVLArea(Ragg,Y,L)=0 and SUM(R$MAP_RAGG(R,Ragg),BVLArea(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BVLArea(R,Y,L));
+BIIArea(Ragg,Y)$(BIIArea(Ragg,Y)=0 and SUM(R$MAP_RAGG(R,Ragg),BIIArea(R,Y)))=SUM(R$MAP_RAGG(R,Ragg),BIIArea(R,Y));
+BIILArea(Ragg,Y,L)$(BIILArea(Ragg,Y,L)=0 and SUM(R$MAP_RAGG(R,Ragg),BIILArea(R,Y,L)))=SUM(R$MAP_RAGG(R,Ragg),BIILArea(R,Y,L));
 *-*-
 
 BII(R,Y)$(BIIArea(R,Y))=BVS(R,Y)/BIIArea(R,Y);

@@ -19,6 +19,8 @@ CPUthreads=25
 pausemode=off
 # Set Data Preparation Process [on/off]
 DataPrep=off
+# Set Data Preparation 2 Process [on/off]
+DataPrep2=on
 # Set Base Year Simulation [on/off]
 Basesim=on
 
@@ -61,11 +63,25 @@ MergeResCSV4NC=on
     Sub_MergeResCSV4NC_bioyielcal=off
     ## if you would like to make carbon sequestration nc file, turn on carseq. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
     Sub_MergeResCSV4NC_carseq=off
-
+    ## if you would like to output livestock distribution map, turn on livdiscal. This switch will be also used in :netcdfgen. (basically it does not take time and can be kept on) 
+    Sub_MergeResCSV4NC_livdiscal=off
 # Set Netcdf Creation [on/off]
 netcdfgen=on
     ## name of the project for netcdf file naming (only used for the BTC format)
     Sub_Netcdfgen_projectname=IBS
+
+# Set PREDICTS output [on/off]  (If on, calculate BII by PREDICTS. You need AIMPLUM netcdf output with Sub_MergeResCSV4NC_BTC3option=on)  
+PREDICTS=off
+    ## Data preparation process. If you want to calculate PREDICTS coefficients, you need to run. Once you run, you can skipp. (default off)
+    Sub_PREDICTS_DataPrep=on
+    ## If you want to calculate PREDICTS coefficients, turn on the switch below. (default off)
+    Sub_PREDICTS_EstCoefs=on
+    ## Flag to differenciate result used in file and directory. If 'default', skipped two process before and use coefficients in tools/PREDICTS_biodiversity/data/
+    PRJ=default
+    ## Flag to differenciate modelsettings.[BTC/HPD]
+    PREDICTSmodelsettings=BTC
+    ## Flag of whtere considering climate chagne or not. Only used for HPD modelsettings. [none/ssp370/ssp126]
+    Climate_sce=none
 
 # Set PNG File Creation [on/off]
 plot=on

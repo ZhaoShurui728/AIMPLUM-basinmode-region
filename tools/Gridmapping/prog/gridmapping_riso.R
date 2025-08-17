@@ -58,13 +58,8 @@ df$landshare <- df$grid005 %>%
     group_by(lon,lat) %>% mutate(landarea_share=landarea_share/sum(landarea_share)) %>% ungroup()
 
 df$landshare_AIM <- df$landshare %>% 
-#    inner_join(df$risomap,by='Country') %>% 
-    group_by(lon,lat,RISO) %>% summarise(landarea_share=sum(landarea_share),.groups='drop')
+  pivot_wider(names_from=RISO,values_from=landarea_share,values_fill=0) %>% 
+  wgdx.reshape(symName='landshare',3,tName='RISO',str_c(output_dir,'/landshare_iso.gdx'))
 
-#write_csv(df$landshare_AIM,file=str_c(output_dir,'/landshare_iso.csv'))
-
-df$landshare_AIM %>% 
-    pivot_wider(names_from=RISO,values_from=landarea_share,values_fill=0) %>% 
-    wgdx.reshape(symName='landshare',3,tName='RISO',str_c(output_dir,'/landshare_iso.gdx'))
 
 

@@ -30,6 +30,10 @@ $if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenar
 
 $include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 
+* AgLU basin-based run. If basin-based AgLU result is used, then it should be turned on otherwise keep off.
+$setglobal agluauto off
+$include ../%prog_loc%/individual/basin/setglobal_region_basin.gms
+
 set
 dum/1*1000000/
 G	Cell number of the target region but both USA and CAN for North America
@@ -39,19 +43,25 @@ YBASE(Y)/ 1700,%base_year% /
 *Y       / %Sy%
 *$if not %Sy%==%base_year% 2005
 */
-R       / %Sr%
+Rall 17 regions + ISO countries /
+$include      ../%prog_loc%/define/region/region17exclNations.set
+$include      ../%prog_loc%/define/region/region_iso.set
+$include      ../%prog_loc%/individual/basin/region_basin.set
+/
+R(Rall)       / %Sr%
 $if %Sr%==USA CAN
 $if %Sr%==CAN USA
 /
-RISO	ISO countries	/
+RISO(Rall)	ISO countries	/
 $include ../%prog_loc%/define/region/region_iso.set
 /
+R17	17 regions	/%Sr17%/
 I	Vertical position (LAT)	/ 1*360 /
 J	Horizontal position (LON)	/ 1*720 /
 MAP_GIJ(G,I,J)	Relationship between cell number G and cell position I J
-MAP_RG(R,G)	Relationship between region R and cell G
+MAP_RG(Rall,G)	Relationship between region R and cell G
 MAP_RISOG(RISO,G)
-MAP_RISO(RISO,R)	Relationship between ISO countries and 17 regions
+MAP_RISO(RISO,R17)	Relationship between ISO countries and 17 regions
 L land use type /
 PRM_SEC forest + grassland + pasture + fallow land
 FRSGL   forest + grassland
@@ -174,6 +184,7 @@ $endif
 *------- Load data ----------*
 set
 LCGE    land use category in AIMCGE /PRM_FRS, MNG_FRS, GRAZING/
+LDM     Aggregated land use category /FRS/
 ;
 
 parameter
@@ -182,18 +193,28 @@ CS_base(G)	carbon stock in base year
 GA(G)           Grid area of cell G kha
 CSB     carbon stock boundary in forest and grassland (MgC ha-1)
 
-Planduse_load(*,Y,R,LCGE)
-Planduse(Y,R,LCGE)
+Planduse_load(*,Y,R17,LCGE)
+Planduse(Y,R17,LCGE)
 ;
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
 $if %not1stiter%==on $setglobal IAVload %preIAV%
 $gdxin '../%prog_loc%/data/cgeoutput/analysis.gdx'
 $load Planduse_load=Planduse
-Planduse(Y,R,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R,LCGE);
+Planduse(Y,R17,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R17,LCGE);
+
+$ifthen.agluout %agluauto%==on
+parameter
+Planduse_aglu(R,LDM,Y,*)                                Land use | kha
+;
+$gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
+$load Planduse_aglu=AgLULandusedata
+$endif.agluout
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
-$load GA MAP_RG MAP_GIJ MAP_RISOG MAP_RISO
+$load GA MAP_RG MAP_GIJ MAP_RISO
+
+MAP_RISOG(RISO,G)$(MAP_RG(RISO,G))=Yes;
 
 parameter
 VYL(L,G)	area ratio of land category L in cell G
@@ -263,7 +284,11 @@ FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Plandu
 $elseif %Sr%==CAN
 FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Planduse("%Sy%","CAN","PRM_FRS")+Planduse("%Sy%","CAN","MNG_FRS");
 $else
-FRSArea=Planduse("%Sy%","%Sr%","PRM_FRS")+Planduse("%Sy%","%Sr%","MNG_FRS");
+$ifthen.agluout3 not %agluauto%==on
+FRSArea=Planduse("%Sy%","%Sr17%","PRM_FRS")+Planduse("%Sy%","%Sr17%","MNG_FRS");
+$else.agluout3
+FRSArea=Planduse_aglu("%Sr%","FRS","%Sy%","Value");
+$endif.agluout3
 $endif
 
 OTHFRSArea=SUM(G,VYL("AFR",G)*GA(G));
@@ -327,7 +352,7 @@ parameter
 forest_management_shareG(G) A ratio of managed forest area to total forest area  in a grid cell G (0-1)
 forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
 Soil_deg(G)	A share of area with soil degradation to grid area in grid G (0-1) Wu et al 2019 GCBB developed using GLADIS (Freddy & Monica 2011).
-frac_rcp(R,L,YBASE,G)	fraction of each gridcell G in land category L
+frac_rcp(R17,L,YBASE,G)	fraction of each gridcell G in land category L
 forest_planted_rate(G) A ratio of planted area(31+32) to managed forest area (20+31+32) in a grid cell G (0-1)
 ;
 $gdxin '../%prog_loc%/data/forest_class_export.gdx'
@@ -347,8 +372,8 @@ VYL("UMNFRS",G)$(VYL("FRS",G))=max(0,VYL("FRS",G)-VYL("MNGFRS",G));
 
 VYL("AGOFRS",G)$(VYL("CL",G) and forest_class_shareG("53",G))=min(VYL("CL",G), forest_class_shareG("53",G));
 
-*VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G) * forest_management_shareG(G));
-VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr%","SECFRS","%base_year%",G), VYL("FRS",G));
+*VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr17%","SECFRS","%base_year%",G), VYL("FRS",G) * forest_management_shareG(G));
+VYL("SECFRS",G)$(VYL("FRS",G)) = min(frac_rcp("%Sr17%","SECFRS","%base_year%",G), VYL("FRS",G));
 VYL("PRMFRS",G)$(VYL("FRS",G)) = max(0,VYL("FRS",G) - VYL("SECFRS",G));
 *VYL("PRMFRS",G)$(VYL("FRS",G)) = VYL("FRS",G) * sharepix("Primary vegetation",G);
 
@@ -357,10 +382,10 @@ VYL("NRMFRS",G)=VYL("PRMFRS",G)+VYL("SECFRS",G);
 
 
 
-VYL("SECGL",G)$(VYL("GL",G)) = min(frac_rcp("%Sr%","SECGL","%base_year%",G),VYL("GL",G));
+VYL("SECGL",G)$(VYL("GL",G)) = min(frac_rcp("%Sr17%","SECGL","%base_year%",G),VYL("GL",G));
 VYL("PRMGL",G)$(VYL("GL",G)) = max(0,VYL("GL",G) - VYL("SECGL",G));
 
-VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G));
+VYL("MNGPAS",G)$(VYL("PAS",G) and frac_rcp("%Sr17%","MNGPAS","%base_year%",G)+frac_rcp("%Sr17%","RAN","%base_year%",G)) = VYL("PAS",G) * frac_rcp("%Sr17%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr17%","MNGPAS","%base_year%",G)+frac_rcp("%Sr17%","RAN","%base_year%",G));
 VYL("RAN",G)$(VYL("PAS",G)) = max(0,VYL("PAS",G) - VYL("MNGPAS",G));
 
 delta_VY("%Sy%",L,G)=0;
@@ -397,7 +422,7 @@ VYL("SECGL",G)=VYL_pre("SECGL",G) +VYL("NRGABD",G)-min(VYL("DEG",G),VYL_pre("SEC
 VYL("PRMGL",G)$(VYL_pre("PRMGL",G)) = max(0,VYL_pre("PRMGL",G) - max(0,VYL("DEG",G)-VYL_pre("SECGL",G)));
 
 VYL("MNGPAS",G)$(delta_Y("PAS",G)>=0) = VYL_pre("MNGPAS",G) + delta_Y("PAS",G);
-VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G))= max(0,VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr%","MNGPAS","%base_year%",G)+frac_rcp("%Sr%","RAN","%base_year%",G)));
+VYL("MNGPAS",G)$(VYL_pre("MNGPAS",G) and delta_Y("PAS",G)<0 and frac_rcp("%Sr17%","MNGPAS","%base_year%",G)+frac_rcp("%Sr17%","RAN","%base_year%",G))= max(0,VYL_pre("MNGPAS",G) + delta_Y("PAS",G) * frac_rcp("%Sr17%","MNGPAS","%base_year%",G)/(frac_rcp("%Sr17%","MNGPAS","%base_year%",G)+frac_rcp("%Sr17%","RAN","%base_year%",G)));
 
 VYL("RAN",G)$(VYL("PAS",G)) = max(0,VYL("PAS",G) - VYL("MNGPAS",G));
 
@@ -445,10 +470,10 @@ $elseif.afftype %afftype%==cmax_vst
 $elseif.afftype %afftype%==ccur_vst
   CFT(G,Forestage)=CFT_vst("AFRCUR",G,Forestage);
 $elseif.afftype %afftype%==cprevisit
-$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr17%.gdx'
 $load CFT
 $else.afftype
-$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr%_aez.gdx'
+$gdxin '../%prog_loc%/data/biomass/output/biomass%Sr17%_aez.gdx'
 $load CFT
 $endif.afftype
 
@@ -473,11 +498,11 @@ Sfrst     Forest type (Natural forest or Plantation) / N, P/
 
 Parameter
 ordy(Y)
-LEC(R,Stc,Sfrst) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
+LEC(R17,Stc,Sfrst) Carbon sequestration coefficient of natural forest grater or less than 20 years  (tonneCO2 per ha per year)
 LEC0(Stc,Sfrst)      Carbon sequestration coefficient of natural forest grater than 20 years  (tonneCO2 per ha per year)
-f_mg_load(R)       Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
+f_mg_load(R17)       Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
 f_mg               Stock change factor of soil carbon for management regime(-) (Table 5.5 & 5.10 for cropland & table6.2 for grassland)
-CSoil_load(R,G,Y)	12 times of Soil Carbon stock (MgC) in grid G and year Y in the baseline scenario (SSP2 land use and RCP4.5 climate) estimated by VISIT
+CSoil_load(R17,G,Y)	12 times of Soil Carbon stock (MgC) in grid G and year Y in the baseline scenario (SSP2 land use and RCP4.5 climate) estimated by VISIT
 CSoil(G)	Soil Carbon stock (MgC) in grid G
 Application_ratio(L)/
 CROP_FLW	1.0
@@ -496,11 +521,11 @@ $gdxin '../%prog_loc%/individual/ForestCsink/AFR00_CSoil_stock_visit.gdx'
 $load	CSoil_load=CSoil
 
 
-LEC0(Stc,Sfrst)=LEC("%Sr%",Stc,Sfrst);
-*f_mg=f_mg_load("%Sr%");
+LEC0(Stc,Sfrst)=LEC("%Sr17%",Stc,Sfrst);
+*f_mg=f_mg_load("%Sr17%");
 f_mg=1.004;
-CSoil_load("%Sr%",G,"2100")=CSoil_load("%Sr%",G,"2090");
-CSoil(G)=CSoil_load("%Sr%",G,"%Sy%")/12*Depth_ratio;
+CSoil_load("%Sr17%",G,"2100")=CSoil_load("%Sr17%",G,"2090");
+CSoil(G)=CSoil_load("%Sr17%",G,"%Sy%")/12*Depth_ratio;
 
 VYL(L,G)$(not G0(G))=0;
 
@@ -538,16 +563,16 @@ VYLY("%Sy%",L,G)$(LCUM(L) and VYL(L,G))=VYL(L,G);
 VYLY("%Sy%","NRFABDCUM",G)=max(0,VYLY("%Sy%","FRS",G)-VYLY("%base_year%","FRS",G));
 VYLY("%Sy%","NRGABDCUM",G)=max(0,VYLY("%Sy%","GL",G)-VYLY("%base_year%","GL",G));
 
-VYL("RFRS",G)$(VYL("AFR",G) and frac_rcp("%Sr%","FRS","1700",G)) = VYL("AFR",G);
-VYL("AFRS",G)$(VYL("AFR",G) and frac_rcp("%Sr%","FRS","1700",G)=0) = VYL("AFR",G);
+VYL("RFRS",G)$(VYL("AFR",G) and frac_rcp("%Sr17%","FRS","1700",G)) = VYL("AFR",G);
+VYL("AFRS",G)$(VYL("AFR",G) and frac_rcp("%Sr17%","FRS","1700",G)=0) = VYL("AFR",G);
 
 
 
 Area(L)$(not LCUM(L))= SUM(G$(G0(G)),VYL(L,G)*GA(G));
 Area(L)$(LCUM(L))= SUM(G$(G0(G)),VYLY("%Sy%",L,G)*GA(G));
 
-AreaR(L,RISO)$(not LCUM(L) and MAP_RISO(RISO,"%Sr%"))= SUM(G$(G0(G) AND MAP_RISOG(RISO,G)),VYL(L,G)*GA(G));
-AreaR(L,RISO)$(LCUM(L) and MAP_RISO(RISO,"%Sr%"))= SUM(G$(G0(G) AND MAP_RISOG(RISO,G)),VYLY("%Sy%",L,G)*GA(G));
+AreaR(L,RISO)$(not LCUM(L) and MAP_RISO(RISO,"%Sr17%"))= SUM(G$(G0(G) AND MAP_RISOG(RISO,G)),VYL(L,G)*GA(G));
+AreaR(L,RISO)$(LCUM(L) and MAP_RISO(RISO,"%Sr17%"))= SUM(G$(G0(G) AND MAP_RISOG(RISO,G)),VYLY("%Sy%",L,G)*GA(G));
 
 delta_VY(Y,L,G)$(Ldelta(L) and ordy(Y)>=ordy("%base_year%")+Ystep AND ordy(Y)<=ordy("%Sy%") AND VYLY(Y,L,G))=(VYLY(Y,L,G)-VYLY(Y-Ystep,L,G));
 
@@ -577,7 +602,7 @@ GHGL(EmitCat,L) = SUM(G$(GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
 GHGL(EmitCat,"LUC")$(SUM(L$(not LNLUC(L)),GHGL(EmitCat,L)))= SUM(L$(not LNLUC(L)),GHGL(EmitCat,L));
 GHGL("Net",L)$(GHGL("Positive",L)+GHGL("Negative",L)) = GHGL("Positive",L)+GHGL("Negative",L);
 
-GHGLR(EmitCat,L,RISO)$(MAP_RISO(RISO,"%Sr%")) = SUM(G$(MAP_RISOG(RISO,G) AND GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
+GHGLR(EmitCat,L,RISO)$(MAP_RISO(RISO,"%Sr17%")) = SUM(G$(MAP_RISOG(RISO,G) AND GHGLG(EmitCat,L,G)),GHGLG(EmitCat,L,G));
 GHGLR(EmitCat,"LUC",RISO)$(SUM(L$(not LNLUC(L)),GHGLR(EmitCat,L,RISO)))= SUM(L$(not LNLUC(L)),GHGLR(EmitCat,L,RISO));
 GHGLR("Net",L,RISO)$(GHGLR("Positive",L,RISO)+GHGLR("Negative",L,RISO)) = GHGLR("Positive",L,RISO)+GHGLR("Negative",L,RISO);
 

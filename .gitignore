@@ -12,3 +12,9 @@ tools/Gridmapping/prog/*/
 tools/Gridmapping/output/
 tools/Gridmapping/data/Basin/major_hydrobasins*
 *.bak
+*.log
+data/agluoutput/*.gdx
+data/agluoutput/.Rproj.user
+data/agluoutput/.Rhistory
+data/agluoutput/R.Rproj
+

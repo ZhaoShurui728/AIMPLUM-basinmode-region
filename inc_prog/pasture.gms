@@ -23,7 +23,12 @@ FLAG_YIELD(G)	flag of grid where potential crop yields exist.
 SF_PAS=1;
 FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 
+$ifthen.agluout2 not %agluauto%==on
 Planduse_pas=Planduse("%Sy%","GRAZING");
+$else.agluout2
+Planduse_pas=Planduse_aglu("%Sr%","PAS","%Sy%","Value");
+$endif.agluout2
+
 Y_NPROT(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("PRM_SEC",G)-protect_wopas(G)>0)=VYL("PRM_SEC",G)-protect_wopas(G);
 
 *VYL("PAS",G)$(Y_pre("PAS",G))=max(Y_NPROT(G),Y_pre("PAS",G));

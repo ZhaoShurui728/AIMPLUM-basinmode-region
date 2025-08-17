@@ -95,14 +95,14 @@ function DataPrep2() {
 function BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
   echo "SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2}, ${S}"
-  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=700 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
+  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
   rm ../output/txt/cpu/basesim/$2.txt
 }
 function BaseRunDisaggfrs() {
   echo "`date '+%s'`" > ../output/txt/cpu/basedsaggfrs/$2.txt
-  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
+  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
   echo $(TimeDif `cat ../output/txt/cpu/basedsaggfrs/$2.txt`) > ../output/txt/cpu/basedsaggfrs/end_$2.txt
   rm ../output/txt/cpu/basedsaggfrs/$2.txt
 }
@@ -160,7 +160,7 @@ function FuturesimRun() {
     parallelSW=on
     if [ ${pausemode} = "on" ]; then parallelSW=off; fi 
     for Y in ${YEAR[@]};    do
-      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
+      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
     done
   done
   
@@ -184,7 +184,7 @@ function FuturesimFullRun() {
       cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
       cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
     fi
-    gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off  MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${S}.lst lo=4
+    gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${S}.lst lo=4
   done
   echo $(TimeDif `cat ../output/txt/cpu/futuresim/${S}_${A}.txt`) > ../output/txt/cpu/futuresim/end_${S}_${A}.txt
   rm ../output/txt/cpu/futuresim/${S}_${A}.txt
@@ -259,7 +259,7 @@ function Futuresim() {
         {
           echo "" > ../output/txt/cpu/disagrfrs/${S}_${A}.txt
           for Y in ${YEAR0[@]};    do
-            gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off \
+            gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off --agluauto=${agluauto} \
               MaxProcDir=700 o=../output/lst/Futuresim/disagg_FRSGL_${S}_${A}.lst lo=4  > ../output/log/disagg_FRSGL_${S}_${A}.log
           done
           echo $(TimeDif `cat ../output/txt/cpu/disagrfrs/${S}_${A}.txt`) > ../output/txt/cpu/disagrfrs/end_${S}_${A}.txt
@@ -312,16 +312,16 @@ function ScnMergeRun() {
   cd ../../../../exe
   
   if [ ${Baserun} = "on" ]; then
-  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4
+  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4
   fi
   if [ ${Restorecal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4	&
   fi
   if [ ${Livdiscal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4	&
   fi
   if [ ${Biocurvesort} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} MaxProcDir=700 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4	&
   fi
   wait
   gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=700  o=../output/lst/comparison_scenario_$2.lst  lo=4
@@ -667,6 +667,7 @@ echo $savedir $baseos
 
 
 if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
+if [ ${agluauto} = "on" ]; then agluauto=on; fi
 
 # Model Execution
 if [ ${DataPrep}       = "on" ]; then DataPrep       ; fi
