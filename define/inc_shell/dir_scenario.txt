@@ -1,5 +1,5 @@
 output/gdx/${S}
-output/gdx/${S}/cbnal
-output/gdx/${S}/analysis
-output/gdx/${S}/bio
+output/gdx/${S}/_cbnal
+output/gdx/${S}/_analysis
+output/gdx/${S}/_bio
 output/csv/${S}

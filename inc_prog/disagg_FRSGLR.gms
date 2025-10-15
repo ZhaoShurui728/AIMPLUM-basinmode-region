@@ -21,8 +21,8 @@ CS_base(G)$CS_base%1(G)=CS_base%1(G);
 VYL(L,G)$(VYL%1(L,G))=VYL%1(L,G);
 
 
-$ifthen exist '../output/gdx/%SCE%_%CLP%%ModelInt%/bio/%Sy%.gdx'
-$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%Sy%.gdx'
+$ifthen exist '../output/gdx/%SCE%_%CLP%%ModelInt%/_bio/%Sy%.gdx'
+$gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_bio/%Sy%.gdx'
 $load YBIO%1=YBIO
 VYL("BIO",G)$(YBIO%1(G))=YBIO%1(G);
 $endif

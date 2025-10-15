@@ -185,6 +185,7 @@ $endif
 set
 LCGE    land use category in AIMCGE /PRM_FRS, MNG_FRS, GRAZING/
 LDM     Aggregated land use category /FRS/
+val /Value/
 ;
 
 parameter
@@ -205,7 +206,7 @@ Planduse(Y,R17,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R17,LCGE)
 
 $ifthen.agluout %agluauto%==on
 parameter
-Planduse_aglu(R,LDM,Y,*)                                Land use | kha
+Planduse_aglu(R,LDM,Y,val)                                Land use | kha
 ;
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
 $load Planduse_aglu=AgLULandusedata

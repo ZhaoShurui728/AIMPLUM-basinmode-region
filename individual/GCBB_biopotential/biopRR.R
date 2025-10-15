@@ -21,7 +21,7 @@ RG <- rgdx.set("..\\..\\data\\data_prep.gdx", symName = 'MAP_RG') %>%
 bioe_in <- function(scenario){
   dfin <- NULL
     for (i in seq(2010, 2100, 10)) {
-      dir <- paste('..\\..\\..\\output\\gdx\\', scenario, '_BaU_NoCC\\bio\\',i,'.gdx', sep='')
+      dir <- paste('..\\..\\..\\output\\gdx\\', scenario, '_BaU_NoCC\\_bio\\',i,'.gdx', sep='')
       temp <- rgdx.param(dir, symName = 'PBIOSUP') %>%
         dcast(G+LB~.k) %>%
         mutate(Y=i, G=as.numeric(as.character(G)), LB = as.character(LB))

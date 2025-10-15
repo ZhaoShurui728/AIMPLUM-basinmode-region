@@ -63,7 +63,7 @@ for %%A in (%COUNTRY_dir%) do (
 	if not exist ..\..\output\gdx\base\%%A\analysis mkdir ..\..\output\gdx\base\%%A\analysis
 )
 for %%F in (%scn%) do (
-  set dirlist2=..\..\output\gdx\%%F ..\..\output\gdx\%%F\cbnal ..\..\output\gdx\%%F\analysis ..\..\output\gdx\%%F\bio ^
+  set dirlist2=..\..\output\gdx\%%F ..\..\output\gdx\%%F\_cbnal ..\..\output\gdx\%%F\_analysis ..\..\output\gdx\%%F\_bio ^
               ..\..\output\csv\%%F
   for %%M in (!dirlist2!) do (
     if not exist %%M mkdir %%M

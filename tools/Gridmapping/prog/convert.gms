@@ -69,7 +69,7 @@ $load landshare_rbasin0=landshare
 
 landshare(I,J,RISO)=sum(lat$map_lat(lat,i),sum(lon$map_lon(lon,j),landshare0(lon,lat,RISO)));
 
-landshare(I,J,Sr17)$(sum(RISO$(map_RISO(RISO,Sr17) and landshare(I,J,RISO)),GAIJ(I)))=sum(RISO$(map_RISO(RISO,Sr17) and landshare(I,J,RISO)),GAIJ(I)*landshare(I,J,RISO))/sum(RISO$(map_RISO(RISO,Sr17) and landshare(I,J,RISO)),GAIJ(I));
+landshare(I,J,Sr17)$(sum(RISO$(map_RISO(RISO,Sr17)),GAIJ(I)*landshare(I,J,RISO)))=sum(RISO$(map_RISO(RISO,Sr17)),GAIJ(I)*landshare(I,J,RISO))/GAIJ(I);
 
 landshare(I,J,Rbasin)$(sum(lat$map_lat(lat,i),sum(lon$map_lon(lon,j),landshare_rbasin0(lon,lat,Rbasin))))=sum(lat$map_lat(lat,i),sum(lon$map_lon(lon,j),landshare_rbasin0(lon,lat,Rbasin)));
 *Adjustmant of basin landshare into Sr17 region landshare if there is discripancy.

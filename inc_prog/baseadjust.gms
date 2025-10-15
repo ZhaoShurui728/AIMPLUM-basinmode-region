@@ -62,6 +62,8 @@ VY.L(L,G)=Y_pre(L,G);
 exclflag(L,G)$(LFIX(L) OR Y_pre(L,G)=0 OR (NOT SUM(LDM$(MAP_LLDM2(L,LDM)),1)))=1;
 VY.FX(L,G)$(exclflag(L,G))=Y_pre(L,G);
 VY.LO(L,G)$(Y_pre(L,G) AND NOT exclflag(L,G))=0;
+
+*Special treatment for ajdustment of total land area
 $ifthen.agluout2 not %agluauto%==on
 PLDM("PAS")=Planduse("%Sy%","GRAZING");
 PLDM("CROP_FLW")=Planduse("%Sy%","CROP_FLW");
@@ -69,8 +71,6 @@ $else.agluout2
 PLDM("PAS")=Planduse_aglu("%Sr%","PAS","%Sy%","Value");
 PLDM("CROP_FLW")=Planduse_aglu("%Sr%","CROP_FLW","%Sy%","Value");
 $endif.agluout2
-
-*Special treatment for ajdustment of total land area
 PLDM("PRM_SEC")=0;
 PLDM("PRM_SEC")=SUM(G,ga(G))-SUM(LDM,PLDM(LDM));
 

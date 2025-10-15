@@ -12,10 +12,10 @@ cd ..\..\exe
 mkdir %1
 cd %1
 for %%A in (%COUNTRY%) do (
-  gdxmerge "..\..\output\gdx\%1\%%A\*.gdx" output="..\..\output\gdx\%1\cbnal\%%A.gdx"
-  gdxmerge "..\..\output\gdx\%1\%%A\analysis\*.gdx" output="..\..\output\gdx\%1\analysis\%%A.gdx"
+  gdxmerge "..\..\output\gdx\%1\%%A\*.gdx" output="..\..\output\gdx\%1\_cbnal\%%A.gdx"
+  gdxmerge "..\..\output\gdx\%1\%%A\analysis\*.gdx" output="..\..\output\gdx\%1\_analysis\%%A.gdx"
 )
-gdxmerge "..\..\output\gdx\%1\bio\*.gdx" output="..\..\output\gdx\%1\bio.gdx"
+gdxmerge "..\..\output\gdx\%1\_bio\*.gdx" output="..\..\output\gdx\%1\bio.gdx"
 
 cd ..\
 rd /q /s %1

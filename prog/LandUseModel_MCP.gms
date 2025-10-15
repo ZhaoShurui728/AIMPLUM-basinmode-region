@@ -828,8 +828,8 @@ Y_pre("OL",G)$(Y_pre("OL",G)>1-Y_pre("SL",G))=1-Y_pre("SL",G);
 
 
 $ifthen.bio %biocurve%==on
-$ifthen.fileex exist '%../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
-$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/bio/%pre_year%.gdx'
+$ifthen.fileex exist '%../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_bio/%pre_year%.gdx'
+$       gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_bio/%pre_year%.gdx'
 $       load YBIO_load=YBIO
 $else.fileex
     YBIO_load(G)=0;
@@ -1085,6 +1085,8 @@ $if not %agluauto%==on  PLDM(LDM)$(PLDM0("%Sy%",LDM)>0.01)=PLDM0("%Sy%",LDM);
 $if %agluauto%==on  PLDM(LDM)$(PLDM0("%Sy%",LDM)>0.01)=PLDM_aglu0("%Sy%",LDM);
 PLDM("SL")=SUM(G,GA(G)*Y_pre("SL",G));
 PLDM("OL")=SUM(G,GA(G)*Y_pre("OL",G));
+*if some crops are missing in Y_pre, then cancel (this may happen in a small basin)
+PLDM(LDM)$(LDMCROPB(LDM) and SUM(L,MAP_LLDM(L,LDM)) AND SUM((L,G)$(Y_pre(L,G) AND MAP_LLDM(L,LDM)),1)=0)=0;
 
 FLAGDM(L)$(SUM(LDM$MAP_LLDM(L,LDM),PLDM(LDM)) OR PCDM(L))=1;
 

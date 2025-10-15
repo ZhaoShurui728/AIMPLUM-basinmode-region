@@ -5,43 +5,43 @@ rg <- rgdx.set("../../..\\prog\\data\\data_prep.gdx", symName = 'MAP_RG') %>%
   mutate(RG=ifelse(R %in% c('USA','CAN','JPN','XE25','XOC', 'TUR', 'XER'), 'OECD', R))
 
 
-yield2010 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2010.gdx", symName = 'YIELDBIO') %>%
+yield2010 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2010.gdx", symName = 'YIELDBIO') %>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2020 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2020.gdx", symName = 'YIELDBIO')%>%
+yield2020 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2020.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2030 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2030.gdx", symName = 'YIELDBIO')%>%
+yield2030 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2030.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2040 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2040.gdx", symName = 'YIELDBIO')%>%
+yield2040 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2040.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2050 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2050.gdx", symName = 'YIELDBIO')%>%
+yield2050 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2050.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2060 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2060.gdx", symName = 'YIELDBIO')%>%
+yield2060 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2060.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2070 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2070.gdx", symName = 'YIELDBIO')%>%
+yield2070 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2070.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2080 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2080.gdx", symName = 'YIELDBIO')%>%
+yield2080 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2080.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2090 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2090.gdx", symName = 'YIELDBIO')%>%
+yield2090 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2090.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
-yield2100 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\bio\\2100.gdx", symName = 'YIELDBIO')%>%
+yield2100 <- rgdx.param("../../..\\output\\gdx\\SSP2_base_BaU_NoCC\\_bio\\2100.gdx", symName = 'YIELDBIO')%>%
   mutate(G=as.numeric(as.character(G))) %>%
   merge(rg %>% dplyr::select(G, RG), by = 'G', all.x = T)
 
