@@ -196,6 +196,7 @@ CSB     carbon stock boundary in forest and grassland (MgC ha-1)
 
 Planduse_load(*,Y,R17,LCGE)
 Planduse(Y,R17,LCGE)
+Planduse_aglu(R,LDM,Y,val)                                Land use | kha
 ;
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
@@ -205,9 +206,6 @@ $load Planduse_load=Planduse
 Planduse(Y,R17,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R17,LCGE);
 
 $ifthen.agluout %agluauto%==on
-parameter
-Planduse_aglu(R,LDM,Y,val)                                Land use | kha
-;
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
 $load Planduse_aglu=AgLULandusedata
 $endif.agluout
@@ -265,6 +263,7 @@ OTHFRSArea      other forest area
 FRSArea2
 YFRS(G)
 Psol_stat(*)                  Solution report
+frac_rcp(R17,L,YBASE,G)	fraction of each gridcell G in land category L
 ;
 
 Variable
@@ -277,6 +276,9 @@ EQVYFRS(G)
 EQCONS
 ;
 
+$gdxin '../%prog_loc%/data/land_map_luh2.gdx'
+$load frac_rcp=frac
+
 $ifthen.baseyear %Sy%==%base_year%
 
 
@@ -285,10 +287,15 @@ FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Plandu
 $elseif %Sr%==CAN
 FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Planduse("%Sy%","CAN","PRM_FRS")+Planduse("%Sy%","CAN","MNG_FRS");
 $else
-$ifthen.agluout3 not %agluauto%==on
+$ifthen.agluout3 %agluauto%==off
 FRSArea=Planduse("%Sy%","%Sr17%","PRM_FRS")+Planduse("%Sy%","%Sr17%","MNG_FRS");
 $else.agluout3
-FRSArea=Planduse_aglu("%Sr%","FRS","%Sy%","Value");
+
+$ifthene.noinput noinput==0
+  FRSArea=Planduse_aglu("%Sr%","FRS","%Sy%","Value");
+$elseif.noinput
+  FRSArea=sum(G,frac_rcp("%Sr17%","FRS","%base_year%",G));
+$endif.noinput
 $endif.agluout3
 $endif
 
@@ -353,7 +360,6 @@ parameter
 forest_management_shareG(G) A ratio of managed forest area to total forest area  in a grid cell G (0-1)
 forest_class_shareG(landcatall,G) A ratio of each forest class to grid area in a grid cell G (0-1)
 Soil_deg(G)	A share of area with soil degradation to grid area in grid G (0-1) Wu et al 2019 GCBB developed using GLADIS (Freddy & Monica 2011).
-frac_rcp(R17,L,YBASE,G)	fraction of each gridcell G in land category L
 forest_planted_rate(G) A ratio of planted area(31+32) to managed forest area (20+31+32) in a grid cell G (0-1)
 ;
 $gdxin '../%prog_loc%/data/forest_class_export.gdx'
@@ -362,8 +368,6 @@ $load forest_management_shareG,forest_class_shareG
 $gdxin '../%prog_loc%/individual/GCBB_biopotential/policydata.gdx'
 $load	Soil_deg=serious_land
 
-$gdxin '../%prog_loc%/data/land_map_luh2.gdx'
-$load frac_rcp=frac
 
 forest_planted_rate(G)$(forest_class_shareG("3",G))=(forest_class_shareG("31",G)+forest_class_shareG("32",G))/forest_class_shareG("3",G);
 

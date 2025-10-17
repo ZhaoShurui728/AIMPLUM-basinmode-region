@@ -120,6 +120,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  CIS
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XME
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XNF
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  XAF
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  ABW_CARC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AFG_AMDA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AFG_CSEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AFG_FARA
@@ -130,6 +131,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AGO_ASII
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AGO_CONG
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AGO_ZAMB
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ALB_AGBS
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  AND_EBRO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ARE_ARPA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ARG_LAPL
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ARG_NASA
@@ -146,6 +148,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AUS_ASCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AUS_AUNC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AUS_AWEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AUS_MRDA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  AUS_NZLZ
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AUT_DANU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  AZE_CSSW
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BDI_CONG
@@ -179,6 +182,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BRA_SAOF
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BRA_TOCA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BRA_UBSA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BRB_CARC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  BRN_NBCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BTN_GABR
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BWA_ASII
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  BWA_LIMP
@@ -220,6 +224,8 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  COL_MAGD
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  COL_ORIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  COM_MADA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  CRI_SCAM
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  CUB_CARI
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  CYM_CARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  CYP_MSEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  CZE_DANU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  CZE_ELBE
@@ -231,6 +237,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DEU_EWES
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DEU_RHIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DJI_ARGA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DJI_RIFT
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  DMA_CARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DNK_DGCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DOM_CARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  DZA_ANIN
@@ -241,6 +248,9 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ECU_CEPC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  EGY_ANIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  EGY_ARGA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  EGY_NILE
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  ERI_ARGA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  ERI_NILE
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  ERI_RIFT
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ESP_DOUR
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ESP_EBRO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ESP_GUAD
@@ -264,6 +274,8 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  FRA_LOIR
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  FRA_NESO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  FRA_RHON
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  FRA_SEIN
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  FRO_SCTD
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  FSM_MICO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GAB_GFGU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GBR_EAWC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GBR_IREL
@@ -277,11 +289,14 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GIN_NIGE
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GIN_SENE
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GMB_AFWC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GNB_AFWC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  GNQ_GFGU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GRC_AGBS
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GRD_CARC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  GRL_AOIS
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GTM_GRIJ
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GTM_SCAM
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GTM_YUPA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  GUM_NMIG
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GUY_AMAZ
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  GUY_NESO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  HKG_CHIN
@@ -334,6 +349,8 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KGZ_SYRD
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KGZ_TARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KHM_GTCC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KHM_MEKO
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  KIR_KINA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  KNA_CARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KOR_NSKU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KWT_ARPA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  KWT_TIEU
@@ -345,6 +362,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LBR_AFWC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LBY_ANIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LBY_MSCC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LCA_CARC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  LIE_RHIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LKA_SRIL
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LSO_ORAN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  LTU_BSCC
@@ -356,6 +374,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MAC_XJIA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MAR_ANIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MAR_ANWC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MAR_MSCC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  MCO_FSCD
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MDA_BSNC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MDA_DANU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MDA_DNIE
@@ -383,6 +402,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MNE_DANU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MNG_AMUR
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MNG_GOBI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MNG_YENS
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  MNP_NMIG
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MOZ_AECC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MOZ_AIOC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MOZ_LIMP
@@ -397,6 +417,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  MYS_PMAL
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NAM_ASII
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NAM_NAMC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NAM_ORAN
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  NCL_SPII
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NER_LCHA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NER_NIGE
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NGA_AFWC
@@ -407,6 +428,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NIC_SCAM
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NLD_MAAS
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NLD_RHIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NLD_SCHE
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  NOR_ANTC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NOR_SNCC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NOR_SWED
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  NPL_GABR
@@ -420,7 +442,9 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PAN_CEPC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PAN_SCAM
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PER_AMAZ
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PER_PERU
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PHL_NBCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PHL_PHIL
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PLW_PAEI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PNG_FLYY
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PNG_IRJA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PNG_PNGC
@@ -428,16 +452,24 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PNG_SEPI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  POL_ODER
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  POL_PLCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  POL_WISL
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRI_CARI
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRK_AMUR
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRK_BHKN
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRK_NSKU
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRK_RSEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRT_DOUR
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRT_GUAD
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRT_SPAC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRT_TAGU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  PRY_LAPL
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PSE_DEAS
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  PSE_MSEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  QAT_ARPA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ROU_DANU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_AMUR
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_LENA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_OBBB
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_PACA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_SNCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_SWCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  RUS_VOLG
@@ -452,11 +484,20 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SDN_LCHA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SDN_NILE
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SEN_AFWC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SEN_SENE
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SGP_PMAL
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SLB_SOLI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SLB_SPII
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SLE_AFWC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SLV_SCAM
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SMR_IECO
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SOM_AECC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SOM_ARGA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SOM_RIFT
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SOM_SHJU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SRB_DANU
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SSD_CONG
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SSD_NILE
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SSD_RIFT
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  STP_GFGU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SUR_NESO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SVK_DANU
@@ -464,6 +505,11 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SVN_AGBS
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SVN_DANU
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SWE_SWED
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  SWZ_SASC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SYR_DEAS
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SYR_EJSS
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SYR_MSEC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  SYR_TIEU
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  TCA_CARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TCD_ANIN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TCD_LCHA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TGO_AFWC
@@ -484,6 +530,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TUR_BSSC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TUR_CSSW
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TUR_MSEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TUR_TIEU
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  TUV_TUVA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TZA_AECC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TZA_CONG
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  TZA_NILE
@@ -506,10 +553,23 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  UZB_AMDA
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  UZB_CSEC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  UZB_SYRD
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  VCT_CARC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VEN_AMAZ
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VEN_CARC
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VEN_MAGD
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VEN_NESO
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VEN_ORIN
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VGB_CARI
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  VIR_CARI
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  VNM_HRIV
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  VNM_MEKO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  VNM_VNCO
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  VUT_SPII
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  XKX_AGBS
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  XKX_DANU
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  YEM_ARGA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  YEM_ARPA
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  YEM_RSEE
+$batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZAF_ANTC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZAF_LIMP
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZAF_ORAN
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZAF_SASC
@@ -520,6 +580,7 @@ $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZWE_AIOC
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZWE_ASII
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZWE_LIMP
 $batinclude ../%prog_loc%/inc_prog/gl_region.gms  ZWE_ZAMB
+
 
 
 
@@ -548,6 +609,7 @@ G_CIS
 G_XME
 G_XNF
 G_XAF
+G_ABW_CARC
 G_AFG_AMDA
 G_AFG_CSEC
 G_AFG_FARA
@@ -558,6 +620,7 @@ G_AGO_ASII
 G_AGO_CONG
 G_AGO_ZAMB
 G_ALB_AGBS
+G_AND_EBRO
 G_ARE_ARPA
 G_ARG_LAPL
 G_ARG_NASA
@@ -574,6 +637,7 @@ G_AUS_ASCO
 G_AUS_AUNC
 G_AUS_AWEC
 G_AUS_MRDA
+G_AUS_NZLZ
 G_AUT_DANU
 G_AZE_CSSW
 G_BDI_CONG
@@ -607,6 +671,7 @@ G_BRA_SAOF
 G_BRA_TOCA
 G_BRA_UBSA
 G_BRB_CARC
+G_BRN_NBCO
 G_BTN_GABR
 G_BWA_ASII
 G_BWA_LIMP
@@ -648,6 +713,8 @@ G_COL_MAGD
 G_COL_ORIN
 G_COM_MADA
 G_CRI_SCAM
+G_CUB_CARI
+G_CYM_CARI
 G_CYP_MSEC
 G_CZE_DANU
 G_CZE_ELBE
@@ -659,6 +726,7 @@ G_DEU_EWES
 G_DEU_RHIN
 G_DJI_ARGA
 G_DJI_RIFT
+G_DMA_CARI
 G_DNK_DGCO
 G_DOM_CARI
 G_DZA_ANIN
@@ -669,6 +737,9 @@ G_ECU_CEPC
 G_EGY_ANIN
 G_EGY_ARGA
 G_EGY_NILE
+G_ERI_ARGA
+G_ERI_NILE
+G_ERI_RIFT
 G_ESP_DOUR
 G_ESP_EBRO
 G_ESP_GUAD
@@ -692,6 +763,8 @@ G_FRA_LOIR
 G_FRA_NESO
 G_FRA_RHON
 G_FRA_SEIN
+G_FRO_SCTD
+G_FSM_MICO
 G_GAB_GFGU
 G_GBR_EAWC
 G_GBR_IREL
@@ -705,11 +778,14 @@ G_GIN_NIGE
 G_GIN_SENE
 G_GMB_AFWC
 G_GNB_AFWC
+G_GNQ_GFGU
 G_GRC_AGBS
 G_GRD_CARC
+G_GRL_AOIS
 G_GTM_GRIJ
 G_GTM_SCAM
 G_GTM_YUPA
+G_GUM_NMIG
 G_GUY_AMAZ
 G_GUY_NESO
 G_HKG_CHIN
@@ -762,6 +838,8 @@ G_KGZ_SYRD
 G_KGZ_TARI
 G_KHM_GTCC
 G_KHM_MEKO
+G_KIR_KINA
+G_KNA_CARI
 G_KOR_NSKU
 G_KWT_ARPA
 G_KWT_TIEU
@@ -773,6 +851,7 @@ G_LBR_AFWC
 G_LBY_ANIN
 G_LBY_MSCC
 G_LCA_CARC
+G_LIE_RHIN
 G_LKA_SRIL
 G_LSO_ORAN
 G_LTU_BSCC
@@ -784,6 +863,7 @@ G_MAC_XJIA
 G_MAR_ANIN
 G_MAR_ANWC
 G_MAR_MSCC
+G_MCO_FSCD
 G_MDA_BSNC
 G_MDA_DANU
 G_MDA_DNIE
@@ -811,6 +891,7 @@ G_MNE_DANU
 G_MNG_AMUR
 G_MNG_GOBI
 G_MNG_YENS
+G_MNP_NMIG
 G_MOZ_AECC
 G_MOZ_AIOC
 G_MOZ_LIMP
@@ -825,6 +906,7 @@ G_MYS_PMAL
 G_NAM_ASII
 G_NAM_NAMC
 G_NAM_ORAN
+G_NCL_SPII
 G_NER_LCHA
 G_NER_NIGE
 G_NGA_AFWC
@@ -835,6 +917,7 @@ G_NIC_SCAM
 G_NLD_MAAS
 G_NLD_RHIN
 G_NLD_SCHE
+G_NOR_ANTC
 G_NOR_SNCC
 G_NOR_SWED
 G_NPL_GABR
@@ -848,7 +931,9 @@ G_PAN_CEPC
 G_PAN_SCAM
 G_PER_AMAZ
 G_PER_PERU
+G_PHL_NBCO
 G_PHL_PHIL
+G_PLW_PAEI
 G_PNG_FLYY
 G_PNG_IRJA
 G_PNG_PNGC
@@ -856,16 +941,24 @@ G_PNG_SEPI
 G_POL_ODER
 G_POL_PLCO
 G_POL_WISL
+G_PRI_CARI
+G_PRK_AMUR
+G_PRK_BHKN
+G_PRK_NSKU
+G_PRK_RSEC
 G_PRT_DOUR
 G_PRT_GUAD
 G_PRT_SPAC
 G_PRT_TAGU
 G_PRY_LAPL
+G_PSE_DEAS
+G_PSE_MSEC
 G_QAT_ARPA
 G_ROU_DANU
 G_RUS_AMUR
 G_RUS_LENA
 G_RUS_OBBB
+G_RUS_PACA
 G_RUS_SNCO
 G_RUS_SWCO
 G_RUS_VOLG
@@ -880,11 +973,20 @@ G_SDN_LCHA
 G_SDN_NILE
 G_SEN_AFWC
 G_SEN_SENE
+G_SGP_PMAL
 G_SLB_SOLI
 G_SLB_SPII
 G_SLE_AFWC
 G_SLV_SCAM
+G_SMR_IECO
+G_SOM_AECC
+G_SOM_ARGA
+G_SOM_RIFT
+G_SOM_SHJU
 G_SRB_DANU
+G_SSD_CONG
+G_SSD_NILE
+G_SSD_RIFT
 G_STP_GFGU
 G_SUR_NESO
 G_SVK_DANU
@@ -892,6 +994,11 @@ G_SVN_AGBS
 G_SVN_DANU
 G_SWE_SWED
 G_SWZ_SASC
+G_SYR_DEAS
+G_SYR_EJSS
+G_SYR_MSEC
+G_SYR_TIEU
+G_TCA_CARI
 G_TCD_ANIN
 G_TCD_LCHA
 G_TGO_AFWC
@@ -912,6 +1019,7 @@ G_TUR_BSSC
 G_TUR_CSSW
 G_TUR_MSEC
 G_TUR_TIEU
+G_TUV_TUVA
 G_TZA_AECC
 G_TZA_CONG
 G_TZA_NILE
@@ -934,10 +1042,23 @@ G_UZB_AMDA
 G_UZB_CSEC
 G_UZB_SYRD
 G_VCT_CARC
+G_VEN_AMAZ
+G_VEN_CARC
+G_VEN_MAGD
+G_VEN_NESO
+G_VEN_ORIN
+G_VGB_CARI
+G_VIR_CARI
 G_VNM_HRIV
 G_VNM_MEKO
 G_VNM_VNCO
 G_VUT_SPII
+G_XKX_AGBS
+G_XKX_DANU
+G_YEM_ARGA
+G_YEM_ARPA
+G_YEM_RSEE
+G_ZAF_ANTC
 G_ZAF_LIMP
 G_ZAF_ORAN
 G_ZAF_SASC
@@ -958,6 +1079,7 @@ MAP_RbasinG
 Gland
 MAP_RISO
 landshareG
+Rbasin
 ;
 
 execute_unload '../%prog_loc%/data/GL_R17.gdx'
@@ -980,6 +1102,7 @@ GLXNF
 GLXAF
 ;
 execute_unload '../%prog_loc%/data/GL_basin.gdx'
+GLABW_CARC
 GLAFG_AMDA
 GLAFG_CSEC
 GLAFG_FARA
@@ -990,6 +1113,7 @@ GLAGO_ASII
 GLAGO_CONG
 GLAGO_ZAMB
 GLALB_AGBS
+GLAND_EBRO
 GLARE_ARPA
 GLARG_LAPL
 GLARG_NASA
@@ -1006,6 +1130,7 @@ GLAUS_ASCO
 GLAUS_AUNC
 GLAUS_AWEC
 GLAUS_MRDA
+GLAUS_NZLZ
 GLAUT_DANU
 GLAZE_CSSW
 GLBDI_CONG
@@ -1039,6 +1164,7 @@ GLBRA_SAOF
 GLBRA_TOCA
 GLBRA_UBSA
 GLBRB_CARC
+GLBRN_NBCO
 GLBTN_GABR
 GLBWA_ASII
 GLBWA_LIMP
@@ -1080,6 +1206,8 @@ GLCOL_MAGD
 GLCOL_ORIN
 GLCOM_MADA
 GLCRI_SCAM
+GLCUB_CARI
+GLCYM_CARI
 GLCYP_MSEC
 GLCZE_DANU
 GLCZE_ELBE
@@ -1091,6 +1219,7 @@ GLDEU_EWES
 GLDEU_RHIN
 GLDJI_ARGA
 GLDJI_RIFT
+GLDMA_CARI
 GLDNK_DGCO
 GLDOM_CARI
 GLDZA_ANIN
@@ -1101,6 +1230,9 @@ GLECU_CEPC
 GLEGY_ANIN
 GLEGY_ARGA
 GLEGY_NILE
+GLERI_ARGA
+GLERI_NILE
+GLERI_RIFT
 GLESP_DOUR
 GLESP_EBRO
 GLESP_GUAD
@@ -1124,6 +1256,8 @@ GLFRA_LOIR
 GLFRA_NESO
 GLFRA_RHON
 GLFRA_SEIN
+GLFRO_SCTD
+GLFSM_MICO
 GLGAB_GFGU
 GLGBR_EAWC
 GLGBR_IREL
@@ -1137,11 +1271,14 @@ GLGIN_NIGE
 GLGIN_SENE
 GLGMB_AFWC
 GLGNB_AFWC
+GLGNQ_GFGU
 GLGRC_AGBS
 GLGRD_CARC
+GLGRL_AOIS
 GLGTM_GRIJ
 GLGTM_SCAM
 GLGTM_YUPA
+GLGUM_NMIG
 GLGUY_AMAZ
 GLGUY_NESO
 GLHKG_CHIN
@@ -1194,6 +1331,8 @@ GLKGZ_SYRD
 GLKGZ_TARI
 GLKHM_GTCC
 GLKHM_MEKO
+GLKIR_KINA
+GLKNA_CARI
 GLKOR_NSKU
 GLKWT_ARPA
 GLKWT_TIEU
@@ -1205,6 +1344,7 @@ GLLBR_AFWC
 GLLBY_ANIN
 GLLBY_MSCC
 GLLCA_CARC
+GLLIE_RHIN
 GLLKA_SRIL
 GLLSO_ORAN
 GLLTU_BSCC
@@ -1216,6 +1356,7 @@ GLMAC_XJIA
 GLMAR_ANIN
 GLMAR_ANWC
 GLMAR_MSCC
+GLMCO_FSCD
 GLMDA_BSNC
 GLMDA_DANU
 GLMDA_DNIE
@@ -1243,6 +1384,7 @@ GLMNE_DANU
 GLMNG_AMUR
 GLMNG_GOBI
 GLMNG_YENS
+GLMNP_NMIG
 GLMOZ_AECC
 GLMOZ_AIOC
 GLMOZ_LIMP
@@ -1257,6 +1399,7 @@ GLMYS_PMAL
 GLNAM_ASII
 GLNAM_NAMC
 GLNAM_ORAN
+GLNCL_SPII
 GLNER_LCHA
 GLNER_NIGE
 GLNGA_AFWC
@@ -1267,6 +1410,7 @@ GLNIC_SCAM
 GLNLD_MAAS
 GLNLD_RHIN
 GLNLD_SCHE
+GLNOR_ANTC
 GLNOR_SNCC
 GLNOR_SWED
 GLNPL_GABR
@@ -1280,7 +1424,9 @@ GLPAN_CEPC
 GLPAN_SCAM
 GLPER_AMAZ
 GLPER_PERU
+GLPHL_NBCO
 GLPHL_PHIL
+GLPLW_PAEI
 GLPNG_FLYY
 GLPNG_IRJA
 GLPNG_PNGC
@@ -1288,16 +1434,24 @@ GLPNG_SEPI
 GLPOL_ODER
 GLPOL_PLCO
 GLPOL_WISL
+GLPRI_CARI
+GLPRK_AMUR
+GLPRK_BHKN
+GLPRK_NSKU
+GLPRK_RSEC
 GLPRT_DOUR
 GLPRT_GUAD
 GLPRT_SPAC
 GLPRT_TAGU
 GLPRY_LAPL
+GLPSE_DEAS
+GLPSE_MSEC
 GLQAT_ARPA
 GLROU_DANU
 GLRUS_AMUR
 GLRUS_LENA
 GLRUS_OBBB
+GLRUS_PACA
 GLRUS_SNCO
 GLRUS_SWCO
 GLRUS_VOLG
@@ -1312,11 +1466,20 @@ GLSDN_LCHA
 GLSDN_NILE
 GLSEN_AFWC
 GLSEN_SENE
+GLSGP_PMAL
 GLSLB_SOLI
 GLSLB_SPII
 GLSLE_AFWC
 GLSLV_SCAM
+GLSMR_IECO
+GLSOM_AECC
+GLSOM_ARGA
+GLSOM_RIFT
+GLSOM_SHJU
 GLSRB_DANU
+GLSSD_CONG
+GLSSD_NILE
+GLSSD_RIFT
 GLSTP_GFGU
 GLSUR_NESO
 GLSVK_DANU
@@ -1324,6 +1487,11 @@ GLSVN_AGBS
 GLSVN_DANU
 GLSWE_SWED
 GLSWZ_SASC
+GLSYR_DEAS
+GLSYR_EJSS
+GLSYR_MSEC
+GLSYR_TIEU
+GLTCA_CARI
 GLTCD_ANIN
 GLTCD_LCHA
 GLTGO_AFWC
@@ -1344,6 +1512,7 @@ GLTUR_BSSC
 GLTUR_CSSW
 GLTUR_MSEC
 GLTUR_TIEU
+GLTUV_TUVA
 GLTZA_AECC
 GLTZA_CONG
 GLTZA_NILE
@@ -1366,10 +1535,23 @@ GLUZB_AMDA
 GLUZB_CSEC
 GLUZB_SYRD
 GLVCT_CARC
+GLVEN_AMAZ
+GLVEN_CARC
+GLVEN_MAGD
+GLVEN_NESO
+GLVEN_ORIN
+GLVGB_CARI
+GLVIR_CARI
 GLVNM_HRIV
 GLVNM_MEKO
 GLVNM_VNCO
 GLVUT_SPII
+GLXKX_AGBS
+GLXKX_DANU
+GLYEM_ARGA
+GLYEM_ARPA
+GLYEM_RSEE
+GLZAF_ANTC
 GLZAF_LIMP
 GLZAF_ORAN
 GLZAF_SASC
@@ -1380,7 +1562,6 @@ GLZWE_AIOC
 GLZWE_ASII
 GLZWE_LIMP
 GLZWE_ZAMB
-
 ;
 
 

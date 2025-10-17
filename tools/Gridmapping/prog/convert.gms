@@ -64,7 +64,7 @@ GAIJ(I)=GAIJ0(I,"1");
 $gdxin '../output/landshare_iso.gdx'
 $load landshare0=landshare
 * generating basin map
-$gdxin '../output/landshare_basiniso.gdx'
+$gdxin '../output/landshare_basiniso_full.gdx'
 $load landshare_rbasin0=landshare
 
 landshare(I,J,RISO)=sum(lat$map_lat(lat,i),sum(lon$map_lon(lon,j),landshare0(lon,lat,RISO)));

@@ -87,13 +87,16 @@ PLDM("SL")=SUM(G,Y_pre("SL",G)*ga(G));
 PLDM("PRM_SEC")=SUM(G,ga(G))-(SUM(LDM,PLDM(LDM))-PLDM("PRM_SEC"));
 
 $if %parallel%==off execute_unload '../output/temp.gdx';
-SOLVE CEBaseAdjModel using NLP minimizing VOBJ;
+$ifthene.data noinput==0
+  SOLVE CEBaseAdjModel using NLP minimizing VOBJ;
+  Y_pre(L,G)=VY.L(L,G);
+  Y_pre("PRM_SEC",G)=VY.L("FRSGL",G)+VY.L("PAS",G);
+$elseif.data
+  Y_pre(L,G)=Y_pretmp(L,G);
+$endif.data
 
 *post process
-Y_pre(L,G)=Y_pretmp(L,G);
 PLDM(LDM)$((not sameas(LDM,"SL")) and (not sameas(LDM,"OL")))=PLDMtmp(LDM);
-Y_pre(L,G)=VY.L(L,G);
-Y_pre("PRM_SEC",G)=VY.L("FRSGL",G)+VY.L("PAS",G);
 VY.SCALE(L,G)=1;
 VY.UP(L,G)=+INF;
 VY.LO(L,G)=-INF;

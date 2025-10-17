@@ -14,7 +14,7 @@ sf_use_s2(FALSE)
 output_dir <- '../output'
 
 # ベクタデータ
-Basin_Boundary <- st_read("../data/Basin_Boundary/Basin_Boundary.shp")
+Basin_Boundary <- st_read("../data/Basin_Boundary_full/Basin_Boundary_full.shp")
 
 # 並列処理の準備
 plan(multisession)  # or sequential if not using parallel
@@ -44,7 +44,7 @@ df$landshare <- df$grid005 %>%
 
 df$landshare_AIM <- df$landshare %>% 
   pivot_wider(names_from=RISOBasin,values_from=landarea_share,values_fill=0) %>% 
-  wgdx.reshape(symName='landshare',3,tName='RISOBasin',str_c(output_dir,'/landshare_basiniso.gdx'))
+  wgdx.reshape(symName='landshare',3,tName='RISOBasin',str_c(output_dir,'/landshare_basiniso_full.gdx'))
 
 
 

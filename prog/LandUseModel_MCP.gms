@@ -1068,6 +1068,9 @@ PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 *PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
 *!!!TEMPORARY!!!
 
+parameter
+noinput /0/
+;
 $ifthen.agluout %agluauto%==on
 parameter
 Planduse_aglu(R,LDM,Y,*)                                Land use | kha
@@ -1076,6 +1079,7 @@ PLDM_aglu0(Y,LDM)
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
 $load Planduse_aglu=AgLULandusedata
 PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%Sr%",LDM,Y,"Value");
+noinput$(sum((Y,LDM),PLDM_aglu0(Y,LDM))=0)=1;
 $endif.agluout
 
 
@@ -1216,6 +1220,7 @@ VZ.L(L,G)$(VZ_load(L,G))=VZ_load(L,G);
 VY.L(L,G)$(Y_pre(L,G)<10**(-5))=0;
 VZ.L(L,G)$(VZ_load(L,G)<10**(-5))=0;
 VOBJ.L=0;
+VYP.L(L,G)=0;
 
 VY.LO(L,G)=0;
 VYP.LO(L,G)=0;
@@ -1297,6 +1302,7 @@ SCALAR
 	IteCounter/0/
 ;
 
+$ifthene.noinput not noinput==1
 $ifthen.mcp %mcp%==on
 	Solve LandUseModel_MCP USING MCP;
         Psol_stat("SSOLVE","MCP")=LandUseModel_MCP.SOLVESTAT;Psol_stat("SMODEL","MCP")=LandUseModel_MCP.MODELSTAT;
@@ -1305,19 +1311,13 @@ $else.mcp
         Psol_stat("SSOLVE","SLP")=LandUseModel_LP.SOLVESTAT;Psol_stat("SMODEL","SLP")=LandUseModel_LP.MODELSTAT;Psol_stat("ITE_HIS","SLP")=ite_his;
 $endif.mcp
 
-*-*-*-*-*
-*-*-*-*-*
-*YPNMAXCL=0.10;
-*FOR(ite_his=11 to maxite,
-*-*-*-*-*
-*-*-*-*-*
-
 FOR(ite_his=2 to maxite,
 IF((NOT (Psol_stat("SMODEL","SLP")=1 AND Psol_stat("SSOLVE","SLP")=1)),
         YPNMAXCL=min(1,YPNMAXCL+0.1);
 	Solve LandUseModel_LP USING LP maximizing VOBJ;
         Psol_stat("SSOLVE","SLP")=LandUseModel_LP.SOLVESTAT;Psol_stat("SMODEL","SLP")=LandUseModel_LP.MODELSTAT;Psol_stat("ITE_HIS","SLP")=ite_his;Psol_stat("YPNMAXCL","SLP")=YPNMAXCL;
 ));
+$endif.noinput
 
 VYL(L,G)$(VY.L(L,G))=VY.L(L,G);
 VZL(L,G)$(VZ.L(L,G))=VZ.L(L,G);
@@ -1350,9 +1350,9 @@ $endif
 
 
 *------ Pasture -----------*
-$include ../%prog_loc%/inc_prog/pasture.gms
+$if not noinput==1  $include ../%prog_loc%/inc_prog/pasture.gms
 *------ Crop fallow -----------*
-$include ../%prog_loc%/inc_prog/crop_fallow.gms
+$if not noinput==1  $include ../%prog_loc%/inc_prog/crop_fallow.gms
 
 *----Total adjustment
 set

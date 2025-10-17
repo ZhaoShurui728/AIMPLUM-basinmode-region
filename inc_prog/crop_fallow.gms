@@ -23,7 +23,11 @@ scalar iter;
 SF_CROP_FLW=1;
 FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 
+$ifthen.agluout2 not %agluauto%==on
 Planduse_cropflw=Planduse("%Sy%","CROP_FLW");
+$else.agluout2
+Planduse_cropflw=Planduse_aglu("%Sr%","CROP_FLW","%Sy%","Value");
+$endif.agluout2
 Y_NPROT_NOPAS(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("FRSGL",G)-protect_wopas(G)>0)=VYL("FRSGL",G)-protect_wopas(G);
 *��N��CROP_FLW���O�N�_�n�������Ƃ���ō��N�g���Ȃ��y�n�̂���Z���ł�����Ƃ���܂ł����
 VYL("CROP_FLW",G)$(Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G)) AND Y_NPROT_NOPAS(G) AND Y_NPROT_NOPAS(G)>=Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G)) ) = Y_pre("CROP_FLW",G) + SUM(L$(LCROPB(L) AND (Y_pre(L,G)-VYL(L,G))>0),Y_pre(L,G)-VYL(L,G));
