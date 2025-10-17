@@ -57,6 +57,9 @@ $setglobal UrbanLandData SSP
 *Base year cross entropy adjustment can be implemented by turning on. default is on. options are [on/off]
 $setglobal baseadjust on
 
+*Flag for a region with no land input data (off: data exists; on: no data)
+$setglobal noinput off
+
 $if %Sy%==2005 $setglobal mcp off
 $if not %Sy%==2005 $setglobal mcp off
 
@@ -1068,18 +1071,22 @@ PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 *PLDM0(Y,"AFR")$(Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS")>0 AND ordy(Y)>=2020)=Planduse(Y,"PRM_FRS")-Planduse("2020","PRM_FRS");
 *!!!TEMPORARY!!!
 
-parameter
-noinput /0/
-;
 $ifthen.agluout %agluauto%==on
+set
+val /Value/
+;
 parameter
-Planduse_aglu(R,LDM,Y,*)                                Land use | kha
+Planduse_aglu(R,LDM,Y,val)                                Land use | kha
 PLDM_aglu0(Y,LDM)
 ;
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
 $load Planduse_aglu=AgLULandusedata
 PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%Sr%",LDM,Y,"Value");
-noinput$(sum((Y,LDM),PLDM_aglu0(Y,LDM))=0)=1;
+
+if(sum((Y,LDM),PLDM_aglu0(Y,LDM))=0,
+$setglobal noinput on
+);
+
 $endif.agluout
 
 
@@ -1302,7 +1309,7 @@ SCALAR
 	IteCounter/0/
 ;
 
-$ifthene.noinput not noinput==1
+$ifthen.noinp %noinput%==off
 $ifthen.mcp %mcp%==on
 	Solve LandUseModel_MCP USING MCP;
         Psol_stat("SSOLVE","MCP")=LandUseModel_MCP.SOLVESTAT;Psol_stat("SMODEL","MCP")=LandUseModel_MCP.MODELSTAT;
@@ -1317,7 +1324,7 @@ IF((NOT (Psol_stat("SMODEL","SLP")=1 AND Psol_stat("SSOLVE","SLP")=1)),
 	Solve LandUseModel_LP USING LP maximizing VOBJ;
         Psol_stat("SSOLVE","SLP")=LandUseModel_LP.SOLVESTAT;Psol_stat("SMODEL","SLP")=LandUseModel_LP.MODELSTAT;Psol_stat("ITE_HIS","SLP")=ite_his;Psol_stat("YPNMAXCL","SLP")=YPNMAXCL;
 ));
-$endif.noinput
+$endif.noinp
 
 VYL(L,G)$(VY.L(L,G))=VY.L(L,G);
 VZL(L,G)$(VZ.L(L,G))=VZ.L(L,G);
@@ -1349,10 +1356,13 @@ $load VY_baseresults=VYL
 $endif
 
 
-*------ Pasture -----------*
-$if not noinput==1  $include ../%prog_loc%/inc_prog/pasture.gms
-*------ Crop fallow -----------*
-$if not noinput==1  $include ../%prog_loc%/inc_prog/crop_fallow.gms
+*------ Pasture and crop fallow ----------*
+$ifthen.noinp %noinput%==off
+$include ../%prog_loc%/inc_prog/pasture.gms
+$include ../%prog_loc%/inc_prog/crop_fallow.gms
+$else.noinp
+VYL("FRSGL",G)$(VYL("PRM_SEC",G))=VYL("PRM_SEC",G);
+$endif.noinp
 
 *----Total adjustment
 set

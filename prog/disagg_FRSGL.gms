@@ -20,6 +20,8 @@ $if not %ModelInt2%==NoValue $setglobal ModelInt %ModelInt2%
 *'cmax_vst' assuming forest type with maximum forest carbon flow (sink)calcuated by VISIT.
 *'off' assuming afforestation's carbon sink estimated by AEZ.
 $setglobal afftype ccur_vst
+*Flag for a region with no land input data (off: data exists; on: no data)
+$setglobal noinput off
 
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
@@ -197,6 +199,7 @@ CSB     carbon stock boundary in forest and grassland (MgC ha-1)
 Planduse_load(*,Y,R17,LCGE)
 Planduse(Y,R17,LCGE)
 Planduse_aglu(R,LDM,Y,val)                                Land use | kha
+Planduse_aglu0(Y)
 ;
 
 $if %not1stiter%==off $setglobal IAVload %IAV%
@@ -208,6 +211,11 @@ Planduse(Y,R17,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R17,LCGE)
 $ifthen.agluout %agluauto%==on
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
 $load Planduse_aglu=AgLULandusedata
+Planduse_aglu0(Y)=Planduse_aglu("%Sr%","FRS",Y,"Value");
+
+if(sum(Y,Planduse_aglu0(Y))=0,
+$setglobal noinput on
+);
 $endif.agluout
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
@@ -291,11 +299,11 @@ $ifthen.agluout3 %agluauto%==off
 FRSArea=Planduse("%Sy%","%Sr17%","PRM_FRS")+Planduse("%Sy%","%Sr17%","MNG_FRS");
 $else.agluout3
 
-$ifthene.noinput noinput==0
-  FRSArea=Planduse_aglu("%Sr%","FRS","%Sy%","Value");
-$elseif.noinput
+$ifthen.noinp %noinput%==off
+  FRSArea=Planduse_aglu0("%Sy%");
+$else.noinp
   FRSArea=sum(G,frac_rcp("%Sr17%","FRS","%base_year%",G));
-$endif.noinput
+$endif.noinp
 $endif.agluout3
 $endif
 
