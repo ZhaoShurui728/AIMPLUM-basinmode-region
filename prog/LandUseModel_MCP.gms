@@ -806,6 +806,11 @@ GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
   PLDM_load(LDM)=0;
   PCDM_load(L)=0;
 
+*---Adjust area of the grid cell which is included in more than one country.
+*---Include area of the other countries in OL and scale down area of the other categories.
+Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
+Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
+
 $else.baseyear
 $ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'

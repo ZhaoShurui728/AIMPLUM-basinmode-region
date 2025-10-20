@@ -53,8 +53,8 @@ Y_pre("PAS",G)=frac_rcp("%Sr17%","PAS","%base_year%",G);
 
 *---Adjust area of the grid cell which is included in more than one country.
 *---Include area of the other countries in OL and scale down area of the other categories.
-Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
-Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
+*Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
+*Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
 *---END adjust
 
 VY.SCALE(L,G)$(Y_pre(L,G))=SQRT(ABS(Y_pre(L,G)));
