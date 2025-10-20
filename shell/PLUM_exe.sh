@@ -95,7 +95,7 @@ function DataPrep2() {
 function BasesimRun() {
   echo "`date '+%s'`" > ../output/txt/cpu/basesim/$2.txt
   echo "SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2}, ${S}"
-  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
+  gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=on --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} --basinmode=${basinmode} MaxProcDir=700 o=../output/lst/Basesim/LandUseModel_mcp_${A}_base.lst   lo=4
   
   echo $(TimeDif `cat ../output/txt/cpu/basesim/$2.txt`) > ../output/txt/cpu/basesim/end_$2.txt
   rm ../output/txt/cpu/basesim/$2.txt
@@ -160,7 +160,7 @@ function FuturesimRun() {
     parallelSW=on
     if [ ${pausemode} = "on" ]; then parallelSW=off; fi 
     for Y in ${YEAR[@]};    do
-      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
+      gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} --basinmode=${basinmode} MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${SCE}_${CLP}_${IAV}${ModelInt}.lst lo=4
     done
   done
   
@@ -184,7 +184,7 @@ function FuturesimFullRun() {
       cp ../output/gdx/base/${A}/2005.gdx ../output/gdx/${S}/${A}/2005.gdx
       cp ../output/gdx/base/${A}/analysis/2005.gdx ../output/gdx/${S}/${A}/analysis/2005.gdx
     fi
-    gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${S}.lst lo=4
+    gams ../$1/prog/LandUseModel_MCP.gms --prog_loc=$1 --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --parallel=${parallelSW} --CPLEXThreadOp=${CPLEXThreadOp} --biocurve=off --agluauto=${agluauto} --basinmode=${basinmode} MaxProcDir=700 o=../output/lst/Futuresim/LandUseModel_mcp_${A}_${S}.lst lo=4
   done
   echo $(TimeDif `cat ../output/txt/cpu/futuresim/${S}_${A}.txt`) > ../output/txt/cpu/futuresim/end_${S}_${A}.txt
   rm ../output/txt/cpu/futuresim/${S}_${A}.txt
@@ -312,16 +312,16 @@ function ScnMergeRun() {
   cd ../../../../exe
   
   if [ ${Baserun} = "on" ]; then
-  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4
+  	gams ../$1/prog/combine.gms --split=1 S=${savedir}combine_$2 o=../output/lst/combine_base_$2.lst lf=../output/log/combine_base_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --basinmode=${basinmode} MaxProcDir=700 lo=4
   fi
   if [ ${Restorecal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --restorecalc=on R=${savedir}combine_$2 o=../output/lst/combine_res_$2.lst lf=../output/log/combine_res_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --basinmode=${basinmode} MaxProcDir=700 lo=4	&
   fi
   if [ ${Livdiscal} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --livdiscalc=on R=${savedir}combine_$2 o=../output/lst/combine_liv_$2.lst lf=../output/log/combine_liv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --basinmode=${basinmode} MaxProcDir=700 lo=4	&
   fi
   if [ ${Biocurvesort} = "on" ]; then
-    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 lo=4	&
+    gams ../$1/prog/combine.gms --split=2 --supcuvout=on R=${savedir}combine_$2 o=../output/lst/combine_biocuv_$2.lst lf=../output/log/combine_biocuv_$2.log --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --basinmode=${basinmode} MaxProcDir=700 lo=4	&
   fi
   wait
   gams ../$1/prog/IAMCTemp_Ind.gms --prog_loc=$1 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV}  --ModelInt2=${ModelInt2} --WWFlandout_exe=$8 --Livestockout_exe=$9 MaxProcDir=700  o=../output/lst/comparison_scenario_$2.lst  lo=4
@@ -617,10 +617,10 @@ fi
 
 ## set regions
 if [ ${global} = "on" ]; then 
-  if [ ${agluauto} = "off" ]; then 
+  if [ ${basinmode} = "off" ]; then 
     COUNTRY0=(CIS XAF JPN USA XE25 XER TUR XOC CHN IND XSE XSA CAN BRA XLM XME XNF)
-  elif [ ${agluauto} = "on" ]; then
-    COUNTRY0=(SSD_NILE SOM_AECC SOM_ARGA SOM_RIFT SOM_SHJU YEM_ARGA YEM_ARPA YEM_RSEE VEN_AMAZ VEN_CARC VEN_MAGD VEN_NESO VEN_ORIN PRK_AMUR PRK_BHKN PRK_NSKU PRK_RSEC AFG_AMDA AFG_CSEC AFG_FARA AFG_HELM AFG_INDU AGO_ANGC AGO_ASII AGO_CONG AGO_ZAMB ALB_AGBS ARE_ARPA ARG_LAPL ARG_NASA ARG_NEGR ARG_PAMP ARG_SACC ARG_SASS ARG_SGRN ARM_CSSW ATG_CARI AUS_AEAC AUS_AINT AUS_ASCO AUS_AUNC AUS_AWEC AUS_MRDA AUT_DANU AZE_CSSW BDI_CONG BDI_NILE BEL_MAAS BEL_SCHE BEN_AFWC BEN_NIGE BEN_VOLT BFA_AFWC BFA_NIGE BFA_VOLT BGD_BBCN BGD_GABR BGR_AGBS BGR_DANU BHR_ARPA BHS_CARI BIH_AGBS BIH_DANU BLR_DAUG BLR_DNIP BLR_NEMA BLZ_YUPA BOL_AMAZ BOL_LAPL BOL_LPUN BRA_AMAZ BRA_LAPL BRA_SAOF BRA_TOCA BRA_UBSA BRB_CARC BTN_GABR BWA_ASII BWA_LIMP BWA_ORAN CAF_CONG CAF_LCHA CAN_AOSB CAN_HBCO CAN_MACK CAN_NWTT CAN_PACA CAN_SNEL CAN_STLA CHE_POOO CHE_RHIN CHE_RHON CHL_LPUN CHL_NCHI CHL_SCPA CHN_AMUR CHN_CHIN CHN_GOBI CHN_HHEE CHN_TARI CHN_YANG CIV_AFWC CIV_NIGE CMR_CONG CMR_GFGU CMR_LCHA CMR_NIGE COD_CONG COG_CONG COG_GFGU COL_AMAZ COL_CARC COL_CEPC COL_MAGD COL_ORIN COM_MADA CRI_SCAM CYP_MSEC CZE_DANU CZE_ELBE CZE_ODER DEU_DANU DEU_DGCO DEU_ELBE DEU_EWES DEU_RHIN DJI_ARGA DJI_RIFT DNK_DGCO DOM_CARI DZA_ANIN DZA_MSCC DZA_NIGE ECU_AMAZ ECU_CEPC EGY_ANIN EGY_ARGA EGY_NILE ESP_DOUR ESP_EBRO ESP_GUAD ESP_GUDA ESP_SPAC ESP_SSEC ESP_TAGU EST_BSCC EST_NARV ETH_ARGA ETH_NILE ETH_RIFT ETH_SHJU FIN_FINL FIN_SNCC FIN_SWED FJI_SPII FRA_FWCX FRA_GIRD FRA_LOIR FRA_NESO FRA_RHON FRA_SEIN GAB_GFGU GBR_EAWC GBR_IREL GBR_SCTD GEO_BSSC GEO_CSSW GHA_AFWC GHA_VOLT GIN_AFWC GIN_NIGE GIN_SENE GMB_AFWC GNB_AFWC GRC_AGBS GRD_CARC GTM_GRIJ GTM_SCAM GTM_YUPA GUY_AMAZ GUY_NESO HKG_CHIN HND_SCAM HRV_AGBS HRV_DANU HTI_CARI HUN_DANU IDN_IRJA IDN_JATI IDN_KALI IDN_SULA IDN_SUMA IND_GABR IND_GODA IND_INDU IND_KRIS IND_SABA IRL_IREL IRN_CIRA IRN_CSEC IRN_CSSW IRN_PGCO IRN_TIEU IRQ_TIEU ISL_ICEL ISR_DEAS ISR_MSEC ITA_IECO ITA_IWCO ITA_MSII ITA_POOO ITA_TIBE JAM_CARI JOR_DEAS JOR_EJSS JOR_SIPE JPN_JAPN KAZ_CSEC KAZ_CSPC KAZ_LKBH KAZ_OBBB KAZ_SYRD KEN_AECC KEN_NILE KEN_RIFT KEN_SHJU KGZ_LKBH KGZ_SYRD KGZ_TARI KHM_GTCC KHM_MEKO KOR_NSKU KWT_ARPA KWT_TIEU LAO_MEKO LAO_VNCO LBN_DEAS LBN_MSEC LBR_AFWC LBY_ANIN LBY_MSCC LCA_CARC LKA_SRIL LSO_ORAN LTU_BSCC LTU_NEMA LUX_RHIN LVA_BSCC LVA_DAUG MAC_XJIA MAR_ANIN MAR_ANWC MAR_MSCC MDA_BSNC MDA_DANU MDA_DNIE MDG_MADA MEX_BJCA MEX_MCIN MEX_MNCW MEX_RGBV MEX_RIBA MEX_RIVE MEX_RLER MEX_YUPA MKD_AGBS MLI_ANIN MLI_NIGE MLI_SENE MLT_MSII MMR_BBCN MMR_IRRA MMR_PMAL MMR_SALW MMR_SITT MNE_AGBS MNE_DANU MNG_AMUR MNG_GOBI MNG_YENS MOZ_AECC MOZ_AIOC MOZ_LIMP MOZ_ZAMB MRT_ANIN MRT_ANWC MRT_SENE MWI_AECC MWI_ZAMB MYS_NBCO MYS_PMAL NAM_ASII NAM_NAMC NAM_ORAN NER_LCHA NER_NIGE NGA_AFWC NGA_GFGU NGA_LCHA NGA_NIGE NIC_SCAM NLD_MAAS NLD_RHIN NLD_SCHE NOR_SNCC NOR_SWED NPL_GABR NZL_NZLZ OMN_ARPA PAK_ASAC PAK_HAMU PAK_INDU PAK_SABA PAN_CEPC PAN_SCAM PER_AMAZ PER_PERU PHL_PHIL PNG_FLYY PNG_IRJA PNG_PNGC PNG_SEPI POL_ODER POL_PLCO POL_WISL PRT_DOUR PRT_GUAD PRT_SPAC PRT_TAGU PRY_LAPL QAT_ARPA ROU_DANU RUS_AMUR RUS_LENA RUS_OBBB RUS_SNCO RUS_SWCO RUS_VOLG RUS_YENS RWA_CONG RWA_NILE SAU_ARPA SAU_RSEE SDN_ANIN SDN_ARGA SDN_LCHA SDN_NILE SEN_AFWC SEN_SENE SLB_SOLI SLB_SPII SLE_AFWC SLV_SCAM SRB_DANU STP_GFGU SUR_NESO SVK_DANU SVN_AGBS SVN_DANU SWE_SWED SWZ_SASC TCD_ANIN TCD_LCHA TGO_AFWC TGO_VOLT THA_CHAO THA_GTCC THA_MEKO THA_PMAL TJK_AMDA TJK_SYRD TKM_AMDA TKM_CSEC TLS_JATI TTO_CARC TUN_ANIN TUN_MSCC TUR_BSSC TUR_CSSW TUR_MSEC TUR_TIEU TZA_AECC TZA_CONG TZA_NILE TZA_RIFT UGA_NILE UKR_BSNC UKR_DANU UKR_DNIE UKR_DNIP UKR_DONN URY_LAPL URY_UBSA USA_COLU USA_GFCO USA_GMAN USA_MSMM USA_NACC USA_PACA UZB_AMDA UZB_CSEC UZB_SYRD VCT_CARC VNM_HRIV VNM_MEKO VNM_VNCO VUT_SPII ZAF_LIMP ZAF_ORAN ZAF_SASC ZAF_SAWC ZMB_CONG ZMB_ZAMB ZWE_AIOC ZWE_ASII ZWE_LIMP ZWE_ZAMB)
+  elif [ ${basinmode} = "on" ]; then
+    COUNTRY0=(CAN_NWTT RUS_AMUR RUS_LENA RUS_OBBB RUS_SNCO RUS_SWCO RUS_VOLG RUS_YENS SSD_NILE SOM_AECC SOM_ARGA SOM_RIFT SOM_SHJU YEM_ARGA YEM_ARPA YEM_RSEE VEN_AMAZ VEN_CARC VEN_MAGD VEN_NESO VEN_ORIN PRK_AMUR PRK_BHKN PRK_NSKU PRK_RSEC AFG_AMDA AFG_CSEC AFG_FARA AFG_HELM AFG_INDU AGO_ANGC AGO_ASII AGO_CONG AGO_ZAMB ALB_AGBS ARE_ARPA ARG_LAPL ARG_NASA ARG_NEGR ARG_PAMP ARG_SACC ARG_SASS ARG_SGRN ARM_CSSW ATG_CARI AUS_AEAC AUS_AINT AUS_ASCO AUS_AUNC AUS_AWEC AUS_MRDA AUT_DANU AZE_CSSW BDI_CONG BDI_NILE BEL_MAAS BEL_SCHE BEN_AFWC BEN_NIGE BEN_VOLT BFA_AFWC BFA_NIGE BFA_VOLT BGD_BBCN BGD_GABR BGR_AGBS BGR_DANU BHR_ARPA BHS_CARI BIH_AGBS BIH_DANU BLR_DAUG BLR_DNIP BLR_NEMA BLZ_YUPA BOL_AMAZ BOL_LAPL BOL_LPUN BRA_AMAZ BRA_LAPL BRA_SAOF BRA_TOCA BRA_UBSA BRB_CARC BTN_GABR BWA_ASII BWA_LIMP BWA_ORAN CAF_CONG CAF_LCHA CAN_AOSB CAN_HBCO CAN_MACK CAN_PACA CAN_SNEL CAN_STLA CHE_POOO CHE_RHIN CHE_RHON CHL_LPUN CHL_NCHI CHL_SCPA CHN_AMUR CHN_CHIN CHN_GOBI CHN_HHEE CHN_TARI CHN_YANG CIV_AFWC CIV_NIGE CMR_CONG CMR_GFGU CMR_LCHA CMR_NIGE COD_CONG COG_CONG COG_GFGU COL_AMAZ COL_CARC COL_CEPC COL_MAGD COL_ORIN COM_MADA CRI_SCAM CYP_MSEC CZE_DANU CZE_ELBE CZE_ODER DEU_DANU DEU_DGCO DEU_ELBE DEU_EWES DEU_RHIN DJI_ARGA DJI_RIFT DNK_DGCO DOM_CARI DZA_ANIN DZA_MSCC DZA_NIGE ECU_AMAZ ECU_CEPC EGY_ANIN EGY_ARGA EGY_NILE ESP_DOUR ESP_EBRO ESP_GUAD ESP_GUDA ESP_SPAC ESP_SSEC ESP_TAGU EST_BSCC EST_NARV ETH_ARGA ETH_NILE ETH_RIFT ETH_SHJU FIN_FINL FIN_SNCC FIN_SWED FJI_SPII FRA_FWCX FRA_GIRD FRA_LOIR FRA_NESO FRA_RHON FRA_SEIN GAB_GFGU GBR_EAWC GBR_IREL GBR_SCTD GEO_BSSC GEO_CSSW GHA_AFWC GHA_VOLT GIN_AFWC GIN_NIGE GIN_SENE GMB_AFWC GNB_AFWC GRC_AGBS GRD_CARC GTM_GRIJ GTM_SCAM GTM_YUPA GUY_AMAZ GUY_NESO HKG_CHIN HND_SCAM HRV_AGBS HRV_DANU HTI_CARI HUN_DANU IDN_IRJA IDN_JATI IDN_KALI IDN_SULA IDN_SUMA IND_GABR IND_GODA IND_INDU IND_KRIS IND_SABA IRL_IREL IRN_CIRA IRN_CSEC IRN_CSSW IRN_PGCO IRN_TIEU IRQ_TIEU ISL_ICEL ISR_DEAS ISR_MSEC ITA_IECO ITA_IWCO ITA_MSII ITA_POOO ITA_TIBE JAM_CARI JOR_DEAS JOR_EJSS JOR_SIPE JPN_JAPN KAZ_CSEC KAZ_CSPC KAZ_LKBH KAZ_OBBB KAZ_SYRD KEN_AECC KEN_NILE KEN_RIFT KEN_SHJU KGZ_LKBH KGZ_SYRD KGZ_TARI KHM_GTCC KHM_MEKO KOR_NSKU KWT_ARPA KWT_TIEU LAO_MEKO LAO_VNCO LBN_DEAS LBN_MSEC LBR_AFWC LBY_ANIN LBY_MSCC LCA_CARC LKA_SRIL LSO_ORAN LTU_BSCC LTU_NEMA LUX_RHIN LVA_BSCC LVA_DAUG MAC_XJIA MAR_ANIN MAR_ANWC MAR_MSCC MDA_BSNC MDA_DANU MDA_DNIE MDG_MADA MEX_BJCA MEX_MCIN MEX_MNCW MEX_RGBV MEX_RIBA MEX_RIVE MEX_RLER MEX_YUPA MKD_AGBS MLI_ANIN MLI_NIGE MLI_SENE MLT_MSII MMR_BBCN MMR_IRRA MMR_PMAL MMR_SALW MMR_SITT MNE_AGBS MNE_DANU MNG_AMUR MNG_GOBI MNG_YENS MOZ_AECC MOZ_AIOC MOZ_LIMP MOZ_ZAMB MRT_ANIN MRT_ANWC MRT_SENE MWI_AECC MWI_ZAMB MYS_NBCO MYS_PMAL NAM_ASII NAM_NAMC NAM_ORAN NER_LCHA NER_NIGE NGA_AFWC NGA_GFGU NGA_LCHA NGA_NIGE NIC_SCAM NLD_MAAS NLD_RHIN NLD_SCHE NOR_SNCC NOR_SWED NPL_GABR NZL_NZLZ OMN_ARPA PAK_ASAC PAK_HAMU PAK_INDU PAK_SABA PAN_CEPC PAN_SCAM PER_AMAZ PER_PERU PHL_PHIL PNG_FLYY PNG_IRJA PNG_PNGC PNG_SEPI POL_ODER POL_PLCO POL_WISL PRT_DOUR PRT_GUAD PRT_SPAC PRT_TAGU PRY_LAPL QAT_ARPA ROU_DANU RWA_CONG RWA_NILE SAU_ARPA SAU_RSEE SDN_ANIN SDN_ARGA SDN_LCHA SDN_NILE SEN_AFWC SEN_SENE SLB_SOLI SLB_SPII SLE_AFWC SLV_SCAM SRB_DANU STP_GFGU SUR_NESO SVK_DANU SVN_AGBS SVN_DANU SWE_SWED SWZ_SASC TCD_ANIN TCD_LCHA TGO_AFWC TGO_VOLT THA_CHAO THA_GTCC THA_MEKO THA_PMAL TJK_AMDA TJK_SYRD TKM_AMDA TKM_CSEC TLS_JATI TTO_CARC TUN_ANIN TUN_MSCC TUR_BSSC TUR_CSSW TUR_MSEC TUR_TIEU TZA_AECC TZA_CONG TZA_NILE TZA_RIFT UGA_NILE UKR_BSNC UKR_DANU UKR_DNIE UKR_DNIP UKR_DONN URY_LAPL URY_UBSA USA_COLU USA_GFCO USA_GMAN USA_MSMM USA_NACC USA_PACA UZB_AMDA UZB_CSEC UZB_SYRD VCT_CARC VNM_HRIV VNM_MEKO VNM_VNCO VUT_SPII ZAF_LIMP ZAF_ORAN ZAF_SASC ZAF_SAWC ZMB_CONG ZMB_ZAMB ZWE_AIOC ZWE_ASII ZWE_LIMP ZWE_ZAMB)
   fi
 elif [ ${global} = "off" ]; then
   COUNTRY0=${CountryC}
@@ -672,6 +672,7 @@ echo $savedir $baseos
 
 if [ ${pausemode} = "on" ]; then read -p "push any key"; fi
 if [ ${agluauto} = "on" ]; then agluauto=on; fi
+if [ ${basinmode} = "on" ]; then basinmode=on; fi
 
 # Model Execution
 if [ ${DataPrep}       = "on" ]; then DataPrep       ; fi

@@ -17,7 +17,8 @@ $setglobal agmip off
 $if %supcuvout%==on $setglobal biocurve on
 $setglobal restorecalc off
 $setglobal livdiscalc off
-$setglobal agluauto off
+* For basin-based run, this should be turned on otherwise keep off (on: basin mode; off: 17 region mode) (To be on, you need agluauto=on).
+$setglobal basinmode off
 
 $if exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/%sce%.gms
 $if not exist ../%prog_loc%/scenario/socioeconomic/%sce%.gms $include ../%prog_loc%/scenario/socioeconomic/SSP2.gms
@@ -397,7 +398,7 @@ $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_cbnal/CIS.gdx' $batinclude
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_cbnal/XME.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XME
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_cbnal/XNF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XNF
 $if exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/_cbnal/XAF.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms XAF
-$ifthen.cmbr %agluauto%==on
+$ifthen.cmbr %basinmode%==on
 $offlisting
 $if exist '../output/gdx/base/ABW_CARC/basedata.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms ABW_CARC
 $if exist '../output/gdx/base/AFG_AMDA/basedata.gdx' $batinclude ../%prog_loc%/inc_prog/combineR.gms AFG_AMDA

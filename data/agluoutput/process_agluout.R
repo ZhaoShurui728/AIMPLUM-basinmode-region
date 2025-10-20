@@ -53,7 +53,7 @@ data <- rbind(data1,data2,data3,data4,data5,data6,data7,data8.1,data9) %>%
 #        select(-RISO) %>%
         select(-Basin) %>%
         select(RISO,RISOBasin, L, Year,Value) %>%
-        filter(Year %in% c(2015,2020,2030,2040,2050,2060,2070,2080,2090,2100))
+        filter(Year %in% c(2015,2020,2025,2030,2040,2050,2060,2070,2080,2090,2100))
 
 row_2015 <- data[data$Year == 2015,]
 row_2015$Year <- 2005

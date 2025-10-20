@@ -11,16 +11,18 @@ global=off
 # if you would like to plot multiple regions but from global model, set global "off" and put multiple regional codes into this Country
 #CountryC=(JPN)
 
-# AgLU basin-based run. If basin-based AgLU result is used, then it should be turned on otherwise keep off.
+# AgLU mode. For using AgLU result, this should be turned on otherwise keep off (on: AgLU mode; off: AIM-Hub mode).
 agluauto=on
-# If agluauto is on, CountryC should be country_basin code(s). 
+# For basin-based run, this should be turned on otherwise keep off (on: basin mode; off: 17 region mode), (To be on, you need agluauto=on).
+basinmode=on
+# If basinmode is on, CountryC should be country_basin code(s).
 CountryC=(JPN_JAPN USA_COLU USA_GFCO USA_GMAN USA_MSMM USA_NACC USA_PACA CHN_AMUR CHN_CHIN CHN_GOBI CHN_HHEE CHN_TARI CHN_YANG)
 CountryC=(JPN_JAPN)
 
 # Set Scenarios
 scn2=(SSP2_Tech_BaU_NoCC_GEO71 SSP2_Life_BaU_NoCC_GEO71 SSP2_Life_500C_CACN_DAC_NoCC_GEO71 SSP2_Tech_500C_CACN_DAC_NoCC_GEO71)
 scn=( SSP2_BaU_NoCC_No)
-scn=( SSP2_400C_2020NDC_NoCC_scenarioMIP_global2)
+scn=( SSP2_BaU_NoCC_scenarioMIP_global2)
 
 # Set CPU Core Threads
 CPUthreads=32

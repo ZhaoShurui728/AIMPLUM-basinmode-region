@@ -32,7 +32,7 @@ $if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenar
 
 $include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 
-* AgLU basin-based run. If basin-based AgLU result is used, then it should be turned on otherwise keep off.
+* AgLU mode. For using AgLU result, this should be turned on otherwise keep off (on: AgLU mode; off: AIM-Hub mode).
 $setglobal agluauto off
 $include ../%prog_loc%/individual/basin/setglobal_region_basin.gms
 
@@ -295,15 +295,12 @@ FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Plandu
 $elseif %Sr%==CAN
 FRSArea=Planduse("%Sy%","USA","PRM_FRS")+Planduse("%Sy%","USA","MNG_FRS")+Planduse("%Sy%","CAN","PRM_FRS")+Planduse("%Sy%","CAN","MNG_FRS");
 $else
-$ifthen.agluout3 %agluauto%==off
+$ifthen.agluout3 %agluauto%_%noinput%==off_off
 FRSArea=Planduse("%Sy%","%Sr17%","PRM_FRS")+Planduse("%Sy%","%Sr17%","MNG_FRS");
+$elseif.agluout3 %agluauto%_%noinput%==on_off
+FRSArea=Planduse_aglu0("%Sy%");
 $else.agluout3
-
-$ifthen.noinp %noinput%==off
-  FRSArea=Planduse_aglu0("%Sy%");
-$else.noinp
-  FRSArea=sum(G,frac_rcp("%Sr17%","FRS","%base_year%",G));
-$endif.noinp
+FRSArea=sum(G,frac_rcp("%Sr17%","FRS","%base_year%",G));
 $endif.agluout3
 $endif
 

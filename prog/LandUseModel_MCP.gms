@@ -77,8 +77,10 @@ $if not exist ../%prog_loc%/scenario/IAV/%iav%.gms $include ../%prog_loc%/scenar
 $setglobal protectStartYear 2030
 *$setglobal protectStartYear %second_year%
 
-* AgLU basin-based run. If basin-based AgLU result is used, then it should be turned on otherwise keep off.
+* AgLU mode. For using AgLU result, this should be turned on otherwise keep off (on: AgLU mode; off: AIM-Hub mode).
 $setglobal agluauto off
+* For basin-based run, this should be turned on otherwise keep off (on: basin mode; off: 17 region mode), (To be on, you need agluauto=on).
+$setglobal basinmode off
 $include ../%prog_loc%/individual/basin/setglobal_region_basin.gms
 
 Set
@@ -1164,8 +1166,8 @@ $ifthen %Sy%==%base_year%
 $gdxin '../%prog_loc%/data/roads.gdx'
 $load ruralroadlength
   roaddens=ruralroadlength("%Sr17%")/SUM(LDM$LDMCROP(LDM),PLDM0("%Sy%",LDM))/1000;
-$if not %agluauto%==on  $gdxin '../%prog_loc%/data/GL_R17.gdx'
-$if %agluauto%==on  $gdxin '../%prog_loc%/data/GL_basin.gdx'
+$if not %basinmode%==on  $gdxin '../%prog_loc%/data/GL_R17.gdx'
+$if %basinmode%==on  $gdxin '../%prog_loc%/data/GL_basin.gdx'
 $load GL=GL%Sr%
 
 
