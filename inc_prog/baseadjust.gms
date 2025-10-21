@@ -68,8 +68,8 @@ $ifthen.agluout2 not %agluauto%==on
 PLDM("PAS")=Planduse("%Sy%","GRAZING");
 PLDM("CROP_FLW")=Planduse("%Sy%","CROP_FLW");
 $else.agluout2
-PLDM("PAS")=Planduse_aglu("%Sr%","PAS","%Sy%","Value");
-PLDM("CROP_FLW")=Planduse_aglu("%Sr%","CROP_FLW","%Sy%","Value");
+PLDM("PAS")=Planduse_aglu("%agluscenario%","%Sr%","PAS","%Sy%");
+PLDM("CROP_FLW")=Planduse_aglu("%agluscenario%","%Sr%","CROP_FLW","%Sy%");
 $endif.agluout2
 PLDM("PRM_SEC")=0;
 PLDM("PRM_SEC")=SUM(G,ga(G))-SUM(LDM,PLDM(LDM));

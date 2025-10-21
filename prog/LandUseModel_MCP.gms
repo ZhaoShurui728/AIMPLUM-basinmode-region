@@ -79,6 +79,7 @@ $setglobal protectStartYear 2030
 
 * AgLU mode. For using AgLU result, this should be turned on otherwise keep off (on: AgLU mode; off: AIM-Hub mode).
 $setglobal agluauto off
+$setglobal agluscenario SSP2_BaU_NoCC
 * For basin-based run, this should be turned on otherwise keep off (on: basin mode; off: 17 region mode), (To be on, you need agluauto=on).
 $setglobal basinmode off
 $include ../%prog_loc%/individual/basin/setglobal_region_basin.gms
@@ -1080,15 +1081,17 @@ PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 
 $ifthen.agluout %agluauto%==on
 set
-val /Value/
+SCEaglu
 ;
 parameter
-Planduse_aglu(R,LDM,Y,val)                                Land use | kha
+Planduse_aglu(SCEaglu,R,LDM,Y)                                Land use | kha
 PLDM_aglu0(Y,LDM)
 ;
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
-$load Planduse_aglu=AgLULandusedata
-PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%Sr%",LDM,Y,"Value");
+$load SCEaglu=SCENARIO
+$if %basinmode%==off $load Planduse_aglu=AgLULandusedata_17region
+$if %basinmode%==on $load Planduse_aglu=AgLULandusedata
+PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%agluscenario%","%Sr%",LDM,Y);
 
 if(sum((Y,LDM),PLDM_aglu0(Y,LDM))=0,
 $setglobal noinput on
