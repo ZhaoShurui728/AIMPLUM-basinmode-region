@@ -1,3 +1,3 @@
 [submodule "tools/PREDICTS_biodiversity"]
 	path = tools/PREDICTS_biodiversity
-	url = https://github.com/KUAtmos/PREDICTS
+	url = https://github.com/KUAtmos/PREDICTS.git
