@@ -806,6 +806,11 @@ GATwoOL=SUM(G$FLAG_G(G),GA(G)*(1-Y_base("OL",G)));
   PLDM_load(LDM)=0;
   PCDM_load(L)=0;
 
+*---Adjust area of the grid cell which is included in more than one country.
+*---Include area of the other countries in OL and scale down area of the other categories.
+Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
+Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
+
 $else.baseyear
 $ifthen.fileex exist '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
 $	gdxin '../output/gdx/%SCE%_%CLP%_%IAV%%ModelInt%/%Sr%/%pre_year%.gdx'
@@ -1075,15 +1080,17 @@ PLDM0(Y,"AFR")$(SUM(Y2,Planduse(Y2,"AFF_FRS")))=Planduse(Y,"AFF_FRS");
 
 $ifthen.agluout %agluauto%==on
 set
-val /Value/
+SCEaglu
 ;
 parameter
-Planduse_aglu(R,LDM,Y,val)                                Land use | kha
+Planduse_aglu(SCEaglu,R,LDM,Y)                                Land use | kha
 PLDM_aglu0(Y,LDM)
 ;
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
-$load Planduse_aglu=AgLULandusedata
-PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%Sr%",LDM,Y,"Value");
+$load SCEaglu=SCENARIO
+$if %basinmode%==off $load Planduse_aglu=AgLULandusedata_17region
+$if %basinmode%==on $load Planduse_aglu=AgLULandusedata
+PLDM_aglu0(Y,LDM)$(LDMCROPB(LDM) OR LDMAFR(LDM))=Planduse_aglu("%agluscenario%","%Sr%",LDM,Y);
 
 if(sum((Y,LDM),PLDM_aglu0(Y,LDM))=0,
 $setglobal noinput on

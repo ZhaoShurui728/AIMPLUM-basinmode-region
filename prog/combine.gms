@@ -300,7 +300,7 @@ C_BRF	.	C_B
 OTH_ARF	.	OTH_A
 /
 ;
-Alias(R,R2),(G,G2),(LB,LB2),(L,L2,L3),(Y,Y2,Y3);
+Alias(R,R2),(G,G2),(LB,LB2),(L,L2,L3),(Y,Y2,Y3),(R17,Sr17);
 set
 MAP_RAGG(R,R2)	/
 $include ../%prog_loc%/define/region/region17_agg.map
@@ -892,7 +892,7 @@ GHGL(Ragg,Y,EmitCat,L)$(GHGL(Ragg,Y,EmitCat,L)=0 and SUM(R$MAP_RAGG(R,Ragg),GHGL
 CSB(R)=CSB_load(R,"%base_year%");
 
 * Subtract area of the other countries that share the same grid cell from "OL".
-VY_load(R,Y,"OL",G)$(landshareG(G,R))=VY_load(R,Y,"OL",G)-(1-landshareG(G,R));
+VY_load(R,Y,"OL",G)$(landshareG(G,R))=max(0,VY_load(R,Y,"OL",G)-(1-landshareG(G,R)));
 
 parameter
 VY_load2(R,Y,L,G) for basin aggregation
@@ -902,8 +902,7 @@ VY_load2(R,Y,L,G) for basin aggregation
 * 1. Basin-level data aggregation
 VY_load2(R17,Y,L,G)$(SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VY_load(Rbasin,Y,L,G)))=SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VY_load(Rbasin,Y,L,G));
 * 2. 17 regional data aggregation if the sum of basin data does not exist.
-VY_load2(Ragg,Y,L,G)$(VY_load2(Ragg,Y,L,G)=0 and SUM(R$MAP_RAGG(R,Ragg),VY_load(Ragg,Y,L,G)))=SUM(R$MAP_RAGG(R,Ragg),VY_load(R,Y,L,G));
-
+VY_load2(R17,Y,L,G)$(sum(Sr17,VY_load2(Sr17,Y,L,G))=0)=VY_load(R17,Y,L,G);
 * The double counting issue was solved by using land share directly.
 VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM((G,R)$MAP_GIJ(G,I,J),VY_load2(R,Y,L,G));
 VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));

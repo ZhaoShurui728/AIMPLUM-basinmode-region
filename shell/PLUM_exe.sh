@@ -102,7 +102,7 @@ function BasesimRun() {
 }
 function BaseRunDisaggfrs() {
   echo "`date '+%s'`" > ../output/txt/cpu/basedsaggfrs/$2.txt
-  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} MaxProcDir=700 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
+  gams ../$1/prog/disagg_FRSGL.gms --prog_loc=$1 --Sr=$2 --Sy=2005 --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --agluauto=${agluauto} --basinmode=${basinmode} MaxProcDir=700 o=../output/lst/Basesim/disagg_FRSGL_$2.lst   lo=4
   echo $(TimeDif `cat ../output/txt/cpu/basedsaggfrs/$2.txt`) > ../output/txt/cpu/basedsaggfrs/end_$2.txt
   rm ../output/txt/cpu/basedsaggfrs/$2.txt
 }
@@ -259,7 +259,7 @@ function Futuresim() {
         {
           echo "" > ../output/txt/cpu/disagrfrs/${S}_${A}.txt
           for Y in ${YEAR0[@]};    do
-            gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off --agluauto=${agluauto} \
+            gams ../${parent_dir}/prog/disagg_FRSGL.gms --prog_loc=${parent_dir} --Sr=${A} --Sy=${Y} --SCE=${SCE} --CLP=${CLP} --IAV=${IAV} --ModelInt2=${ModelInt2} --biocurve=off --agluauto=${agluauto} --basinmode=${basinmode} \
               MaxProcDir=700 o=../output/lst/Futuresim/disagg_FRSGL_${S}_${A}.lst lo=4  > ../output/log/disagg_FRSGL_${S}_${A}.log
           done
           echo $(TimeDif `cat ../output/txt/cpu/disagrfrs/${S}_${A}.txt`) > ../output/txt/cpu/disagrfrs/end_${S}_${A}.txt

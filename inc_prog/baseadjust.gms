@@ -53,8 +53,8 @@ Y_pre("PAS",G)=frac_rcp("%Sr17%","PAS","%base_year%",G);
 
 *---Adjust area of the grid cell which is included in more than one country.
 *---Include area of the other countries in OL and scale down area of the other categories.
-Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
-Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
+*Y_pre("OL",G)$(landshare(G))=Y_pre("OL",G)*landshare(G)+(1-landshare(G));
+*Y_pre("SL",G)$(Y_pre("SL",G) and landshare(G))=Y_pre("SL",G)*landshare(G);
 *---END adjust
 
 VY.SCALE(L,G)$(Y_pre(L,G))=SQRT(ABS(Y_pre(L,G)));
@@ -68,8 +68,8 @@ $ifthen.agluout2 not %agluauto%==on
 PLDM("PAS")=Planduse("%Sy%","GRAZING");
 PLDM("CROP_FLW")=Planduse("%Sy%","CROP_FLW");
 $else.agluout2
-PLDM("PAS")=Planduse_aglu("%Sr%","PAS","%Sy%","Value");
-PLDM("CROP_FLW")=Planduse_aglu("%Sr%","CROP_FLW","%Sy%","Value");
+PLDM("PAS")=Planduse_aglu("%agluscenario%","%Sr%","PAS","%Sy%");
+PLDM("CROP_FLW")=Planduse_aglu("%agluscenario%","%Sr%","CROP_FLW","%Sy%");
 $endif.agluout2
 PLDM("PRM_SEC")=0;
 PLDM("PRM_SEC")=SUM(G,ga(G))-SUM(LDM,PLDM(LDM));

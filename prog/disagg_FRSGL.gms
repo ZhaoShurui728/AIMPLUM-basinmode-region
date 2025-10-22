@@ -34,6 +34,9 @@ $include ../%prog_loc%/inc_prog/pre_%Ystep0%year.gms
 
 * AgLU mode. For using AgLU result, this should be turned on otherwise keep off (on: AgLU mode; off: AIM-Hub mode).
 $setglobal agluauto off
+$setglobal agluscenario SSP2_BaU_NoCC
+* For basin-based run, this should be turned on otherwise keep off (on: basin mode; off: 17 region mode), (To be on, you need agluauto=on).
+$setglobal basinmode off
 $include ../%prog_loc%/individual/Basin/setglobal_region_basin.gms
 
 set
@@ -187,7 +190,7 @@ $endif
 set
 LCGE    land use category in AIMCGE /PRM_FRS, MNG_FRS, GRAZING/
 LDM     Aggregated land use category /FRS/
-val /Value/
+SCEaglu
 ;
 
 parameter
@@ -198,7 +201,7 @@ CSB     carbon stock boundary in forest and grassland (MgC ha-1)
 
 Planduse_load(*,Y,R17,LCGE)
 Planduse(Y,R17,LCGE)
-Planduse_aglu(R,LDM,Y,val)                                Land use | kha
+Planduse_aglu(SCEaglu,R,LDM,Y)                                Land use | kha
 Planduse_aglu0(Y)
 ;
 
@@ -210,8 +213,10 @@ Planduse(Y,R17,LCGE)=Planduse_load("%SCE%_%CLP%_%IAVload%%ModelInt%",Y,R17,LCGE)
 
 $ifthen.agluout %agluauto%==on
 $gdxin '../%prog_loc%/data/agluoutput/agludata.gdx'
-$load Planduse_aglu=AgLULandusedata
-Planduse_aglu0(Y)=Planduse_aglu("%Sr%","FRS",Y,"Value");
+$load SCEaglu=SCENARIO
+$if %basinmode%==off $load Planduse_aglu=AgLULandusedata_17region
+$if %basinmode%==on $load Planduse_aglu=AgLULandusedata
+Planduse_aglu0(Y)=Planduse_aglu("%agluscenario%","%Sr%","FRS",Y);
 
 if(sum(Y,Planduse_aglu0(Y))=0,
 $setglobal noinput on

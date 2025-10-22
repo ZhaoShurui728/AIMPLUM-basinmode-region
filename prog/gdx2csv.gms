@@ -40,6 +40,7 @@ R	17 regions	/
 $include ../%prog_loc%/define/region/region17.set
 $include ../%prog_loc%/define/region/region5.set
 $include ../%prog_loc%/define/region/region10.set
+$include ../%prog_loc%/individual/Basin/region_basin.set
 World,Non-OECD,ASIA2,R2OECD,R2NonOECD
 Industrial,Transition,Developing
 $    ifthen.agmip %agmip%==on
@@ -58,6 +59,9 @@ $    ifthen.agmip %agmip%==on
       EUU
       WLD
 $  endif.agmip
+/
+R17(R)	17 regions	/
+$include ../%prog_loc%/define/region/region17.set
 /
 MAP_Ragg(R,R)/
 $include ../%prog_loc%/define/region/region17_agg.map
@@ -203,7 +207,15 @@ C_BRF	.	C_B
 OTH_ARF	.	OTH_A
 /
 ;
-Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2),(Lmip,Lmip2,Lmip3);
+Alias (I,I2),(J,J2),(L,L2,L3,LL),(Y,Y2,Y3),(R,R2),(Lmip,Lmip2,Lmip3),(R17,Sr17);
+Set
+MAP_RAGG_basin_17(R,R17)/
+$include ../%prog_loc%/individual/Basin/region_basin_17.map
+/
+Rbasin(R)	basin regions	/
+$include      ../%prog_loc%/individual/Basin/region_basin.set
+/
+;
 
 parameter
 FLAG_G(G)		Grid flag
@@ -225,10 +237,12 @@ Ynum/
 $if %end_year%==2100 11
 $if %end_year%==2050 6
 /
+landshareG(G,R) Parcentage ratio of land area to grid area (0 to 1)
 ;
 
 $gdxin '../%prog_loc%/data/data_prep.gdx'
 $load Map_GIJ MAP_RIJ GAIJ MAP_RG
+$load landshareG
 
 FLAG_IJ(I,J)$SUM(R,MAP_RIJ(R,I,J))=1;
 
@@ -451,10 +465,25 @@ $load VY_load=VYL
 ;
 $gdxin '../output/gdx/analysis/base_%SCE%_%CLP%_%IAV%%ModelInt%.gdx'
 $load VYL_protect
-$load VY_IJ
 ;
 
+* Subtract area of the other countries that share the same grid cell from "OL".
+VY_load(R,Y,"OL",G)$(landshareG(G,R))=max(0,VY_load(R,Y,"OL",G)-(1-landshareG(G,R)));
+
+parameter
+VY_load2(R,Y,L,G) for basin aggregation
+;
+* If the basin-level data exists, it is used at high priority. If not, 17 reiongal data is used.
+* 1. Basin-level data aggregation
+VY_load2(R17,Y,L,G)$(SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VY_load(Rbasin,Y,L,G)))=SUM(Rbasin$MAP_RAGG_basin_17(Rbasin,R17),VY_load(Rbasin,Y,L,G));
+* 2. 17 regional data aggregation if the sum of basin data does not exist.
+VY_load2(R17,Y,L,G)$(sum(Sr17,VY_load2(Sr17,Y,L,G))=0)=VY_load(R17,Y,L,G);
 * The double counting issue was solved by using land share directly.
+
+* To avoid double counting in cell which is included in two countries due to just 50% share of land area, sum of land share is divided by the number of countires.
+*VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VY_load(R,Y,L,G))/SUM(R$(MAP_RG(R,G)),1));
+VY_IJ(Y,L,I,J)$FLAG_IJ(I,J)=SUM((G,R)$MAP_GIJ(G,I,J),VY_load2(R,Y,L,G));
+VY_IJ(Y,L,I,J)$(sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J)))=sum(L2$(MAP_CL(L2,L)),VY_IJ(Y,L2,I,J));
 VYL_protectIJ(Y,Lmip,I,J)$FLAG_IJ(I,J)=SUM(G$(MAP_GIJ(G,I,J)),SUM(R$(MAP_RG(R,G)),VYL_protect(R,Y,Lmip,G))/SUM(R$(MAP_RG(R,G)),1));
 
 VY_IJmip(Y,Lmip,I,J)=SUM(L$MAP_LUMIP(Lmip,L),VY_IJ(Y,L,I,J));

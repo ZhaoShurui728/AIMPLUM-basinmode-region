@@ -26,7 +26,7 @@ FLAG_YIELD(G)$(SUM(L$(LCROPA(L) AND YIELD(L,G)),YIELD(L,G)))=YES;
 $ifthen.agluout2 not %agluauto%==on
 Planduse_cropflw=Planduse("%Sy%","CROP_FLW");
 $else.agluout2
-Planduse_cropflw=Planduse_aglu("%Sr%","CROP_FLW","%Sy%","Value");
+Planduse_cropflw=Planduse_aglu("%agluscenario%","%Sr%","CROP_FLW","%Sy%");
 $endif.agluout2
 Y_NPROT_NOPAS(G)$((CS(G) OR FLAG_YIELD(G)) AND VYL("FRSGL",G)-protect_wopas(G)>0)=VYL("FRSGL",G)-protect_wopas(G);
 *��N��CROP_FLW���O�N�_�n�������Ƃ���ō��N�g���Ȃ��y�n�̂���Z���ł�����Ƃ���܂ł����

@@ -34,10 +34,10 @@ DataPrep=off
 # Set Data Preparation 2 Process [on/off]
 DataPrep2=off
 # Set Base Year Simulation [on/off]
-Basesim=off
+Basesim=on
 
 # Set Future Simulation [on/off]
-Futuresim=off
+Futuresim=on
     ## loop level change: [CTY (country), SCN (scenario)]
     Sub_Futuresim_Loop=CTY
     ## switch whether normal scenario core run is carried out or not (normally it should be on) 
@@ -48,7 +48,7 @@ Futuresim=off
     Sub_Futuresim_Biocurve=off
 
 # Set Scenario Merge [on/off]
-ScnMerge=off
+ScnMerge=on
     Sub_ScnMerge_Baserun=on
 	## Calculate wwf regional restored area [on/off] 
 	Sub_ScnMerge_Restorecal=off
@@ -96,7 +96,7 @@ PREDICTS=off
     Climate_sce=none
 
 # Set PNG File Creation [on/off]
-plot=off
+plot=on
     ## To export lumip landtype images, turn on lumip switch. To turn on, you also need to make netcdrgen with lumip format.
     Sub_Plot_lumip=on
     ## To make BTC images, then turn on BTC switch. To turn on, you also need to make netcdrgen with BTC format.
