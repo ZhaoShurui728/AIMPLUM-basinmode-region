@@ -1,0 +1,23 @@
+LC_glc2000,LCname_glc2000,LC_GLOBIOM,LCname_GLOBIOM,,LCname_AIM
+1,"Tree Cover, broadleaved, evergreen",1,forest,,FRS
+2,"Tree Cover, broadleaved, deciduous, closed",1,forest,,FRS
+3,"Tree Cover, broadleaved, deciduous, open",1,forest,,FRS
+4,"Tree Cover, needle-leaved, evergreen",1,forest,,FRS
+5,"Tree Cover, needle-leaved, deciduous",1,forest,,FRS
+6,"Tree Cover, mixed leaf type",1,forest,,FRS
+7,"Tree Cover, regularly flooded, fresh water",5,wetlands,,ONV
+8,"Tree Cover, regularly flooded, saline water",5,wetlands,,ONV
+9,Mosaic: Tree Cover / Other natural vegetation,1,forest,,FRS
+10,"Tree Cover, burnt",1,forest,,FRS
+11,"Shrub Cover, closed-open, evergreen",2,other natural vegetation,,ONV
+12,"Shrub Cover, closed-open, deciduous",2,other natural vegetation,,ONV
+13,"Herbaceous Cover, closed-open",3,grassland,,ONV
+14,Sparse herbaceous or sparse shrub cover,2,other natural vegetation,,ONV
+15,Regularly flooded shrub and/or herbaceous cover,5,wetlands,,ONV
+16,Cultivated and managed areas,4,agricultural total,,PAS
+17,Mosaic: Cropland / Tree Cover / Other natural vegetation,4,agricultural total,,CL
+18,Mosaic: Cropland / Shrub and/or grass cover,4,agricultural total,,CL
+19,Bare Areas,7,bare areas,,OL
+20,Water Bodies,6,water areas,,OL
+21,Snow and Ice,8,snow and ice,,OL
+22,Artificial surfaces and associated areas,9,artificial,,OL

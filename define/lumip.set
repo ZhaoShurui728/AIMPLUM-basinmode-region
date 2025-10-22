@@ -1,0 +1,87 @@
+*	2.2 Variable Names and Units
+*	2.2.1 States (units fraction of grid cell unless otherwise specified)
+	primf	forested primary land
+	primn	non-forested primary land
+	secdf	potentially forested secondary land
+	secdn	potentially non-forested secondary land
+	pastr	managed pasture
+	range	rangeland
+	urban	urban land
+	c3ann	C3 annual crops
+	c3per	C3 perennial crops
+	c4ann	C4 annual crops
+	c4per	C4 perennial crops
+	c3nfx	C3 nitrogen-fixing crops
+	secma	secondary mean age units
+	secmb	secondary mean biomass density units
+	pltns	plantation forestry land
+
+*	2. Annual Transitions
+*	Transitions between land use states (units fraction of grid cell per y)
+*	All in format <state1_to_state2>
+*	Wood harvest (units fraction of grid cell)
+	primf_harv
+	primn_harv
+	secmf_harv
+	secyf_harv
+	secnf_harv
+	pltns_harv	wood harvest area from plantation forests
+*	Wood harvest (units kg C per year)
+	primf_bioh
+	primn_bioh
+	secmf_bioh
+	secyf_bioh
+	secnf_bioh	
+	pltns_bioh	wood harvest biomass from plantation forests
+
+*	3. Annual Management
+*	Irrigation (units fraction of crop area)
+	irrig_c3ann
+	irrig_c3per
+	irrig_c4ann
+	irrig_c4per
+	irrig_c3nfx	
+	flood	flooded fraction of C3 annual crop area
+	
+*	Fertilizer (units kg N/ha/yr (crop season))
+	fertl_c3ann
+	fertl_c4ann
+	fertl_c3per
+	fertl_c4per
+	fertl_c3nfx
+*	Biofuel crops (fraction of crop type area occupied by biofuel crops)
+	cpbf1_c3ann	C3 annual crops grown as first-generation biofuels
+	cpbf1_c4ann	C4 annual crops grown as first-generation biofuels
+	cpbf1_c3per	C3 perennial crops grown as first-generation biofuels
+	cpbf1_c4per	C4 perennial crops grown as first-generation biofuels
+	cpbf1_c3nfx	C3 N-fixing crops grown as first-generation biofuels
+	cpbf2_c3ann	C3 annual crops grown as second-generation biofuels
+	cpbf2_c4ann	C4 annual crops grown as second-generation biofuels
+	cpbf2_c3per	C3 perennial crops grown as second-generation biofuels
+	cpbf2_c4per	C4 perennial crops grown as second-generation biofuels
+	cpbf2_c3nfx	C3 N-fixing crops grown as second-generation biofuels	
+*	Wood harvest product split (units fraction of wood harvest biomass)
+	rndwd
+	fulwd
+	combf
+	pltns_wdprd	fraction of harvested plantations biomass used for wood products
+	pltns_bfuel fraction of harvested plantations biomass used for bioenergy
+*	Harvest (units of fraction of biomass harvested annually)
+	fharv_c3per
+	fharv_c4per
+*Forest Management (units fraction of land-use area)
+	prtct_primf protected fraction of primary forest
+	prtct_primn protected fraction of primary non-forest
+	prtct_secdf protected fraction of secondary forest
+	prtct_secdn protected fraction of secondary non-forest
+	prtct_pltns protected fraction of plantation forest
+	addtc added tree cover for afforestation
+
+*	2.2.4 Static
+	ptbio
+	fstnf
+	carea
+	ccode
+	icwtr
+	fallow
+

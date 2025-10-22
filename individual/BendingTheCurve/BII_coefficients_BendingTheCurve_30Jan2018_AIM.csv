@@ -1,0 +1,25 @@
+PotBiomeMask,LULC_class,value
+forested,"Primary vegetation",1
+forested,"Primary vegetation Minimal use",0
+forested,"Mature and Intermediate secondary vegetation",1
+forested,"Young secondary vegetation",0.871909675
+forested,"Mature secondary vegetation Minimal use",1
+forested,"Timber",0.788076341
+forested,"Rangeland",0.815319567
+forested,"Managed pasture",0.69178578
+forested,"Perennial cropland",0.519729973
+forested,"Annual cropland",0.504430822
+forested,"Nitrogen-fixing cropland",0
+forested,"Urban",0.537824472
+nonforested,"Primary vegetation",1
+nonforested,"Primary vegetation Minimal use",0
+nonforested,"Mature and Intermediate secondary vegetation",0.773810798
+nonforested,"Young secondary vegetation",0.776305666
+nonforested,"Mature secondary vegetation Minimal use",0.701624675
+nonforested,"Timber",0.556077911
+nonforested,"Rangeland",0.766671348
+nonforested,"Managed pasture",0.367189443
+nonforested,"Perennial cropland",0.700301454
+nonforested,"Annual cropland",0.646753878
+nonforested,"Nitrogen-fixing cropland",0
+nonforested,"Urban",0.697314427

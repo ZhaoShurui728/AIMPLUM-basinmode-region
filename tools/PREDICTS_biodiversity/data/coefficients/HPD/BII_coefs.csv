@@ -1,0 +1,12 @@
+Luclass,refinedLUclass,BII,share_area_global_refinedLUclass.in.Luclass
+cropland_other,Cropland,0.286963192,1
+cropland_2Gbioen,Cropland,0.629581501,1
+grassland,Pasture,0.540682696,1
+forest_unmanaged,Primary vegetation Minimal use,1,0.826992204
+forest_unmanaged,Secondary vegetation Minimal use,0.941546325,0.173007796
+forest_managed,Secondary vegetation and Timber,1,0.511262526
+forest_managed,Primary vegetation,0.880459287,0.488737474
+restored,Secondary vegetation Minimal use,0.899323535,1
+other,Secondary vegetation Minimal use,1,0.596041247
+other,Primary vegetation Minimal use,0.845986563,0.403958753
+built.up,Urban,0.715122813,1

@@ -1,0 +1,3 @@
+SCE=SSP2
+CLP=600C_CACNup200
+IAV=affcmax

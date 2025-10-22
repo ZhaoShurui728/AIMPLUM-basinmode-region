@@ -1,0 +1,4 @@
+SCE=SSP2
+CLP=1100C_2025CP
+IAV=NoCC
+ModelInt=_scenarioMIP_global1

@@ -1,0 +1,20 @@
+"","Luclass","refinedLUclass","BII","share_area_global_refinedLUclass.in.Luclass"
+"1","cropland_other_f","Forested Annual + Nitrogen",0.236304185562924,0.827363866
+"2","cropland_other_f","Forested Perennial",0.570228354366309,0.172636134
+"3","cropland_other_nf","Non-forested Annual + Nitrogen",0.732871416005844,0.921679434
+"4","cropland_other_nf","Non-forested Perennial",0.792500082518899,0.078320566
+"5","cropland_2Gbioen_f","Forested Perennial",0.570228354366309,1
+"6","cropland_2Gbioen_nf","Non-forested Perennial",0.792500082518899,1
+"7","grassland_f","Forested pasture (rangelands+managed pasture) ",0.465216237606194,1
+"8","grassland_nf","Non-forested pasture (rangelands + managed pasture)",0.650984544427834,1
+"9","forest_unmanaged","Forested Primary Minimal use",1,0.826992204
+"10","forest_unmanaged","Forested Mature secondary vegetation Minimal use",0.922526429097558,0.173007796
+"11","forest_managed","Forested Primary vegetation (light and intense use)",1,0.511262526
+"12","forest_managed","Forested Secondary (light and intense) + Forested Timber (light and intense use)",0.783647596022451,0.488737474
+"13","restored_f","Forested Mature secondary vegetation Minimal use",0.922526429097558,1
+"14","restored_nf","Non-forested Mature secondary vegetation Minimal use",0.755403572854219,1
+"15","other_nf","Non-forested Primary Minimal use",1,0.596041247
+"16","other_nf","Non-forested Secondary vegetation (all ages) Minimal use",0.889499796001294,0.403958753
+"17","other_f","Forested Young secondary vegetation Minimal use",0.888946658953142,1
+"18","built.up_f","Forested Urban",0.623881659364258,1
+"19","built.up_nf","Non-forested Urban",0.750700809649721,1

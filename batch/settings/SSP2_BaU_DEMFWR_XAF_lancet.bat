@@ -1,0 +1,3 @@
+set SCE=SSP2
+set CLP=BaU
+set IAV=DEMFWR_JPN_lancet

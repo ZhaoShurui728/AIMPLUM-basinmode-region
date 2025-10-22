@@ -1,0 +1,4 @@
+SCE=SSP3
+CLP=BaU
+IAV=NoCC
+ModelInt=_No

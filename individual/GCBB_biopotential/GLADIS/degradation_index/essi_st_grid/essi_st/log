@@ -1,0 +1,2 @@
+201107221631   0     1     0Bloise RCL_GRID4 = con(isnull(rcl_grid3) == 1, 203, rcl_grid3)
+201107221631   0     0     0Bloise COPY rcl_grid4 ..\DOWNL_map\GRID_downl\essi_st

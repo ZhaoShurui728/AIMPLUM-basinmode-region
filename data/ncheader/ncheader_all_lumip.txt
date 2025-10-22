@@ -1,0 +1,320 @@
+netcdf LUH2v1.0h_AIM {
+dimensions:
+	lon = 720 ;
+	lat = 360 ;
+	time = 11 ;
+variables:
+	float lon(lon) ;
+		lon:long_name = "Longitude" ;
+		lon:units = "degrees_east" ;
+		lon:comment = "center of cell" ;
+	float lat(lat) ;
+		lat:long_name = "Latitude" ;
+		lat:units = "degrees_north" ;
+		lat:comment = "center of cell" ;
+	double time(time) ;
+		time:long_name = "Time" ;
+		time:units = "days since 1900-01-01 00:00" ;
+		time:calendar = "gregorian" ;
+	int year(time) ;
+		year:long_name = "Year" ;
+		year:units = "year" ;
+		year:format = "YYYY" ;
+	float c3ann(time, lat, lon) ;
+		c3ann:standard_name = "fraction of grid cell area";
+		c3ann:long_name = "C3 annual crops fraction of grid cell area";
+		c3ann:units = "1";
+		c3ann:missing_value = -99.0f ;
+	float c3per(time, lat, lon) ;
+		c3per:standard_name = "fraction of grid cell area";
+		c3per:long_name = "C3 perennial crops fraction of grid cell area";
+		c3per:units = "1";
+		c3per:missing_value = -99.0f ;
+	float c4ann(time, lat, lon) ;
+		c4ann:standard_name = "fraction of grid cell area";
+		c4ann:long_name = "C4 annual crops fraction of grid cell area";
+		c4ann:units = "1";
+		c4ann:missing_value = -99.0f ;
+	float c4per(time, lat, lon) ;
+		c4per:standard_name = "fraction of grid cell area";
+		c4per:long_name = "C4 perennial crops fraction of grid cell area";
+		c4per:units = "1";
+		c4per:missing_value = -99.0f ;
+	float c3nfx(time, lat, lon) ;
+		c3nfx:standard_name = "fraction of grid cell area";
+		c3nfx:long_name = "C3 nitrogen-fixing crops fraction of grid cell area";
+		c3nfx:units = "1";
+		c3nfx:missing_value = -99.0f ;
+	float cpbf2_c4per(time, lat, lon) ;
+		cpbf2_c4per:standard_name = "Second-generation biofuel crop fraction to C4 perennial area";
+		cpbf2_c4per:long_name = "C4 perennial crops grown as second-generation biofuels fraction to C4 perennial area";
+		cpbf2_c4per:units = "1";
+		cpbf2_c4per:missing_value = -99.0f ;
+	float irrig_c3ann(time, lat, lon) ;
+		irrig_c3ann:standard_name = "irrigated fraction of C3 annual area";
+		irrig_c3ann:long_name = "irrigated fraction of C3 annual area";
+		irrig_c3ann:units = "1";
+		irrig_c3ann:missing_value = -99.0f ;
+	float irrig_c3per(time, lat, lon) ;
+		irrig_c3per:standard_name = "irrigated fraction of C3 perennial area";
+		irrig_c3per:long_name = "irrigated fraction of C3 perennial area";
+		irrig_c3per:units = "1";
+		irrig_c3per:missing_value = -99.0f ;
+	float irrig_c4ann(time, lat, lon) ;
+		irrig_c4ann:standard_name = "irrigated fraction of C4 annual area";
+		irrig_c4ann:long_name = "irrigated fraction of C4 annual area";
+		irrig_c4ann:units = "1";
+		irrig_c4ann:missing_value = -99.0f ;
+	float irrig_c4per(time, lat, lon) ;
+		irrig_c4per:standard_name = "irrigated fraction of C4 perennial area";
+		irrig_c4per:long_name = "irrigated fraction of C4 perennial area";
+		irrig_c4per:units = "1";
+		irrig_c4per:missing_value = -99.0f ;
+	float irrig_c3nfx(time, lat, lon) ;
+		irrig_c3nfx:standard_name = "irrigated fraction of C3 N-fixing area";
+		irrig_c3nfx:long_name = "irrigated fraction of C3 N-fixing area fraction";
+		irrig_c3nfx:units = "1";
+		irrig_c3nfx:missing_value = -99.0f ;
+	float pastr(time, lat, lon) ;
+		pastr:standard_name = "fraction of grid cell area";
+		pastr:long_name = "managed pasture fraction of grid cell area";
+		pastr:units = "1";
+		pastr:missing_value = -99.0f ;
+	float primf(time, lat, lon) ;
+		primf:standard_name = "fraction of grid cell area";
+		primf:long_name = "primary forest land fraction of grid cell area";
+		primf:units = "1";
+		primf:missing_value = -99.0f ;
+	float primn(time, lat, lon) ;
+		primn:standard_name = "fraction of grid cell area";
+		primn:long_name = "primary non-forest land fraction of grid cell area";
+		primn:units = "1";
+		primn:missing_value = -99.0f ;
+	float pltns(time, lat, lon) ;
+		pltns:standard_name = "fraction of grid cell area";
+		pltns:long_name = "plantation forestry land fraction of grid cell area";
+		pltns:units = "1";
+		pltns:missing_value = -99.0f ;
+	float range(time, lat, lon) ;
+		range:standard_name = "fraction of grid cell area";
+		range:long_name = "rangeland fraction of grid cell area";
+		range:units = "1";
+		range:missing_value = -99.0f ;
+	float secdf(time, lat, lon) ;
+		secdf:standard_name = "fraction of grid cell area";
+		secdf:long_name = "secondary forest land fraction of grid cell area";
+		secdf:units = "1";
+		secdf:missing_value = -99.0f ;
+	float secdn(time, lat, lon) ;
+		secdn:standard_name = "fraction of grid cell area";
+		secdn:long_name = "secondary non-forest land fraction of grid cell area";
+		secdn:units = "1";
+		secdn:missing_value = -99.0f ;
+	float urban(time, lat, lon) ;
+		urban:standard_name = "fraction of grid cell area";
+		urban:long_name = "urban land fraction of grid cell area";
+		urban:units = "1";
+		urban:missing_value = -99.0f ;
+	float flood(time, lat, lon) ;
+		flood:standard_name = "flooded fraction of C3 annual crop area";
+		flood:long_name = "flooded fractin of C3 annual crop area";
+		flood:units = "1";
+		flood:missing_value = -99.0f ;
+	float fallow(time, lat, lon) ;
+		fallow:standard_name = "fraction of grid cell area";
+		fallow:long_name = "fallow land";
+		fallow:units = "1";
+		fallow:missing_value = -99.0f ;
+	float rice(time, lat, lon) ;
+		rice:standard_name = "fraction of grid cell area";
+		rice:long_name = "cropland for rice";
+		rice:units = "1";
+		rice:missing_value = -99.0f ;
+	float wheat(time, lat, lon) ;
+		wheat:standard_name = "fraction of grid cell area";
+		wheat:long_name = "cropland for wheat";
+		wheat:units = "1";
+		wheat:missing_value = -99.0f ;
+	float maize(time, lat, lon) ;
+		maize:standard_name = "fraction of grid cell area";
+		maize:long_name = "cropland for maize";
+		maize:units = "1";
+		maize:missing_value = -99.0f ;
+	float sugarcrops(time, lat, lon) ;
+		sugarcrops:standard_name = "fraction of grid cell area";
+		sugarcrops:long_name = "cropland for sugarcrops";
+		sugarcrops:units = "1";
+		sugarcrops:missing_value = -99.0f ;
+	float oilcrops(time, lat, lon) ;
+		oilcrops:standard_name = "fraction of grid cell area";
+		oilcrops:long_name = "cropland for oilcrops";
+		oilcrops:units = "1";
+		oilcrops:missing_value = -99.0f ;
+	float othercrops(time, lat, lon) ;
+		othercrops:standard_name = "fraction of grid cell area";
+		othercrops:long_name = "cropland for othercrops";
+		othercrops:units = "1";
+		othercrops:missing_value = -99.0f ;
+	float icwtr(time, lat, lon) ;
+		icwtr:standard_name = "fraction of grid cell area";
+		icwtr:long_name = "ice and water";
+		icwtr:units = "1";
+		icwtr:missing_value = -99.0f ;
+	float prtct_primf(time, lat, lon) ;
+		prtct_primf:standard_name = "fraction of grid cell area";
+		prtct_primf:long_name = "protected fraction of primary forest";
+		prtct_primf:units = "1";
+		prtct_primf:missing_value = -99.0f ;
+	float prtct_primn(time, lat, lon) ;
+		prtct_primn:standard_name = "fraction of grid cell area";
+		prtct_primn:long_name = "protected fraction of primary non-forest";
+		prtct_primn:units = "1";
+		prtct_primn:missing_value = -99.0f ;
+	float prtct_secdf(time, lat, lon) ;
+		prtct_secdf:standard_name = "fraction of grid cell area";
+		prtct_secdf:long_name = "protected fraction of secondary forest";
+		prtct_secdf:units = "1";
+		prtct_secdf:missing_value = -99.0f ;
+	float prtct_secdn(time, lat, lon) ;
+		prtct_secdn:standard_name = "fraction of grid cell area";
+		prtct_secdn:long_name = "protected fraction of secondary non-forest";
+		prtct_secdn:units = "1";
+		prtct_secdn:missing_value = -99.0f ;
+	float prtct_crop(time, lat, lon) ;
+		prtct_crop:standard_name = "fraction of grid cell area";
+		prtct_crop:long_name = "protected fraction of cropland";
+		prtct_crop:units = "1";
+		prtct_crop:missing_value = -99.0f ;
+	float prtct_all(time, lat, lon) ;
+		prtct_all:standard_name = "fraction of grid cell area";
+		prtct_all:long_name = "protected fraction of all protected area";
+		prtct_all:units = "1";
+		prtct_all:missing_value = -99.0f ;
+
+
+data:
+
+ lon = -179.75, -179.25, -178.75, -178.25, -177.75, -177.25, -176.75, 
+    -176.25, -175.75, -175.25, -174.75, -174.25, -173.75, -173.25, -172.75, 
+    -172.25, -171.75, -171.25, -170.75, -170.25, -169.75, -169.25, -168.75, 
+    -168.25, -167.75, -167.25, -166.75, -166.25, -165.75, -165.25, -164.75, 
+    -164.25, -163.75, -163.25, -162.75, -162.25, -161.75, -161.25, -160.75, 
+    -160.25, -159.75, -159.25, -158.75, -158.25, -157.75, -157.25, -156.75, 
+    -156.25, -155.75, -155.25, -154.75, -154.25, -153.75, -153.25, -152.75, 
+    -152.25, -151.75, -151.25, -150.75, -150.25, -149.75, -149.25, -148.75, 
+    -148.25, -147.75, -147.25, -146.75, -146.25, -145.75, -145.25, -144.75, 
+    -144.25, -143.75, -143.25, -142.75, -142.25, -141.75, -141.25, -140.75, 
+    -140.25, -139.75, -139.25, -138.75, -138.25, -137.75, -137.25, -136.75, 
+    -136.25, -135.75, -135.25, -134.75, -134.25, -133.75, -133.25, -132.75, 
+    -132.25, -131.75, -131.25, -130.75, -130.25, -129.75, -129.25, -128.75, 
+    -128.25, -127.75, -127.25, -126.75, -126.25, -125.75, -125.25, -124.75, 
+    -124.25, -123.75, -123.25, -122.75, -122.25, -121.75, -121.25, -120.75, 
+    -120.25, -119.75, -119.25, -118.75, -118.25, -117.75, -117.25, -116.75, 
+    -116.25, -115.75, -115.25, -114.75, -114.25, -113.75, -113.25, -112.75, 
+    -112.25, -111.75, -111.25, -110.75, -110.25, -109.75, -109.25, -108.75, 
+    -108.25, -107.75, -107.25, -106.75, -106.25, -105.75, -105.25, -104.75, 
+    -104.25, -103.75, -103.25, -102.75, -102.25, -101.75, -101.25, -100.75, 
+    -100.25, -99.75, -99.25, -98.75, -98.25, -97.75, -97.25, -96.75, -96.25, 
+    -95.75, -95.25, -94.75, -94.25, -93.75, -93.25, -92.75, -92.25, -91.75, 
+    -91.25, -90.75, -90.25, -89.75, -89.25, -88.75, -88.25, -87.75, -87.25, 
+    -86.75, -86.25, -85.75, -85.25, -84.75, -84.25, -83.75, -83.25, -82.75, 
+    -82.25, -81.75, -81.25, -80.75, -80.25, -79.75, -79.25, -78.75, -78.25, 
+    -77.75, -77.25, -76.75, -76.25, -75.75, -75.25, -74.75, -74.25, -73.75, 
+    -73.25, -72.75, -72.25, -71.75, -71.25, -70.75, -70.25, -69.75, -69.25, 
+    -68.75, -68.25, -67.75, -67.25, -66.75, -66.25, -65.75, -65.25, -64.75, 
+    -64.25, -63.75, -63.25, -62.75, -62.25, -61.75, -61.25, -60.75, -60.25, 
+    -59.75, -59.25, -58.75, -58.25, -57.75, -57.25, -56.75, -56.25, -55.75, 
+    -55.25, -54.75, -54.25, -53.75, -53.25, -52.75, -52.25, -51.75, -51.25, 
+    -50.75, -50.25, -49.75, -49.25, -48.75, -48.25, -47.75, -47.25, -46.75, 
+    -46.25, -45.75, -45.25, -44.75, -44.25, -43.75, -43.25, -42.75, -42.25, 
+    -41.75, -41.25, -40.75, -40.25, -39.75, -39.25, -38.75, -38.25, -37.75, 
+    -37.25, -36.75, -36.25, -35.75, -35.25, -34.75, -34.25, -33.75, -33.25, 
+    -32.75, -32.25, -31.75, -31.25, -30.75, -30.25, -29.75, -29.25, -28.75, 
+    -28.25, -27.75, -27.25, -26.75, -26.25, -25.75, -25.25, -24.75, -24.25, 
+    -23.75, -23.25, -22.75, -22.25, -21.75, -21.25, -20.75, -20.25, -19.75, 
+    -19.25, -18.75, -18.25, -17.75, -17.25, -16.75, -16.25, -15.75, -15.25, 
+    -14.75, -14.25, -13.75, -13.25, -12.75, -12.25, -11.75, -11.25, -10.75, 
+    -10.25, -9.75, -9.25, -8.75, -8.25, -7.75, -7.25, -6.75, -6.25, -5.75, 
+    -5.25, -4.75, -4.25, -3.75, -3.25, -2.75, -2.25, -1.75, -1.25, -0.75, 
+    -0.25, 0.25, 0.75, 1.25, 1.75, 2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25, 
+    5.75, 6.25, 6.75, 7.25, 7.75, 8.25, 8.75, 9.25, 9.75, 10.25, 10.75, 
+    11.25, 11.75, 12.25, 12.75, 13.25, 13.75, 14.25, 14.75, 15.25, 15.75, 
+    16.25, 16.75, 17.25, 17.75, 18.25, 18.75, 19.25, 19.75, 20.25, 20.75, 
+    21.25, 21.75, 22.25, 22.75, 23.25, 23.75, 24.25, 24.75, 25.25, 25.75, 
+    26.25, 26.75, 27.25, 27.75, 28.25, 28.75, 29.25, 29.75, 30.25, 30.75, 
+    31.25, 31.75, 32.25, 32.75, 33.25, 33.75, 34.25, 34.75, 35.25, 35.75, 
+    36.25, 36.75, 37.25, 37.75, 38.25, 38.75, 39.25, 39.75, 40.25, 40.75, 
+    41.25, 41.75, 42.25, 42.75, 43.25, 43.75, 44.25, 44.75, 45.25, 45.75, 
+    46.25, 46.75, 47.25, 47.75, 48.25, 48.75, 49.25, 49.75, 50.25, 50.75, 
+    51.25, 51.75, 52.25, 52.75, 53.25, 53.75, 54.25, 54.75, 55.25, 55.75, 
+    56.25, 56.75, 57.25, 57.75, 58.25, 58.75, 59.25, 59.75, 60.25, 60.75, 
+    61.25, 61.75, 62.25, 62.75, 63.25, 63.75, 64.25, 64.75, 65.25, 65.75, 
+    66.25, 66.75, 67.25, 67.75, 68.25, 68.75, 69.25, 69.75, 70.25, 70.75, 
+    71.25, 71.75, 72.25, 72.75, 73.25, 73.75, 74.25, 74.75, 75.25, 75.75, 
+    76.25, 76.75, 77.25, 77.75, 78.25, 78.75, 79.25, 79.75, 80.25, 80.75, 
+    81.25, 81.75, 82.25, 82.75, 83.25, 83.75, 84.25, 84.75, 85.25, 85.75, 
+    86.25, 86.75, 87.25, 87.75, 88.25, 88.75, 89.25, 89.75, 90.25, 90.75, 
+    91.25, 91.75, 92.25, 92.75, 93.25, 93.75, 94.25, 94.75, 95.25, 95.75, 
+    96.25, 96.75, 97.25, 97.75, 98.25, 98.75, 99.25, 99.75, 100.25, 100.75, 
+    101.25, 101.75, 102.25, 102.75, 103.25, 103.75, 104.25, 104.75, 105.25, 
+    105.75, 106.25, 106.75, 107.25, 107.75, 108.25, 108.75, 109.25, 109.75, 
+    110.25, 110.75, 111.25, 111.75, 112.25, 112.75, 113.25, 113.75, 114.25, 
+    114.75, 115.25, 115.75, 116.25, 116.75, 117.25, 117.75, 118.25, 118.75, 
+    119.25, 119.75, 120.25, 120.75, 121.25, 121.75, 122.25, 122.75, 123.25, 
+    123.75, 124.25, 124.75, 125.25, 125.75, 126.25, 126.75, 127.25, 127.75, 
+    128.25, 128.75, 129.25, 129.75, 130.25, 130.75, 131.25, 131.75, 132.25, 
+    132.75, 133.25, 133.75, 134.25, 134.75, 135.25, 135.75, 136.25, 136.75, 
+    137.25, 137.75, 138.25, 138.75, 139.25, 139.75, 140.25, 140.75, 141.25, 
+    141.75, 142.25, 142.75, 143.25, 143.75, 144.25, 144.75, 145.25, 145.75, 
+    146.25, 146.75, 147.25, 147.75, 148.25, 148.75, 149.25, 149.75, 150.25, 
+    150.75, 151.25, 151.75, 152.25, 152.75, 153.25, 153.75, 154.25, 154.75, 
+    155.25, 155.75, 156.25, 156.75, 157.25, 157.75, 158.25, 158.75, 159.25, 
+    159.75, 160.25, 160.75, 161.25, 161.75, 162.25, 162.75, 163.25, 163.75, 
+    164.25, 164.75, 165.25, 165.75, 166.25, 166.75, 167.25, 167.75, 168.25, 
+    168.75, 169.25, 169.75, 170.25, 170.75, 171.25, 171.75, 172.25, 172.75, 
+    173.25, 173.75, 174.25, 174.75, 175.25, 175.75, 176.25, 176.75, 177.25, 
+    177.75, 178.25, 178.75, 179.25, 179.75 ;
+
+ lat =  89.75, 89.25, 88.75, 88.25, 87.75, 87.25, 86.75, 86.25, 
+    85.75, 85.25, 84.75, 84.25, 83.75, 83.25, 82.75, 82.25, 81.75, 
+    81.25, 80.75, 80.25, 79.75, 79.25, 78.75, 78.25, 77.75, 77.25, 
+    76.75, 76.25, 75.75, 75.25, 74.75, 74.25, 73.75, 73.25, 72.75, 
+    72.25, 71.75, 71.25, 70.75, 70.25, 69.75, 69.25, 68.75, 68.25, 
+    67.75, 67.25, 66.75, 66.25, 65.75, 65.25, 64.75, 64.25, 63.75, 
+    63.25, 62.75, 62.25, 61.75, 61.25, 60.75, 60.25, 59.75, 59.25, 
+    58.75, 58.25, 57.75, 57.25, 56.75, 56.25, 55.75, 55.25, 54.75, 
+    54.25, 53.75, 53.25, 52.75, 52.25, 51.75, 51.25, 50.75, 50.25, 
+    49.75, 49.25, 48.75, 48.25, 47.75, 47.25, 46.75, 46.25, 45.75, 
+    45.25, 44.75, 44.25, 43.75, 43.25, 42.75, 42.25, 41.75, 41.25, 
+    40.75, 40.25, 39.75, 39.25, 38.75, 38.25, 37.75, 37.25, 36.75, 
+    36.25, 35.75, 35.25, 34.75, 34.25, 33.75, 33.25, 32.75, 32.25, 
+    31.75, 31.25, 30.75, 30.25, 29.75, 29.25, 28.75, 28.25, 27.75, 
+    27.25, 26.75, 26.25, 25.75, 25.25, 24.75, 24.25, 23.75, 23.25, 
+    22.75, 22.25, 21.75, 21.25, 20.75, 20.25, 19.75, 19.25, 18.75, 
+    18.25, 17.75, 17.25, 16.75, 16.25, 15.75, 15.25, 14.75, 14.25, 
+    13.75, 13.25, 12.75, 12.25, 11.75, 11.25, 10.75, 10.25, 9.75, 
+    9.25, 8.75, 8.25, 7.75, 7.25, 6.75, 6.25, 5.75, 5.25, 4.75, 
+    4.25, 3.75, 3.25, 2.75, 2.25, 1.75, 1.25, 0.75, 0.25, -0.25, 
+    -0.75, -1.25, -1.75, -2.25, -2.75, -3.25, -3.75, -4.25, -4.75, -5.25, -5.75, -6.25,
+    -6.75, -7.25, -7.75, -8.25, -8.75, -9.25, -9.75, -10.25, -10.75, -11.25, -11.75,
+    -12.25, -12.75, -13.25, -13.75, -14.25, -14.75, -15.25, -15.75, -16.25, -16.75, 
+    -17.25, -17.75, -18.25, -18.75, -19.25, -19.75, -20.25, -20.75, -21.25, -21.75, 
+    -22.25, -22.75, -23.25, -23.75, -24.25, -24.75, -25.25, -25.75, -26.25, -26.75, 
+    -27.25, -27.75, -28.25, -28.75, -29.25, -29.75, -30.25, -30.75, -31.25, -31.75, 
+    -32.25, -32.75, -33.25, -33.75, -34.25, -34.75, -35.25, -35.75, -36.25, -36.75, 
+    -37.25, -37.75, -38.25, -38.75, -39.25, -39.75, -40.25, -40.75, -41.25, -41.75, 
+    -42.25, -42.75, -43.25, -43.75, -44.25, -44.75, -45.25, -45.75, -46.25, -46.75, 
+    -47.25, -47.75, -48.25, -48.75, -49.25, -49.75, -50.25, -50.75, -51.25, -51.75, 
+    -52.25, -52.75, -53.25, -53.75, -54.25, -54.75, -55.25, -55.75, -56.25, -56.75, 
+    -57.25, -57.75, -58.25, -58.75, -59.25, -59.75, -60.25, -60.75, -61.25, -61.75, 
+    -62.25, -62.75, -63.25, -63.75, -64.25, -64.75, -65.25, -65.75, -66.25, -66.75, 
+    -67.25, -67.75, -68.25, -68.75, -69.25, -69.75, -70.25, -70.75, -71.25, -71.75, 
+    -72.25, -72.75, -73.25, -73.75, -74.25, -74.75, -75.25, -75.75, -76.25, -76.75, 
+    -77.25, -77.75, -78.25, -78.75, -79.25, -79.75, -80.25, -80.75, -81.25, -81.75, 
+    -82.25, -82.75, -83.25, -83.75, -84.25, -84.75, -85.25, -85.75, -86.25, -86.75, 
+    -87.25, -87.75, -88.25, -88.75, -89.25, -89.75 ;
+
+ year = 2005, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100;
+
+ time = 38351, 40177, 43829, 47482, 51134, 54787, 58439, 62092, 65744, 69397, 73049 ;
+

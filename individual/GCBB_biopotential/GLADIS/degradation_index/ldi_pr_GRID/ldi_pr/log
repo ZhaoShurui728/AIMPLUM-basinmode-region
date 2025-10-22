@@ -1,0 +1,2 @@
+201107251024   0     2     0Bloise RCL_GRID4_2 = con(isnull(rcl_grid3_2) == 1, 203, rcl_grid3_2)
+201107251024   0     0     0Bloise COPY rcl_grid4_2 ..\DOWNL_map\GRID_downl\ldi_pr

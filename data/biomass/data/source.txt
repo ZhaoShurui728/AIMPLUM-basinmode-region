@@ -1,0 +1,15 @@
+http://luh.umd.edu/
+http://luh.umd.edu/~luh_data/
+http://luh.umd.edu/~luh_data/supporting_files/pot_biomass.txt
+http://luh.umd.edu/~luh_data/supporting_files/AEZ_zone_grid.txt
+
+G. C. Hurtt, L. P. Chini, S. Frolking, R. A. Betts, J. Feddema, G. Fischer, J. P. Fisk, K. Hibbard, R. A. Houghton, A. Janetos, C. D. Jones, G. Kindermann, T. Kinoshita, Kees Klein Goldewijk, K. Riahi, E. Shevliakova, S. Smith, E. Stehfest, A. Thomson, P. Thornton, D. P. van Vuuren, Y. P. Wang (2011) Harmonization of land-use scenarios for the period 1500?2100: 600 years of global gridded annual land-use transitions, wood harvest, and resulting secondary lands. Climatic Change 109:117?161 DOI 10.1007/s10584-011-0153-2 (Paper)
+
+http://link.springer.com/article/10.1007%2Fs10584-011-0153-2
+
+Hurtt et al. 2011 ¤ÎFig3
+
+unit: Ckg/m2
+
+
+
